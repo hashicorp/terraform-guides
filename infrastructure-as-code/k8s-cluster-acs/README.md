@@ -20,23 +20,41 @@ It uses the Microsoft AzureRM provider's azurerm_container_service resource to c
 Execute the following commands to deploy your Kubernetes cluster to ACS.
 
 1. Fork this repository from https://github.com/hashicorp/terraform-guides.
-1. Create a dev branch from the master branch.
-1. Create a prod branch from the dev branch.
-1. Create a workspace in your TFE organization called k8s-cluster-dev.
-1. Configure the k8s-cluster-dev workspace to connect to the fork of this repository in your own GitHub account.
+1. Create a dev branch from the master branch in your fork.
+1. Clone the fork to your laptop.
+1. Run `git checkout dev` to put yourself on the dev branch of your fork.
+1. Create a workspace in your TFE organization called k8s-cluster-acs-dev.
+1. Configure the k8s-cluster-acs-dev workspace to connect to the fork of this repository in your own GitHub account.
 1. Click the "More options" link, set the VCS Root Path to "infrastructure-as-code/k8s-cluster-acs" and the VCS Branch to "dev".
 1. On the Variables tab of your workspace, add the following variables to the Terraform variables: dns_agent_pool_prefix, dns_master_prefix, environment, resource_group_name, and vault_user. We recommend values for the first four of these like "<user>-k8s-agentpool-dev", "<user>-k8s-master-dev", "dev", and "<user>-k8s-example-dev". Be sure to set vault_user to your username on the Vault server you are using. Note that the dns_agent_pool_prefix and dns_master_prefix values must be unique within Azure. If you see errors related to these when provisioning your ACS cluster, please pick different values.
 1. Set the following Environment Variables: VAULT_ADDR to the address of your Vault server including the port (e.g., "http://<your_vault_dns>:8200"), VAULT_TOKEN to your Vault token, and VAULT_SKIP_VERIFY to true (if you have not enabled TLS on your Vault server).
-1. Click the "Queue Plan" button in the upper right corner of your workspace.
+1. Click the "Queue Plan" button in the upper right corner of your workspace. (Alternatively, you could make some minor change to your local clone of your dev branch, run `git commit -m "<change_description>"`, and then run `git push origin dev` to push the change you made to GitHub. This will trigger a Terraform run in your workspace.)
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the ACS cluster will be created when you apply your plan.
-1. Click the "Confirm and Apply" button to actually provision your ACS cluster.
+1. Click the "Confirm and Apply" button to actually provision your ACS dev cluster.
+
+You will see outputs representing the URL to access your ACS dev cluster in the Azure Portal, your private key PEM, the FQDN of your cluster, and TLS certs/keys for your cluster.  You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces.
+
+## Adding a Prod Environment
+You can execute the following steps if you want to create a production ACS cluster and walk through the process of promoting Terraform code from a dev environent to a production environment in TFE.
+
+1. Create a prod branch from the dev branch in your fork.
+1. Create a workspace in your TFE organization called k8s-cluster-acs-prod.
+1. Configure the k8s-cluster-acs-prod workspace to connect to the fork of this repository in your own GitHub account.
+1. Click the "More options" link, set the VCS Root Path to "infrastructure-as-code/k8s-cluster-acs" and the VCS Branch to "prod".
+1. On the Variables tab of your workspace, add the following variables to the Terraform variables: dns_agent_pool_prefix, dns_master_prefix, environment, resource_group_name, and vault_user. We recommend values for the first four of these like "<user>-k8s-agentpool-prod", "<user>-k8s-master-prod", "prod", and "<user>-k8s-example-prod". Be sure to set vault_user to your username on the Vault server you are using.
+1. Set the same Vault environment variables that you set for your k8s-cluster-acs-dev.
+1. In GitHub, do a pull request to merge your dev branch into your prod branch within your fork. (You might need to make some small change in your dev branch so that the two branches differ.)
+1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the ACS cluster will be created when you apply your plan.
+1. However, you will not yet see the "Confirm and Apply" button. To see it, you must first go back to GitHub and merge the pull request. At that point, a new run will be triggered within TFE which will allow you to apply the plan if you want.
+1. Click the "Confirm and Apply" button to actually provision your ACS production cluster.
 
 You will see outputs representing the URL to access your ACS cluster in the Azure Portal, your private key PEM, the FQDN of your cluster, and TLS certs/keys for your cluster.  You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces.
 
 ## Cleanup
-Execute the following steps to delete your Kubernetes cluster and associated resources from ACS.
+Execute the following steps to delete your Kubernetes clusters and associated resources from ACS.
 
-1. On the Variables tab of your workspace, add the environment variable CONFIRM_DESTROY with value 1.
-1. At the bottom of the Settings tab of your workspace, click the "Queue destroy plan" button to make TFE do a destroy run.
-1. On the Latest Run tab of your workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually destroy your ACS cluster and other resources that were provisioned by Terraform.
+1. On the Variables tab of your k8s-cluster-acs-dev workspace, add the environment variable CONFIRM_DESTROY with value 1.
+1. At the bottom of the Settings tab of your k8s-cluster-acs-dev workspace, click the "Queue destroy plan" button to make TFE do a destroy run.
+1. On the Latest Run tab of your k8s-cluster-acs-dev workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually destroy your ACS cluster and other resources that were provisioned by Terraform.
 1. If for any reason, you do not see the "Confirm and Apply" button even though the Plan was successful, please delete your resource group from insize the [Azure Portal](https://portal.azure.com). Doing that will destroy all the resources that Terraform provisioned since they are all created inside the resource group.
+1. Repeat the previous steps for your k8s-cluster-acs-prod workspace.
