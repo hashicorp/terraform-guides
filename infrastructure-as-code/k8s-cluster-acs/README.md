@@ -6,6 +6,8 @@ This Terraform configuration replicates what an Azure customer could do with the
 
 It uses the Microsoft AzureRM provider's azurerm_container_service resource to create an entire Kubernetes cluster in ACS including required VMs, networks, and other Azure constructs. Note that this creates a legacy ACS service which includes both the master node VMs that run the Kubernetes control plane and the agent node VMs onto which customers deploy their containerized applications. This differs from the  [new Azure Container Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/) which excludes the master node VMs since Microsoft runs those outside the customer's Azure account.
 
+We get the Azure credentials from a Vault server.
+
 ## Deployment Prerequisites
 
 1. Sign up for a free [Azure account](https://azure.microsoft.com/en-us/free/) if you do not already have one.
