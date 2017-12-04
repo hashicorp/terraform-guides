@@ -57,7 +57,7 @@ resource "vault_generic_secret" "role" {
     "bound_service_account_names": "cats-and-dogs",
     "bound_service_account_namespaces": "default",
     "policies": "${var.vault_user}-policy",
-    "ttl": "1h"
+    "ttl": "2h"
   }
   EOT
 }
