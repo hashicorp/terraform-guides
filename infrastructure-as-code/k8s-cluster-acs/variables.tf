@@ -1,7 +1,3 @@
-variable "vault_user" {
-  description = "Vault userid: determines location of secrets and affects path of k8s auth backend"
-}
-
 variable "dns_master_prefix" {
   description = "DNS prefix for the master nodes of your cluster"
 }
@@ -57,4 +53,8 @@ variable "diagnostics_enabled" {
 variable "environment" {
   description = "value passed to ACS Environment tag"
   default = "dev"
+}
+
+variable "vault_user" {
+  description = "Vault userid: determines location of secrets and affects path of k8s auth backend"
 }

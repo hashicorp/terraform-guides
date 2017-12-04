@@ -5,7 +5,7 @@ terraform {
 data "terraform_remote_state" "k8s_cluster" {
   backend = "atlas"
   config {
-    name = "${var.tfe_organization}/${var.k8s_cluster_workspace}"
+    name = "${var.tfe-organization}/${var.k8s_cluster-workspace}"
   }
 }
 
