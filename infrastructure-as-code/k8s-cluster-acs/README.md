@@ -14,14 +14,15 @@ It uses the Microsoft AzureRM provider's azurerm_container_service resource to c
 1. Set up a [Vault](https://www.vaultproject.io/) server if you do not already have access to one and determine your username, password, and associated Vault token.
 1. Login to the UI of your Vault server or use the Vault CLI to add your Azure client_id, client_secret, subscription_id, and tenant_id with those names in secret/<your_vault_username>/azure/credentials. Note that this is the path to the secret and that the 4 Azure credentials will be 4 keys underneath this single secret.  If using the vault CLI, you would use `vault write secret/<your_username>/azure/credentials client_id=<client_id> client_secret=<client_secret> subscription_id=<subscription_id> tenant_id=<tenant_id>`.
 1. If you do not already have a Terraform Enterprise (TFE) account, request one from sales@hashicorp.com.
-1. After getting access to your TFE account, create an organization in it.
+1. After getting access to your TFE account, create an organization in it. Click the Cancel button when prompted to create a new workspace.
+1. Configure your TFE organization to connect to GitHub. See this [doc](https://www.terraform.io/docs/enterprise-beta/vcs/github.html).
 
 ## Deployment Steps
 Execute the following commands to deploy your Kubernetes cluster to ACS.
 
-1. Fork this repository from https://github.com/hashicorp/terraform-guides.
-1. Create a dev branch from the master branch in your fork.
-1. Clone the fork to your laptop.
+1. Duplicate this repository from https://github.com/hashicorp/terraform-guides following these [instructions](https://help.github.com/articles/duplicating-a-repository/#mirroring-a-repository). At the end of this process, you should end up with a "terraform-guides" repository inside your own GitHub organization or personal account.
+1. Create a dev branch from the master branch in your duplicated repository.
+1. Clone the fork to your laptop by running `git clone https://github.com/<your_github_account>/terraform-guides.git`.
 1. Run `git checkout dev` to put yourself on the dev branch of your fork.
 1. Create a workspace in your TFE organization called k8s-cluster-acs-dev.
 1. Configure the k8s-cluster-acs-dev workspace to connect to the fork of this repository in your own GitHub account.
