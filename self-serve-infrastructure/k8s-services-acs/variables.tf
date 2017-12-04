@@ -1,6 +1,5 @@
 variable "tfe-organization" {
   description = "TFE organization"
-  default = "RogerBerlind"
 }
 
 variable "k8s-cluster-workspace" {
