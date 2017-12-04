@@ -27,5 +27,5 @@ output "vault-k8s-auth-backend" {
 }
 
 output "vault_user" {
-  vaule = "${var.vault_user}"
+  value = "${var.vault_user}"
 }
