@@ -5,7 +5,7 @@ terraform {
 provider "vault" {}
 
 data "vault_generic_secret" "gcp_credentials" {
-  path = "secret/gcp/credentials"
+  path = "secret/${var.vault_user}/gcp/credentials"
 }
 
 resource "vault_auth_backend" "k8s" {
