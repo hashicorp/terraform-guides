@@ -1,0 +1,23 @@
+import "tfplan"
+
+clusters = tfplan.resources.google_container_cluster
+
+node_count_limit = rule {
+  all clusters as name, instances {
+    all instances as index, r {
+      int(r.applied.initial_node_count) < 10
+    }
+  }
+}
+
+machine_type_allowed = rule {
+  all clusters as name, instances {
+    all instances as index, r {
+  	  r.applied.node_config[0].machine_type in ["n1-standard-1", "n1-standard-2", "n1-standard-4"]
+    }
+  }
+}
+
+main = rule {
+  (machine_type_allowed and node_count_limit) else true
+}
