@@ -52,6 +52,10 @@ resource "kubernetes_pod" "cats-and-dogs-backend" {
           }
         }
       }
+      env = {
+        name = "CHANGE"
+        value = "CHANGE"
+      }
       port {
         container_port = 6379
       }
