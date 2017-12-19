@@ -1,0 +1,20 @@
+{
+  "data": {
+    "type":"vars",
+    "attributes": {
+      "key":"name",
+      "value":"my-name",
+      "category":"terraform",
+      "hcl":false,
+      "sensitive":false
+    }
+  },
+  "filter": {
+    "organization": {
+      "username":"my-organization"
+    },
+    "workspace": {
+      "name":"my-workspace"
+    }
+  }
+}
