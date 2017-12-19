@@ -41,7 +41,9 @@ Follow these instructions to run the script:
 
 ### Examples
 `./loadAndRunWorkspace Peter` (no override will be done)
+
 `./loadAndRunWorkspace Paul yes` (override will be done)
+
 `./loadAndRunWorkspace Mary no` (no override will be done)
 
 ## Cleaning Up
