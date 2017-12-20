@@ -1,0 +1,25 @@
+import "tfplan"
+
+get_firewalls = func() {
+    firewalls = []
+    for tfplan.module_paths as path {
+        firewalls += values(tfplan.module(path).resources.google_compute_firewall) else []
+    }
+    return firewalls
+}
+
+firewalls = get_firewalls()
+
+disallowed_cidr_block = "0.0.0.0/0"
+
+block_allow_all = rule {
+  all firewalls as _, instances {
+    all instances as _, fw {
+      disallowed_cidr_block not in fw.applied.source_ranges[0]
+    }
+  }
+}
+
+main = rule {
+  (block_allow_all) else true
+ }

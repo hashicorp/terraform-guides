@@ -1,0 +1,28 @@
+import "tfplan"
+
+get_vms = func() {
+    vms = []
+    for tfplan.module_paths as path {
+        vms += values(tfplan.module(path).resources.azurerm_virtual_machine) else []
+    }
+    return vms
+}
+
+
+allowed_publishers = [
+  "MicrosoftWindowsServer",
+  "RedHat",
+]
+
+vms = get_vms()
+vm_publisher_allowed = rule {
+    all vms as _, instances {
+      all instances as index, r {
+  	   r.applied.storage_image_reference[0].publisher in allowed_publishers
+      }
+    }
+}
+
+main = rule {
+  (vm_publisher_allowed) else true
+}

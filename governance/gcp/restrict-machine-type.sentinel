@@ -1,0 +1,29 @@
+import "tfplan"
+
+get_vms = func() {
+    vms = []
+    for tfplan.module_paths as path {
+        vms += values(tfplan.module(path).resources.google_compute_instance) else []
+    }
+    return vms
+}
+
+
+allowed_machine_types = [
+  "n1-standard-1",
+  "n1-standard-2",
+  "n1-standard-4",
+]
+
+vms = get_vms()
+machine_type_allowed = rule {
+    all vms as _, instances {
+      all instances as index, r {
+  	   r.applied.machine_type in allowed_machine_types
+      }
+    }
+}
+
+main = rule {
+  (machine_type_allowed) else true
+}
