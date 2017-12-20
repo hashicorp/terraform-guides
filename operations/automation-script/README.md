@@ -37,6 +37,9 @@ Do the following before using this script:
 ## Instructions
 Follow these instructions to run the script:
 
+1. If you are using a private Terraform Enterprise server, edit the script and set the address variable to the address of your server. Otherwise, you would leave the address set to "atlas.hashicorp.com" which is the address of the SaaS Terraform Enterprise server.
+1. Edit the script and set the organization variable to the name of your Terraform Enterprise organization.
+1. If you want, you can also change the name of the workspace that will be created and the sleep_duration variable which controls how often the script checks the status of the triggered run (in seconds).
 1. Run `./loadAndRunWorkspace.sh <name>` or `./loadAndRunWorkspace.sh <name> <override>` where \<name\> is any name (without spaces) and \<override\> is "yes" or "no". If you do not specify a value for \<override\>, the script will set it to "no".
 
 ### Examples

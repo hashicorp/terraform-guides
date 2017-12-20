@@ -4,8 +4,8 @@
 # to owners team token for organization
 
 # Set PTFE address, organization, and workspace to create. You should edit these before running.
-address="roger-ptfe.hashidemos.io"
-organization="Solutions-Engineering"
+address="atlas.hashicorp.com"
+organization="<your_organization>"
 workspace="workspace-from-api"
 
 # You can change sleep duration if desired
