@@ -33,12 +33,15 @@ Do the following before using this script:
 
 1. `git clone https://github.com/hashicorp/terraform-guides.git`
 1. `cd operations/automation-script`
+1. Make sure [python3](https://www.python.org/downloads/) is installed on your machine and in your path since the script uses python to parse JSON documents returned by the Terraform Enterprise REST API.
 
 ## Instructions
 Follow these instructions to run the script:
 
 1. If you are using a private Terraform Enterprise server, edit the script and set the address variable to the address of your server. Otherwise, you would leave the address set to "atlas.hashicorp.com" which is the address of the SaaS Terraform Enterprise server.
 1. Edit the script and set the organization variable to the name of your Terraform Enterprise organization.
+1. Generate a [team token](https://www.terraform.io/docs/enterprise/users-teams-organizations/service-accounts.html#team-service-accounts) for the owners team in your organization in the Terraform Enterprise UI by selecting your organization settings, then Teams, then owners, and then clicking the Generate button and saving the token that is displayed.
+1. `export ATLAS_TOKEN=<owners_token>` where \<owners_token\> is the token generated in the previous step.
 1. If you want, you can also change the name of the workspace that will be created and the sleep_duration variable which controls how often the script checks the status of the triggered run (in seconds).
 1. Run `./loadAndRunWorkspace.sh <name>` or `./loadAndRunWorkspace.sh <name> <override>` where \<name\> is any name (without spaces) and \<override\> is "yes" or "no". If you do not specify a value for \<override\>, the script will set it to "no".
 

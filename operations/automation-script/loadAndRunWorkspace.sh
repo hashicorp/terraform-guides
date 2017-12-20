@@ -3,7 +3,9 @@
 # Make sure ATLAS_TOKEN environment variable is set
 # to owners team token for organization
 
-# Set PTFE address, organization, and workspace to create. You should edit these before running.
+# Set address if using private Terraform Enterprise server.
+# Set organization and workspace to create.
+# You should edit these before running.
 address="atlas.hashicorp.com"
 organization="<your_organization>"
 workspace="workspace-from-api"
@@ -12,11 +14,12 @@ workspace="workspace-from-api"
 sleep_duration=15
 
 # name of person to set name variable to
+# first argument passed to script
 name=$1
 
-# Override soft-mandatory policy checks that fail
-# Set to "yes" or "no"
-# if not specified, then we set to "no"
+# Override soft-mandatory policy checks that fail.
+# Set to "yes" or "no" in second argument passed to script.
+# If not specified, then this is set to "no"
 if [ ! -z $2 ]; then
   override=$2
 else
@@ -33,65 +36,63 @@ cd ..
 #Set name of workspace in workspace.json
 sed "s/placeholder/$workspace/" < workspace.template.json > workspace.json
 
+# Create workspace
 workspace_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @workspace.json "https://${address}/api/v2/organizations/${organization}/workspaces")
 
 # Parse workspace_id from workspace_result
 workspace_id=$(echo $workspace_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
-
 echo "Workspace ID: " $workspace_id
 
-# Create configuration versions
+# Create configuration version
 configuration_version_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @configversion.json "https://${address}/api/v2/workspaces/${workspace_id}/configuration-versions")
 
 # Parse configuration_version_id and upload_url
 config_version_id=$(echo $configuration_version_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
 upload_url=$(echo $configuration_version_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['upload-url'])")
-
 echo "Config Version ID: " $config_version_id
 echo "Upload URL: " $upload_url
 
 # Upload configuration
 curl --request PUT -F 'data=@myconfig.tar.gz' "$upload_url"
 
-# Add name variable
+# Add name variable to workspace
 sed -e "s/my-name/$name/" -e "s/my-organization/$organization/" -e "s/my-workspace/$workspace/" < variable.template.json  > variable.json
-
 upload_variable_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Busername%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
 # Do a run
 sed "s/workspace_id/$workspace_id/" < run.template.json  > run.json
-
 run_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @run.json https://${address}/api/v2/runs)
 
-# Parse run run_result
+# Parse run_result
 run_id=$(echo $run_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
 echo "Run ID: " $run_id
 
-# Check run run result
+# Check run result in loop
 continue=1
 while [ $continue -ne 0 ]; do
   # Sleep a bit
   sleep $sleep_duration
   echo "Checking run status"
 
-  # Check the status
+  # Check the status of run
   check_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id})
 
-  # Parse out the startus
+  # Parse out the run status
   run_status=$(echo $check_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['status'])")
   echo "Run Status: " $run_status
 
-  # If status is "policy_checked" or "policy_override",
-  # then do Apply.  If "errored", exit loop.
-  # Anything else, continue loop
+  # Apply in some cases
+  # policy_checked means all Sentinel policies passed
   if [[ "$run_status" == "policy_checked" ]] ; then
     continue=0
     # Do the apply
     echo "Policies passed. Doing Apply"
     apply_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+  # policy_override means at least 1 Sentinel policy failed
+  # but since $override is "yes", we will override and then apply
   elif [[ "$run_status" == "policy_override" ]] && [[ "$override" == "yes" ]]; then
     continue=0
-    echo "Some policies failed, but will override"
+    echo "Some policies failed, but overriding"
     # Get the policy check ID
     echo "Getting policy check ID"
     policy_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" https://${address}/api/v2/runs/${run_id}/policy-checks)
@@ -104,13 +105,19 @@ while [ $continue -ne 0 ]; do
     # Do the apply
     echo "Doing Apply"
     apply_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+  # policy_override means at least 1 Sentinel policy failed
+  # but since $override is "no", we will not override
+  # and will not apply
   elif [[ "$run_status" == "policy_override" ]] && [[ "$override" == "no" ]]; then
     echo "Some policies failed, but will not override. Check run in Terraform Enterprise UI."
     continue=0
+  # errored means that plan had an error or that a hard-mandatory
+  # policy failed
   elif [[ "$run_status" == "errored" ]]; then
     echo "Plan errored or hard-mandatory policy failed"
     continue=0
   else
-      sleep $sleep_duration
+    # Sleep a bit and then check status again in next loop
+    sleep $sleep_duration
   fi
 done
