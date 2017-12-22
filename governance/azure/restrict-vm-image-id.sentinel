@@ -1,0 +1,30 @@
+import "tfplan"
+
+get_vms = func() {
+    vms = []
+    for tfplan.module_paths as path {
+        vms += values(tfplan.module(path).resources.azurerm_virtual_machine) else []
+    }
+    return vms
+}
+
+
+allowed_image_ids = [
+  "/subscriptions/<subscription_id>/resourceGroups/ABC-US-Z-RGP-NJS3-E005/providers/Microsoft.Compute/images/WIN-base-image",
+  "/subscriptions/<subscription_id>/resourceGroups/ABC-US-Z-RGP-NJS3-E005/providers/Microsoft.Compute/images/RHEL-base-image",
+]
+
+vms = get_vms()
+vm_image_id_allowed = rule {
+    all vms as _, instances {
+      all instances as index, r {
+       # Two possible ways to restrict image ID
+  	   r.applied.storage_image_reference[0].id in allowed_image_ids
+       #r.applied.storage_image_reference[0].id matches "/subscriptions/<subscription_id>/(.*)[Win|RHEL](.*)"
+      }
+    }
+}
+
+main = rule {
+  (vm_image_id_allowed) else true
+}
