@@ -13,15 +13,11 @@ workspace="workspace-from-api"
 # You can change sleep duration if desired
 sleep_duration=15
 
-# name of person to set name variable to
-# first argument passed to script
-name=$1
-
 # Override soft-mandatory policy checks that fail.
 # Set to "yes" or "no" in second argument passed to script.
 # If not specified, then this is set to "no"
-if [ ! -z $2 ]; then
-  override=$2
+if [ ! -z $1 ]; then
+  override=$1
 else
   override="no"
 fi
@@ -55,9 +51,13 @@ echo "Upload URL: " $upload_url
 # Upload configuration
 curl --request PUT -F 'data=@myconfig.tar.gz' "$upload_url"
 
-# Add name variable to workspace
-sed -e "s/my-name/$name/" -e "s/my-organization/$organization/" -e "s/my-workspace/$workspace/" < variable.template.json  > variable.json
-upload_variable_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Busername%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+# Add variables to workspace
+while IFS=',' read -r key value category hcl sensitive
+do
+  sed -e "s/my-organization/$organization/" -e "s/my-workspace/$workspace/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
+  echo "Adding variable $key with value $value in category $category with hcl $hcl and sensitive $sensitive"
+  upload_variable_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Busername%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+done < variables.csv
 
 # Do a run
 sed "s/workspace_id/$workspace_id/" < run.template.json  > run.json

@@ -2,11 +2,11 @@
   "data": {
     "type":"vars",
     "attributes": {
-      "key":"name",
-      "value":"my-name",
-      "category":"terraform",
-      "hcl":false,
-      "sensitive":false
+      "key":"my-key",
+      "value":"my-value",
+      "category":"my-category",
+      "hcl":my-hcl,
+      "sensitive":my-sensitive
     }
   },
   "filter": {
