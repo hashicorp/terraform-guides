@@ -4,7 +4,7 @@ import "tfplan"
 get_vpcs = func() {
     vpcs = []
     for tfplan.module_paths as path {
-        instances += values(tfplan.module(path).resources.aws_vpc) else []
+        vpcs += values(tfplan.module(path).resources.aws_vpc) else []
     }
     return vpcs
 }
