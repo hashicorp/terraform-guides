@@ -1,0 +1,32 @@
+import "tfplan"
+
+# Get all AWS vpcs from all modules
+get_vpcs = func() {
+    vpcs = []
+    for tfplan.module_paths as path {
+        instances += values(tfplan.module(path).resources.aws_vpc) else []
+    }
+    return vpcs
+}
+  
+vpcs = get_vpcs()
+
+vpc_must_have_tags = rule {
+  all vpcs as name, instances {
+    all instances as index, r {
+      (length(r.applied.tags) else 0) > 0
+    }
+  }
+}
+
+vpc_hostnames_true = rule {
+  all vpcs as name, instances {
+    all instances as index, r {
+      r.applied.enable_dns_hostnames == true
+    }
+  }
+}
+
+main = rule {
+  (vpc_must_have_tags and vpc_hostnames_true) else true
+}
