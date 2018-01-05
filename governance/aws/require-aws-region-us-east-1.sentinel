@@ -1,0 +1,39 @@
+# NOTE that you must explicitly specify availability_zone on all aws_instances
+# or this policy will fail since the computed availability_zone is not available
+# to plan
+import "tfplan"
+
+# Get all AWS instances from all modules
+get_aws_instances = func() {
+    instances = []
+    for tfplan.module_paths as path {
+        instances += values(tfplan.module(path).resources.aws_instance) else []
+    }
+    return instances
+}
+
+# Allowed availability zones
+allowed_zones = [
+  "us-east-1a",
+  "us-east-1b",
+  "us-east-1c",
+  "us-east-1d",
+  "us-east-1e",
+  "us-east-1f",
+]
+
+aws_instances = get_aws_instances()
+
+# Rule to restrict availability zones and region
+region_allowed = rule {
+    all aws_instances as _, instances {
+      all instances as index, r {
+  	   r.applied.availability_zone in allowed_zones
+      }
+    }
+}
+  
+# Main rule that requires other rules to be true
+main = rule {
+  (region_allowed) else true
+}
