@@ -21,8 +21,8 @@ block_allow_all = rule {
     	all sg.applied.security_rule as _, sr {
         	(sr.source_address_prefix not in disallowed_cidr_blocks) or sr.access == "Deny"
     	}
-  	}
-	}
+    }
+  }
 }
 
 main = rule {
