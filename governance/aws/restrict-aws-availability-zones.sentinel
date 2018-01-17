@@ -1,6 +1,7 @@
 # NOTE that you must explicitly specify availability_zone on all aws_instances
 # or this policy will fail since the computed availability_zone is not available
 # to plan
+
 import "tfplan"
 
 # Get all AWS instances from all modules
@@ -32,7 +33,7 @@ region_allowed = rule {
       }
     }
 }
-  
+
 # Main rule that requires other rules to be true
 main = rule {
   (region_allowed) else true
