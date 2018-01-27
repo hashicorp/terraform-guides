@@ -26,8 +26,8 @@ Execute the following commands to deploy your Kubernetes cluster to ACS.
 1. Fork this repository by clicking the Fork button in the upper right corner of the screen and selecting your own personal GitHub account or organization.
 1. Clone the fork to your laptop by running `git clone https://github.com/<your_github_account>/terraform-guides.git`.
 1. If you would like to provision both dev and prod ACS clusters, please do the next two steps. If you only want to provision a single cluster, you can just work with the master branch.
-    1. Run `git checkout dev` to create a new dev branch of your fork.
-    1. Run `git push origin dev` to push your dev branch to your fork.
+    * Run `git checkout dev` to create a new dev branch of your fork.
+    * Run `git push origin dev` to push your dev branch to your fork.
 1. Create a workspace in your TFE organization called k8s-cluster-acs-dev if you plan to provision both dev and prod clusters, otherwise k8s-cluster-acs.
 1. Configure the k8s-cluster-acs-dev or k8s-cluster-acs workspace to connect to the fork of this repository in your own GitHub account.
 1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-acs" and the VCS Branch to "dev" or "master", matching the branch you are actually using. (If you leave this blank, the master branch will be used.)
