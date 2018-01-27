@@ -14,29 +14,30 @@ Another important aspect of this configuration is that both the frontend applica
     - [tfe-k8s-cluster-acs](../../infrastructure-as-code/k8s-cluster-acs)
     - [tfe-k8s-cluster-gke](../../infrastructure-as-code/k8s-cluster-gke)
 1. We assume that you have already satisfied all the prerequisites for deploying a Kubernetes cluster in ACS or GKE described by the above links.
+1. We also assume that you have already forked this repository and cloned your fork to your laptop.
+1. We also assume you have created dev and prod branches on your fork if you deployed both dev and prod clusters.
 
 
 ## Deployment Steps
 Execute the following commands to deploy the pods and services to your Kubernetes cluster:
 
-1. Run `git checkout dev` to put yourself on the dev branch of your fork.
 1. Create a new TFE workspace called k8s-services-acs-dev or k8s-services-gke-dev depending on whether you are deploying to ACS or GKE.
 1. Configure your workspace to connect to the fork of this repository in your own GitHub account.
-1. Click the "More options" link, set the Terraform Working Directory to "self-serve-infrastructure/k8s-services" and the VCS Branch to "dev".
+1. Click the "More options" link, set the Terraform Working Directory to "self-serve-infrastructure/k8s-services" and the VCS Branch to "dev". (If you are only using one cluster and did not create a dev branch on your fork, use "master" instead or just leave the VCS Branch blank.)
 1. Set the tfe-organization Terraform variable in your new workspace to the name of the TFE organization containing your Kubernetes cluster workspace.
 1. Set the k8s-cluster-workspace Terraform variable in your new workspace to the name of the workspace you used to deploy your Kubernetes cluster.
-1. Queue a plan for the services workspace in TFE by clicking the "Queue Plan" button in the upper right corner of your workspace. (Alternatively, you could make some minor change to your dev branch, run `git commit -m "<change_description>"`, and then run `git push origin dev` to push the change you made to GitHub. This will trigger a Terraform run in your workspace.)
+1. Queue a plan for the services workspace in TFE by clicking the "Queue Plan" button in the upper right corner of your workspace.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the pods and services will be created when you apply your plan.
 1. Click the "Confirm and Apply" button to actually deploy the pods and services.
 1. Finally, enter the cats_and_dogs_ip output in a browser. You should see the "Pets Voting App" page.
 1. Vote for your favorite pets.
 
 ## Adding a Prod Environment
-If you deployed a production Kubernetes cluster, you can repeat the previous steps with a second services workspace and deploy the pods and services into your production cluster too. You could then walk through the process of promoting Terraform code from a dev environment to a production environment in TFE. (See the [k8s-cluster-acs README.md](../../infrastructure-as-code/k8s-cluster-acs/README.md) or [k8s-cluster-gke README.md](../../infrastructure-as-code/k8s-cluster-gke/README.md) too see how.)
+If you deployed a production Kubernetes cluster, you can repeat the previous steps with a second services workspace and deploy the pods and services into your production cluster too. You could then walk through the process of promoting Terraform code from a dev environment to a production environment in TFE. (See the [k8s-cluster-acs README.md](../../infrastructure-as-code/k8s-cluster-acs/README.md) or [k8s-cluster-gke README.md](../../infrastructure-as-code/k8s-cluster-gke/README.md) too see how.) You would want to set the VCS Branch of the second services workspace to "prod".
 
 ## Cleanup
-Execute the following steps to delete the cats-and-dogs pods and services from your Kubernetes cluster.
+Execute the following steps to delete the cats-and-dogs pods and services from each of your Kubernetes clusters.
 
-1. Define a Terraform variable CONFIRM_DESTROY with value 1 on the Variables tab of your dev services workspace.
-1. Queue a Destroy plan in TFE from the Settings tab of your dev services workspace.
-1. On the Latest Run tab of your dev services workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually remove the cats-and-dogs pods and services.
+1. Define a Terraform variable CONFIRM_DESTROY with value 1 on the Variables tab of your services workspace.
+1. Queue a Destroy plan in TFE from the Settings tab of your services workspace.
+1. On the Latest Run tab of your services workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually remove the cats-and-dogs pods and services.
