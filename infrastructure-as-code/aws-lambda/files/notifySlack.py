@@ -1,5 +1,7 @@
 # General purpose Lambda function for sending Slack messages, encrypted in transit.
 
+# TODO:  Rename this as notifySlackUntaggedInstances
+
 import boto3
 import json
 import logging
@@ -22,23 +24,30 @@ logger.setLevel(logging.INFO)
 lam = boto3.client('lambda')
 
 def lambda_handler(event, context):
+    """Sends out a formatted slack message.  Edit to your liking."""
+    
     msg_text = 'Hello humans. Some of you have not tagged your AWS instances yet.'
-    response = get_untagged_instances()
-    # csv_report = generate_csv(response)
-    lb = generate_leaderboard(response)
+    leaderboard_length = 15
+    untagged = get_untagged_instances()
+    lb = generate_leaderboard(untagged, leaderboard_length)
     
     send_slack_message(
         msg_text, 
         title='The Wall Of Shame :shame: :bell:',
-        text="```"+lb+"```",
+        text="```\n"+lb+"\n```",
         fallback='The Wall of Shame :shame: :bell:',
         color='warning',
         actions = [
             {
                 "type": "button",
-                "text": "Clean up my stuff",
+                "text": ":mag: Find my stuff",
+                "url": "https://hashicorp.slack.com/files/U8QGF2A30/F8ZNCRP41/show_all_instances_sh.sh"
+            },
+            {
+                "type": "button",
+                "text": ":broom: Clean up my stuff",
                 "url": "https://console.aws.amazon.com/ec2/v2/home"
-            }
+            },
         ]
     )
     
@@ -67,39 +76,44 @@ def send_slack_message(msg_text, **kwargs):
         logger.error("Server connection failed: %s", e.reason)
         
 def get_untagged_instances():
-    """Calls the Lambda function that returns a list of instances."""
-    payload = {}
-    payload['key1'] = "hello"
-    
+    """Calls the Lambda function that returns a dictionary of instances."""
     try:
-        response = lam.invoke(FunctionName='getInstances',
-                    InvocationType='RequestResponse',
-                    Payload=json.dumps(payload))
+        response = lam.invoke(FunctionName='getInstances', InvocationType='RequestResponse')
     except Exception as e:
         print(e)
         raise e
     return response
-
-def generate_csv(response):
-    data=json.loads(response['Payload'].read().decode())
-    output = io.StringIO()
-    writer = csv.writer(output, delimiter='\t')
-    writer.writerows(data)
-    contents = output.getvalue()
-    return(contents)
     
-def generate_leaderboard(response):
-    data=json.loads(response['Payload'].read().decode())
-    keys = [item[2] for item in data]
-    leaders = dict(Counter(keys))
+def generate_leaderboard(response,num_leaders):
+    """Generates a leaderboard showing KeyNames with the most untagged instances."""
+    data = json.loads(response['Payload'].read().decode('utf-8'))
+    data = json.loads(data)
+    sshkeys = []
+    for key, value in data.items():
+        sshkeys.append(value['KeyName'])
+    leaders = dict(Counter(sshkeys))
     tmp = io.StringIO()
     writer = csv.writer(tmp, delimiter='\t')
-    #writer.writerow(['Instances','Keyname'])
     count=0
+    # This is a fancy way to say 'return top leaders in reverse numerical order'.
     for key, value in sorted(leaders.items(), key=lambda x: x[1], reverse=True):
-        if count < 15:
-            writer.writerow([value, key])
+        if count < num_leaders:
+            writer.writerow(["{: >2}".format(value), (key or 'No KeyName')])
         count = count + 1
     leaderboard = tmp.getvalue()
-    #logger.info(leaderboard)
+    # To keep things simple we make sure these functions always return a string.
     return(leaderboard)
+
+# This could be useful for generating email reports or dumping a list of untagged
+# instances into an S3 bucket.  Meant for use with getUntaggedInstances Lambda.
+def generate_tsv(response):
+    """Ingests data from a lambda response, converts it to tab-separated format."""
+    data=json.loads(response['Payload'].read().decode('utf-8'))
+    data=json.loads(data)
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter='\t')
+    for key, value in data.items():
+        value['InstanceId'] = key
+        writer.writerow(value.values())
+    contents = output.getvalue()
+    return(contents)
