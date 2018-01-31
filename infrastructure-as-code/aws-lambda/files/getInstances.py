@@ -7,13 +7,13 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
-    # This client is only for fetching a list of regions.
-    c = boto3.client('ec2')
-    regions = [region['RegionName'] for region in c.describe_regions()['Regions']]
-    #logger.info(regions)
-    big_list = []
-    for r in regions:
-        # Need a new client here for each region, because we are iterating.
+    instances = get_global_list()
+    return instances
+
+def get_global_list():
+    """Fetches a master list of instances across all regions, returns some identifying information."""
+    global_list = []
+    for r in get_regions():
         client = boto3.client('ec2',region_name=r)
         instance_ids = check_instances(r)
         response = client.describe_instances()
@@ -22,12 +22,20 @@ def lambda_handler(event, context):
                 id = instance["InstanceId"]
                 keyname = instance.get("KeyName")
                 az = instance["Placement"]["AvailabilityZone"]
-                big_list.append([r,id,keyname])
-    return big_list
+                global_list.append([r,id,keyname])
+    return global_list
+    
+def get_regions():
+    """Returns a list of all AWS regions."""
+    c = boto3.client('ec2')
+    regions = [region['RegionName'] for region in c.describe_regions()['Regions']]
+    return regions
 
 def check_instances(region):
+    """Checks instances in a single region for required tags."""
     ec2 = boto3.resource('ec2',region_name=region)
     instances = ec2.instances.all()
+    # We should be able to check against this list:
     mandatory_tags = [os.environ.get("REQTAGS").split(",")]
     naughty_list = []
     for instance in instances:
