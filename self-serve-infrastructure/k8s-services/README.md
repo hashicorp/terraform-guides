@@ -38,6 +38,6 @@ If you deployed a production Kubernetes cluster, you can repeat the previous ste
 ## Cleanup
 Execute the following steps to delete the cats-and-dogs pods and services from each of your Kubernetes clusters.
 
-1. Define a Terraform variable CONFIRM_DESTROY with value 1 on the Variables tab of your services workspace.
+1. Define an environment variable CONFIRM_DESTROY with value 1 on the Variables tab of your services workspace.
 1. Queue a Destroy plan in TFE from the Settings tab of your services workspace.
 1. On the Latest Run tab of your services workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually remove the cats-and-dogs pods and services.
