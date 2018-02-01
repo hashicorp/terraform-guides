@@ -1,7 +1,3 @@
-# This function returns a dictionary of improperly tagged or untagged instances.
-
-# TODO: Rename as getUntaggedInstances
-
 import boto3
 import json
 import logging
@@ -15,32 +11,32 @@ def lambda_handler(event, context):
     untagged = json.dumps(get_untagged_instances())
     return untagged
     
-def get_regions():
-    """Returns a list of all AWS regions."""
-    c = boto3.client('ec2')
-    regions = [region['RegionName'] for region in c.describe_regions()['Regions']]
-    return regions
-    
 def check_instance_tags(region):
-    """Checks instances in a single region for mandatory tags, returns list of instance ids."""
+    """Checks instances in a single region for required tags, returns list of instance ids."""
     ec2 = boto3.resource('ec2',region_name=region)
     instances = ec2.instances.all()
     # We should be able to check against this list:
-    mandatory_tags = [os.environ.get("REQTAGS").split(",")]
+    mandatory_tags = os.environ.get("REQTAGS").split(",")
     naughty_list = []
     for instance in instances:
         if instance.tags:
-            # There's got to be a way to compare mandatory tags vs. instance.tags
-            if 'owner' not in instance.tags or 'TTL' not in instance.tags:
+            # logger.info(instance.tags)
+            taglist = []
+            for tag in instance.tags:
+                taglist.append(tag['Key'])
+            if set(mandatory_tags).issubset(set(taglist)):
+                logger.info(instance.id)
+            else:
                 naughty_list.append(instance.id)
         else:
             naughty_list.append(instance.id)
+    logger.info(len(naughty_list))
     return naughty_list
 
 def get_untagged_instances():
     """
-    Fetches a master list of untagged or improperly tagged instances across all 
-    regions.  Returns a dictionary object with the instance id as the primary key.
+    Fetches a master list of instances across all regions, returns dictionary 
+    that includes some identifying information as key-value pairs.
     """
     global_untagged_instances = {}
     for r in get_regions():
@@ -78,6 +74,12 @@ def get_untagged_instances():
                     'created-by': created_by
                 }
     return global_untagged_instances
+    
+def get_regions():
+    """Returns a list of all AWS regions."""
+    c = boto3.client('ec2')
+    regions = [region['RegionName'] for region in c.describe_regions()['Regions']]
+    return regions
 
 if __name__ == '__main__':
     lambda_handler({}, {})

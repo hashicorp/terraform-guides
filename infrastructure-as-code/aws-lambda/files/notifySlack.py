@@ -1,7 +1,5 @@
 # General purpose Lambda function for sending Slack messages, encrypted in transit.
 
-# TODO:  Rename this as notifySlackUntaggedInstances
-
 import boto3
 import json
 import logging
@@ -30,6 +28,7 @@ def lambda_handler(event, context):
     leaderboard_length = 15
     untagged = get_untagged_instances()
     lb = generate_leaderboard(untagged, leaderboard_length)
+    #tsv = generate_tsv(untagged)
     
     send_slack_message(
         msg_text, 
@@ -95,7 +94,7 @@ def generate_leaderboard(response,num_leaders):
     tmp = io.StringIO()
     writer = csv.writer(tmp, delimiter='\t')
     count=0
-    # This is a fancy way to say 'return top leaders in reverse numerical order'.
+    # This is a fancy way to say 'return leaders in reverse numerical order'.
     for key, value in sorted(leaders.items(), key=lambda x: x[1], reverse=True):
         if count < num_leaders:
             writer.writerow(["{: >2}".format(value), (key or 'No KeyName')])
@@ -103,9 +102,26 @@ def generate_leaderboard(response,num_leaders):
     leaderboard = tmp.getvalue()
     # To keep things simple we make sure these functions always return a string.
     return(leaderboard)
+    
+def generate_instance_report(response):
+    """Generates a list showing KeyNames with the most untagged instances."""
+    data = json.loads(response['Payload'].read().decode('utf-8'))
+    data = json.loads(data)
+    instance_types = []
+    for key, value in data.items():
+        instance_types.append(value['InstanceType'])
+    counted_types = dict(Counter(instance_types))
+    tmp = io.StringIO()
+    writer = csv.writer(tmp, delimiter='\t')
+    # This is a fancy way to say 'return # of each instance type in descending order'.
+    for key, value in sorted(counted_types.items(), key=lambda x: x[1], reverse=True):
+        writer.writerow(["{: >2}".format(value), (key or 'No KeyName')])
+    results = tmp.getvalue()
+    # To keep things simple we make sure these functions always return a string.
+    return(results)
 
 # This could be useful for generating email reports or dumping a list of untagged
-# instances into an S3 bucket.  Meant for use with getUntaggedInstances Lambda.
+# instances into an S3 bucket.
 def generate_tsv(response):
     """Ingests data from a lambda response, converts it to tab-separated format."""
     data=json.loads(response['Payload'].read().decode('utf-8'))
