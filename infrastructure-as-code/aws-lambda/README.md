@@ -6,3 +6,5 @@ This Terraform configuration provides examples of:
  - Simple Email Service
  - Slack integration
 ## 
+
+### TODO: Find out if it's possible to auto-encrypt the Slack webhook URL.

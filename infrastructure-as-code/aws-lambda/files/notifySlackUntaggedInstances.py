@@ -77,7 +77,7 @@ def send_slack_message(msg_text, **kwargs):
 def get_untagged_instances():
     """Calls the Lambda function that returns a dictionary of instances."""
     try:
-        response = lam.invoke(FunctionName='getInstances', InvocationType='RequestResponse')
+        response = lam.invoke(FunctionName='getUntaggedInstances', InvocationType='RequestResponse')
     except Exception as e:
         print(e)
         raise e
