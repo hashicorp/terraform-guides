@@ -147,6 +147,8 @@ resource "aws_cloudwatch_event_target" "daily_untagged_report" {
   arn = "${aws_lambda_function.notifySlackUntaggedInstances.arn}"
 }
 
+# This resource was added due to this possible bug.  It works now.
+# https://github.com/terraform-providers/terraform-provider-aws/issues/756
 resource "aws_lambda_permission" "allow_cloudwatch" {
   statement_id   = "AllowExecutionFromCloudWatch"
   action         = "lambda:InvokeFunction"
