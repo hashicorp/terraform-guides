@@ -7,6 +7,6 @@ variable "region" {
 # See here for details: https://github.com/hashicorp/terraform/issues/12225
 # So we have to do one manual step to encrypt the URL in the GUI.
 variable "slack_hook_url" {
-  default = "https://hooks.slack.com/services/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"
+  default = "https://hooks.slack.com/services/REPLACE/WITH/YOUR/WEBHOOK"
   description = "Slack incoming webhook URL, get this from the slack management page."
 }
