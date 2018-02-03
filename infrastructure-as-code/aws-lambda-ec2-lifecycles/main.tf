@@ -30,7 +30,6 @@ data "template_file" "iam_lambda_notify_slack" {
     kmskey = "${aws_kms_key.notify_slack.arn}"
     account_id = "${data.aws_caller_identity.current.account_id}"
     region = "${var.region}"
-    #log_group = "${aws_cloudwatch_log_group.getUntaggedInstances.name}"
   }
 }
 
@@ -42,7 +41,6 @@ data "template_file" "iam_lambda_get_untagged_instances" {
     kmskey = "${aws_kms_key.notify_slack.arn}"
     account_id = "${data.aws_caller_identity.current.account_id}"
     region = "${var.region}"
-    #log_group = "${aws_cloudwatch_log_group.notifySlackUntaggedInstances.name}"
   }
 }
 
