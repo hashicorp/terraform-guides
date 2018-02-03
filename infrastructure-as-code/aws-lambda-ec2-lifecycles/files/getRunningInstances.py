@@ -8,43 +8,31 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     """Returns stringified JSON output to the requestor."""
-    untagged = json.dumps(get_untagged_instances())
-    #logger.info("I found "+str(len(get_untagged_instances()))+" untagged instances in this account.")
-    return untagged
+    running = json.dumps(get_running_instance_data())
+    return running
     
-def check_instance_tags(region):
+def get_running_instances(region):
     """Checks instances in a single region for required tags, returns list of instance ids."""
     ec2 = boto3.resource('ec2',region_name=region)
-    instances = ec2.instances.all()
-    # We should be able to check against this list:
-    mandatory_tags = os.environ.get("REQTAGS").split(",")
-    naughty_list = []
+    instances = ec2.instances.filter(
+        Filters=[{'Name': 'instance-state-name', 'Values': ['running']}])
+    instance_list = []
     for instance in instances:
-        if instance.tags:
-            # logger.info(instance.tags)
-            taglist = []
-            for tag in instance.tags:
-                taglist.append(tag['Key'])
-            if set(mandatory_tags).issubset(set(taglist)):
-                pass
-            else:
-                naughty_list.append(instance.id)
-        else:
-            naughty_list.append(instance.id)
-    logger.info("Found "+str(len(naughty_list))+" untagged instances in "+region)
-    return naughty_list
+        instance_list.append(instance.id)
+    logger.info("Found "+str(len(instance_list))+" running instances in "+region)
+    return instance_list
 
-def get_untagged_instances():
+def get_running_instance_data():
     """
     Fetches a master list of instances across all regions, returns dictionary 
     that includes some identifying information as key-value pairs.
     """
-    global_untagged_instances = {}
+    global_running_instances = {}
     for r in get_regions():
     #for r in ['us-east-1']:
         client = boto3.client('ec2',region_name=r)
-        # Get our list of untagged instances
-        instance_ids = check_instance_tags(r)
+        # Get our list of running instances
+        instance_ids = get_running_instances(r)
         if len(instance_ids) != 0:
             response = client.describe_instances(InstanceIds=instance_ids)
             #logger.info(response)
@@ -66,7 +54,7 @@ def get_untagged_instances():
                             if tag['Key'] == "created-by":
                                 created_by = tag['Value']
                     # Add more data as you see fit.
-                    global_untagged_instances[instance['InstanceId']] = {
+                    global_running_instances[instance['InstanceId']] = {
                         'InstanceType': instance['InstanceType'],
                         'RegionName': r,
                         'KeyName': instance.get('KeyName'),
@@ -75,7 +63,7 @@ def get_untagged_instances():
                         'TTL': ttl,
                         'created-by': created_by
                     }
-    return global_untagged_instances
+    return global_running_instances
     
 def get_regions():
     """Returns a list of all AWS regions."""
