@@ -13,7 +13,7 @@
                 "logs:PutLogEvents"
             ],
             "Resource": [
-                "arn:aws:logs:${region}:${account_id}:log-group:${log_group}:*"
+                "arn:aws:logs:${region}:${account_id}:*"
             ]
         },
         {

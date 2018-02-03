@@ -30,7 +30,7 @@ data "template_file" "iam_lambda_notify_slack" {
     kmskey = "${aws_kms_key.notify_slack.arn}"
     account_id = "${data.aws_caller_identity.current.account_id}"
     region = "${var.region}"
-    log_group = "${aws_cloudwatch_log_group.get_untagged_instances.name}"
+    #log_group = "${aws_cloudwatch_log_group.getUntaggedInstances.name}"
   }
 }
 
@@ -42,7 +42,7 @@ data "template_file" "iam_lambda_get_untagged_instances" {
     kmskey = "${aws_kms_key.notify_slack.arn}"
     account_id = "${data.aws_caller_identity.current.account_id}"
     region = "${var.region}"
-    log_group = "${aws_cloudwatch_log_group.notify_slack.name}"
+    #log_group = "${aws_cloudwatch_log_group.notifySlackUntaggedInstances.name}"
   }
 }
 
@@ -96,24 +96,6 @@ resource "aws_iam_role_policy" "lambda_get_untagged_instances_policy" {
 	name = "lambda_get_untagged_instances_policy"
 	policy = "${data.template_file.iam_lambda_get_untagged_instances.rendered}"
   role = "${aws_iam_role.lambda_get_untagged_instances.id}"
-}
-
-# A cloudwatch log group to store logs
-resource "aws_cloudwatch_log_group" "notify_slack" {
-  name = "/aws/lambda/notify_slack"
-  retention_in_days = 30
-  tags {
-    Name = "notify_slack"
-  }
-}
-
-# A cloudwatch log group to store logs
-resource "aws_cloudwatch_log_group" "get_untagged_instances" {
-  name = "/aws/lambda/get_untagged_instances"
-  retention_in_days = 30
-  tags {
-    Name = "get_untagged_instances"
-  }
 }
 
 # Finally we get to create the lambda functions themselves.  Source code
