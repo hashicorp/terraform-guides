@@ -146,3 +146,15 @@ resource "aws_cloudwatch_event_target" "daily_untagged_report" {
   target_id = "${aws_lambda_function.notifySlackUntaggedInstances.function_name}"
   arn = "${aws_lambda_function.notifySlackUntaggedInstances.arn}"
 }
+
+resource "aws_lambda_permission" "allow_cloudwatch" {
+  statement_id   = "AllowExecutionFromCloudWatch"
+  action         = "lambda:InvokeFunction"
+  function_name  = "${aws_lambda_function.notifySlackUntaggedInstances.function_name}"
+  principal      = "events.amazonaws.com"
+  source_account = "${data.aws_caller_identity.current.account_id}"
+  source_arn     = "${aws_cloudwatch_event_rule.notify_slack_untagged_instances.arn}"
+  depends_on = [
+    "aws_lambda_function.notifySlackUntaggedInstances"
+  ]
+}
