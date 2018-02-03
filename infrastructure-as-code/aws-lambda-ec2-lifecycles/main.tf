@@ -130,7 +130,7 @@ resource "aws_lambda_function" "getUntaggedInstances" {
 
   environment {
     variables = {
-      "REQTAGS" = "TTL,owner"
+      "REQTAGS" = "${var.mandatory_tags}"
     }
   }
 }

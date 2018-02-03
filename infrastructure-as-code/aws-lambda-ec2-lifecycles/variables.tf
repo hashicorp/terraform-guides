@@ -10,3 +10,8 @@ variable "slack_hook_url" {
   default = "https://hooks.slack.com/services/REPLACE/WITH/YOUR/WEBHOOK"
   description = "Slack incoming webhook URL, get this from the slack management page."
 }
+
+variable "mandatory_tags" {
+  default = "TTL,owner"
+  description = "Comma separated string mandatory tag values."
+}
