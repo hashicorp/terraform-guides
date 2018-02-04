@@ -206,7 +206,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_untagged_instances" {
   action         = "lambda:InvokeFunction"
   function_name  = "${aws_lambda_function.notifySlackUntaggedInstances.function_name}"
   principal      = "events.amazonaws.com"
-  source_account = "${data.aws_caller_identity.current.account_id}"
+  # source_account = "${data.aws_caller_identity.current.account_id}"
   source_arn     = "${aws_cloudwatch_event_rule.notify_slack_untagged_instances.arn}"
   depends_on = [
     "aws_lambda_function.notifySlackUntaggedInstances"
@@ -230,7 +230,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_instance_usage" {
   action         = "lambda:InvokeFunction"
   function_name  = "${aws_lambda_function.notifySlackInstanceUsage.function_name}"
   principal      = "events.amazonaws.com"
-  source_account = "${data.aws_caller_identity.current.account_id}"
+  # source_account = "${data.aws_caller_identity.current.account_id}"
   source_arn     = "${aws_cloudwatch_event_rule.notify_slack_running_instances.arn}"
   depends_on = [
     "aws_lambda_function.notifySlackInstanceUsage"
