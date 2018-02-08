@@ -9,25 +9,11 @@ provider "aws" {
 # in our IAM policy resources.
 data "aws_caller_identity" "current" {}                           
 
-# This key is used to encrypt the slack webhook URL
-resource "aws_kms_key" "notify_slack" {
-    description = "Key for encrypting the Slack webhook URL"
-    enable_key_rotation = "false"
-    is_enabled = "true"
-}
-
-# A human friendly alias so we can find it in the UI
-resource "aws_kms_alias" "notify_slack" {
-  name          = "alias/notify_slack"
-  target_key_id = "${aws_kms_key.notify_slack.key_id}"
-}
-
 # Template for our 'notify_slack' lambda IAM policy
 data "template_file" "iam_lambda_notify_slack" {
   template = "${file("./files/iam_lambda_notify_slack.tpl")}"
 
   vars {
-    kmskey = "${aws_kms_key.notify_slack.arn}"
     account_id = "${data.aws_caller_identity.current.account_id}"
     region = "${var.region}"
   }
@@ -38,7 +24,6 @@ data "template_file" "iam_lambda_read_instances" {
   template = "${file("./files/iam_lambda_read_instances.tpl")}"
 
   vars {
-    kmskey = "${aws_kms_key.notify_slack.arn}"
     account_id = "${data.aws_caller_identity.current.account_id}"
     region = "${var.region}"
   }
@@ -111,7 +96,7 @@ resource "aws_lambda_function" "notifySlackUntaggedInstances" {
   environment {
     variables = {
       slackChannel = "#aws-hc-se-demos"
-      kmsEncryptedHookUrl = "${var.slack_hook_url}"
+      slackHookUrl = "${var.slack_hook_url}"
     }
   }
 }
@@ -129,7 +114,7 @@ resource "aws_lambda_function" "notifySlackInstanceUsage" {
   environment {
     variables = {
       slackChannel = "#aws-hc-se-demos"
-      kmsEncryptedHookUrl = "${var.slack_hook_url}"
+      slackHookUrl = "${var.slack_hook_url}"
     }
   }
 }
@@ -206,7 +191,6 @@ resource "aws_lambda_permission" "allow_cloudwatch_untagged_instances" {
   action         = "lambda:InvokeFunction"
   function_name  = "${aws_lambda_function.notifySlackUntaggedInstances.function_name}"
   principal      = "events.amazonaws.com"
-  # source_account = "${data.aws_caller_identity.current.account_id}"
   source_arn     = "${aws_cloudwatch_event_rule.notify_slack_untagged_instances.arn}"
   depends_on = [
     "aws_lambda_function.notifySlackUntaggedInstances"
@@ -230,7 +214,6 @@ resource "aws_lambda_permission" "allow_cloudwatch_instance_usage" {
   action         = "lambda:InvokeFunction"
   function_name  = "${aws_lambda_function.notifySlackInstanceUsage.function_name}"
   principal      = "events.amazonaws.com"
-  # source_account = "${data.aws_caller_identity.current.account_id}"
   source_arn     = "${aws_cloudwatch_event_rule.notify_slack_running_instances.arn}"
   depends_on = [
     "aws_lambda_function.notifySlackInstanceUsage"

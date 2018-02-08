@@ -39,7 +39,7 @@ This Terraform configuration deploys AWS Lambda functions that can do the follow
 8. Find the notifySlackInstanceUsage Lambda and click on it.
 9. Scroll down to the Environment Variables section. Click the little arrow to expand the Encryption configuration options.
 10. Check the box under "Enable helpers for encryption in transit". This will enable a new menu that says "KMS key to encrypt in transit". From that pull-down menu select the `notify_slack` key. This is the KMS key that Terraform created in step #6.
-11. Copy and paste your Slack Webhook URL into the kmsEncryptedHookUrl field, replacing the default value: `https://hooks.slack.com/services/REPLACE/WITH/YOUR/WEBHOOK`
+11. Copy and paste your Slack Webhook URL into the slackHookUrl field, replacing the default value: `https://hooks.slack.com/services/REPLACE/WITH/YOUR/WEBHOOK`
 12. Click on the `Encrypt` button next to the webhook URL. This will encrypt your webhook URL. Now click on `Save` at the top right. If you don't save here the settings won't stick.
 13. Navigate back to the AWS Lambda functions list and click on notifySlackUntaggedInstances. Repeat steps #9-#12.
 14. Now you can test your new lambda functions. Use the test button at the top of the page to ensure they are working correctly. For your Test Event you can simply create a dummy event with the default JSON payload.

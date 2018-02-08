@@ -8,13 +8,16 @@ import csv
 import io
 from collections import Counter
 
-from base64 import b64decode
+# Required if you want to encrypt your Slack Hook URL in the AWS console
+# from base64 import b64decode
 from urllib.request import Request, urlopen
 from urllib.error import URLError, HTTPError
 
-ENCRYPTED_HOOK_URL = os.environ['kmsEncryptedHookUrl']
 SLACK_CHANNEL = os.environ['slackChannel']
-HOOK_URL = boto3.client('kms').decrypt(CiphertextBlob=b64decode(ENCRYPTED_HOOK_URL))['Plaintext'].decode('utf-8')
+# Required if you want to encrypt your Slack hook URL in the AWS Console
+# ENCRYPTED_HOOK_URL = os.environ['slackHookUrl']
+# HOOK_URL = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['slackHookUrl']))['Plaintext'].decode('utf-8')
+HOOK_URL = os.environ['slackHookUrl']
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)

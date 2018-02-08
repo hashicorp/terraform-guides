@@ -20,15 +20,6 @@
             "Effect": "Allow",
             "Action": "lambda:InvokeFunction",
             "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "kms:Decrypt"
-            ],
-            "Resource": [
-                "${kmskey}"
-            ]
         }
     ]
 }
