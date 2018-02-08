@@ -81,6 +81,13 @@ resource "aws_iam_role_policy" "lambda_read_instances_policy" {
   role = "${aws_iam_role.lambda_read_instances.id}"
 }
 
+# Here we ingest the template and create the role policy
+resource "aws_iam_role_policy" "lambda_stop_and_terminate_instances" {
+	name = "lambda_stop_and_terminate_instances"
+	policy = "${data.template_file.iam_lambda_stop_and_terminate_instances.rendered}"
+  role = "${aws_iam_role.lambda_stop_and_terminate_instances.id}"
+}
+
 # Finally we get to create the lambda functions themselves.  Source code
 # is stored in a zip file with all of the *.py files and libraries in it.
 resource "aws_lambda_function" "notifySlackUntaggedInstances" {
@@ -168,6 +175,17 @@ resource "aws_lambda_function" "getRunningInstances" {
       "REQTAGS" = "${var.mandatory_tags}"
     }
   }
+}
+
+resource "aws_lambda_function" "checkInstanceTTLs" {
+  filename         = "./files/checkInstanceTTLs.zip"
+  function_name    = "checkInstanceTTLs"
+  role             = "${aws_iam_role.lambda_stop_and_terminate_instances.arn}"
+  handler          = "checkInstanceTTLs.lambda_handler"
+  source_code_hash = "${base64sha256(file("./files/checkInstanceTTLs.zip"))}"
+  runtime          = "python3.6"
+  timeout          = "120"
+  description      = "Checks instance TTLs for expiration and deals with them accordingly."
 }
 
 # And finally, we create a cloudwatch event rule, essentially a cron job that
