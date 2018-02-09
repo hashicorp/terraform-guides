@@ -58,5 +58,5 @@ You can optionally encrypt the Slack Webhook URL so that it cannot be viewed in 
 6. Scroll down to the Environment Variables section. Click the little arrow to expand the Encryption configuration options.
 7. Check the box under "Enable helpers for encryption in transit". This will enable a new menu that says "KMS key to encrypt in transit". From that pull-down menu select the `notify_slack` key. This is the KMS key that Terraform created in step #3.
 8. Click on the `Encrypt` button next to the webhook URL. This will encrypt your webhook URL. Now click on `Save` at the top right. If you don't save here the settings won't stick.
-9. Navigate back to the AWS Lambda functions list and click on `notifySlackUntaggedInstances`. Repeat steps #1-8.
+9. Navigate back to the AWS Lambda functions and repeat steps #1-8 for any other functions where you want to configure the encrypted URL.
 10. If you want to make this configuration permanent, comment out the `aws_kms_key` and `aws_kms_alias` resources in encryption.tf. Then use the `terraform state rm` command to remove both of them from your state file. The key you created will now be persistent, and allow you to save your encrypted Slack Webhook URL in your variables file.  You can fetch the encrypted URL by running `terraform show` command.
