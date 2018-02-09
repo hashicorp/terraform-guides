@@ -18,6 +18,11 @@
         },
         {
             "Effect": "Allow",
+            "Action": "lambda:InvokeFunction",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
             "Action": "ec2:*",
             "Resource": "*"
         }

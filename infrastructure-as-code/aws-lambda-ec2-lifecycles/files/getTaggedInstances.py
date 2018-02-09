@@ -73,6 +73,7 @@ def get_tagged_instances():
                     global_tagged_instances[instance['InstanceId']] = {
                         'InstanceType': instance['InstanceType'],
                         'RegionName': r,
+                        'LaunchTime': str(instance['LaunchTime']),
                         'KeyName': instance.get('KeyName'),
                         'Name': name,
                         'Owner': owner,

@@ -57,6 +57,7 @@ def get_running_instance_data():
                     global_running_instances[instance['InstanceId']] = {
                         'InstanceType': instance['InstanceType'],
                         'RegionName': r,
+                        'LaunchTime': str(instance['LaunchTime']),
                         'KeyName': instance.get('KeyName'),
                         'Name': name,
                         'Owner': owner,

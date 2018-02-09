@@ -29,6 +29,16 @@ data "template_file" "iam_lambda_read_instances" {
   }
 }
 
+# Template for our 'stop_and_terminate_instances' lambda IAM policy
+data "template_file" "iam_lambda_stop_and_terminate_instances" {
+  template = "${file("./files/iam_lambda_stop_and_terminate_instances.tpl")}"
+
+  vars {
+    account_id = "${data.aws_caller_identity.current.account_id}"
+    region = "${var.region}"
+  }
+}
+
 # Role for our 'notify_slack' lambda to assume
 resource "aws_iam_role" "lambda_notify_slack" {
   name = "lambda_notify_slack"
@@ -51,6 +61,25 @@ EOF
 # Role for our 'read_instances' lambda to assume
 resource "aws_iam_role" "lambda_read_instances" {
   name = "lambda_read_instances"
+	assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      }
+    }
+  ]
+}
+EOF
+}
+
+# Role for our 'stop_and_terminate_instances' lambda to assume
+resource "aws_iam_role" "lambda_stop_and_terminate_instances" {
+  name = "lambda_stop_and_terminate_instances"
 	assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -102,7 +131,7 @@ resource "aws_lambda_function" "notifySlackUntaggedInstances" {
 
   environment {
     variables = {
-      slackChannel = "#aws-hc-se-demos"
+      slackChannel = "#team-se"
       slackHookUrl = "${var.slack_hook_url}"
     }
   }
@@ -120,7 +149,7 @@ resource "aws_lambda_function" "notifySlackInstanceUsage" {
 
   environment {
     variables = {
-      slackChannel = "#aws-hc-se-demos"
+      slackChannel = "#team-se"
       slackHookUrl = "${var.slack_hook_url}"
     }
   }
@@ -186,6 +215,12 @@ resource "aws_lambda_function" "checkInstanceTTLs" {
   runtime          = "python3.6"
   timeout          = "120"
   description      = "Checks instance TTLs for expiration and deals with them accordingly."
+  environment {
+    variables = {
+      slackChannel = "#aws-hc-se-demos"
+      slackHookUrl = "${var.slack_hook_url}"
+    }
+  }
 }
 
 # And finally, we create a cloudwatch event rule, essentially a cron job that
@@ -235,5 +270,28 @@ resource "aws_lambda_permission" "allow_cloudwatch_instance_usage" {
   source_arn     = "${aws_cloudwatch_event_rule.notify_slack_running_instances.arn}"
   depends_on = [
     "aws_lambda_function.notifySlackInstanceUsage"
+  ]
+}
+
+resource "aws_cloudwatch_event_rule" "check_instance_ttls" {
+  name = "check_instance_ttls"
+  description = "Check instance TTLs to see if they are expired"
+  schedule_expression = "cron(0 8 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "daily_reaper_report" {
+  rule      = "${aws_cloudwatch_event_rule.check_instance_ttls.name}"
+  target_id = "${aws_lambda_function.checkInstanceTTLs.function_name}"
+  arn = "${aws_lambda_function.checkInstanceTTLs.arn}"
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_check_ttls" {
+  statement_id   = "AllowExecutionFromCloudWatch"
+  action         = "lambda:InvokeFunction"
+  function_name  = "${aws_lambda_function.checkInstanceTTLs.function_name}"
+  principal      = "events.amazonaws.com"
+  source_arn     = "${aws_cloudwatch_event_rule.check_instance_ttls.arn}"
+  depends_on = [
+    "aws_lambda_function.checkInstanceTTLs"
   ]
 }

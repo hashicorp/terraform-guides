@@ -6,7 +6,9 @@ import logging
 import os
 import csv
 import io
+from datetime import datetime,timezone,timedelta
 from collections import Counter
+from dateutil import parser
 
 # Required if you want to encrypt your Slack Hook URL in the AWS console
 # from base64 import b64decode
@@ -27,18 +29,29 @@ lam = boto3.client('lambda')
 def lambda_handler(event, context):
     """Sends out a formatted slack message.  Edit to your liking."""
     
-    # msg_text = 'The Reaper Cometh :reaper:'
-    # expired = generate_expired_dict(tagged)
+    msg_text = 'The Reaper Cometh :reaper:'
     tagged = get_tagged_instances()
-    return tagged
+    expired = generate_expired_dict(tagged)
+    logger.info(expired)
+    for instance,data in expired.items():
+        sleep_instance(instance,data['RegionName'])
+        
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter='\t')
+    writer.writerow(['Instance_Id        ', 'Region   ', 'Expires_On'])
+    for key, value in expired.items():
+        #value['InstanceId'] = key
+        writer.writerow([key, value['RegionName'], value['ExpiresOn']])
+    contents = output.getvalue()
     
-    # send_slack_message(
-    #     msg_text, 
-    #     title='AWS Instance Reaper Report :reaper:',
-    #     text="```\n"+lb+"\n```",
-    #     fallback='AWS Instance Reaper Report :reaper:',
-    #     color='warning'
-    # )
+    if expired:
+        send_slack_message(
+            msg_text, 
+            title='Expired Instances - TESTING',
+            text="```\n"+str(contents)+"\n```",
+            fallback='Expired Instance Cleanup',
+            color='warning'
+        )
     
 def send_slack_message(msg_text, **kwargs):
     """Sends a slack message to the slackChannel you specify. The only parameter
@@ -79,20 +92,24 @@ def generate_expired_dict(response):
     data = json.loads(data)
     expired_instances = {}
     for key, value in data.items():
-        expired_instances[key] = expired_instances[value['TTL']]
-    logger.info(expired_instances)
+        if int(value['TTL']) != -1:
+            launch_time = parser.parse(value['LaunchTime'])
+            #logger.info(key+" launch time: "+str(launch_time))
+            expires_on = launch_time + timedelta(hours=int(value['TTL']))
+            #logger.info(key+"  expires on: "+str(expires_on))
+            if expires_on < datetime.now(timezone.utc):
+                expired_instances[key] = {
+                    'RegionName':value['RegionName'],
+                    'Owner':value['Owner'],
+                    'TTL':value['TTL'],
+                    'LaunchTime':str(launch_time),
+                    'ExpiresOn':str(expires_on)
+                }
     return expired_instances
 
-# This could be useful for generating email reports or dumping a list of untagged
-# instances into an S3 bucket.
-def generate_tsv(response):
-    """Ingests data from a lambda response, converts it to tab-separated format."""
-    data=json.loads(response['Payload'].read().decode('utf-8'))
-    data=json.loads(data)
-    output = io.StringIO()
-    writer = csv.writer(output, delimiter='\t')
-    for key, value in data.items():
-        value['InstanceId'] = key
-        writer.writerow(value.values())
-    contents = output.getvalue()
-    return(contents)
+def sleep_instance(instance_id,region):
+    ec2 = boto3.resource('ec2', region_name=region)
+    """Stops instances that have gone beyond their TTL"""
+    # Uncomment to make this live!
+    #ec2.instances.filter(InstanceIds=instance_id).stop()
+    logger.info("I would have stopped "+instance_id+" in "+region)

@@ -69,6 +69,7 @@ def get_untagged_instances():
                     global_untagged_instances[instance['InstanceId']] = {
                         'InstanceType': instance['InstanceType'],
                         'RegionName': r,
+                        'LaunchTime': str(instance['LaunchTime']),
                         'KeyName': instance.get('KeyName'),
                         'Name': name,
                         'Owner': owner,
