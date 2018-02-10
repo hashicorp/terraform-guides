@@ -31,14 +31,13 @@ def lambda_handler(event, context):
     msg_text = 'The Reaper Cometh :reaper:'
     tagged = get_tagged_instances()
     expired = generate_expired_dict(tagged)
-    logger.info(expired)
-    # Put expired TTL instances down
-    for instance,data in expired.items():
-        sleep_instance(instance,data['RegionName'])
+    # logger.info(expired)
     
     # Create a TSV-formatted list of instances that were found
     output = io.StringIO()
     writer = csv.writer(output, delimiter='\t')
+    writer.writerow(['******************************************','',''])
+    writer.writerow(['The following instances will be terminated:','',''])
     writer.writerow(['Instance_Id        ', 'Region   ', 'Expires_On'])
     for key, value in expired.items():
         #value['InstanceId'] = key
@@ -49,11 +48,15 @@ def lambda_handler(event, context):
     if expired:
         send_slack_message(
             msg_text, 
-            title='Expired Instances - TESTING',
+            title='Expired TTL Instance Report - TESTING',
             text="```\n"+str(contents)+"\n```",
             fallback='Expired Instance Cleanup',
             color='warning'
         )
+
+    # Put expired TTL instances down
+    for instance,data in expired.items():
+        sleep_instance(instance,data['RegionName'])
     
 def send_slack_message(msg_text, **kwargs):
     """Sends a slack message to the slackChannel you specify. The only parameter
