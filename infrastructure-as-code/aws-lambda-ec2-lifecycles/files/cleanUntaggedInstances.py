@@ -1,5 +1,5 @@
 # This function deals with instances that are untagged.  Use the environment variables 
-# SLEEPDAYS and REAPDAYS to set your lifecycle policies.
+# sleepDays and reapDays to set your lifecycle policies.
 
 import boto3
 import json
@@ -35,8 +35,33 @@ def lambda_handler(event, context):
     msg_text = 'Enter the Sandman :sleeping:'
     untagged = get_untagged_instances()
     stop_dict = generate_stop_dict(untagged)
-    terminate_dict = generate_terminate_dict(untagged)
-
+    
+    untagged2 = get_untagged_instances()
+    terminate_dict = generate_terminate_dict(untagged2)
+    
+    # Create a TSV-formatted list of instances scheduled for stop or termination
+    output = io.StringIO()
+    writer = csv.writer(output, delimiter='\t')
+    writer.writerow(['*********************************************', '', ''])
+    writer.writerow(['These instances will be put to sleep:', '', ''])
+    writer.writerow(['Instance_Id        ', 'Region   ', 'Stop_On'])
+    for key, value in stop_dict.items():
+        writer.writerow([key, value['RegionName'], value['StopOn']])
+    writer.writerow(['*********************************************', '', ''])
+    writer.writerow(['These instances will be terminated:', '', ''])
+    writer.writerow(['Instance_Id        ', 'Region   ', 'Terminate_On'])
+    for key, value in terminate_dict.items():
+        writer.writerow([key, value['RegionName'], value['TerminateOn']])
+    contents = output.getvalue()
+    
+    send_slack_message(
+        msg_text, 
+        title='Untagged Instance Report - TESTING',
+        text="```\n"+str(contents)+"\n```",
+        fallback='Untagged Instance Report - TESTING',
+        color='warning'
+    )
+    
     # Stop instances that have passed SLEEPDAYS.
     for instance,data in stop_dict.items():
         sleep_instance(instance,data['RegionName'])
@@ -44,33 +69,6 @@ def lambda_handler(event, context):
     # Terminate instances that have passed REAPDAYS.
     for instance,data in terminate_dict.items():
         terminate_instance(instance,data['RegionName'])
-    
-    # Create a TSV-formatted list of instances scheduled for stop or termination
-    output = io.StringIO()
-    writer = csv.writer(output, delimiter='\t')
-    writer.writerow(['*********************************************', '', ''])
-    writer.writerow(['These instances will be put to sleep:', '', ''])
-    writer.writerow(['Instance_Id        ', 'Region   ', 'stop_on'])
-    for key, value in stop_dict.items():
-        #value['InstanceId'] = key
-        writer.writerow([key, value['RegionName'], value['StopOn']])
-    writer.writerow(['*********************************************', '', ''])
-    writer.writerow(['These instances will be terminated:', '', ''])
-    writer.writerow(['Instance_Id        ', 'Region   ', 'stop_on'])
-    for key, value in terminate_dict.items():
-        #value['InstanceId'] = key
-        writer.writerow([key, value['RegionName'], value['TerminateOn']])
-    contents = output.getvalue()
-    
-    # If there are any instances on the list, notify slack.
-    if contents:
-        send_slack_message(
-            msg_text, 
-            title='Untagged Instance Report - TESTING',
-            text="```\n"+str(contents)+"\n```",
-            fallback='Untagged Instance Report - TESTING',
-            color='warning'
-        )
     
 def send_slack_message(msg_text, **kwargs):
     """Sends a slack message to the slackChannel you specify. The only parameter
@@ -128,11 +126,12 @@ def generate_terminate_dict(response):
     """Generates a dictionary of untagged instances to terminate."""
     data = json.loads(response['Payload'].read().decode('utf-8'))
     data = json.loads(data)
+    #logger.info(data)
     terminate_instances = {}
     for key, value in data.items():
         # A value of -1 signifies that a machine should never be reaped.
         launch_time = parser.parse(value['LaunchTime'])
-        terminate_on = launch_time + timedelta(days=int(SLEEPDAYS))
+        terminate_on = launch_time + timedelta(days=int(REAPDAYS))
         # If we have passed the terminate_on time, add to list.
         if terminate_on < datetime.now(timezone.utc):
             terminate_instances[key] = {
