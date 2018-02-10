@@ -11,7 +11,7 @@ variable "slack_hook_url" {
 }
 
 variable "slack_channel" {
-  default = "#aws_hc_se_demos"
+  default = "#aws-hc-se-demos"
   description = "Slack channel your bot will post messages to."
 }
 
