@@ -8,9 +8,9 @@ This Terraform configuration deploys AWS Lambda functions that can do the follow
 
  - Check for mandatory tags on AWS instances and notify via Slack if untagged instances are found.
  - Notify on how many of each instance type are currently running across all regions.
- - Shutdown untagged instances after X days. (COMING SOON)
- - Delete untagged instances after Y days. (COMING SOON)
- - Delete machines whose TTL (time to live) has expired. (COMING SOON)
+ - Shutdown untagged instances after X days.
+ - Delete untagged instances after Y days.
+ - Delete machines whose TTL (time to live) has expired.
 
 ## Prerequisites
 1. Admin level access to your AWS account via API. If admin access is not available you must have the ability to create, describe, and delete the following types of resources in AWS. Fine-grained configuration of IAM policies is beyond the scope of this guide. We will assume you have API keys and appropriate permissions that allow you to create the following resources using Terraform:
@@ -23,6 +23,7 @@ This Terraform configuration deploys AWS Lambda functions that can do the follow
     aws\_lambda\_permission  
     aws\_kms\_alias  
     aws\_kms\_key  
+    aws\_instance
 
 2. Properly configured workstation or server for running Terraform commands. New to Terraform? Try our [Getting Started Guide](https://www.terraform.io/intro/getting-started/install.html)
 
@@ -33,11 +34,13 @@ This Terraform configuration deploys AWS Lambda functions that can do the follow
 2. Edit the `variables.tf` file and choose which region you want to run your Lambda functions in. These functions can be run from any region and manage instances in any other region.
 3. Set the `slack_hook_url` variable to the URL you generated in step #1.
 4. Set any tags that you want to be considered mandatory in the `mandatory_tags` variable. This is a comma separated list, with no spaces between items.
-5. Save the `variables.tf` file and run `terraform plan`. Make sure that the command exits cleanly.
-6. Run `terraform apply` to build out all the resources listed in `main.tf`.
-7. Now you can test your new lambda functions. Use the test button at the top of the page to ensure they are working correctly. For your test event you can simply create a dummy event with the default JSON payload.
-8. Check your slack channel to see the messages posted from your bot.
-9. By default these lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources in `main.tf`. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`.
+5. Set the `reap_days` and `sleep_days` to your liking. These represent the number of days after launch that an untagged instance will be stopped and terminated respectively.
+6. Save the `variables.tf` file and run `terraform plan`. Make sure that the command exits cleanly.
+7. Run `terraform apply` to build out all the resources listed in `main.tf`.
+8. Now you can test your new lambda functions. Use the test button at the top of the page to ensure they are working correctly. For your test event you can simply create a dummy event with the default JSON payload.
+9. Check your slack channel to see the messages posted from your bot.
+10. By default these lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources in `main.tf`. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`.
+11. IMPORTANT: If you want to actually stop and terminate instances in a live environment, you must uncomment/edit the code inside of `cleanUntaggedInstances.py` and `checkInstanceTTLs.py`. We have commented out the lines that do these actions so you can test before going live. 
 
 ## Cleanup
 Cleanup is easy, simply run `terraform destroy` and all of the resources you created above will be destroyed.
@@ -45,7 +48,7 @@ Cleanup is easy, simply run `terraform destroy` and all of the resources you cre
 ### Optional - Enable KMS encryption
 You can optionally encrypt the Slack Webhook URL so that it cannot be viewed in plaintext in the AWS console. This also allows you to commit your webhook URL to source code without worrying about it getting into the wrong hands. This also provides some extra security if you are working with a shared AWS account. Here are the additional steps you need to follow to enable encryption:
 
-1. Uncomment the lines in `notifySlackUntaggedInstances.py` and `notifySlackInstanceUsage.py` that enable encryption. These are the lines you'll need to uncomment. Note how we are using the b64decode Python module to decrypt the encrypted Slack Webhook:
+1. Uncomment the lines in `notifySlackUntaggedInstances.py` and `notifySlackInstanceUsage.py` (or other lambdas) that enable encryption. These are the lines you'll need to uncomment. Note how we are using the b64decode Python module to decrypt the encrypted Slack Webhook:
 ```
 # from base64 import b64decode
 # ENCRYPTED_HOOK_URL = os.environ['slackHookUrl']
