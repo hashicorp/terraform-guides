@@ -2,7 +2,7 @@
 Terraform configuration for lifecycle management of AWS instances and other resources.
 
 ## Introduction
-Spending too much on your AWS instances every month?  Maybe developers create instances and forget to turn them off? Perhaps you struggle with identifying who created AWS resources? This guide is for you!
+Spending too much on your AWS instances every month? Maybe developers create instances and forget to turn them off? Perhaps you struggle with identifying who created AWS resources? This guide is for you!
 
 This Terraform configuration deploys AWS Lambda functions that can do the following:
 

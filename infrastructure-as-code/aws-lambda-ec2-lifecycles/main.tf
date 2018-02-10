@@ -131,7 +131,7 @@ resource "aws_lambda_function" "notifySlackUntaggedInstances" {
 
   environment {
     variables = {
-      slackChannel = "#team-se"
+      slackChannel = "${var.slack_channel}"
       slackHookUrl = "${var.slack_hook_url}"
     }
   }
@@ -149,7 +149,7 @@ resource "aws_lambda_function" "notifySlackInstanceUsage" {
 
   environment {
     variables = {
-      slackChannel = "#team-se"
+      slackChannel = "${var.slack_channel}"
       slackHookUrl = "${var.slack_hook_url}"
     }
   }
@@ -198,12 +198,6 @@ resource "aws_lambda_function" "getRunningInstances" {
   runtime          = "python3.6"
   timeout          = "120"
   description      = "Gathers a list of running instances."
-
-  environment {
-    variables = {
-      "REQTAGS" = "${var.mandatory_tags}"
-    }
-  }
 }
 
 resource "aws_lambda_function" "checkInstanceTTLs" {
@@ -217,14 +211,35 @@ resource "aws_lambda_function" "checkInstanceTTLs" {
   description      = "Checks instance TTLs for expiration and deals with them accordingly."
   environment {
     variables = {
-      slackChannel = "#aws-hc-se-demos"
+      slackChannel = "${var.slack_channel}"
       slackHookUrl = "${var.slack_hook_url}"
+    }
+  }
+}
+
+resource "aws_lambda_function" "cleanUntaggedInstances" {
+  filename         = "./files/cleanUntaggedInstances.zip"
+  function_name    = "cleanUntaggedInstances"
+  role             = "${aws_iam_role.lambda_stop_and_terminate_instances.arn}"
+  handler          = "cleanUntaggedInstances.lambda_handler"
+  source_code_hash = "${base64sha256(file("./files/cleanUntaggedInstances.zip"))}"
+  runtime          = "python3.6"
+  timeout          = "120"
+  description      = "Checks instance TTLs for expiration and deals with them accordingly."
+  environment {
+    variables = {
+      slackChannel = "${var.slack_channel}"
+      slackHookUrl = "${var.slack_hook_url}"
+      sleepDays = "${var.sleep_days}"
+      sleepDays = "${var.reap_days}"
     }
   }
 }
 
 # And finally, we create a cloudwatch event rule, essentially a cron job that
 # will call our lambda function every day.  Adjust to your schedule.
+
+# Notify Slack about untagged instances (the Wall of Shame)
 resource "aws_cloudwatch_event_rule" "notify_slack_untagged_instances" {
   name = "notify_slack_untagged_instances"
   description = "Notify users about their untagged AWS instances via Slack"
@@ -237,8 +252,6 @@ resource "aws_cloudwatch_event_target" "daily_untagged_report" {
   arn = "${aws_lambda_function.notifySlackUntaggedInstances.arn}"
 }
 
-# This resource was added due to this possible bug.  It works now.
-# https://github.com/terraform-providers/terraform-provider-aws/issues/756
 resource "aws_lambda_permission" "allow_cloudwatch_untagged_instances" {
   statement_id   = "AllowExecutionFromCloudWatch"
   action         = "lambda:InvokeFunction"
@@ -250,6 +263,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_untagged_instances" {
   ]
 }
 
+# Notify slack about how many of each instance type is currently running
 resource "aws_cloudwatch_event_rule" "notify_slack_running_instances" {
   name = "notify_slack_running_instances"
   description = "Notify users about their running AWS instances via Slack"
@@ -273,6 +287,7 @@ resource "aws_lambda_permission" "allow_cloudwatch_instance_usage" {
   ]
 }
 
+# Check TTLS, take appropriate action on expired ones. Notify slack.
 resource "aws_cloudwatch_event_rule" "check_instance_ttls" {
   name = "check_instance_ttls"
   description = "Check instance TTLs to see if they are expired"
@@ -293,5 +308,29 @@ resource "aws_lambda_permission" "allow_cloudwatch_check_ttls" {
   source_arn     = "${aws_cloudwatch_event_rule.check_instance_ttls.arn}"
   depends_on = [
     "aws_lambda_function.checkInstanceTTLs"
+  ]
+}
+
+# Check TTLS, take appropriate action on expired ones. Notify slack.
+resource "aws_cloudwatch_event_rule" "clean_untagged_instances" {
+  name = "clean_untagged_instances"
+  description = "Check untagged instances and stop/terminate old ones"
+  schedule_expression = "cron(0 8 * * ? *)"
+}
+
+resource "aws_cloudwatch_event_target" "untagged_instance_cleanup" {
+  rule      = "${aws_cloudwatch_event_rule.clean_untagged_instances.name}"
+  target_id = "${aws_lambda_function.cleanUntaggedInstances.function_name}"
+  arn = "${aws_lambda_function.cleanUntaggedInstances.arn}"
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_clean_untagged_instances" {
+  statement_id   = "AllowExecutionFromCloudWatch"
+  action         = "lambda:InvokeFunction"
+  function_name  = "${aws_lambda_function.cleanUntaggedInstances.function_name}"
+  principal      = "events.amazonaws.com"
+  source_arn     = "${aws_cloudwatch_event_rule.clean_untagged_instances.arn}"
+  depends_on = [
+    "aws_lambda_function.cleanUntaggedInstances"
   ]
 }

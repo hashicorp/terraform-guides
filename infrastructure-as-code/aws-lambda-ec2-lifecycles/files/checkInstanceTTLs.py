@@ -7,7 +7,6 @@ import os
 import csv
 import io
 from datetime import datetime,timezone,timedelta
-from collections import Counter
 from dateutil import parser
 
 # Required if you want to encrypt your Slack Hook URL in the AWS console
@@ -33,9 +32,11 @@ def lambda_handler(event, context):
     tagged = get_tagged_instances()
     expired = generate_expired_dict(tagged)
     logger.info(expired)
+    # Put expired TTL instances down
     for instance,data in expired.items():
         sleep_instance(instance,data['RegionName'])
-        
+    
+    # Create a TSV-formatted list of instances that were found
     output = io.StringIO()
     writer = csv.writer(output, delimiter='\t')
     writer.writerow(['Instance_Id        ', 'Region   ', 'Expires_On'])
@@ -44,6 +45,7 @@ def lambda_handler(event, context):
         writer.writerow([key, value['RegionName'], value['ExpiresOn']])
     contents = output.getvalue()
     
+    # If there are any instances on the list, notify slack.
     if expired:
         send_slack_message(
             msg_text, 
@@ -92,11 +94,11 @@ def generate_expired_dict(response):
     data = json.loads(data)
     expired_instances = {}
     for key, value in data.items():
+        # A value of -1 signifies that a machine should never be reaped.
         if int(value['TTL']) != -1:
             launch_time = parser.parse(value['LaunchTime'])
-            #logger.info(key+" launch time: "+str(launch_time))
             expires_on = launch_time + timedelta(hours=int(value['TTL']))
-            #logger.info(key+"  expires on: "+str(expires_on))
+            # If we have passed the expires_on time, add to list.
             if expires_on < datetime.now(timezone.utc):
                 expired_instances[key] = {
                     'RegionName':value['RegionName'],
