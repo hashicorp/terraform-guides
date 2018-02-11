@@ -35,7 +35,6 @@ This Terraform configuration deploys AWS Lambda functions that can do the follow
     aws\_lambda\_permission  
     aws\_kms\_alias  
     aws\_kms\_key  
-    aws\_instance
 
 2. Properly configured workstation or server for running Terraform commands. New to Terraform? Try our [Getting Started Guide](https://www.terraform.io/intro/getting-started/install.html)
 
