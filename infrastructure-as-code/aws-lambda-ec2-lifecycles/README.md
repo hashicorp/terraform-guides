@@ -1,5 +1,5 @@
 # Terraforming EC2 lifecycles with AWS Lambda
-Terraform configuration for lifecycle management of AWS instances and other resources.
+Terraform configuration for lifecycle management of AWS instances.
 
 ## Introduction
 Spending too much on your AWS instances every month? Maybe developers create instances and forget to turn them off? Perhaps you struggle with identifying who created AWS resources? This guide is for you!
@@ -11,6 +11,18 @@ This Terraform configuration deploys AWS Lambda functions that can do the follow
  - Shutdown untagged instances after X days.
  - Delete untagged instances after Y days.
  - Delete machines whose TTL (time to live) has expired.
+
+## Directory Structure
+```
+ main.tf - Main configuration file. REQUIRED
+ data_collectors.tf - Lambda functions for gathering instance data. REQUIRED
+ iam_roles.tf - Configures IAM role and policies for your Lambda functions. REQUIRED
+ notify_slack_instance_usage.tf - sends reports to Slack about running instances.
+ notify_slack_untagged.tf - sends reports to slack about untagged instances and their key names.
+ instance_reaper.tf - Checks instance TTL tag, terminates instances that have expired.
+ untagged_janitor.tf - Cleans up untagged instances after a set number of days.
+ files/ - Contains all of the lambda source code, zip files, and IAM template files.
+```
 
 ## Prerequisites
 1. Admin level access to your AWS account via API. If admin access is not available you must have the ability to create, describe, and delete the following types of resources in AWS. Fine-grained configuration of IAM policies is beyond the scope of this guide. We will assume you have API keys and appropriate permissions that allow you to create the following resources using Terraform:
@@ -39,7 +51,7 @@ This Terraform configuration deploys AWS Lambda functions that can do the follow
 7. Run `terraform apply` to build out all the resources listed in `main.tf`.
 8. Now you can test your new lambda functions. Use the test button at the top of the page to ensure they are working correctly. For your test event you can simply create a dummy event with the default JSON payload.
 9. Check your slack channel to see the messages posted from your bot.
-10. By default these lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources in `main.tf`. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`.
+10. By default the reporting lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`. The instance_reaper will be most effective if it is run every hour.
 11. IMPORTANT: If you want to actually stop and terminate instances in a live environment, you must uncomment/edit the code inside of `cleanUntaggedInstances.py` and `checkInstanceTTLs.py`. We have commented out the lines that do these actions so you can test before going live. 
 
 ## Cleanup
