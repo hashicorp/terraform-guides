@@ -30,15 +30,7 @@ resource "vault_aws_secret_backend_role" "producer" {
     {
       "Effect": "Allow",
       "Action": [
-        "iam:GetGroup",
-        "iam:CreateGroup",
-        "iam:UpdateGroup",
-        "iam:DeleteGroup",
-        "iam:GetUser",
-        "iam:CreateUser",
-        "iam:UpdateUser",
-        "iam:DeleteUser",
-        "iam:ListGroupsForUser"
+        "iam:*"
       ],
       "Resource": "*"
     }

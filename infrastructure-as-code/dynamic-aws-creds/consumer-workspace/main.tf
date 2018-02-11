@@ -1,5 +1,6 @@
 variable "name" { default = "dynamic-aws-creds-consumer" }
 variable "path" { default = "../producer-workspace/terraform.tfstate" }
+variable "ttl"  { default = "1h" }
 
 terraform {
   backend "local" {
@@ -24,19 +25,31 @@ provider "aws" {
   access_key = "${data.vault_aws_access_credentials.creds.access_key}"
   secret_key = "${data.vault_aws_access_credentials.creds.secret_key}"
 }
-resource "random_id" "name" {
-  byte_length = 4
-  prefix      = "${var.name}-"
+
+data "aws_ami" "ubuntu" {
+  most_recent = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+
+  owners = ["099720109477"] # Canonical
 }
 
-# Create AWS IAM Group
-resource "aws_iam_group" "consumer-group" {
-  name = "group-${random_id.name.hex}"
-  path = "/groups/"
-}
+# Create AWS EC2 Instance
+resource "aws_instance" "main" {
+  ami           = "${data.aws_ami.ubuntu.id}"
+  instance_type = "t2.nano"
 
-# Create AWS IAM User
-resource "aws_iam_user" "consumer-user" {
-  name = "user-${random_id.name.hex}"
-  path = "/users/"
+  tags {
+    Name  = "${var.name}"
+    TTL   = "${var.ttl}"
+    owner = "${var.name}-guide"
+  }
 }

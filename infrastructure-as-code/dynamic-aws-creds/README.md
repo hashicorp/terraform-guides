@@ -1,10 +1,10 @@
 # Dynamic AWS Credentials
 
-Using long lived static AWS credentials for Terraform runs can be dangerous. By leveraging the Terraform Vault provider, you can generate short lived AWS credentials for each Terraform run that automatically get deleted after the run.
+Using long lived static AWS credentials for Terraform runs can be dangerous. By leveraging the [Terraform Vault provider](https://www.terraform.io/docs/providers/vault/), you can generate short lived AWS credentials for each Terraform run that are automatically revoked after the run.
 
 ## Reference Material
-- [Terraform Vault provider](https://www.terraform.io/docs/providers/vault/)
 - [HashiCorp's Vault](https://www.vaultproject.io/)
+- [Terraform Vault provider](https://www.terraform.io/docs/providers/vault/)
 - [Vault AWS Secret Engine](https://www.vaultproject.io/docs/secrets/aws/index.html)
 
 ## Estimated Time to Complete
@@ -13,47 +13,121 @@ Using long lived static AWS credentials for Terraform runs can be dangerous. By 
 
 ## Personas
 
-There are 2 different personas involved in this guide.
+There are 2 different personas involved in this guide, the "Producer" and the "Consumer".
 
-The first persona is the "Producer", which is the operator responsible for configuring the [AWS Secret Engine](https://www.vaultproject.io/docs/secrets/aws/index.html) in Vault and defining the policy scope for the AWS credentials dynamically generated.
+### Producer
 
-The second persona is the "Consumer", which is the developer looking to safely provision infrastructure without having to worry about managing AWS credentials.
+The "Producer" is the operator responsible for configuring the [AWS Secrets Engine](https://www.vaultproject.io/docs/secrets/aws/index.html) in Vault and defining the policy scope for the AWS credentials dynamically generated.
+
+The "Producer" is generally concerned about managing the static and long lived AWS IAM credentials with varying scope required for developers to provision infrastructure in AWS.
+
+### Consumer
+
+The "Consumer" is the developer looking to safely provision infrastructure using Terraform without having to worry about managing sensitive AWS credentials locally.
 
 ## Challenge
 
-We want to enable a workflow where "Consumers" can automatically retrieve the AWS credentials required by Terraform to provision resources in AWS the "Producers" have allowed them to.
+"Producers" want to enable a workflow where "Consumers" can automatically retrieve short-lived AWS credentials used by Terraform to provision resources in AWS. Traditionally this has been difficult to achieve as each "Consumer" has their own set of long-lived AWS credentials they use with Terraform that remain active beyond the length of a Terraform run.
+
+Long-lived AWS credentials with unbounded scope on developer's local machines creates a large attack surface.
 
 ## Solution
 
-Store your sensitive, static, and long lived AWS credentials in HashiCorp's Vault. Then leverage [Terraform's Vault provider](https://www.terraform.io/docs/providers/vault/) to dynamically generate short lived AWS credentials appropriately scoped to be used by Terraform to provision resources in AWS.
+Store your long-lived AWS credentials in HashiCorp's Vault's [AWS Secrets Engine](https://www.vaultproject.io/docs/secrets/aws/index.html), then leverage [Terraform's Vault provider](https://www.terraform.io/docs/providers/vault/) to dynamically generate appropriately scoped & short-lived AWS credentials to be used by Terraform to provision resources in AWS.
 
-This mitigates the risk of someone swiping the AWS credentials used by Terraform from a "Consumer's" machine and doing something malicious with them.
+This mitigates the risk of someone swiping the AWS credentials used by Terraform from a developer's machine and doing something malicious with them.
 
-Following [Terraform Recommended Practices](https://www.terraform.io/docs/enterprise/guides/recommended-practices/index.html), we will separate our Terraform templates into 2 [Workspaces](https://www.terraform.io/docs/state/workspaces.html). One Workspace for our "Producer" persona, and one Workspace for our "Consumer" persona. We do this to separate concerns and ensure each persona only has access to what's required for them to perform their job.
+Following [Terraform Recommended Practices](https://www.terraform.io/docs/enterprise/guides/recommended-practices/index.html), we will separate our Terraform templates into 2 [Workspaces](https://www.terraform.io/docs/state/workspaces.html). One Workspace for our "Producer" persona, and one Workspace for our "Consumer" persona. We do this to separate concerns and ensure each persona only has access to the resources required for them to perform their job.
 
-The "Producer" will be responsible for configuring Vault's AWS Secret Engine using Terraform and exposing the output variables necessary for the "Consumer" to provision the resources they need in AWS. In our use case, the "Consumer" will only need access to provision IAM `Groups` and `Users` with Terraform, and should only be given IAM credentials with access to do so.
+The "Producer" will be responsible for configuring Vault's [AWS Secrets Engine](https://www.vaultproject.io/docs/secrets/aws/index.html) using Terraform and exposing the output variables necessary for the "Consumer" to provision the resources they need in AWS. In our use case, the "Consumer" will require access to provision an [AWS EC2 Instance](https://www.terraform.io/docs/providers/aws/r/instance.html) with Terraform, and should only be given IAM credentials with permission to do so.
 
 ## Prerequisites
 
 1. [Download HashiCorp's Terraform](https://www.terraform.io/downloads.html)
 1. [Download HashiCorp's Vault](https://www.vaultproject.io/downloads.html)
 
+## TL;DR
+
+Below are all of the consecutive commands that need to be run to complete this guide.
+
+```sh
+# Start Vault server
+$ vault server -dev
+
+# Export env vars
+export TF_VAR_aws_access_key=${AWS_ACCESS_KEY_ID} # AWS Access Key ID - This command assumes the AWS Access Key ID is set in your environment as AWS_ACCESS_KEY_ID
+export TF_VAR_aws_secret_key=${AWS_SECRET_ACCESS_KEY} # AWS Secret Access Key - This command assumes the AWS Access Key ID is set in your environment as AWS_SECRET_ACCESS_KEY
+export VAULT_ADDR=http://127.0.0.1:8200 # Address of Vault server
+export VAULT_TOKEN=<VAULT_TOKEN> # Vault token
+
+# Provision "Producer" Workspace Vault resources
+$ cd producer-workspace
+$ terraform init
+$ terraform plan
+$ terraform apply -auto-approve
+
+# Provision "Consumer" Workspace AWS resources
+$ cd ../consumer-workspace
+$ terraform init
+$ terraform plan
+$ terraform apply -auto-approve
+
+# Destroy "Consumer" Workspace EC2 Instance
+$ terraform destroy --force
+
+# Update "Producer" AWS IAM Policy
+$ cd ../producer-workspace
+$ sed -i '' -e 's/, \"ec2:\*\"//g' main.tf
+$ terraform plan
+$ terraform apply -auto-approve
+
+# Verify "Consumer" cannot provision EC2 Instance
+$ cd ../consumer-workspace
+$ terraform plan
+```
+
 ## Steps
 
-We will now walk through step by step how  to dynamically generate "Consumer" AWS credentials for each Terraform run.
+We will now walk through step by step instructions for how to dynamically generate appropriately scoped "Consumer" AWS credentials for each Terraform run.
 
-### Step 1: Setup Vault
+### Step 1: Start a Vault Server
 
-We will start by starting a Vault server in it's own terminal.
+We will start by starting a Vault server. Open up a separate terminal window and run the below command.
 
 #### CLI
 
-https://www.vaultproject.io/intro/getting-started/dev-server.html#starting-the-dev-server
+- [Starting a Vault Dev Server](https://www.vaultproject.io/intro/getting-started/dev-server.html#starting-the-dev-server)
 
 ##### Request
 
 ```sh
+# Start Vault server
 $ vault server -dev
+
+# export env vars
+export TF_VAR_aws_access_key=${AWS_ACCESS_KEY_ID} # AWS Access Key ID - This command assumes the AWS Access Key ID is set in your environment as AWS_ACCESS_KEY_ID
+export TF_VAR_aws_secret_key=${AWS_SECRET_ACCESS_KEY} # AWS Secret Access Key - This command assumes the AWS Access Key ID is set in your environment asAWS_SECRET_ACCESS_KEY
+export VAULT_ADDR=http://127.0.0.1:8200 # Address of the Vault server (e.g. `http://127.0.0.1:8200` if running locally)
+export VAULT_TOKEN=e05a0e71-b460-e045-31a9-187c68ccab17 # Vault token the Vault provider will use to mount and configure the [Vault AWS secret backend](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) and [Vault AWS secret backend role](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) - In this case we grabbed the `Root Token` token output from the above Vault dev server logs
+
+# Provision "Producer" Workspace
+$ cd producer-workspace
+$ terraform init
+$ terraform plan
+$ terraform apply -auto-approve
+
+# Provision "Consumer" Workspace
+$ cd ../consumer-workspace
+$ terraform init
+$ terraform plan
+$ terraform apply -auto-approve
+$ terraform destroy --force
+
+# Update "Producer" Workspace IAM Policy
+$ cd ../producer-workspace
+$ terraform plan
+
+
 ```
 
 ##### Response
@@ -129,20 +203,15 @@ Development mode should NOT be used in production installations!
 
 Terraform requires a few [Environment Variables](https://www.terraform.io/docs/configuration/variables.html#environment-variables) to be set in order to function appropriately. We're passing these in as env vars instead of [Terraform Input Variables](https://www.terraform.io/docs/configuration/variables.html) because they are sensitive and we don't want them committed to our VCS.
 
-Notice that we're also setting [Vault Provider Arguments](https://www.terraform.io/docs/providers/vault/index.html#provider-arguments) as env vars `VAULT_ADDR` & `VAULT_TOKEN`.
+Notice that we're also setting the required [Vault Provider Arguments](https://www.terraform.io/docs/providers/vault/index.html#provider-arguments) as env vars: `VAULT_ADDR` & `VAULT_TOKEN`.
 
 #### CLI
-
-- [Terraform Variables - Input](https://www.terraform.io/docs/configuration/variables.html)
-- [Terraform Variables - Environment](https://www.terraform.io/docs/configuration/variables.html#environment-variables)
-- [Terraform Environment Variables](https://www.terraform.io/docs/configuration/environment-variables.html)
-- [Vault Provider Arguments](https://www.terraform.io/docs/providers/vault/index.html#provider-arguments)
 
 ##### Request
 
 ```sh
 export TF_VAR_aws_access_key=${AWS_ACCESS_KEY_ID} # AWS Access Key ID - This command assumes the AWS Access Key ID is set in your environment as AWS_ACCESS_KEY_ID
-export TF_VAR_aws_secret_key=${AWS_SECRET_ACCESS_KEY} # AWS Secret Access Key - This command assumes the AWS Access Key ID is set in your environment asAWS_SECRET_ACCESS_KEY
+export TF_VAR_aws_secret_key=${AWS_SECRET_ACCESS_KEY} # AWS Secret Access Key - This command assumes the AWS Access Key ID is set in your environment as AWS_SECRET_ACCESS_KEY
 export VAULT_ADDR=http://127.0.0.1:8200 # Address of the Vault server (e.g. `http://127.0.0.1:8200` if running locally)
 export VAULT_TOKEN=e05a0e71-b460-e045-31a9-187c68ccab17 # Vault token the Vault provider will use to mount and configure the [Vault AWS secret backend](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) and [Vault AWS secret backend role](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) - In this case we grabbed the `Root Token` token output from the above Vault dev server logs
 ```
@@ -152,44 +221,26 @@ export VAULT_TOKEN=e05a0e71-b460-e045-31a9-187c68ccab17 # Vault token the Vault 
 You can verify that these env vars were set appropriately by using `echo`.
 
 ```sh
-echo ${TF_VAR_aws_access_key}
-```
-
-```
+$ echo ${TF_VAR_aws_access_key}
 ABCDEFGHIJKLMNOPQRST
-```
 
-```sh
-echo ${TF_VAR_aws_secret_key}
-```
-
-```
+$ echo ${TF_VAR_aws_secret_key}
 abcdefghijklmnopqrstuvwxyz12345678910987
-```
 
-```sh
-echo ${VAULT_ADDR}
-```
-
-```
+$ echo ${VAULT_ADDR}
 http://127.0.0.1:8200
-```
 
-```sh
-echo ${VAULT_TOKEN}
-```
-
-```
+$ echo ${VAULT_TOKEN}
 e05a0e71-b460-e045-31a9-187c68ccab17
 ```
 
 ### Step 3: "Producer" Workspace Init
 
-We will start by initializing the "Producer" Workspace. This will initialize Terraform and pull down the appropriate [Terraform providers](https://www.terraform.io/docs/providers/index.html).
+We will start by initializing the "Producer" Workspace. This will initialize Terraform and pull down the appropriate [Terraform providers](https://www.terraform.io/docs/providers/index.html) required by the declared resources.
 
-Be sure you are starting in the root directory of this repository. After running the command, notice Terraform fetches the [AWS](https://www.terraform.io/docs/providers/aws/index.html), [Vault](https://www.terraform.io/docs/providers/vault/index.html], and [Random](https://www.terraform.io/docs/providers/random/index.html) providers.
+Be sure you are starting in the root directory of this repository. After running the command, notice Terraform fetches the [Vault](https://www.terraform.io/docs/providers/vault/index.html) provider.
 
-Take a look at the [producer-workspace/main.tf file](producer-workspace/main.tf) to see what resources Terraform will provision.
+Take a look at the [producer-workspace/main.tf](producer-workspace/main.tf) Terraform template to see the Vault resources Terraform will configure.
 
 #### CLI
 
@@ -206,6 +257,9 @@ $ terraform init
 
 ```
 Initializing the backend...
+
+Successfully configured the backend "local"! Terraform will automatically
+use this backend unless the backend configuration changes.
 
 Initializing provider plugins...
 - Checking for available provider plugins on https://releases.hashicorp.com...
@@ -234,10 +288,9 @@ commands will detect it and remind you to do so if necessary.
 
 ### Step 4: "Producer" Workspace Plan
 
-Run a plan to inspect what Terraform is going to provision in the Producer Workspace. Notice that Terraform's plan is to mount the AWS Secret Engine with a [`default_lease`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#default_lease_ttl_seconds) of `60` seconds, a [`max_lease_ttl`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#max_lease_ttl_seconds) of `120` seconds, and a policy that allows the credentials read from the role to `Create`, `Get`, and `Delete` IAM `Groups` and `Users`. Any credentials read from this role will be dynamically generated with these attributes.
+Run a `terraform plan` to inspect what Terraform is going to provision in the "Producer" Workspace.
 
-![Dynamic IAM Creds](../assets/dynamic-iam-creds.png)
-![Dynamic IAM Creds Policy](../assets/dynamic-iam-creds-policy.png)
+Notice that Terraform's plan is to mount the [AWS Secrets Engine](https://www.vaultproject.io/docs/secrets/aws/index.html) with a [`default_lease_ttl_seconds`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#default_lease_ttl_seconds) of `60` seconds, a [`max_lease_ttl_seconds`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#max_lease_ttl_seconds) of `120` seconds, and a policy that allows the AWS IAM credentials `iam:*` and `ec2:*` permissions. Any credentials read from this role will be dynamically generated with these attributes.
 
 #### CLI
 
@@ -278,7 +331,7 @@ Terraform will perform the following actions:
       id:                        <computed>
       backend:                   "dynamic-aws-creds-producer-path"
       name:                      "dynamic-aws-creds-producer-role"
-      policy:                    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:GetGroup\",\n        \"iam:CreateGroup\",\n        \"iam:DeleteGroup\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
+      policy:                    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:*\",\n        \"ec2:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
 
 
 Plan: 2 to add, 0 to change, 0 to destroy.
@@ -292,11 +345,11 @@ can't guarantee that exactly these actions will be performed if
 
 ### Step 5: "Producer" Workspace Apply
 
-Run the apply to actually provision the resources in the Producer Workspace. Based on the plan, we expect Terraform to...
+Run the `terraform apply` to actually provision the resources in the "Producer" Workspace. Based on the plan, we expect Terraform to...
 
-1.) Use the supplied AWS credentials to mount the AWS Secret Engine in Vault under the path `dynamic-aws-creds-producer`.
-2.) Configure a role for the AWS Secret Engine named `dynamic-aws-creds-producer` with an IAM policy that allows it to Create, Get, and Delete IAM Groups & Users in AWS.
-  - This is the role that will be used by the Consumer Workspace to dynamically generate AWS credentials scoped with this IAM policy to be used by Terraform to provision an [`aws_iam_group` resource](https://www.terraform.io/docs/providers/aws/d/iam_group.html).
+1. Use the AWS credentials supplied by the env vars in [Step 2](#step-2-configure-environment-variables) to mount the AWS Secret Engine in Vault under the path `dynamic-aws-creds-producer-path`.
+2. Configure a role for the [AWS Secrets Engine](https://www.vaultproject.io/docs/secrets/aws/index.html) named `dynamic-aws-creds-producer-role` with an IAM policy that allows it `iam:*` and `ec2:*` permissions.
+  - This role will be used by the "Consumer" Workspace to dynamically generate AWS credentials scoped with this IAM policy to be used by Terraform to provision an [`aws_instance`](https://www.terraform.io/docs/providers/aws/r/instance.html) resource.
 
 #### CLI
 
@@ -308,7 +361,7 @@ Run the apply to actually provision the resources in the Producer Workspace. Bas
 $ terraform apply -auto-approve
 ```
 
-Notice we added the `-auto-approve` switch below. This tells Terraform to just run the apply with out prompting us to verify we actually wanted to apply.
+Notice we added the `-auto-approve` switch. This tells Terraform to just run the apply without prompting us to verify we actually wanted to apply.
 
 ##### Response
 
@@ -324,7 +377,7 @@ vault_aws_secret_backend.aws: Creation complete after 0s (ID: dynamic-aws-creds-
 vault_aws_secret_backend_role.producer: Creating...
   backend: "" => "dynamic-aws-creds-producer-path"
   name:    "" => "dynamic-aws-creds-producer-role"
-  policy:  "" => "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:GetGroup\",\n        \"iam:CreateGroup\",\n        \"iam:DeleteGroup\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
+  policy:  "" => "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:*\",\n        \"ec2:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
 vault_aws_secret_backend_role.producer: Creation complete after 0s (ID: dynamic-aws-creds-producer-path/roles/dynamic-aws-creds-producer-role)
 
 Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
@@ -342,19 +395,19 @@ backend = dynamic-aws-creds-producer-path
 role = dynamic-aws-creds-producer-role
 ```
 
-Notice that we output 2 [Output Variables](https://www.terraform.io/intro/getting-started/outputs.html) - `backend` & `role`. These output variables will be used by the "Consumer" workspace in a later step.
+Notice there are 2 [Output Variables](https://www.terraform.io/intro/getting-started/outputs.html) named `backend` & `role`. These output variables will be used by the "Consumer" workspace in a later step.
 
-If you go to the terminal where your Vault server is running, you should see Vault output something to the below. These means Terraform was successfully able to mount the AWS Secret Engine at the specified path. Although it's not output in the logs, the role has also been configured.
+If you go to the terminal where your Vault server is running, you should see Vault output something similar to the below. This means Terraform was successfully able to mount the AWS Secrets Engine at the specified path. Although it's not output in the logs, the role has also been configured.
 
 ```
-2018/02/09 18:33:34.799899 [INFO ] core: successful mount: path=dynamic-aws-creds-producer-path/ type=aws
+2018/02/10 19:23:37.072445 [INFO ] core: successful mount: path=dynamic-aws-creds-producer-path/ type=aws
 ```
 
 ### Step 6: "Consumer" Workspace Init
 
-Next we will initialize the "Consumer" Workspace, similar to what we did with the "Producer" Workspace. This workspace will consumer the outputs created in the "Producer" Workspace.
+Next we will initialize the "Consumer" Workspace, similar to what we did with the "Producer" Workspace. This Workspace will consume the outputs created in the "Producer" Workspace.
 
-Take a look at the [consumer-workspace/main.tf file](consumer-workspace/main.tf) to see what resources Terraform will provision.
+Take a look at the [consumer-workspace/main.tf](consumer-workspace/main.tf) Terraform template to see the resources Terraform will provision.
 
 #### CLI
 
@@ -377,7 +430,6 @@ use this backend unless the backend configuration changes.
 
 Initializing provider plugins...
 - Checking for available provider plugins on https://releases.hashicorp.com...
-- Downloading plugin for provider "random" (1.1.0)...
 - Downloading plugin for provider "aws" (1.9.0)...
 - Downloading plugin for provider "vault" (1.0.0)...
 
@@ -390,7 +442,6 @@ corresponding provider blocks in configuration, with the constraint strings
 suggested below.
 
 * provider.aws: version = "~> 1.9"
-* provider.random: version = "~> 1.1"
 * provider.vault: version = "~> 1.0"
 
 Terraform has been successfully initialized!
@@ -404,19 +455,19 @@ rerun this command to reinitialize your working directory. If you forget, other
 commands will detect it and remind you to do so if necessary.
 ```
 
-### Step 7: "Consumer" Workspace Plan to Provision `Group` & `User` Resources
+### Step 7: "Consumer" Workspace Plan to Provision EC2 Instance
 
-First log in to your [AWS Console](https://console.aws.amazon.com) and navigate to the IAM "Users" tab. Search for the username prefix `vault-token-terraform-dynamic-aws-creds-producer`. Nothing will show up in your intitial search, but we are now prepared to do a "Refresh" after we run a `terraform plan` to verify that the dynamic IAM credentials were in fact created by Vault and used by Terraform.
+First, login to your [AWS Console](https://console.aws.amazon.com) and navigate to the IAM `Users` tab. Search for the username prefix `vault-token-terraform-dynamic-aws-creds-producer`. Nothing will show up in your initial search, but we are now prepared to do a "Refresh" after we run a `terraform plan` to verify that the dynamic IAM credentials were in fact created by Vault and used by Terraform.
 
-In the [consumer-workspace/main.tf Terraform template](consumer-workspace/main.tf) we've defined 2 AWS resources to be provisioned, the [`aws_iam_group`](https://www.terraform.io/docs/providers/aws/r/iam_group.html) & the [`aws_iam_user`](https://www.terraform.io/docs/providers/aws/r/iam_user.html). Assuming the credentials passed into the AWS provider have access to create the `Group` and `User` resources, the plan should run successfully.
+In the [consumer-workspace/main.tf#L46-L55](consumer-workspace/main.tf#L46-L55) Terraform template we've defined an [`aws_instance`](https://www.terraform.io/docs/providers/aws/r/instance.html) to be provisioned. Assuming the credentials passed into the AWS provider have access to create the EC2 Instance resource, the plan should run successfully.
 
-Now run a plan to inspect what Terraform is going to provision in the "Consumer" Workspace and verify a new set of IAM credentials were created after running the plan.
+Now run a `terraform plan` to inspect what Terraform is going to provision in the "Consumer" Workspace and verify a new set of IAM credentials were created after running the plan.
 
-The reason the IAM credentials were created is we have a [`vault_aws_access_credentials` Data Source](https://www.terraform.io/docs/providers/vault/d/aws_access_credentials.html) in our [consumer-workspace/main.tf Terraform template](consumer-workspace/main.tf) that is requesting the Vault provider to [read AWS IAM credentials](https://www.vaultproject.io/docs/secrets/aws/index.html#usage) from the role named `dynamic-aws-creds-producer-role` in Vault's AWS Secret Engine.
+The reason the IAM credentials were created is we have a [`vault_aws_access_credentials` Data Source](https://www.terraform.io/docs/providers/vault/d/aws_access_credentials.html) in our [consumer-workspace/main.tf#L19-L27](consumer-workspace/main.tf#L19-L27) Terraform template that is requesting the Vault provider to [read AWS IAM credentials](https://www.vaultproject.io/docs/secrets/aws/index.html#usage) from the role named `dynamic-aws-creds-producer-role` in Vault's [AWS Secrets Engine](https://www.vaultproject.io/docs/secrets/aws/index.html).
 
-These credentials are generated by Vault with the [IAM policy](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend_role.html#policy) configured in the [`vault_aws_secret_backend_role` role resource](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend_role.html), and a [`default_lease`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#default_lease_ttl_seconds) and [`max_lease_ttl`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#max_lease_ttl_seconds) configured on the [AWS Secret Engine](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html). These resources were configured by the "Producer" in the [producer-workspace/main.tf Terraform template](producer-workspace/main.tf).
+These credentials are generated by Vault with the appropriate [IAM policy](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend_role.html#policy) configured in the [`vault_aws_secret_backend_role` role](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend_role.html) resource, and a [`default_lease`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#default_lease_ttl_seconds) and [`max_lease_ttl`](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html#max_lease_ttl_seconds) configured on the [AWS Secret Engine](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html). These resources were configured by the "Producer" in the [producer-workspace/main.tf#L13-L40](producer-workspace/main.tf#L13-L40) Terraform template.
 
-Because the `default_lease` is set to `60` seconds, Vault will expire those IAM credentials after `60` seconds and they should dissapear from the AWS IAM Console. Every Terraform run moving forward will now use it's own unique set of AWS IAM credentials that are scoped to whatever the "Producer" has defined!
+Because the `default_lease_ttl_seconds ` is set to `60` seconds, Vault will revoke those IAM credentials and they will be removed from the AWS IAM console after `60` seconds. Every Terraform run moving forward will now use it's own unique set of AWS IAM credentials that are scoped to whatever the "Producer" has defined!
 
 #### CLI
 
@@ -437,6 +488,7 @@ persisted to local or remote state storage.
 
 data.terraform_remote_state.producer: Refreshing state...
 data.vault_aws_access_credentials.creds: Refreshing state...
+data.aws_ami.ubuntu: Refreshing state...
 
 ------------------------------------------------------------------------
 
@@ -446,33 +498,40 @@ Resource actions are indicated with the following symbols:
 
 Terraform will perform the following actions:
 
-  + aws_iam_group.consumer-group
-      id:            <computed>
-      arn:           <computed>
-      name:          "${random_id.name.hex}"
-      path:          "/groups/"
-      unique_id:     <computed>
+  + aws_instance.main
+      id:                           <computed>
+      ami:                          "ami-a22323d8"
+      associate_public_ip_address:  <computed>
+      availability_zone:            <computed>
+      ebs_block_device.#:           <computed>
+      ephemeral_block_device.#:     <computed>
+      instance_state:               <computed>
+      instance_type:                "t2.nano"
+      ipv6_address_count:           <computed>
+      ipv6_addresses.#:             <computed>
+      key_name:                     <computed>
+      network_interface.#:          <computed>
+      network_interface_id:         <computed>
+      placement_group:              <computed>
+      primary_network_interface_id: <computed>
+      private_dns:                  <computed>
+      private_ip:                   <computed>
+      public_dns:                   <computed>
+      public_ip:                    <computed>
+      root_block_device.#:          <computed>
+      security_groups.#:            <computed>
+      source_dest_check:            "true"
+      subnet_id:                    <computed>
+      tags.%:                       "3"
+      tags.Name:                    "dynamic-aws-creds-consumer"
+      tags.TTL:                     "1h"
+      tags.owner:                   "dynamic-aws-creds-consumer-guide"
+      tenancy:                      <computed>
+      volume_tags.%:                <computed>
+      vpc_security_group_ids.#:     <computed>
 
-  + aws_iam_user.consumer-user
-      id:            <computed>
-      arn:           <computed>
-      force_destroy: "false"
-      name:          "${random_id.name.hex}"
-      path:          "/users/"
-      unique_id:     <computed>
 
-  + random_id.name
-      id:            <computed>
-      b64:           <computed>
-      b64_std:       <computed>
-      b64_url:       <computed>
-      byte_length:   "4"
-      dec:           <computed>
-      hex:           <computed>
-      prefix:        "dynamic-aws-creds-consumer-"
-
-
-Plan: 3 to add, 0 to change, 0 to destroy.
+Plan: 1 to add, 0 to change, 0 to destroy.
 
 ------------------------------------------------------------------------
 
@@ -481,16 +540,17 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-### Step 8: "Consumer" Workspace Apply to Provision `Group` & `User` Resources
+![Dynamic IAM Creds](assets/dynamic-iam-creds.png)
 
-Now that we've run a successful plan, the "Consumer" will actually want to provision the `Group` and `User` resources in AWS. We should expect to see yet another set of IAM credentials named with a prefix of `vault-token-terraform-dynamic-aws-creds-producer` and an appropriately scoped IAM policy (`Create`, `Get`, `Delete` on `Group` & `User`) attached. These IAM creds will be dynamically generated by Vault and used for the AWS provider in Terraform to provision the [`aws_iam_group`](https://www.terraform.io/docs/providers/aws/r/iam_group.html) & [`aws_iam_user`](https://www.terraform.io/docs/providers/aws/r/iam_user.html) resources. You will be able to see these in the AWS IAM Console by searching for `Users` with the prefix `user-dynamic-aws-creds-consumer` and `Groups` with the prefix `group-dynamic-aws-creds-consumer`.
+![Dynamic IAM Creds Policy](assets/dynamic-iam-creds-policy.png)
 
-Just like the `terraform plan`, the short lived IAM credentials used by Terraform will be revoked after `60` seconds, however, the `Group` & `User` resources provisioned by Terraform will not.
+### Step 8: "Consumer" Workspace Apply to Provision EC2 Instance
 
-![IAM Group](../assets/iam-group.png)
-![IAM Group Detail](../assets/iam-group-detail.png)
-![IAM User](../assets/iam-user.png)
-![IAM User Detail](../assets/iam-user-detail.png)
+Now that we've run a successful plan, the "Consumer" will actually want to provision the EC2 Instance in AWS. We should expect to see yet another set of IAM credentials named with a prefix of `vault-token-terraform-dynamic-aws-creds-producer` and an appropriately scoped IAM policy attached.
+
+These IAM creds will be dynamically generated by Vault and used for the AWS provider in Terraform to provision the [`aws_instance`](https://www.terraform.io/docs/providers/aws/r/instance.html) resource. You will be able to see this in the AWS EC2 dashboard by searching for `Instances` with the name `dynamic-aws-creds-consumer`.
+
+Just like the `terraform plan`, the short lived IAM credentials used by Terraform will be revoked after `60` seconds.
 
 #### CLI
 
@@ -502,37 +562,49 @@ Just like the `terraform plan`, the short lived IAM credentials used by Terrafor
 $ terraform apply -auto-approve
 ```
 
-Notice we added the `-auto-approve` switch below. This tells Terraform to just run the apply with out prompting us to verify we actually wanted to apply.
+Notice we added the `-auto-approve` switch. This tells Terraform to just run the apply with out prompting us to verify we actually wanted to apply.
 
 ##### Response
 
 ```
 data.terraform_remote_state.producer: Refreshing state...
 data.vault_aws_access_credentials.creds: Refreshing state...
-random_id.name: Creating...
-  b64:         "" => "<computed>"
-  b64_std:     "" => "<computed>"
-  b64_url:     "" => "<computed>"
-  byte_length: "" => "4"
-  dec:         "" => "<computed>"
-  hex:         "" => "<computed>"
-  prefix:      "" => "dynamic-aws-creds-consumer-"
-random_id.name: Creation complete after 0s (ID: 2HlZ8w)
-aws_iam_user.consumer-user: Creating...
-  arn:           "" => "<computed>"
-  force_destroy: "" => "false"
-  name:          "" => "dynamic-aws-creds-consumer-d87959f3"
-  path:          "" => "/users/"
-  unique_id:     "" => "<computed>"
-aws_iam_group.consumer-group: Creating...
-  arn:       "" => "<computed>"
-  name:      "" => "dynamic-aws-creds-consumer-d87959f3"
-  path:      "" => "/groups/"
-  unique_id: "" => "<computed>"
-aws_iam_group.consumer-group: Creation complete after 0s (ID: dynamic-aws-creds-consumer-d87959f3)
-aws_iam_user.consumer-user: Creation complete after 0s (ID: dynamic-aws-creds-consumer-d87959f3)
+data.aws_ami.ubuntu: Refreshing state...
+aws_instance.main: Creating...
+  ami:                          "" => "ami-a22323d8"
+  associate_public_ip_address:  "" => "<computed>"
+  availability_zone:            "" => "<computed>"
+  ebs_block_device.#:           "" => "<computed>"
+  ephemeral_block_device.#:     "" => "<computed>"
+  instance_state:               "" => "<computed>"
+  instance_type:                "" => "t2.nano"
+  ipv6_address_count:           "" => "<computed>"
+  ipv6_addresses.#:             "" => "<computed>"
+  key_name:                     "" => "<computed>"
+  network_interface.#:          "" => "<computed>"
+  network_interface_id:         "" => "<computed>"
+  placement_group:              "" => "<computed>"
+  primary_network_interface_id: "" => "<computed>"
+  private_dns:                  "" => "<computed>"
+  private_ip:                   "" => "<computed>"
+  public_dns:                   "" => "<computed>"
+  public_ip:                    "" => "<computed>"
+  root_block_device.#:          "" => "<computed>"
+  security_groups.#:            "" => "<computed>"
+  source_dest_check:            "" => "true"
+  subnet_id:                    "" => "<computed>"
+  tags.%:                       "" => "3"
+  tags.Name:                    "" => "dynamic-aws-creds-consumer"
+  tags.TTL:                     "" => "1h"
+  tags.owner:                   "" => "dynamic-aws-creds-consumer-guide"
+  tenancy:                      "" => "<computed>"
+  volume_tags.%:                "" => "<computed>"
+  vpc_security_group_ids.#:     "" => "<computed>"
+aws_instance.main: Still creating... (10s elapsed)
+aws_instance.main: Still creating... (20s elapsed)
+aws_instance.main: Creation complete after 25s (ID: i-0c47c6d46f0a71fb8)
 
-Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 
 The state of your infrastructure has been saved to the path
 below. This state is required to modify and destroy your
@@ -542,13 +614,13 @@ use the `terraform show` command.
 State path: terraform.tfstate
 ```
 
-Voila, our "Consumer" has successfully created the AWS resources without ever having long-lived static AWS credentials locally.
+Voila, our "Consumer" has successfully created the EC2 Instance resource without ever having long-lived AWS credentials locally.
 
-### Step 9: "Consumer" to Destroy `Group` & `User` Resources
+![EC2 Instance](assets/ec2-instance.png)
 
-Now let's destroy the `Group` & `User` IAM resources generated by Terraform. After destroy you can check in the AWS IAM Console to verify they were deleted. You should also have seen another set of IAM credentials get _generated_ to run the `terraform destroy` operation.
+### Step 9: "Consumer" to Destroy EC2 Instance
 
-Notice we're using the `--force` switch to prevent Terraform from prompting us to verify it's what we want to do.
+Now let's cleanup the EC2 Instance created by Terraform. After destroying, you can check in the AWS Console to verify they were deleted. You should also have seen another set of IAM credentials get _generated_ to run the `terraform destroy` operation.
 
 #### CLI
 
@@ -557,30 +629,33 @@ Notice we're using the `--force` switch to prevent Terraform from prompting us t
 ##### Request
 
 ```sh
-$ cd ../consumer-workspace
 $ terraform destroy --force
 ```
+
+Notice we're using the `--force` switch to prevent Terraform from prompting us to verify it's what we want to do.
 
 ##### Response
 
 ```
 data.terraform_remote_state.producer: Refreshing state...
-random_id.name: Refreshing state... (ID: 2HlZ8w)
 data.vault_aws_access_credentials.creds: Refreshing state...
-aws_iam_user.consumer-user: Refreshing state... (ID: dynamic-aws-creds-consumer-d87959f3)
-aws_iam_user.consumer-user: Destroying... (ID: dynamic-aws-creds-consumer-d87959f3)
-aws_iam_user.consumer-user: Destruction complete after 0s
-random_id.name: Destroying... (ID: 2HlZ8w)
-random_id.name: Destruction complete after 0s
+data.aws_ami.ubuntu: Refreshing state...
+aws_instance.main: Refreshing state... (ID: i-0c47c6d46f0a71fb8)
+aws_instance.main: Destroying... (ID: i-0c47c6d46f0a71fb8)
+aws_instance.main: Still destroying... (ID: i-0c47c6d46f0a71fb8, 10s elapsed)
+aws_instance.main: Still destroying... (ID: i-0c47c6d46f0a71fb8, 20s elapsed)
+aws_instance.main: Destruction complete after 21s
 
-Destroy complete! Resources: 2 destroyed.
+Destroy complete! Resources: 1 destroyed.
 ```
 
 ### Step 10: "Producer" IAM Policy Update Plan
 
-Now let's say the "Producer" wanted to scope the "Consumers" IAM policy to only allow them to create IAM `Groups` with Terraform. Previously, this would have required us to revoke every "Consumers" IAM credentials and generate new creds with the updated policy. However, because we are dynamically generated IAM credentials for each Terraform run, the "Producer" simply has to update the IAM policy in their [consumer-workspace/main.tf Terraform template](consumer-workspace/main.tf) and they're done.
+Now let's say the "Producer" wanted to scope the "Consumers" IAM policy to only allow them to create `iam` resources with Terraform, but not `ec2`.
 
-To prove this, we will change the IAM policy in the [producer-workspace/main.tf Terraform template](producer-workspace/main.tf) from...
+Previously, this would have required them to revoke every "Consumers" IAM credentials and generate new ones with the updated policy. However, because we are dynamically generating IAM credentials for each Terraform run, the "Producer" simply has to update the IAM policy in their [producer-workspace/main.tf#L27-L38](producer-workspace/main.tf#L27-L38) Terraform template and they're done.
+
+To prove this, we will change the IAM policy in the [producer-workspace/main.tf](producer-workspace/main.tf#L27-L39) Terraform template from...
 
 ```
 {
@@ -589,15 +664,7 @@ To prove this, we will change the IAM policy in the [producer-workspace/main.tf 
     {
       "Effect": "Allow",
       "Action": [
-        "iam:GetGroup",
-        "iam:CreateGroup",
-        "iam:UpdateGroup",
-        "iam:DeleteGroup",
-        "iam:GetUser",
-        "iam:CreateUser",
-        "iam:UpdateUser",
-        "iam:DeleteUser",
-        "iam:ListGroupsForUser"
+        "iam:*", "ec2:*"
       ],
       "Resource": "*"
     }
@@ -614,11 +681,7 @@ to...
     {
       "Effect": "Allow",
       "Action": [
-        "iam:GetGroup",
-        "iam:CreateGroup",
-        "iam:UpdateGroup",
-        "iam:DeleteGroup",
-        "iam:GetUser"
+        "iam:*"
       ],
       "Resource": "*"
     }
@@ -626,8 +689,7 @@ to...
 }
 ```
 
-This means that any "Consumer" should now not be allowed to provision any [`aws_iam_user`](https://www.terraform.io/docs/providers/aws/r/iam_user.html) resources. `GetUser` is a permission still required when provisioning IAM `Groups`.
-
+This means that any "Consumer" should now not be allowed to provision any AWS EC2 resources.
 
 #### CLI
 
@@ -637,6 +699,7 @@ This means that any "Consumer" should now not be allowed to provision any [`aws_
 
 ```sh
 $ cd ../producer-workspace
+$ sed -i '' -e 's/, \"ec2:\*\"//g' main.tf
 $ terraform plan
 ```
 
@@ -659,7 +722,7 @@ Resource actions are indicated with the following symbols:
 Terraform will perform the following actions:
 
   ~ vault_aws_secret_backend_role.producer
-      policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"iam:GetGroup\",\"iam:CreateGroup\",\"iam:DeleteGroup\",\"iam:GetUser\",\"iam:CreateUser\",\"iam:DeleteUser\",\"iam:ListGroupsForUser\"],\"Resource\":\"*\"}]}" => "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:GetGroup\",\n        \"iam:CreateGroup\",\n        \"iam:DeleteGroup\",\n        \"iam:GetUser\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
+      policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"iam:*\",\"ec2:*\"],\"Resource\":\"*\"}]}" => "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
 
 
 Plan: 0 to add, 1 to change, 0 to destroy.
@@ -673,7 +736,7 @@ can't guarantee that exactly these actions will be performed if
 
 ### Step 11: "Producer" Policy Update Apply
 
-We will now apply those changes and update the Vault role's policy.
+We will now apply those changes and update Vault role's policy.
 
 #### CLI
 
@@ -691,7 +754,7 @@ $ terraform apply -auto-approve
 vault_aws_secret_backend.aws: Refreshing state... (ID: dynamic-aws-creds-producer-path)
 vault_aws_secret_backend_role.producer: Refreshing state... (ID: dynamic-aws-creds-producer-path/roles/dynamic-aws-creds-producer-role)
 vault_aws_secret_backend_role.producer: Modifying... (ID: dynamic-aws-creds-producer-path/roles/dynamic-aws-creds-producer-role)
-  policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"iam:GetGroup\",\"iam:CreateGroup\",\"iam:DeleteGroup\",\"iam:GetUser\",\"iam:CreateUser\",\"iam:DeleteUser\",\"iam:ListGroupsForUser\"],\"Resource\":\"*\"}]}" => "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:GetGroup\",\n        \"iam:CreateGroup\",\n        \"iam:DeleteGroup\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
+  policy: "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":[\"iam:*\",\"ec2:*\"],\"Resource\":\"*\"}]}" => "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"iam:*\"\n      ],\n      \"Resource\": \"*\"\n    }\n  ]\n}\n"
 vault_aws_secret_backend_role.producer: Modifications complete after 0s (ID: dynamic-aws-creds-producer-path/roles/dynamic-aws-creds-producer-role)
 
 Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
@@ -709,9 +772,9 @@ backend = dynamic-aws-creds-producer-path
 role = dynamic-aws-creds-producer-role
 ```
 
-### Step 12: "Consumer" Workspace Plan to Provision `Group` & `User` Resources
+### Step 12: "Consumer" Workspace Plan to Provision EC2 Instance
 
-Now we will verify the "Consumer" is not able to provision the "User" resources as it should no longer have the ability to do so based on the updates the "Producer" made to the IAM policy. We should expect to see the `terraform plan` fail here as the credentials generated don't have permission to provision the [`aws_iam_user`](https://www.terraform.io/docs/providers/aws/r/iam_user.html) resource.
+Now we will verify the "Consumer" is _not_ able to provision an EC2 Instance as it should no longer have the ability to do so based on the updates the "Producer" made to the IAM policy. We should expect to see the `terraform plan` fail here as the credentials generated don't have permission to provision the [`aws_instance`](https://www.terraform.io/docs/providers/aws/r/instance.html) resource.
 
 Let's try it.
 
@@ -735,133 +798,22 @@ persisted to local or remote state storage.
 
 data.terraform_remote_state.producer: Refreshing state...
 data.vault_aws_access_credentials.creds: Refreshing state...
+data.aws_ami.ubuntu: Refreshing state...
 
 Error: Error refreshing state: 1 error(s) occurred:
 
-* data.vault_aws_access_credentials.creds: 1 error(s) occurred:
+* data.aws_ami.ubuntu: 1 error(s) occurred:
 
-* data.vault_aws_access_credentials.creds: data.vault_aws_access_credentials.creds: Error checking if credentials are valid: AccessDenied: User: arn:aws:iam::362381645759:user/vault-token-terraform-dynamic-aws-creds-producer1518237036-9178 is not authorized to perform: iam:GetUser on resource: user vault-token-terraform-dynamic-aws-creds-producer1518237036-9178
-	status code: 403, request id: 480bd1bb-0e1b-11e8-bb0b-610f349da931
+* data.aws_ami.ubuntu: data.aws_ami.ubuntu: UnauthorizedOperation: You are not authorized to perform this operation.
+	status code: 403, request id: 5f25a398-9417-4e16-9bae-f336d624e017
 ```
 
-As expected, our plan failed!
-
-### Step 13: "Consumer" Workspace Plan to Provision `Group` Resource
-
-The "Consumer" will need to modify their [consumer-workspace/main.tf Terraform template](consumer-workspace/main.tf) to only provision resources it has permission to. To do this, we will remove the [`aws_iam_user`](https://www.terraform.io/docs/providers/aws/r/iam_user.html) resource shown below from the [consumer-workspace/main.tf Terraform template](consumer-workspace/main.tf) and see if we can successfully provision a `Group`.
-
-```
-# Create AWS IAM User
-resource "aws_iam_user" "consumer-user" {
-  name = "${random_id.name.hex}"
-  path = "/users/"
-}
-```
-
-#### CLI
-
-- [terraform plan](https://www.terraform.io/docs/commands/plan.html)
-
-##### Request
-
-```sh
-$ terraform plan
-```
-
-##### Response
-
-```
-Refreshing Terraform state in-memory prior to plan...
-The refreshed state will be used to calculate this plan, but will not be
-persisted to local or remote state storage.
-
-data.terraform_remote_state.producer: Refreshing state...
-data.vault_aws_access_credentials.creds: Refreshing state...
-
-------------------------------------------------------------------------
-
-An execution plan has been generated and is shown below.
-Resource actions are indicated with the following symbols:
-  + create
-
-Terraform will perform the following actions:
-
-  + aws_iam_group.consumer-group
-      id:          <computed>
-      arn:         <computed>
-      name:        "${random_id.name.hex}"
-      path:        "/groups/"
-      unique_id:   <computed>
-
-  + random_id.name
-      id:          <computed>
-      b64:         <computed>
-      b64_std:     <computed>
-      b64_url:     <computed>
-      byte_length: "4"
-      dec:         <computed>
-      hex:         <computed>
-      prefix:      "dynamic-aws-creds-consumer-"
-
-
-Plan: 2 to add, 0 to change, 0 to destroy.
-
-------------------------------------------------------------------------
-
-Note: You didn't specify an "-out" parameter to save this plan, so Terraform
-can't guarantee that exactly these actions will be performed if
-"terraform apply" is subsequently run.
-```
-
-### Step 14: "Consumer" Workspace Apply to Provision `Group` Resource
-
-And now we can apply.
-
-#### CLI
-
-- [terraform apply](https://www.terraform.io/docs/commands/apply.html)
-
-##### Request
-
-```sh
-$ terraform apply -auto-approve
-```
-
-##### Response
-
-```
-data.terraform_remote_state.producer: Refreshing state...
-data.vault_aws_access_credentials.creds: Refreshing state...
-random_id.name: Creating...
-  b64:         "" => "<computed>"
-  b64_std:     "" => "<computed>"
-  b64_url:     "" => "<computed>"
-  byte_length: "" => "4"
-  dec:         "" => "<computed>"
-  hex:         "" => "<computed>"
-  prefix:      "" => "dynamic-aws-creds-consumer-"
-random_id.name: Creation complete after 0s (ID: ZbvMpw)
-aws_iam_group.consumer-group: Creating...
-  arn:       "" => "<computed>"
-  name:      "" => "dynamic-aws-creds-consumer-65bbcca7"
-  path:      "" => "/groups/"
-  unique_id: "" => "<computed>"
-aws_iam_group.consumer-group: Creation complete after 0s (ID: dynamic-aws-creds-consumer-65bbcca7)
-
-Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
-
-The state of your infrastructure has been saved to the path
-below. This state is required to modify and destroy your
-infrastructure, so keep it safe. To inspect the complete state
-use the `terraform show` command.
-
-State path: terraform.tfstate
-```
-
-Success! We were able to successfully provision an IAM `Group`. Refer back to Step 9 to destroy this resource.
+As expected, our plan failed! The "Producer" would need to add the `ec2:*` permission back to the IAM policy for this plan to succeed.
 
 ## Next Steps
 
-Now play around with the "Producer" permissions and the "Consumer" resources to get a feel for how this workflow can work for you.
+Play around with the "Producer" permissions and the "Consumer" resources to get a feel for how this can work for you.
 
-To take your security to the next level by leveraging Terraform Enterprise's [Secure Storage of Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html#secure-storage-of-variables) to store the Vault token used to authenticate with Vault to generate dynamic AWS credentials for Terraform to use.
+Once finished, run `terraform destroy` in each "Producer" and "Consumer" workspace to ensure all resources are cleaned up.
+
+You can take your security to the next level by leveraging Terraform Enterprise's [Secure Storage of Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html#secure-storage-of-variables) to safely store sensitive variables like the Vault token used for authentication.
