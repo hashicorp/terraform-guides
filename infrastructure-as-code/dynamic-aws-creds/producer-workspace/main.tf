@@ -30,7 +30,7 @@ resource "vault_aws_secret_backend_role" "producer" {
     {
       "Effect": "Allow",
       "Action": [
-        "iam:*"
+        "iam:*", "ec2:*"
       ],
       "Resource": "*"
     }

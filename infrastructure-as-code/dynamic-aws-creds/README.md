@@ -542,7 +542,7 @@ can't guarantee that exactly these actions will be performed if
 
 ![Dynamic IAM Creds](assets/dynamic-iam-creds.png)
 
-![Dynamic IAM Creds Policy](assets/dynamic-iam-creds-policy.png)
+![Dynamic IAM Creds Policy](assets/dynamic-iam-creds-iam-ec2-policy.png)
 
 ### Step 8: "Consumer" Workspace Apply to Provision EC2 Instance
 
@@ -809,6 +809,8 @@ Error: Error refreshing state: 1 error(s) occurred:
 ```
 
 As expected, our plan failed! The "Producer" would need to add the `ec2:*` permission back to the IAM policy for this plan to succeed.
+
+![Dynamic IAM Creds Policy](assets/dynamic-iam-creds-iam-policy.png)
 
 ## Next Steps
 
