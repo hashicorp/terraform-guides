@@ -100,3 +100,6 @@ def generate_instance_report(response):
     results = tmp.getvalue()
     # To keep things simple we make sure these functions always return a string.
     return(results)
+
+if __name__ == '__main__':
+    lambda_handler({}, {})

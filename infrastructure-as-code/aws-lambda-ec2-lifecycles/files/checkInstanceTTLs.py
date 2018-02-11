@@ -98,7 +98,7 @@ def generate_expired_dict(response):
     expired_instances = {}
     for key, value in data.items():
         # A value of -1 signifies that a machine should never be reaped.
-        if int(value['TTL']) != -1:
+        if int(value['TTL']) != -1 and isInteger(value['TTL']):
             launch_time = parser.parse(value['LaunchTime'])
             expires_on = launch_time + timedelta(hours=int(value['TTL']))
             # If we have passed the expires_on time, add to list.
@@ -118,3 +118,13 @@ def sleep_instance(instance_id,region):
     # Uncomment to make this live!
     #ec2.instances.filter(InstanceIds=instance_id).stop()
     logger.info("I would have stopped "+instance_id+" in "+region)
+    
+def isInteger(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+if __name__ == '__main__':
+    lambda_handler({}, {})

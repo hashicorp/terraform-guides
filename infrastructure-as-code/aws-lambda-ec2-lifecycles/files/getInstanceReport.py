@@ -42,3 +42,6 @@ def generate_tsv(response):
         writer.writerow(value.values())
     contents = output.getvalue()
     return(contents)
+
+if __name__ == '__main__':
+    lambda_handler({}, {})

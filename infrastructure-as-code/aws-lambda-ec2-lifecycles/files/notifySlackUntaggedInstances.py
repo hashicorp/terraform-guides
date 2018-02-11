@@ -104,3 +104,6 @@ def generate_leaderboard(response,num_leaders):
     leaderboard = tmp.getvalue()
     # To keep things simple we make sure these functions always return a string.
     return(leaderboard)
+
+if __name__ == '__main__':
+    lambda_handler({}, {})

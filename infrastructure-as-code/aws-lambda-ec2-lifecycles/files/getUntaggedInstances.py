@@ -24,7 +24,12 @@ def check_instance_tags(region):
             # logger.info(instance.tags)
             taglist = []
             for tag in instance.tags:
-                taglist.append(tag['Key'])
+                # Ensures that TTL is valid
+                if tag['Key'] == 'TTL':
+                    if isInteger(tag['Value']):
+                        taglist.append(tag['Key'])
+                else:
+                    taglist.append(tag['Key'])
             if set(mandatory_tags).issubset(set(taglist)):
                 pass
             else:
@@ -62,7 +67,11 @@ def get_untagged_instances():
                             if tag['Key'] == "owner":
                                 owner = tag['Value']
                             if tag['Key'] == "TTL":
-                                ttl = tag['Value']
+                                if isInteger(tag['Value']):
+                                    ttl = tag['Value']
+                                else:
+                                    logger.info("Invalid TTL found: "+tag['Value'])
+                                    ttl = 'None'
                             if tag['Key'] == "created-by":
                                 created_by = tag['Value']
                     # Add more data as you see fit.
@@ -83,6 +92,13 @@ def get_regions():
     c = boto3.client('ec2')
     regions = [region['RegionName'] for region in c.describe_regions()['Regions']]
     return regions
+    
+def isInteger(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
 
 if __name__ == '__main__':
     lambda_handler({}, {})
