@@ -2,6 +2,7 @@
 # instances of the AWS provider in the root module of the workspace.
 # It does not check providers in nested modules
 
+import "tfconfig"
 import "tfplan"
 import "strings"
 
@@ -9,10 +10,10 @@ import "strings"
 region_values = []
 
 # Iterate through all AWS providers in root module
-if ((length(tfplan.config.providers) else 0) > 0) {
-  providers = tfplan.config.providers
+if ((length(tfconfig.providers) else 0) > 0) {
+  providers = tfconfig.providers
   if "aws" in keys(providers) {
-    aws = tfplan.config.providers.aws
+    aws = tfconfig.providers.aws
     aliases = aws["alias"]
     for aliases as alias, data {
       print ( "alias is: ", alias )
