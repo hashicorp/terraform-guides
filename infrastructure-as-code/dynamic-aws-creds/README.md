@@ -54,13 +54,13 @@ Below are all of the consecutive commands that need to be run to complete this g
 
 ```sh
 # Start Vault server
-$ vault server -dev
+$ vault server -dev -dev-root-token-id=root
 
 # Export env vars
 export TF_VAR_aws_access_key=${AWS_ACCESS_KEY_ID} # AWS Access Key ID - This command assumes the AWS Access Key ID is set in your environment as AWS_ACCESS_KEY_ID
 export TF_VAR_aws_secret_key=${AWS_SECRET_ACCESS_KEY} # AWS Secret Access Key - This command assumes the AWS Access Key ID is set in your environment as AWS_SECRET_ACCESS_KEY
 export VAULT_ADDR=http://127.0.0.1:8200 # Address of Vault server
-export VAULT_TOKEN=<VAULT_TOKEN> # Vault token
+export VAULT_TOKEN=root # Vault token
 
 # Provision "Producer" Workspace Vault resources
 $ cd producer-workspace
@@ -110,7 +110,7 @@ $ vault server -dev
 export TF_VAR_aws_access_key=${AWS_ACCESS_KEY_ID} # AWS Access Key ID - This command assumes the AWS Access Key ID is set in your environment as AWS_ACCESS_KEY_ID
 export TF_VAR_aws_secret_key=${AWS_SECRET_ACCESS_KEY} # AWS Secret Access Key - This command assumes the AWS Access Key ID is set in your environment asAWS_SECRET_ACCESS_KEY
 export VAULT_ADDR=http://127.0.0.1:8200 # Address of the Vault server (e.g. `http://127.0.0.1:8200` if running locally)
-export VAULT_TOKEN=e05a0e71-b460-e045-31a9-187c68ccab17 # Vault token the Vault provider will use to mount and configure the [Vault AWS secret backend](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) and [Vault AWS secret backend role](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) - In this case we grabbed the `Root Token` token output from the above Vault dev server logs
+export VAULT_TOKEN=root # Vault token the Vault provider will use to mount and configure the [Vault AWS secret backend](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) and [Vault AWS secret backend role](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) - In this case we grabbed the `Root Token` token output from the above Vault dev server logs
 
 # Provision "Producer" Workspace
 $ cd producer-workspace
@@ -159,7 +159,7 @@ The unseal key and root token are displayed below in case you want to
 seal/unseal the Vault or re-authenticate.
 
 Unseal Key: vfFcgKeoHUoIDNUNqQsrzl6Y0kASr9AZ1QCnsd6tF2k=
-Root Token: e05a0e71-b460-e045-31a9-187c68ccab17
+Root Token: root
 
 Development mode should NOT be used in production installations!
 
@@ -215,7 +215,7 @@ Notice that we're also setting the required [Vault Provider Arguments](https://w
 export TF_VAR_aws_access_key=${AWS_ACCESS_KEY_ID} # AWS Access Key ID - This command assumes the AWS Access Key ID is set in your environment as AWS_ACCESS_KEY_ID
 export TF_VAR_aws_secret_key=${AWS_SECRET_ACCESS_KEY} # AWS Secret Access Key - This command assumes the AWS Access Key ID is set in your environment as AWS_SECRET_ACCESS_KEY
 export VAULT_ADDR=http://127.0.0.1:8200 # Address of the Vault server (e.g. `http://127.0.0.1:8200` if running locally)
-export VAULT_TOKEN=e05a0e71-b460-e045-31a9-187c68ccab17 # Vault token the Vault provider will use to mount and configure the [Vault AWS secret backend](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) and [Vault AWS secret backend role](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) - In this case we grabbed the `Root Token` token output from the above Vault dev server logs
+export VAULT_TOKEN=root # Vault token the Vault provider will use to mount and configure the [Vault AWS secret backend](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) and [Vault AWS secret backend role](https://www.terraform.io/docs/providers/vault/r/aws_secret_backend.html) - In this case we grabbed the `Root Token` token output from the above Vault dev server logs
 ```
 
 ##### Response
@@ -233,7 +233,7 @@ $ echo ${VAULT_ADDR}
 http://127.0.0.1:8200
 
 $ echo ${VAULT_TOKEN}
-e05a0e71-b460-e045-31a9-187c68ccab17
+root
 ```
 
 ### Step 3: "Producer" Workspace Init
