@@ -18,8 +18,8 @@ You can interact with Consul using any of the CLI (https://www.consul.io/docs/co
 
   # Use the CLI to retrieve the Consul members, write a key/value, and read that key/value
   $ consul members
-  $ consul kv put foo bar=baz
-  $ consul kv get foo
+  $ consul kv put cli bar=baz
+  $ consul kv get cli
 
   # Use the API to retrieve the Consul members, write a key/value, and read that key/value
   $ curl \
@@ -27,9 +27,9 @@ You can interact with Consul using any of the CLI (https://www.consul.io/docs/co
   $ curl \
       -X PUT \
       -d '{"bar=baz"}' \
-      http://127.0.0.1:8500/v1/kv/foo | jq '.'
+      http://127.0.0.1:8500/v1/kv/api | jq '.'
   $ curl \
-      http://127.0.0.1:8500/v1/kv/foo | jq '.'
+      http://127.0.0.1:8500/v1/kv/api | jq '.'
 
 You can interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html) or API (https://www.vaultproject.io/api/index.html) commands.
 
@@ -37,18 +37,18 @@ You can interact with Vault using any of the CLI (https://www.vaultproject.io/do
   $ echo $VAULT_TOKEN
 
   # Use the CLI to write and read a generic secret
-  $ vault write secret/foo bar=baz
-  $ vault read secret/foo
+  $ vault write secret/cli bar=baz
+  $ vault read secret/cli
 
   # Use the API to write and read a generic secret
   $ curl \
       -H "X-Vault-Token: $VAULT_TOKEN" \
       -X POST \
       -d '{"bar":"baz"}' \
-      http://127.0.0.1:8200/v1/secret/foo | jq '.'
+      http://127.0.0.1:8200/v1/secret/api | jq '.'
   $ curl \
       -H "X-Vault-Token: $VAULT_TOKEN" \
-      http://127.0.0.1:8200/v1/secret/foo | jq '.'
+      http://127.0.0.1:8200/v1/secret/api | jq '.'
 
 You can interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html) or API (https://www.nomadproject.io/api/index.html) commands.
 
