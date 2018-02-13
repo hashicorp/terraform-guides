@@ -33,13 +33,13 @@ You can now interact with Consul using any of the CLI (https://www.consul.io/doc
 
 To SSH into one of the Consul server nodes from the Bastion host, run the below command and it will use Consul DNS to lookup the address of one of the healthy Consul server nodes and SSH you in.
 
-  ssh -A ${module.consul_aws.consul_username}@consul.service.consul
+  $ ssh -A ${module.hashistack_aws.hashistack_username}@consul.service.consul
 
 You won't be able to start interacting with Vault from the Bastion host yet as the Vault server has not been initialized & unsealed. Follow the below steps to set this up.
 
 1.) SSH into one of the Vault servers registered with Consul, you can use the below command to accomplish this automatically (we'll use Consul DNS moving forward once Vault is unsealed)
 
-  $ ssh -A ${module.vault_aws.vault_username}@$(curl http://127.0.0.1:8500/v1/agent/members | jq -M -r '[.[] | select(.Name | contains ("${var.name}-vault")) | .Addr][0]')
+  $ ssh -A ${module.hashistack_aws.hashistack_username}@$(curl http://127.0.0.1:8500/v1/agent/members | jq -M -r '[.[] | select(.Name | contains ("${var.name}-hashistack")) | .Addr][0]')
 
 2.) Initialize Vault
 
@@ -81,7 +81,7 @@ Repeat steps 1.) and 3.) to unseal the other "standby" Vault servers as well to 
 
 Now that Vault is unsealed, you can seemlessly SSH back into unsealed Vault servers using Consul DNS (rather than using the command in Step 1). The nodes returned will be both active and standby Vault servers as long as they're unsealed.
 
-  ssh -A ${module.vault_aws.vault_username}@vault.service.consul
+  $ ssh -A ${module.hashistack_aws.hashistack_username}@vault.service.consul
 
 You can now interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html) or API (https://www.nomadproject.io/api/index.html) commands.
 
@@ -127,7 +127,7 @@ You can now interact with Nomad using any of the CLI (https://www.nomadproject.i
 
 To SSH into Nomad server nodes, you can also leverage Consul's DNS functionality.
 
-  ssh -A ${module.consul_aws.consul_username}@nomad-server.service.consul
+  $ ssh -A ${module.hashistack_aws.hashistack_username}@nomad-server.service.consul
 
 To force the generation of a new key, the private key instance can be "tainted" using the below command.
 

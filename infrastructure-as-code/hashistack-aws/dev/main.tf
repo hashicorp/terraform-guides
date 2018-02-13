@@ -33,7 +33,7 @@ data "aws_ami" "base" {
 }
 
 data "template_file" "consul_install" {
-  template = "${file("${path.module}/../../templates/install-consul-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../templates/install-consul-systemd.sh.tpl")}"
 
   vars = {
     consul_version = "${var.consul_version}"
@@ -42,7 +42,7 @@ data "template_file" "consul_install" {
 }
 
 data "template_file" "vault_install" {
-  template = "${file("${path.module}/../../templates/install-vault-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../templates/install-vault-systemd.sh.tpl")}"
 
   vars = {
     vault_version = "${var.vault_version}"
@@ -51,7 +51,7 @@ data "template_file" "vault_install" {
 }
 
 data "template_file" "nomad_install" {
-  template = "${file("${path.module}/../../templates/install-nomad-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../templates/install-nomad-systemd.sh.tpl")}"
 
   vars = {
     nomad_version = "${var.nomad_version}"
@@ -69,7 +69,7 @@ module "hashistack_aws" {
   subnet_ids   = "${module.network_aws.subnet_public_ids}" # Provision into public subnets to provide easier accessibility without a Bastion host
   public_ip    = "${var.hashistack_public_ip}"
   count        = "${var.hashistack_count}"
-  image_id     = "${var.hashistack_image_id != "" ? var.hashistack_image_id : data.aws_ami.base.id}"
+  image_id     = "${var.image_id != "" ? var.image_id : data.aws_ami.base.id}"
   ssh_key_name = "${element(module.ssh_keypair_aws.name, 0)}"
   user_data    = "${data.template_file.hashistack_user_data.rendered}" # Custom user_data
   user_data    = <<EOF

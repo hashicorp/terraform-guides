@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "[---Begin quick-start-vault-systemd.sh---]"
+echo "[---Begin quick-start-hashistack-systemd.sh---]"
 
 echo "Set variables"
 LOCAL_IPV4=$(curl -s ${local_ip_url})
@@ -20,14 +20,7 @@ cat <<CONFIG | sudo tee $CONSUL_CONFIG_FILE
   "server": true,
   "bootstrap_expect": ${consul_bootstrap},
   "leave_on_terminate": true,
-  "retry_join": ["provider=${provider} tag_key=Consul-Auto-Join tag_value=${name}"],
-  "encrypt": "${consul_encrypt}",
-  "ca_file": "$CONSUL_CACERT_FILE",
-  "cert_file": "$CONSUL_CLIENT_CERT_FILE",
-  "key_file": "$CONSUL_CLIENT_KEY_FILE",
-  "verify_incoming": true,
-  "verify_outgoing": true,
-  "ports": { "https": 8080 }
+  "retry_join": ["provider=${provider} tag_key=Consul-Auto-Join tag_value=${name}"]
 }
 CONFIG
 
@@ -121,4 +114,4 @@ SWITCHES
 echo "Restart Nomad"
 sudo systemctl restart nomad
 
-echo "[---quick-start-vault-systemd.sh Complete---]"
+echo "[---quick-start-hashistack-systemd.sh Complete---]"

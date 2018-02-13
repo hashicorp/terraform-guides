@@ -2,29 +2,25 @@
 
 echo "[---Begin install-consul-systemd.sh---]"
 
-echo "Download scripts"
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/download-guides-configuration.sh | sudo bash
-
 echo "Run base script"
-bash /tmp/shared/scripts/base.sh
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/base.sh | bash
 
 echo "Setup Consul user"
 export GROUP=consul
 export USER=consul
 export COMMENT=Consul
 export HOME=/srv/consul
-bash /tmp/shared/scripts/setup-user.sh
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/setup-user.sh | bash
 
 echo "Install Consul"
 export VERSION=${consul_version}
 export URL=${consul_url}
-bash /tmp/consul/scripts/install-consul.sh
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/scripts/install-consul.sh | bash
 
 echo "Install Consul Systemd"
-bash /tmp/consul/scripts/install-consul-systemd.sh
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/scripts/install-consul-systemd.sh | bash
 
 echo "Cleanup install files"
-sudo rm -rf /tmp/*
-sudo rm -rf /tmp/.git*
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/cleanup.sh | bash
 
 echo "[---install-consul-systemd.sh Complete---]"
