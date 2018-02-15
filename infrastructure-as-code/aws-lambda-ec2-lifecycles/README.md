@@ -1,4 +1,4 @@
-# Terraforming EC2 lifecycles with AWS Lambda
+# Terraforming EC2 lifecycles with AWS Lambda & Slack
 Terraform configuration for lifecycle management of AWS instances.
 
 ![Lambda bot posting to Slack](./assets/good_morning.png)
