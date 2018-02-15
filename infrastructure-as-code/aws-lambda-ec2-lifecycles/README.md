@@ -70,11 +70,13 @@ terraform apply
 ## Steps
 The following walkthrough describes in detail the steps required to enable the cleanup and 'reaper' scripts that are included in this repo.
 
-1. Set up your Slack incoming webhook: https://my.slack.com/services/new/incoming-webhook/. Feel free to give your new bot a unique name, icon and description. Make note of the Webhook URL. This is a specially coded URL that allows remote applications to post data into your Slack channels. Do not share this link publicly or commit it to your source code repo. Choose the channel you want your bot to post messages to.
+### Step 1: Configure incoming Slack webhook
+Set up your Slack incoming webhook: https://my.slack.com/services/new/incoming-webhook/. Feel free to give your new bot a unique name, icon and description. Make note of the Webhook URL. This is a specially coded URL that allows remote applications to post data into your Slack channels. Do not share this link publicly or commit it to your source code repo. Choose the channel you want your bot to post messages to.
 
 ![Slack Webhook Config Page](./assets/aws_bot.png)
 
-2. Edit the `variables.tf` file and choose which region you want to run your Lambda functions in. These functions can be run from any region and manage instances in any other region.
+### Step 2: Configure your variables
+Edit the `variables.tf` file and choose which region you want to run your Lambda functions in. These functions can be run from any region and manage instances in any other region.
 
 ```
 variable "region" {
@@ -88,18 +90,30 @@ variable "slack_hook_url" {
 }
 ```
 
-3. Set the `slack_hook_url` variable to the URL you generated in step #1.
-4. Set any tags that you want to be considered mandatory in the `mandatory_tags` variable. This is a comma separated list, with no spaces between items.
-5. Set the `reap_days` and `sleep_days` to your liking. These represent the number of days after launch that an untagged instance will be stopped and terminated respectively.
-6. Save the `variables.tf` file and run `terraform plan`. Make sure that the command exits cleanly.
-7. Run `terraform apply` to build out all the resources listed in `main.tf`.
-8. Now you can test your new lambda functions. Use the test button at the top of the page to ensure they are working correctly. For your test event you can simply create a dummy event with the default JSON payload.
+ * Set the `slack_hook_url` variable to the URL you generated in step #1.  
+ * Set any tags that you want to be considered mandatory in the `mandatory_tags` variable. This is a comma separated list, with no spaces between items.  
+ * Set the `reap_days` and `sleep_days` to your liking. These represent the number of days after launch that an untagged instance will be stopped and terminated respectively.  
+ * Save the `variables.tf` file.  
+
+### Step 3: Run Terraform
+
+#### CLI
+ * [Terraform Apply Docs](https://www.terraform.io/docs/commands/apply.html)
+
+Run `terraform plan` and then `terraform apply` to build out all the lambda functions and permissions.
+
+### Step 4: Test your Lambda functions
+Now you can test your new lambda functions. Use the test button at the top of the page to ensure they are working correctly. For your test event you can simply create a dummy event with the default JSON payload:
 
 ![Configure test event](./assets/dummy_event.png)
 
-9. Check your slack channel to see the messages posted from your bot.
-10. By default the reporting lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`. The instance_reaper will be most effective if it is run every hour.
-11. IMPORTANT: If you want to actually stop and terminate instances in a live environment, you must uncomment/edit the code inside of `cleanUntaggedInstances.py` and `checkInstanceTTLs.py`. We have commented out the lines that do these actions so you can test before going live. See below for the lines that handle stop() and terminate() actions:
+Check your slack channel to see the messages posted from your bot.
+
+#### Step 5: Adjust Schedule
+By default the reporting lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`. The instance_reaper will be most effective if it is run every hour.
+
+#### Step 6: Go live
+_IMPORTANT_: If you want to actually stop and terminate instances in a live environment, you must uncomment/edit the code inside of `cleanUntaggedInstances.py` and `checkInstanceTTLs.py`. We have commented out the lines that do these actions so you can test before going live. See below for the lines that handle stop() and terminate() actions:
 
 ```
 def sleep_instance(instance_id,region):
