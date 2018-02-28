@@ -111,15 +111,17 @@ def generate_stop_dict(response):
     for key, value in data.items():
         launch_time = parser.parse(value['LaunchTime'])
         stop_on = launch_time + timedelta(days=int(SLEEPDAYS))
-        # If we have passed the stop_on time, add to list.
-        if stop_on < datetime.now(timezone.utc):
-            stop_instances[key] = {
-                'RegionName':value['RegionName'],
-                'Owner':value['Owner'],
-                'TTL':value['TTL'],
-                'LaunchTime':str(launch_time),
-                'StopOn':str(stop_on)
-            }
+        # Only proceed if the instance is running
+        if value['State'] == 'running':
+            # If we have passed the stop_on time, add to list.
+            if stop_on < datetime.now(timezone.utc):
+                stop_instances[key] = {
+                    'RegionName':value['RegionName'],
+                    'Owner':value['Owner'],
+                    'TTL':value['TTL'],
+                    'LaunchTime':str(launch_time),
+                    'StopOn':str(stop_on)
+                }
     return stop_instances
 
 def generate_terminate_dict(response):

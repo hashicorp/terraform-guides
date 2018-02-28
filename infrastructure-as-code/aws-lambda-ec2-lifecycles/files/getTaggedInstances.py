@@ -79,6 +79,7 @@ def get_tagged_instances():
                             'InstanceType': instance['InstanceType'],
                             'RegionName': r,
                             'LaunchTime': str(instance['LaunchTime']),
+                            'State': instance['State']['Name'],
                             'KeyName': instance.get('KeyName'),
                             'Name': name,
                             'Owner': owner,
