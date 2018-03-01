@@ -1,0 +1,39 @@
+import "json"
+import "tfplan"
+
+# get all IAM policy resources from the tfplan
+all_policy_resources = func() {
+    policies = []
+    for tfplan.module_paths as path {
+        resources = values(tfplan.module(path).resources.aws_iam_policy) else []
+        for resources as _, r {
+            policies += values(r)
+        }
+    }
+
+    return policies
+}
+
+# get all IAM Policy statements
+policy_statements = func() {
+    statements = []
+    for all_policy_resources() as r {
+        statements += json.unmarshal(r.applied.policy).Statement
+    }
+    return statements
+}
+
+valid_statement = func(s) {
+    if s.Action contains "iam:PassRole" {
+    return s.Resource is not "*"
+  }
+  
+  return true
+}
+  
+# Main rule that requires other rules to be true
+main = rule {
+    all policy_statements() as s {
+        valid_statement(s)
+    }
+}
