@@ -6,8 +6,8 @@
 # Set address if using private Terraform Enterprise server.
 # Set organization and workspace to create.
 # You should edit these before running.
-address="atlas.hashicorp.com"
-organization="<your_organization>"
+address="dan-ptfe.hashidemos.io"
+organization="bank"
 workspace="workspace-from-api"
 
 # You can change sleep duration if desired
