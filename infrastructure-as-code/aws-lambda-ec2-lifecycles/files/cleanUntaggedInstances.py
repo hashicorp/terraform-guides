@@ -9,6 +9,7 @@ import csv
 import io
 from datetime import datetime,timezone,timedelta
 from dateutil import parser
+from distutils.util import strtobool
 
 # Required if you want to encrypt your Slack Hook URL in the AWS console
 # from base64 import b64decode
@@ -23,6 +24,7 @@ HOOK_URL = os.environ['slackHookUrl']
 
 SLEEPDAYS = os.environ['sleepDays']
 REAPDAYS = os.environ['reapDays']
+ISACTIVE = os.environ['isActive']
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -53,12 +55,17 @@ def lambda_handler(event, context):
     for key, value in terminate_dict.items():
         writer.writerow([key, value['RegionName'], value['TerminateOn']])
     contents = output.getvalue()
+
+    if str_to_bool(ISACTIVE) == False:
+        title_text = ':broom: Untagged Janitor - TESTING MODE'
+    else:
+        title_text = ':broom: Untagged Janitor - ACTIVE MODE'
     
     send_slack_message(
         msg_text, 
-        title='Untagged Instance Report - TESTING',
+        title=title_text,
         text="```\n"+str(contents)+"\n```",
-        fallback='Untagged Instance Report - TESTING',
+        fallback='Untagged Instance Report',
         color='warning'
     )
     
@@ -145,16 +152,44 @@ def generate_terminate_dict(response):
             }
     return terminate_instances
 
+# TODO: Move these into a central file and import them
+def str_to_bool(string):
+    return bool(strtobool(str(string)))
+
 def sleep_instance(instance_id,region):
-    """Stops instances that have gone beyond their TTL"""
-    # Uncomment to make this live!
-    #ec2 = boto3.resource('ec2', region_name=region)
-    #ec2.instances.filter(InstanceIds=instance_id).stop()
-    logger.info("I would have stopped "+instance_id+" in "+region)
+    ec2 = boto3.resource('ec2', region_name=region)
+    """Stops instances"""
+    if str_to_bool(ISACTIVE) == True:
+        try:
+            # Uncomment to make this live!
+            #ec2.instances.filter(InstanceIds=[instance_id]).stop()
+            logger.info("I stopped "+instance_id+" in "+region)
+        except Exception as e:
+            logger.info("Problem stopping instance: "+instance_id)
+            logger.info(e)
+    else:
+        logger.info("I would have stopped "+instance_id+" in "+region)
 
 def terminate_instance(instance_id,region):
-    """Stops instances that have gone beyond their TTL"""
-    # Uncomment to make this live!
-    #ec2 = boto3.resource('ec2', region_name=region)
-    #ec2.instances.filter(InstanceIds=instance_id).terminate()
-    logger.info("I would have terminated "+instance_id+" in "+region)
+    ec2 = boto3.resource('ec2', region_name=region)
+    """Terminates instances"""
+    if str_to_bool(ISACTIVE) == True:
+        try:
+            # Uncomment to make this live!
+            #ec2.instances.filter(InstanceIds=[instance_id]).terminate()
+            logger.info("I terminated "+instance_id+" in "+region)
+        except Exception as e:
+            logger.info("Problem terminating instance: "+instance_id)
+            logger.info(e)
+    else:
+        logger.info("I would have terminated "+instance_id+" in "+region)
+    
+def isInteger(s):
+    try: 
+        int(s)
+        return True
+    except ValueError:
+        return False
+
+if __name__ == '__main__':
+    lambda_handler({}, {})

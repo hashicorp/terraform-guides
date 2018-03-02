@@ -93,6 +93,7 @@ variable "slack_hook_url" {
  * Set the `slack_hook_url` variable to the URL you generated in step #1.  
  * Set any tags that you want to be considered mandatory in the `mandatory_tags` variable. This is a comma separated list, with no spaces between items.  
  * Set the `reap_days` and `sleep_days` to your liking. These represent the number of days after launch that an untagged instance will be stopped and terminated respectively.  
+ * Leave the `is_active` variable set to 0 for testing. You must set this to 1 or True if you want to activate the scripts. 0 or False means reporting mode where nothing is actually stopped or terminated.
  * Save the `variables.tf` file.  
 
 ### Step 3: Run Terraform Plan
@@ -167,22 +168,30 @@ Check your slack channel to see the messages posted from your bot.
 By default the reporting lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`. The instance_reaper will be most effective if it is run every hour.
 
 ### Step 6: Go live
-_IMPORTANT_: If you want to actually stop and terminate instances in a live environment, you must uncomment/edit the code inside of `cleanUntaggedInstances.py` and `checkInstanceTTLs.py`. We have commented out the lines that do these actions so you can test before going live. See below for the lines that handle `stop()` and `terminate()` actions:
+_IMPORTANT_: If you want to actually stop and terminate instances in a live environment, you must uncomment/edit the code inside of `cleanUntaggedInstances.py` and `checkInstanceTTLs.py`. We have commented out the lines that do these actions so you can test before going live.  This is for your own safety and protection. In order to activate these scripts you must *both* uncomment those lines *and* set the is_active variable to True. You can uncomment the lines directly in the AWS Lambda editor, or make the changes locally and re-deploy your lambdas.
+
+See below for the lines that handle `stop()` and `terminate()` actions.
 
 ```
 def sleep_instance(instance_id,region):
+    ec2 = boto3.resource('ec2', region_name=region)
     """Stops instances that have gone beyond their TTL"""
-    # Uncomment to make this live!
-    #ec2 = boto3.resource('ec2', region_name=region)
-    #ec2.instances.filter(InstanceIds=instance_id).stop()
-    logger.info("I would have stopped "+instance_id+" in "+region)
+    if str_to_bool(ISACTIVE) == True:
+        # Uncomment to make this live!
+        #ec2.instances.filter(InstanceIds=instance_id).stop()
+        logger.info("I stopped "+instance_id+" in "+region)
+    else:
+        logger.info("I would have stopped "+instance_id+" in "+region)
 
 def terminate_instance(instance_id,region):
+    ec2 = boto3.resource('ec2', region_name=region)
     """Stops instances that have gone beyond their TTL"""
-    # Uncomment to make this live!
-    #ec2 = boto3.resource('ec2', region_name=region)
-    #ec2.instances.filter(InstanceIds=instance_id).terminate()
-    logger.info("I would have terminated "+instance_id+" in "+region)
+    if str_to_bool(ISACTIVE) == True:
+        # Uncomment to make this live!
+        #ec2.instances.filter(InstanceIds=instance_id).terminate()
+        logger.info("I terminated "+instance_id+" in "+region)
+    else:
+        logger.info("I would have terminated "+instance_id+" in "+region)
 ```
 
 ## Next Steps 

@@ -8,6 +8,7 @@ import csv
 import io
 from datetime import datetime,timezone,timedelta
 from dateutil import parser
+from distutils.util import strtobool
 
 # Required if you want to encrypt your Slack Hook URL in the AWS console
 # from base64 import b64decode
@@ -19,6 +20,7 @@ SLACK_CHANNEL = os.environ['slackChannel']
 # ENCRYPTED_HOOK_URL = os.environ['slackHookUrl']
 # HOOK_URL = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['slackHookUrl']))['Plaintext'].decode('utf-8')
 HOOK_URL = os.environ['slackHookUrl']
+ISACTIVE = os.environ['isActive']
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -43,12 +45,17 @@ def lambda_handler(event, context):
         #value['InstanceId'] = key
         writer.writerow([key, value['RegionName'], value['ExpiresOn']])
     contents = output.getvalue()
-    
+
+    if str_to_bool(ISACTIVE) == False:
+        title_text = ':reaper: Instance Reaper - TESTING MODE'
+    else:
+        title_text = ':reaper: Instance Reaper - ACTIVE MODE'
+
     # If there are any instances on the list, notify slack.
     if expired:
         send_slack_message(
             msg_text, 
-            title='Expired TTL Instance Report - TESTING',
+            title=title_text,
             text="```\n"+str(contents)+"\n```",
             fallback='Expired Instance Cleanup',
             color='warning'
@@ -56,7 +63,7 @@ def lambda_handler(event, context):
 
     # Put expired TTL instances down
     for instance,data in expired.items():
-        sleep_instance(instance,data['RegionName'])
+        terminate_instance(instance,data['RegionName'])
     
 def send_slack_message(msg_text, **kwargs):
     """Sends a slack message to the slackChannel you specify. The only parameter
@@ -112,12 +119,37 @@ def generate_expired_dict(response):
                 }
     return expired_instances
 
+# TODO: Move these into a central file and import them
+def str_to_bool(string):
+    return bool(strtobool(str(string)))
+
 def sleep_instance(instance_id,region):
     ec2 = boto3.resource('ec2', region_name=region)
-    """Stops instances that have gone beyond their TTL"""
-    # Uncomment to make this live!
-    #ec2.instances.filter(InstanceIds=instance_id).stop()
-    logger.info("I would have stopped "+instance_id+" in "+region)
+    """Stops instances"""
+    if str_to_bool(ISACTIVE) == True:
+        try:
+            # Uncomment to make this live!
+            #ec2.instances.filter(InstanceIds=[instance_id]).stop()
+            logger.info("I stopped "+instance_id+" in "+region)
+        except Exception as e:
+            logger.info("Problem stopping instance: "+instance_id)
+            logger.info(e)
+    else:
+        logger.info("I would have stopped "+instance_id+" in "+region)
+
+def terminate_instance(instance_id,region):
+    ec2 = boto3.resource('ec2', region_name=region)
+    """Terminates instances"""
+    if str_to_bool(ISACTIVE) == True:
+        try:
+            # Uncomment to make this live!
+            #ec2.instances.filter(InstanceIds=[instance_id]).terminate()
+            logger.info("I terminated "+instance_id+" in "+region)
+        except Exception as e:
+            logger.info("Problem terminating instance: "+instance_id)
+            logger.info(e)
+    else:
+        logger.info("I would have terminated "+instance_id+" in "+region)
     
 def isInteger(s):
     try: 

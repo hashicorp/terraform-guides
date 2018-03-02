@@ -12,16 +12,17 @@ resource "aws_lambda_function" "checkInstanceTTLs" {
     variables = {
       slackChannel = "${var.slack_channel}"
       slackHookUrl = "${var.slack_hook_url}"
+      isActive = "${var.is_active}"
     }
   }
 }
 
 # Here we create a cloudwatch event rule, essentially a cron job that
-# will call our lambda function every day.  Adjust to your schedule.
+# will call our lambda function every hour.  Adjust to your schedule.
 resource "aws_cloudwatch_event_rule" "check_instance_ttls" {
   name = "check_instance_ttls"
   description = "Check instance TTLs to see if they are expired"
-  schedule_expression = "cron(0 8 * * ? *)"
+  schedule_expression = "cron(0 * * * ? *)"
 }
 
 resource "aws_cloudwatch_event_target" "reaper_report" {
