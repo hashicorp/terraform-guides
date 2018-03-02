@@ -56,7 +56,7 @@ while IFS=',' read -r key value category hcl sensitive
 do
   sed -e "s/my-organization/$organization/" -e "s/my-workspace/$workspace/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
   echo "Adding variable $key with value $value in category $category with hcl $hcl and sensitive $sensitive"
-  upload_variable_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Busername%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 done < variables.csv
 
 # Do a run
