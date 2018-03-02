@@ -15,6 +15,7 @@ resource "aws_lambda_function" "cleanUntaggedInstances" {
       slackHookUrl = "${var.slack_hook_url}"
       sleepDays = "${var.sleep_days}"
       reapDays = "${var.reap_days}"
+      isActive = "${var.is_active}"
     }
   }
 }
