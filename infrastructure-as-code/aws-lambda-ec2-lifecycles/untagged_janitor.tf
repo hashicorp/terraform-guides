@@ -8,7 +8,7 @@ resource "aws_lambda_function" "cleanUntaggedInstances" {
   source_code_hash = "${base64sha256(file("./files/cleanUntaggedInstances.zip"))}"
   runtime          = "python3.6"
   timeout          = "120"
-  description      = "Checks instance TTLs for expiration and deals with them accordingly."
+  description      = "Stops or terminates untagged instances after a pre-set number of days."
   environment {
     variables = {
       slackChannel = "${var.slack_channel}"
