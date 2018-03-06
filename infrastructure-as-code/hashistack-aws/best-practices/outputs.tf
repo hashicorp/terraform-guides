@@ -86,6 +86,7 @@ Now that Vault is unsealed, you can seemlessly SSH back into unsealed Vault serv
 You can now interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html) or API (https://www.nomadproject.io/api/index.html) commands.
 
   $ nomad server-members # Check Nomad's server members
+  $ nomad node-status # Check Nomad's client nodes
   $ nomad init # Create a skeletion job file to deploy a Redis Docker container
 
   # Use the CLI to deploy a Redis Docker container

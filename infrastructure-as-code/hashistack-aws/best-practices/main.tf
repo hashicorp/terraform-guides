@@ -30,44 +30,6 @@ module "hashistack_tls_self_signed_cert" {
   ip_addresses          = ["0.0.0.0", "127.0.0.1"]
 }
 
-/*
-module "consul_tls_self_signed_cert" {
-  source = "git@github.com:hashicorp-modules/tls-self-signed-cert.git?ref=f-refactor"
-
-  name                  = "${var.name}-consul"
-  validity_period_hours = "24"
-  ca_common_name        = "hashicorp.com"
-  organization_name     = "HashiCorp Inc."
-  common_name           = "hashicorp.com"
-  dns_names             = ["*.node.consul", "*.service.consul"]
-  ip_addresses          = ["0.0.0.0", "127.0.0.1"]
-}
-
-module "vault_tls_self_signed_cert" {
-  source = "git@github.com:hashicorp-modules/tls-self-signed-cert.git?ref=f-refactor"
-
-  name                  = "${var.name}-vault"
-  validity_period_hours = "24"
-  ca_common_name        = "hashicorp.com"
-  organization_name     = "HashiCorp Inc."
-  common_name           = "hashicorp.com"
-  dns_names             = ["*.node.consul", "*.service.consul"]
-  ip_addresses          = ["0.0.0.0", "127.0.0.1"]
-}
-
-module "nomad_tls_self_signed_cert" {
-  source = "git@github.com:hashicorp-modules/tls-self-signed-cert.git?ref=f-refactor"
-
-  name                  = "${var.name}-nomad"
-  validity_period_hours = "24"
-  ca_common_name        = "hashicorp.com"
-  organization_name     = "HashiCorp Inc."
-  common_name           = "hashicorp.com"
-  dns_names             = ["*.node.consul", "*.service.consul"]
-  ip_addresses          = ["0.0.0.0", "127.0.0.1"]
-}
-*/
-
 data "template_file" "bastion_user_data" {
   template = "${file("${path.module}/../templates/best-practices-bastion-systemd.sh.tpl")}"
 
@@ -77,16 +39,6 @@ data "template_file" "bastion_user_data" {
     local_ip_url   = "${var.local_ip_url}"
     consul_encrypt = "${random_id.consul_encrypt.b64_std}"
     nomad_encrypt  = "${random_id.nomad_encrypt.b64_std}"
-
-    # consul_ca_crt   = "${element(module.consul_tls_self_signed_cert.ca_cert_pem, 0)}"
-    # consul_leaf_crt = "${element(module.consul_tls_self_signed_cert.leaf_cert_pem, 0)}"
-    # consul_leaf_key = "${element(module.consul_tls_self_signed_cert.leaf_private_key_pem, 0)}"
-    # vault_ca_crt    = "${element(module.vault_tls_self_signed_cert.ca_cert_pem, 0)}"
-    # vault_leaf_crt  = "${element(module.vault_tls_self_signed_cert.leaf_cert_pem, 0)}"
-    # vault_leaf_key  = "${element(module.vault_tls_self_signed_cert.leaf_private_key_pem, 0)}"
-    # nomad_ca_crt    = "${element(module.nomad_tls_self_signed_cert.ca_cert_pem, 0)}"
-    # nomad_leaf_crt  = "${element(module.nomad_tls_self_signed_cert.leaf_cert_pem, 0)}"
-    # nomad_leaf_key  = "${element(module.nomad_tls_self_signed_cert.leaf_private_key_pem, 0)}"
 
     hashistack_ca_crt   = "${element(module.hashistack_tls_self_signed_cert.ca_cert_pem, 0)}"
     hashistack_leaf_crt = "${element(module.hashistack_tls_self_signed_cert.leaf_cert_pem, 0)}"
@@ -127,16 +79,6 @@ data "template_file" "hashistack_user_data" {
     consul_encrypt   = "${random_id.consul_encrypt.b64_std}"
     nomad_bootstrap  = "${length(module.network_aws.subnet_private_ids)}"
     nomad_encrypt    = "${random_id.nomad_encrypt.b64_std}"
-
-    # consul_ca_crt    = "${element(module.consul_tls_self_signed_cert.ca_cert_pem, 0)}"
-    # consul_leaf_crt  = "${element(module.consul_tls_self_signed_cert.leaf_cert_pem, 0)}"
-    # consul_leaf_key  = "${element(module.consul_tls_self_signed_cert.leaf_private_key_pem, 0)}"
-    # vault_ca_crt     = "${element(module.vault_tls_self_signed_cert.ca_cert_pem, 0)}"
-    # vault_leaf_crt   = "${element(module.vault_tls_self_signed_cert.leaf_cert_pem, 0)}"
-    # vault_leaf_key   = "${element(module.vault_tls_self_signed_cert.leaf_private_key_pem, 0)}"
-    # nomad_ca_crt     = "${element(module.nomad_tls_self_signed_cert.ca_cert_pem, 0)}"
-    # nomad_leaf_crt   = "${element(module.nomad_tls_self_signed_cert.leaf_cert_pem, 0)}"
-    # nomad_leaf_key   = "${element(module.nomad_tls_self_signed_cert.leaf_private_key_pem, 0)}"
 
     hashistack_ca_crt   = "${element(module.hashistack_tls_self_signed_cert.ca_cert_pem, 0)}"
     hashistack_leaf_crt = "${element(module.hashistack_tls_self_signed_cert.leaf_cert_pem, 0)}"
