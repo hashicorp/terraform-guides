@@ -56,12 +56,14 @@ data "template_file" "bastion_quick_start" {
 }
 
 module "network_aws" {
-  source = "git@github.com:hashicorp-modules/network-aws.git?ref=f-refactor"
+  # source = "git@github.com:hashicorp-modules/network-aws.git?ref=f-refactor"
+  source = "../../../../../hashicorp-modules/network-aws"
 
   name          = "${var.name}"
   nat_count     = "1"
   bastion_count = "1"
   image_id      = "${data.aws_ami.base.id}"
+  tags          = "${var.network_tags}"
   user_data     = <<EOF
 ${data.template_file.consul_install.rendered}
 ${data.template_file.vault_install.rendered}
@@ -92,6 +94,7 @@ module "hashistack_aws" {
   subnet_ids   = "${module.network_aws.subnet_private_ids}"
   image_id     = "${var.image_id != "" ? var.image_id : data.aws_ami.base.id}"
   ssh_key_name = "${element(split(",", module.network_aws.ssh_key_name), 0)}"
+  tags         = "${var.hashistack_tags}"
   user_data    = <<EOF
 ${data.template_file.consul_install.rendered} # Runtime install Consul in -dev mode
 ${data.template_file.vault_install.rendered} # Runtime install Vault in -dev mode

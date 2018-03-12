@@ -26,3 +26,13 @@ variable "hashistack_os"              { }
 variable "hashistack_os_version"      { }
 variable "hashistack_count"           { }
 variable "hashistack_instance_type"   { }
+
+variable "network_tags" {
+  type    = "map"
+  default = { }
+}
+
+variable "hashistack_tags" {
+  type    = "list"
+  default = [ ]
+}

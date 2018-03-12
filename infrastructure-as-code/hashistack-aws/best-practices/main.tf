@@ -26,7 +26,7 @@ module "hashistack_tls_self_signed_cert" {
   ca_common_name        = "hashicorp.com"
   organization_name     = "HashiCorp Inc."
   common_name           = "hashicorp.com"
-  dns_names             = ["*.node.consul", "*.service.consul"]
+  dns_names             = ["*.node.consul", "*.service.consul", "server.global.nomad"]
   ip_addresses          = ["0.0.0.0", "127.0.0.1"]
 }
 
@@ -47,7 +47,8 @@ data "template_file" "bastion_user_data" {
 }
 
 module "network_aws" {
-  source = "git@github.com:hashicorp-modules/network-aws.git?ref=f-refactor"
+  # source = "git@github.com:hashicorp-modules/network-aws.git?ref=f-refactor"
+  source = "../../../../../hashicorp-modules/network-aws"
 
   name              = "${var.name}"
   vpc_cidr          = "${var.vpc_cidr}"
@@ -66,6 +67,7 @@ module "network_aws" {
   user_data         = "${data.template_file.bastion_user_data.rendered}" # Override user_data
   ssh_key_name      = "${element(module.ssh_keypair_aws_override.name, 0)}"
   ssh_key_override  = "true"
+  tags              = "${var.network_tags}"
 }
 
 data "template_file" "hashistack_user_data" {
@@ -105,4 +107,5 @@ module "hashistack_aws" {
   instance_type    = "${var.hashistack_instance_type}"
   user_data        = "${data.template_file.hashistack_user_data.rendered}" # Custom user_data
   ssh_key_name     = "${element(module.ssh_keypair_aws_override.name, 0)}"
+  tags             = "${var.hashistack_tags}"
 }

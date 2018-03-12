@@ -124,7 +124,7 @@ To SSH into Nomad server nodes, you can also leverage Consul's DNS functionality
 
 To force the generation of a new key, the private key instance can be "tainted" using the below command.
 
-  terraform taint -module=network_aws.ssh_keypair_aws.tls_private_key tls_private_key.key
+  $ terraform taint -module=network_aws.ssh_keypair_aws.tls_private_key tls_private_key.key
 
 Below are output variables that are currently commented out to reduce clutter. If you need the value of a certain output variable, such as "private_key_pem", just uncomment in outputs.tf.
 

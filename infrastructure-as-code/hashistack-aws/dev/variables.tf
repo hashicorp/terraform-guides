@@ -14,3 +14,13 @@ variable "vault_version"        { default = "0.9.0" }
 variable "vault_url"            { default = "" }
 variable "nomad_version"        { default = "0.7.1" }
 variable "nomad_url"            { default = "" }
+
+variable "network_tags" {
+  type    = "map"
+  default = { }
+}
+
+variable "hashistack_tags" {
+  type    = "list"
+  default = [ ]
+}

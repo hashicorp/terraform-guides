@@ -33,8 +33,9 @@ You can interact with Consul using any of the CLI (https://www.consul.io/docs/co
 
 You can interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html) or API (https://www.vaultproject.io/api/index.html) commands.
 
-  # The Root token for your Vault -dev instance is set to `root` and the `VAULT_TOKEN` environment variable has already been set for you
+  # The Root token for your Vault -dev instance is set to `root` and placed in /srv/vault/.vault-token, the `VAULT_TOKEN` environment variable has already been set for you
   $ echo $VAULT_TOKEN
+  $ sudo cat /srv/vault/.vault-token
 
   # Use the CLI to write and read a generic secret
   $ vault write secret/cli bar=baz

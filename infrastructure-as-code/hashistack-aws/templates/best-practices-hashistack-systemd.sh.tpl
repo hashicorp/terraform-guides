@@ -157,7 +157,7 @@ echo "Copy HashiStack certificate key to $NOMAD_CLIENT_KEY_FILE"
 sudo cp $HASHISTACK_CLIENT_KEY_FILE $NOMAD_CLIENT_KEY_FILE
 
 echo "Update Nomad certificates file owner"
-sudo chown -R nomad:nomad $NOMAD_TLS_PATH
+sudo chown -R root:root $NOMAD_TLS_PATH
 
 echo "Configure Nomad server"
 cat <<CONFIG | sudo tee $NOMAD_CONFIG_FILE
@@ -220,7 +220,7 @@ vault {
 CONFIG
 
 echo "Update Nomad configuration & certificates file owner"
-sudo chown -R nomad:nomad $NOMAD_CONFIG_FILE $NOMAD_TLS_PATH
+sudo chown -R root:root $NOMAD_CONFIG_FILE $NOMAD_TLS_PATH
 
 echo "Configure Nomad environment variables to point Nomad client CLI to remote Nomad cluster & set TLS certs on login"
 cat <<ENVVARS | sudo tee /etc/profile.d/nomad.sh

@@ -3,13 +3,15 @@ module "ssh_keypair_aws" {
 }
 
 module "network_aws" {
-  source = "git@github.com:hashicorp-modules/network-aws.git?ref=f-refactor"
+  # source = "git@github.com:hashicorp-modules/network-aws.git?ref=f-refactor"
+  source = "../../../../../hashicorp-modules/network-aws"
 
   name              = "${var.name}"
   vpc_cidrs_public  = "${var.vpc_cidrs_public}"
   nat_count         = "${var.nat_count}"
   vpc_cidrs_private = "${var.vpc_cidrs_private}"
   bastion_count     = "${var.bastion_count}"
+  tags              = "${var.network_tags}"
 }
 
 data "aws_ami" "base" {
@@ -71,7 +73,7 @@ module "hashistack_aws" {
   count        = "${var.hashistack_count}"
   image_id     = "${var.image_id != "" ? var.image_id : data.aws_ami.base.id}"
   ssh_key_name = "${element(module.ssh_keypair_aws.name, 0)}"
-  user_data    = "${data.template_file.hashistack_user_data.rendered}" # Custom user_data
+  tags         = "${var.hashistack_tags}"
   user_data    = <<EOF
 ${data.template_file.consul_install.rendered} # Runtime install Consul in -dev mode
 ${data.template_file.vault_install.rendered} # Runtime install Vault in -dev mode

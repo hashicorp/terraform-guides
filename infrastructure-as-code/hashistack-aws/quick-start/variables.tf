@@ -5,7 +5,6 @@ variable "ami_owner"    { default = "309956199498" } # Base RHEL owner
 variable "ami_name"     { default = "*RHEL-7.3_HVM_GA-*" } # Base RHEL name
 variable "image_id"     { default = "" }
 
-
 variable "consul_version"  { default = "0.9.2" }
 variable "consul_url"      { default = "" }
 
@@ -14,3 +13,13 @@ variable "vault_url"      { default = "" }
 
 variable "nomad_version"  { default = "0.6.2" }
 variable "nomad_url"      { default = "" }
+
+variable "network_tags" {
+  type    = "map"
+  default = { }
+}
+
+variable "hashistack_tags" {
+  type    = "list"
+  default = [ ]
+}

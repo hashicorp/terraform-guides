@@ -20,7 +20,7 @@ VAULT_TLS_PATH=/opt/vault/tls
 VAULT_CACERT_FILE="$VAULT_TLS_PATH/ca.crt"
 VAULT_CLIENT_CERT_FILE="$VAULT_TLS_PATH/vault.crt"
 VAULT_CLIENT_KEY_FILE="$VAULT_TLS_PATH/vault.key"
-NOMAD_TLS_PATH=/opt/vault/tls
+NOMAD_TLS_PATH=/opt/nomad/tls
 NOMAD_CACERT_FILE="$NOMAD_TLS_PATH/ca.crt"
 NOMAD_CLIENT_CERT_FILE="$NOMAD_TLS_PATH/nomad.crt"
 NOMAD_CLIENT_KEY_FILE="$NOMAD_TLS_PATH/nomad.key"
@@ -124,7 +124,7 @@ echo "Copy HashiStack certificate key to $NOMAD_CLIENT_KEY_FILE"
 sudo cp $HASHISTACK_CLIENT_KEY_FILE $NOMAD_CLIENT_KEY_FILE
 
 echo "Update Nomad certificates file owner"
-sudo chown -R nomad:nomad $NOMAD_TLS_PATH
+sudo chown -R root:root $NOMAD_TLS_PATH
 
 echo "Configure Nomad environment variables to point Nomad client CLI to remote Nomad cluster & set TLS certs on login"
 cat <<ENVVARS | sudo tee /etc/profile.d/nomad.sh
