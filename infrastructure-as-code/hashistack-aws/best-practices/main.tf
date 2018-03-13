@@ -1,11 +1,11 @@
 module "ssh_keypair_aws_override" {
-  source = "git@github.com:hashicorp-modules/ssh-keypair-aws.git?ref=f-refactor"
+  source = "github.com/hashicorp-modules/ssh-keypair-aws?ref=f-refactor"
 
   name = "${var.name}-override"
 }
 
 module "consul_auto_join_instance_role" {
-  source = "git@github.com:hashicorp-modules/consul-auto-join-instance-role-aws?ref=f-refactor"
+  source = "github.com/hashicorp-modules/consul-auto-join-instance-role-aws?ref=f-refactor"
 
   name = "${var.name}"
 }
@@ -19,7 +19,7 @@ resource "random_id" "nomad_encrypt" {
 }
 
 module "hashistack_tls_self_signed_cert" {
-  source = "git@github.com:hashicorp-modules/tls-self-signed-cert.git?ref=f-refactor"
+  source = "github.com/hashicorp-modules/tls-self-signed-cert?ref=f-refactor"
 
   name                  = "${var.name}-hashistack"
   validity_period_hours = "24"
@@ -47,7 +47,7 @@ data "template_file" "bastion_user_data" {
 }
 
 module "network_aws" {
-  source = "git@github.com:hashicorp-modules/network-aws.git?ref=f-refactor"
+  source = "github.com/hashicorp-modules/network-aws?ref=f-refactor"
   # source = "../../../../../hashicorp-modules/network-aws"
 
   name              = "${var.name}"
@@ -89,7 +89,7 @@ data "template_file" "hashistack_user_data" {
 }
 
 module "hashistack_aws" {
-  source = "git@github.com:hashicorp-modules/hashistack-aws.git?ref=f-refactor"
+  source = "github.com/hashicorp-modules/hashistack-aws?ref=f-refactor"
   # source = "../../../../../hashicorp-modules/hashistack-aws"
 
   name             = "${var.name}" # Must match network_aws module name for Consul Auto Join to work
