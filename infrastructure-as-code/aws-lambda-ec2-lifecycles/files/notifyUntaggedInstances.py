@@ -1,6 +1,7 @@
 # General purpose Lambda function for sending Slack messages, encrypted in transit.
 
 import boto3
+from botocore.exceptions import ClientError
 import json
 import logging
 import os
@@ -19,9 +20,19 @@ SLACK_CHANNEL = os.environ['slackChannel']
 # HOOK_URL = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['slackHookUrl']))['Plaintext'].decode('utf-8')
 HOOK_URL = os.environ['slackHookUrl']
 
+############################################################################
+# These settings are only required if you are using email for notifications.
+SENDER = "Cleanup Bot <robot@example.com>"
+RECIPIENT = "robot@example.com"
+AWS_REGION = "us-west-2"
+CHARSET = "UTF-8"
+
+# This is used as the subject for Slack messages or emails.
+SUBJECT = "The Wall Of Shame :shame: :bell"
+############################################################################
+
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
 lam = boto3.client('lambda')
 
 def lambda_handler(event, context):
@@ -31,12 +42,21 @@ def lambda_handler(event, context):
     leaderboard_length = 15
     untagged = get_untagged_instances()
     lb = generate_leaderboard(untagged, leaderboard_length)
+
+    # Uncomment send_email to use email instead of slack
+    # send_email(
+    #     SENDER,
+    #     RECIPIENT,
+    #     AWS_REGION,
+    #     SUBJECT,
+    #     lb,
+    #     CHARSET)
     
     send_slack_message(
         msg_text, 
-        title='The Wall Of Shame :shame: :bell:',
+        title=SUBJECT,
         text="```\n"+lb+"\n```",
-        fallback='The Wall of Shame :shame: :bell:',
+        fallback=SUBJECT,
         color='warning',
         actions = [
             {
@@ -75,7 +95,47 @@ def send_slack_message(msg_text, **kwargs):
         logger.error("Request failed: %d %s", e.code, e.reason)
     except URLError as e:
         logger.error("Server connection failed: %s", e.reason)
-        
+
+def send_email(sender,recipient,aws_region,subject,body_text,charset):
+    """
+    Sends a plaintext email to the address of your choice. Be sure to 
+    verify your email in the SES control panel first. More documentation 
+    here: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-sdk-python.html
+    """
+
+    # Create a new SES resource and specify a region.
+    client = boto3.client('ses',region_name=aws_region)
+    
+    # Try to send the email.
+    try:
+        #Provide the contents of the email.
+        response = client.send_email(
+            Destination={
+                'ToAddresses': [
+                    recipient,
+                ],
+            },
+            Message={
+                'Body': {
+                    'Text': {
+                        'Charset': charset,
+                        'Data': body_text,
+                    },
+                },
+                'Subject': {
+                    'Charset': charset,
+                    'Data': subject,
+                },
+            },
+            Source=sender
+        )
+    # Display an error if something goes wrong.	
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        print("Email sent! Message ID:"),
+        print(response['ResponseMetadata']['RequestId'])
+
 def get_untagged_instances():
     """Calls the Lambda function that returns a dictionary of instances."""
     try:

@@ -2,6 +2,7 @@
 # sleepDays and reapDays to set your lifecycle policies.
 
 import boto3
+from botocore.exceptions import ClientError
 import json
 import logging
 import os
@@ -26,9 +27,16 @@ SLEEPDAYS = os.environ['sleepDays']
 REAPDAYS = os.environ['reapDays']
 ISACTIVE = os.environ['isActive']
 
+############################################################################
+# These settings are only required if you are using email for notifications.
+SENDER = "Cleanup Bot <robot@example.com>"
+RECIPIENT = "robot@example.com"
+AWS_REGION = "us-west-2"
+CHARSET = "UTF-8"
+############################################################################
+
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
-
 lam = boto3.client('lambda')
 
 def lambda_handler(event, context):
@@ -68,6 +76,16 @@ def lambda_handler(event, context):
         fallback='Untagged Instance Report',
         color='warning'
     )
+
+    # Uncomment send_email to use email instead of slack
+    # send_email(
+    #     SENDER,
+    #     RECIPIENT,
+    #     AWS_REGION,
+    #     title_text,
+    #     contents,
+    #     CHARSET
+    # )
     
     # Stop instances that have passed SLEEPDAYS.
     for instance,data in stop_dict.items():
@@ -100,7 +118,47 @@ def send_slack_message(msg_text, **kwargs):
         logger.error("Request failed: %d %s", e.code, e.reason)
     except URLError as e:
         logger.error("Server connection failed: %s", e.reason)
-        
+
+def send_email(sender,recipient,aws_region,subject,body_text,charset):
+    """
+    Sends a plaintext email to the address of your choice. Be sure to 
+    verify your email in the SES control panel first. More documentation 
+    here: https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-using-sdk-python.html
+    """
+
+    # Create a new SES resource and specify a region.
+    client = boto3.client('ses',region_name=aws_region)
+    
+    # Try to send the email.
+    try:
+        #Provide the contents of the email.
+        response = client.send_email(
+            Destination={
+                'ToAddresses': [
+                    recipient,
+                ],
+            },
+            Message={
+                'Body': {
+                    'Text': {
+                        'Charset': charset,
+                        'Data': body_text,
+                    },
+                },
+                'Subject': {
+                    'Charset': charset,
+                    'Data': subject,
+                },
+            },
+            Source=sender
+        )
+    # Display an error if something goes wrong.	
+    except ClientError as e:
+        print(e.response['Error']['Message'])
+    else:
+        print("Email sent! Message ID:"),
+        print(response['ResponseMetadata']['RequestId'])
+
 def get_untagged_instances():
     """Calls the Lambda function that returns a dictionary of instances."""
     try:
