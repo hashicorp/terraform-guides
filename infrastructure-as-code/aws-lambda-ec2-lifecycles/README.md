@@ -215,5 +215,30 @@ You can optionally encrypt the Slack Webhook URL so that it cannot be viewed in 
 9. Navigate back to the AWS Lambda functions and repeat steps #1-8 for any other functions where you want to configure the encrypted URL.
 10. If you want to make this configuration permanent, comment out the `aws_kms_key` and `aws_kms_alias` resources in encryption.tf. Then use the `terraform state rm` command to remove both of them from your state file. The key you created will now be persistent, and allow you to save your encrypted Slack Webhook URL in your variables file.  You can fetch the encrypted URL by running `terraform show` command.
 
+### Optional - Edit the Slack message and formatting
+If you'd like to customize the messages that get sent into your Slack channels, just edit the part of the code that calls the `send_slack_message` function. Note how you can put action buttons into your message to link your users to useful information or status pages.  The Slack API guide has examples and more info: https://api.slack.com/docs/message-formatting
+
+```
+    send_slack_message(
+        msg_text, 
+        title='AWS Instance Type Usage',        
+        text="```\n"+report+"\n```",
+        fallback='AWS Instance Type Usage',
+        color='warning',
+        actions = [
+            {
+                "type": "button",
+                "text": ":money-burning: AWS Cost Explorer",
+                "url": "http://amzn.to/2EBAfQu"
+            },
+            {
+                "type": "button",
+                "text": ":broom: AWS Console",
+                "url": "https://console.aws.amazon.com/ec2/v2/home"
+            },
+        ]
+    )
+```
+
 ### Clean up
 Cleanup is simple, just run `terraform destroy` in your workspace and all resources will be cleaned up.
