@@ -1,11 +1,14 @@
-output "instance_template" {
-  value = "${module.mig1.google_compute_instance_template.default}"
+output "compute_network_consumable" {
+  value       = "${google_compute_network.demo_network.name}"
+  description = "The Network Name"
 }
 
-output "instance_group_manager" {
-  value = "${module.mig1.google_compute_instance_group_manager.default}"
+output "subnetwork_consumable_name" {
+  value       = "${google_compute_subnetwork.demo_subnetwork.name}"
+  description = "The Subnet Name"
 }
 
-output "firewall" {
-  value = "${module.mig1.google_compute_firewall.default-ssh}"
+output "subnetwork_consumable_ip_cidr_range" {
+  value       = "${google_compute_subnetwork.demo_subnetwork.ip_cidr_range}"
+  description = "The default Cidr Range"
 }
