@@ -1,0 +1,26 @@
+# Operating System to use ie RHEL or Ubuntu
+os = "Ubuntu"
+#os = "RHEL"
+
+# Operating System version to use ie 7.3 (for RHEL) or 16.04 (for Ubuntu)
+os_version = "16.04"
+#os_version = "7.3"
+
+# GCP Region
+gcp_region = "us-east1"
+
+project_name = "my-hashistack-test-1"
+
+account_file_json = "~/.gcloud/my-image-test.json"
+
+cluster_name = "my-hashistack"
+environment_name = "my-hashistack"
+
+consul_version = "0.9.2+ent"
+nomad_version  = "0.6.2"
+vault_version  = "0.8.1+ent"
+
+machine_type = "g1-small"
+
+image_bucket_name = "my-image-store"
+environment = "test"
