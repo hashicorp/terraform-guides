@@ -6,7 +6,7 @@ variable "region" {
 # Set your Slack Webhook URL here.  For extra security you can use AWS KMS to 
 # encrypt this data in the AWS console.
 variable "slack_hook_url" {
-  default = "https://hooks.slack.com/services/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"
+  default = "https://hooks.slack.com/services/REPLACE/WITH/YOUR_WEBHOOK_URL"
   description = "Slack incoming webhook URL, get this from the slack management page."
 }
 
