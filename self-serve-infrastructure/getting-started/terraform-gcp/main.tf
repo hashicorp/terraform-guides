@@ -1,30 +1,17 @@
-# Need to add actual script inline with HEREDOC - below path doesn't exist
-/*
-data "template_file" "php-startup-script" {
-  template = "${file("${format("%s/../scripts/gceme.sh.tpl", path.module)}")}"
-  vars {
-    PROXY_PATH = ""
-  }
-}
-*/
-
-module "mig1" {
-  source            = "GoogleCloudPlatform/managed-instance-group/google"
-  region            = "${var.region}"
-  zone              = "${var.zone}"
-  name              = "${var.name}"
-  size              = 2
-  service_port      = "${var.service_port}"
-  service_port_name = "http"
-  target_pools      = ["${module.gce-lb-fr.target_pool}"]
-  target_tags       = ["${var.tags}"]
-  startup_script    = "${data.template_file.php-startup-script.rendered}"
+provider "google" {
+  project = "terraform-gcp-module-test"
+  region  = "us-central1"
+  project = "terraform-gcp-module-test"
 }
 
-module "gce-lb-fr" {
-  source       = "GoogleCloudPlatform/lb/google"
-  region       = "${var.region}"
-  name         = "${var.name}"
-  service_port = "${var.service_port}"
-  target_tags  = ["${var.tags}"]
+resource "google_compute_network" "demo_network" {
+  name                    = "${var.gn_name}"
+  auto_create_subnetworks = "false"
+}
+
+resource "google_compute_subnetwork" "demo_subnetwork" {
+  network       = "${google_compute_network.demo_network.name}"
+  name          = "${var.sn_name}"
+  region        = "${var.sn_region}"
+  ip_cidr_range = "${var.sn_cidr_range}"
 }

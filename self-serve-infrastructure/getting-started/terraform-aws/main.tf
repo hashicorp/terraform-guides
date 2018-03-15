@@ -1,61 +1,21 @@
-provider "aws" { }
-
-data "aws_vpc" "default" {
-  default = true
+provider "aws" {
+  region = "${var.region}"
 }
 
-data "aws_subnet_ids" "all" {
-  vpc_id = "${data.aws_vpc.default.id}"
-}
+resource "aws_vpc" "demo_vpc" {
+  cidr_block = "${var.vpc_cidr_block}"
 
-data "aws_ami" "amazon_linux" {
-  most_recent = true
-
-  filter {
-    name = "name"
-
-    values = [
-      "amzn-ami-hvm-*-x86_64-gp2",
-    ]
-  }
-
-  filter {
-    name = "owner-alias"
-
-    values = [
-      "amazon",
-    ]
+  tags {
+    Name = "fp_demo_vpc"
   }
 }
 
-module "security_group" {
-  source = "terraform-aws-modules/security-group/aws"
+resource "aws_subnet" "demo_subnet" {
+  vpc_id            = "${aws_vpc.demo_vpc.id}"
+  cidr_block        = "${var.subnet_cidr_block}"
+  availability_zone = "${var.subnet_availability_zone}"
 
-  name        = "${var.name}"
-  description = "Security group for example usage with EC2 instance"
-  vpc_id      = "${data.aws_vpc.default.id}"
-
-  ingress_cidr_blocks = ["0.0.0.0/0"]
-  ingress_rules       = ["http-80-tcp", "all-icmp"]
-  egress_rules        = ["all-all"]
-
-  tags = "${var.tags}"
-}
-
-resource "aws_eip" "this" {
-  vpc      = true
-  instance = "${module.ec2.id[0]}"
-}
-
-module "ec2" {
-  source  = "terraform-aws-modules/ec2-instance/aws"
-
-  name                        = "${var.name}"
-  ami                         = "${data.aws_ami.amazon_linux.id}"
-  instance_type               = "${var.instance_type}"
-  subnet_id                   = "${element(data.aws_subnet_ids.all.ids, 0)}"
-  vpc_security_group_ids      = ["${module.security_group.this_security_group_id}"]
-  associate_public_ip_address = true
-
-  tags = "${var.tags}"
+  tags {
+    Name = "fp_demo_subnet"
+  }
 }
