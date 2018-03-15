@@ -28,7 +28,7 @@ AWS_REGION = "us-west-2"
 CHARSET = "UTF-8"
 
 # This is used as the subject for Slack messages or emails.
-SUBJECT = "The Wall Of Shame :shame: :bell"
+SUBJECT = "The Wall Of Shame :shame: :bell:"
 ############################################################################
 
 logger = logging.getLogger()
