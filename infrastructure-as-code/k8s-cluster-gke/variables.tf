@@ -29,7 +29,7 @@ variable "master_username" {
 
 variable "master_password" {
   description = "Password for accessing the Kubernetes master endpoint"
-  default = "k8smaster"
+  default = "k8smasterk8smaster"
 }
 
 variable "node_machine_type" {
