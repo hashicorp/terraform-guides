@@ -4,7 +4,6 @@ module "ssh_keypair_aws" {
 
 module "network_aws" {
   source = "github.com/hashicorp-modules/network-aws?ref=f-refactor"
-  # source = "../../../../../hashicorp-modules/network-aws"
 
   name              = "${var.name}"
   vpc_cidrs_public  = "${var.vpc_cidrs_public}"
@@ -35,7 +34,7 @@ data "aws_ami" "base" {
 }
 
 data "template_file" "consul_install" {
-  template = "${file("${path.module}/../templates/install-consul-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../../templates/install-consul-systemd.sh.tpl")}"
 
   vars = {
     consul_version = "${var.consul_version}"
@@ -44,7 +43,7 @@ data "template_file" "consul_install" {
 }
 
 data "template_file" "vault_install" {
-  template = "${file("${path.module}/../templates/install-vault-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../../templates/install-vault-systemd.sh.tpl")}"
 
   vars = {
     vault_version = "${var.vault_version}"
@@ -53,7 +52,7 @@ data "template_file" "vault_install" {
 }
 
 data "template_file" "nomad_install" {
-  template = "${file("${path.module}/../templates/install-nomad-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../../templates/install-nomad-systemd.sh.tpl")}"
 
   vars = {
     nomad_version = "${var.nomad_version}"

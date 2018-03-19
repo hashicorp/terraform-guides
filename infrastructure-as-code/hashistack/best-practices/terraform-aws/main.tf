@@ -31,7 +31,7 @@ module "hashistack_tls_self_signed_cert" {
 }
 
 data "template_file" "bastion_user_data" {
-  template = "${file("${path.module}/../templates/best-practices-bastion-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../../templates/best-practices-bastion-systemd.sh.tpl")}"
 
   vars = {
     name           = "${var.name}"
@@ -48,7 +48,6 @@ data "template_file" "bastion_user_data" {
 
 module "network_aws" {
   source = "github.com/hashicorp-modules/network-aws?ref=f-refactor"
-  # source = "../../../../../hashicorp-modules/network-aws"
 
   name              = "${var.name}"
   vpc_cidr          = "${var.vpc_cidr}"
@@ -71,7 +70,7 @@ module "network_aws" {
 }
 
 data "template_file" "hashistack_user_data" {
-  template = "${file("${path.module}/../templates/best-practices-hashistack-systemd.sh.tpl")}"
+  template = "${file("${path.module}/../../templates/best-practices-hashistack-systemd.sh.tpl")}"
 
   vars = {
     name             = "${var.name}"

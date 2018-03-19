@@ -4,15 +4,19 @@ Your "${var.name}" HashiStack cluster has been successfully provisioned!
 
 A private RSA key has been generated and downloaded locally. The file permissions have been changed to 0600 so the key can be used immediately for SSH or scp.
 
+If you're not running Terraform locally (e.g. in TFE or Jenkins) but are using remote state and need the private key locally for SSH, run the below command to download.
+
+  ${join("\n  ", formatlist("$ echo \"$(terraform output private_key_pem)\" > %s && chmod 0600 %s", module.ssh_keypair_aws_override.private_key_filename, module.ssh_keypair_aws_override.private_key_filename))}
+
 Run the below command to add this private key to the list maintained by ssh-agent so you're not prompted for it when using SSH or scp to connect to hosts with your public key.
 
-  ${join("\n  ", formatlist("$ ssh-add %s", split(",", module.network_aws.private_key_filename)))}
+  ${join("\n  ", formatlist("$ ssh-add %s", module.ssh_keypair_aws_override.private_key_filename))}
 
 The public part of the key loaded into the agent ("public_key_openssh" output) has been placed on the target system in ~/.ssh/authorized_keys.
 
 To SSH into a Bastion host using this private key, run one of the below commands.
 
-  ${join("\n  ", formatlist("$ ssh -A -i %s %s@%s", split(",", module.network_aws.private_key_filename), module.network_aws.bastion_username, module.network_aws.bastion_ips_public))}
+  ${join("\n  ", formatlist("$ ssh -A -i %s %s@%s", module.ssh_keypair_aws_override.private_key_filename, module.network_aws.bastion_username, module.network_aws.bastion_ips_public))}
 
 You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html) or API (https://www.consul.io/api/index.html) commands.
 
@@ -72,10 +76,12 @@ Repeat steps 1.) and 3.) to unseal the other "standby" Vault servers as well to 
       -H "X-Vault-Token: $VAULT_TOKEN" \
       -X POST \
       -d '{"foo":"bar"}' \
-      http://vault.service.consul:8200/v1/secret/api | jq '.'
+      -k --cacert /opt/vault/tls/ca.crt --cert /opt/vault/tls/vault.crt --key /opt/vault/tls/vault.key \
+      https://vault.service.consul:8200/v1/secret/api | jq '.'
   $ curl \
       -H "X-Vault-Token: $VAULT_TOKEN" \
-      http://vault.service.consul:8200/v1/secret/api | jq '.'
+      -k --cacert /opt/vault/tls/ca.crt --cert /opt/vault/tls/vault.crt --key /opt/vault/tls/vault.key \
+      https://vault.service.consul:8200/v1/secret/api | jq '.'
 
 Now that Vault is unsealed, you can seemlessly SSH back into unsealed Vault servers using Consul DNS (rather than using the command in Step 1). The nodes returned will be both active and standby Vault servers as long as they're unsealed.
 
@@ -100,23 +106,29 @@ You can now interact with Nomad using any of the CLI (https://www.nomadproject.i
   $ curl \
       -X POST \
       -d @example.json \
-      http://nomad-server.service.consul:4646/v1/job/example/plan | jq '.' # Run a nomad plan on the example job
+      -k --cacert /opt/nomad/tls/ca.crt --cert /opt/nomad/tls/nomad.crt --key /opt/nomad/tls/nomad.key \
+      https://nomad-server.service.consul:4646/v1/job/example/plan | jq '.' # Run a nomad plan on the example job
   $ curl \
       -X POST \
       -d @example.json \
-      http://nomad-server.service.consul:4646/v1/job/example | jq '.' # Run the example job
+      -k --cacert /opt/nomad/tls/ca.crt --cert /opt/nomad/tls/nomad.crt --key /opt/nomad/tls/nomad.key \
+      https://nomad-server.service.consul:4646/v1/job/example | jq '.' # Run the example job
   $ curl \
       -X GET \
-      http://nomad-server.service.consul:4646/v1/jobs | jq '.' # Check that the job is running
+      -k --cacert /opt/nomad/tls/ca.crt --cert /opt/nomad/tls/nomad.crt --key /opt/nomad/tls/nomad.key \
+      https://nomad-server.service.consul:4646/v1/jobs | jq '.' # Check that the job is running
   $ curl \
       -X GET \
-      http://nomad-server.service.consul:4646/v1/job/example | jq '.' # Check job details
+      -k --cacert /opt/nomad/tls/ca.crt --cert /opt/nomad/tls/nomad.crt --key /opt/nomad/tls/nomad.key \
+      https://nomad-server.service.consul:4646/v1/job/example | jq '.' # Check job details
   $ curl \
       -X DELETE \
-      http://nomad-server.service.consul:4646/v1/job/example | jq '.' # Stop the example job
+      -k --cacert /opt/nomad/tls/ca.crt --cert /opt/nomad/tls/nomad.crt --key /opt/nomad/tls/nomad.key \
+      https://nomad-server.service.consul:4646/v1/job/example | jq '.' # Stop the example job
   $ curl \
       -X GET \
-      http://nomad-server.service.consul:4646/v1/jobs | jq '.' # Check that the job is stopped
+      -k --cacert /opt/nomad/tls/ca.crt --cert /opt/nomad/tls/nomad.crt --key /opt/nomad/tls/nomad.key \
+      https://nomad-server.service.consul:4646/v1/jobs | jq '.' # Check that the job is stopped
 
 To SSH into Nomad server nodes, you can also leverage Consul's DNS functionality.
 
@@ -124,29 +136,10 @@ To SSH into Nomad server nodes, you can also leverage Consul's DNS functionality
 
 To force the generation of a new key, the private key instance can be "tainted" using the below command.
 
-  $ terraform taint -module=network_aws.ssh_keypair_aws.tls_private_key tls_private_key.key
-
-Below are output variables that are currently commented out to reduce clutter. If you need the value of a certain output variable, such as "private_key_pem", just uncomment in outputs.tf.
-
- - "vpc_cidr_block"
- - "vpc_id"
- - "subnet_public_ids"
- - "subnet_private_ids"
- - "bastion_security_group"
- - "bastion_username"
- - "bastion_ips_public"
- - "private_key_name"
- - "private_key_filename"
- - "private_key_pem"
- - "public_key_pem"
- - "public_key_openssh"
- - "ssh_key_name"
- - "hashistack_asg_id"
- - "hashistack_sg_id"
+  $ terraform taint -module=ssh_keypair_aws_override.tls_private_key tls_private_key.key
 README
 }
 
-/*
 output "vpc_cidr_block" {
   value = "${module.network_aws.vpc_cidr_block}"
 }
@@ -176,34 +169,41 @@ output "bastion_username" {
 }
 
 output "private_key_name" {
-  value = "${module.network_aws.private_key_name}"
+  value = "${module.ssh_keypair_aws_override.private_key_name}"
 }
 
 output "private_key_filename" {
-  value = "${module.network_aws.private_key_filename}"
+  value = "${module.ssh_keypair_aws_override.private_key_filename}"
 }
 
 output "private_key_pem" {
-  value = "${module.network_aws.private_key_pem}"
+  value = "${module.ssh_keypair_aws_override.private_key_pem}"
 }
 
 output "public_key_pem" {
-  value = "${module.network_aws.public_key_pem}"
+  value = "${module.ssh_keypair_aws_override.public_key_pem}"
 }
 
 output "public_key_openssh" {
-  value = "${module.network_aws.public_key_openssh}"
+  value = "${module.ssh_keypair_aws_override.public_key_openssh}"
 }
 
 output "ssh_key_name" {
-  value = "${module.network_aws.ssh_key_name}"
+  value = "${module.ssh_keypair_aws_override.name}"
 }
 
 output "hashistack_asg_id" {
   value = "${module.hashistack_aws.hashistack_asg_id}"
 }
 
-output "hashistack_sg_id" {
-  value = "${module.hashistack_aws.hashistack_sg_id}"
+output "consul_sg_id" {
+  value = "${module.hashistack_aws.consul_sg_id}"
 }
-*/
+
+output "vault_sg_id" {
+  value = "${module.hashistack_aws.vault_sg_id}"
+}
+
+output "nomad_sg_id" {
+  value = "${module.hashistack_aws.nomad_sg_id}"
+}
