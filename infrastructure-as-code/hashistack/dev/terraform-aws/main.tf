@@ -1,11 +1,9 @@
 module "ssh_keypair_aws" {
-  # source = "github.com/hashicorp-modules/ssh-keypair-aws?ref=f-refactor"
-  source = "../../../../../../hashicorp-modules/ssh-keypair-aws"
+  source = "github.com/hashicorp-modules/ssh-keypair-aws?ref=f-refactor"
 }
 
 module "network_aws" {
-  # source = "github.com/hashicorp-modules/network-aws?ref=f-refactor"
-  source = "../../../../../hashicorp-modules/network-aws"
+  source = "github.com/hashicorp-modules/network-aws?ref=f-refactor"
 
   name              = "${var.name}"
   vpc_cidrs_public  = "${var.vpc_cidrs_public}"
@@ -63,8 +61,7 @@ data "template_file" "nomad_install" {
 }
 
 module "hashistack_aws" {
-  # source = "github.com/hashicorp-modules/hashistack-aws?ref=f-refactor"
-  source = "../../../../../hashicorp-modules/hashistack-aws"
+  source = "github.com/hashicorp-modules/hashistack-aws?ref=f-refactor"
 
   name         = "${var.name}" # Must match network_aws module name for Consul Auto Join to work
   vpc_id       = "${module.network_aws.vpc_id}"
