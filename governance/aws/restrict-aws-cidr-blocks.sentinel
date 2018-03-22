@@ -1,0 +1,17 @@
+import "tfplan"
+
+disallowed_cidr_blocks = [
+  "0.0.0.0/0",
+]
+
+main = rule {
+  all tfplan.resources.aws_security_group as _, instances {
+    all instances as _, sg {
+      all sg.applied.ingress as ingress {
+        all disallowed_cidr_blocks as block {
+          ingress.cidr_blocks not contains block
+        }
+      }
+    }
+  }
+}
