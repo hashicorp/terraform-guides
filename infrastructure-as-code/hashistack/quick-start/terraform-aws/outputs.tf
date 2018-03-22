@@ -6,17 +6,17 @@ A private RSA key has been generated and downloaded locally. The file permission
 
 If you're not running Terraform locally (e.g. in TFE or Jenkins) but are using remote state and need the private key locally for SSH, run the below command to download.
 
-  ${join("\n  ", formatlist("$ echo \"$(terraform output private_key_pem)\" > %s && chmod 0600 %s", split(",", module.network_aws.private_key_filename), split(",", module.network_aws.private_key_filename)))}
+  ${format("$ echo \"$(terraform output private_key_pem)\" > %s && chmod 0600 %s", module.network_aws.private_key_filename, module.network_aws.private_key_filename)}
 
 Run the below command to add this private key to the list maintained by ssh-agent so you're not prompted for it when using SSH or scp to connect to hosts with your public key.
 
-  ${join("\n  ", formatlist("$ ssh-add %s", split(",", module.network_aws.private_key_filename)))}
+  ${format("$ ssh-add %s", module.network_aws.private_key_filename)}
 
 The public part of the key loaded into the agent ("public_key_openssh" output) has been placed on the target system in ~/.ssh/authorized_keys.
 
 To SSH into a Bastion host using this private key, run one of the below commands.
 
-  ${join("\n  ", formatlist("$ ssh -A -i %s %s@%s", split(",", module.network_aws.private_key_filename), module.network_aws.bastion_username, module.network_aws.bastion_ips_public))}
+  ${join("\n  ", formatlist("$ ssh -A -i %s %s@%s", module.network_aws.private_key_filename, module.network_aws.bastion_username, module.network_aws.bastion_ips_public))}
 
 You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html) or API (https://www.consul.io/api/index.html) commands.
 

@@ -2,6 +2,9 @@
 
 echo "[---Begin install-consul-systemd.sh---]"
 
+echo "Wait for system to be ready"
+sleep 10
+
 echo "Run base script"
 curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/base.sh | bash
 
