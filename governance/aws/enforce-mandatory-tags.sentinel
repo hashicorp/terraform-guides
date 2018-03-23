@@ -1,6 +1,8 @@
 import "tfplan"
 
-# Warning, this is case sensitive.  This is on purpose especially for organizations that do cost analysis on tag names.   Case sensitivity enforcements allow you to not have duplicates by case 
+# Warning, this is case sensitive.  
+# This is on purpose especially for organizations that do cost analysis on tag names.
+# where case sensitivity will cause grouping issues
 
 mandatory_tags = [
   "TTL", 
