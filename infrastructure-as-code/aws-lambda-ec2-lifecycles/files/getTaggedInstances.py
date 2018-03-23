@@ -25,7 +25,13 @@ def check_instance_tags(region):
             # logger.info(instance.tags)
             taglist = []
             for tag in instance.tags:
-                taglist.append(tag['Key'])
+                if tag['Key'] == 'TTL' or tag['Key'] == 'ttl':
+                    if isInteger(tag['Value']):
+                        taglist.append(tag['Key'].upper())
+                elif tag['Key'] == 'Owner' or tag['Key'] == 'owner':
+                    taglist.append(tag['Key'].lower())
+                else:
+                    taglist.append(tag['Key'])
             # logger.info(taglist)
             if set(mandatory_tags).issubset(set(taglist)):
                 nice_list.append(instance.id)
@@ -63,9 +69,9 @@ def get_tagged_instances():
                         for tag in instance['Tags']:
                             if tag['Key'] == "Name":
                                 name = tag['Value']
-                            if tag['Key'] == "owner":
+                            if tag['Key'] == "owner" or tag['Key'] == "Owner":
                                 owner = tag['Value']
-                            if tag['Key'] == "TTL":
+                            if tag['Key'] == "TTL" or tag['Key'] == "ttl":
                                 if isInteger(tag['Value']):
                                     ttl = tag['Value']
                                 else:
