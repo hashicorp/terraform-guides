@@ -1,0 +1,36 @@
+import "tfplan"
+
+# Warning, this is case sensitive.  
+# This is on purpose especially for organizations that do cost analysis on tag names.
+# where case sensitivity will cause grouping issues
+
+mandatory_tags = [
+  "TTL", 
+  "Owner",
+]
+
+# Get all AWS instances contained in all modules being used
+get_aws_instances = func() {
+    instances = []
+    for tfplan.module_paths as path {
+        instances += values(tfplan.module(path).resources.aws_instance) else []
+    }
+    return instances
+}
+    
+aws_instances = get_aws_instances()
+
+# Instance tag rule
+instance_tags = rule {
+    all aws_instances as _, instances {
+    	all instances as index, r {
+            all mandatory_tags as t {
+                r.applied.tags contains t
+            }
+        }
+    }
+}
+
+main = rule {
+    (instance_tags) else true
+}
