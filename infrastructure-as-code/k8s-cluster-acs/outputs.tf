@@ -29,3 +29,7 @@ output "vault_k8s_auth_backend" {
 output "vault_user" {
   value = "${var.vault_user}"
 }
+
+output "vault_addr" {
+  value = "${var.vault_addr}"
+}

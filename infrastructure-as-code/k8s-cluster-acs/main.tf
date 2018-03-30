@@ -6,7 +6,9 @@ resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
 }
 
-provider "vault" {}
+provider "vault" {
+  address = "${var.vault_addr}"
+}
 
 data "vault_generic_secret" "azure_credentials" {
   path = "secret/${var.vault_user}/azure/credentials"
@@ -116,8 +118,8 @@ resource "vault_generic_secret" "role" {
   {
     "bound_service_account_names": "cats-and-dogs",
     "bound_service_account_namespaces": "default",
-    "policies": "${var.vault_user}-policy",
-    "ttl": "1h"
+    "policies": "${var.vault_user}",
+    "ttl": "24h"
   }
   EOT
 }
