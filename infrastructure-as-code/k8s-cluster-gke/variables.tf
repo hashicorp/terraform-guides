@@ -34,12 +34,12 @@ variable "master_password" {
 
 variable "node_machine_type" {
   description = "GCE machine type"
-  default = "n1-standard-1"
+  default = "n1-standard-2"
 }
 
 variable "node_disk_size" {
   description = "Node disk size in GB"
-  default = "10"
+  default = "20"
 }
 
 variable "environment" {
@@ -49,4 +49,8 @@ variable "environment" {
 
 variable "vault_user" {
   description = "Vault userid: determines location of secrets and affects path of k8s auth backend"
+}
+
+variable "vault_addr" {
+  description = "Address of Vault server including port"
 }
