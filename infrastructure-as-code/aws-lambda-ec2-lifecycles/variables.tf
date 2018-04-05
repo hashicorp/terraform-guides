@@ -6,7 +6,7 @@ variable "region" {
 # Set your Slack Webhook URL here.  For extra security you can use AWS KMS to 
 # encrypt this data in the AWS console.
 variable "slack_hook_url" {
-  default = "https://hooks.slack.com/services/REPLACE/WITH/YOUR_WEBHOOK"
+  default = "https://hooks.slack.com/services/REPLACE/WITH/YOUR_WEBHOOK_URL"
   description = "Slack incoming webhook URL, get this from the slack management page."
 }
 
@@ -28,4 +28,9 @@ variable "sleep_days" {
 variable "reap_days" {
   default = "90"
   description = "Days after launch after which untagged instances are terminated."
+}
+
+variable "is_active" {
+  default = "False"
+  description = "Determines whether scripts will actually stop and terminate instances or do a dry run instead."
 }

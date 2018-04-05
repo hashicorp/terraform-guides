@@ -6,7 +6,9 @@ resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
 }
 
-provider "vault" {}
+provider "vault" {
+  address = "${var.vault_addr}"
+}
 
 data "vault_generic_secret" "azure_credentials" {
   path = "secret/${var.vault_user}/azure/credentials"
@@ -106,7 +108,7 @@ data "null_data_source" "get_certs" {
 
 resource "null_resource" "auth_config" {
   provisioner "local-exec" {
-    command = "curl --header \"X-Vault-Token: $VAULT_TOKEN\" --header \"Content-Type: application/json\" --request POST --data '{ \"kubernetes_host\": \"https://${lookup(azurerm_container_service.k8sexample.master_profile[0], "fqdn")}:443\", \"kubernetes_ca_cert\": \"${chomp(replace(base64decode(data.null_data_source.get_certs.outputs["ca_certificate"]), "/\\r\n/", "\\n"))}\" }' $VAULT_ADDR/v1/auth/${vault_auth_backend.k8s.path}config"
+    command = "curl --header \"X-Vault-Token: $VAULT_TOKEN\" --header \"Content-Type: application/json\" --request POST --data '{ \"kubernetes_host\": \"https://${lookup(azurerm_container_service.k8sexample.master_profile[0], "fqdn")}:443\", \"kubernetes_ca_cert\": \"${chomp(replace(base64decode(data.null_data_source.get_certs.outputs["ca_certificate"]), "/\\r\n/", "\\n"))}\" }' ${var.vault_addr}/v1/auth/${vault_auth_backend.k8s.path}config"
   }
 }
 
@@ -116,8 +118,8 @@ resource "vault_generic_secret" "role" {
   {
     "bound_service_account_names": "cats-and-dogs",
     "bound_service_account_namespaces": "default",
-    "policies": "${var.vault_user}-policy",
-    "ttl": "1h"
+    "policies": "${var.vault_user}",
+    "ttl": "24h"
   }
   EOT
 }

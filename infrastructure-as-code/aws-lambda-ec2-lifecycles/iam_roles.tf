@@ -3,9 +3,9 @@
 # Fetch our own account id and region. Used in our IAM policy templates.
 data "aws_caller_identity" "current" {}
 
-# Template for our 'notify_slack' lambda IAM policy
-data "template_file" "iam_lambda_notify_slack" {
-  template = "${file("./files/iam_lambda_notify_slack.tpl")}"
+# Template for our 'notify' lambda IAM policy
+data "template_file" "iam_lambda_notify" {
+  template = "${file("./files/iam_lambda_notify.tpl")}"
 
   vars {
     account_id = "${data.aws_caller_identity.current.account_id}"
@@ -33,10 +33,10 @@ data "template_file" "iam_lambda_stop_and_terminate_instances" {
   }
 }
 
-# Role for our 'notify_slack' lambda to assume
+# Role for our 'notify' lambda to assume
 # This role is allowed to use the data collector lambda functions.
-resource "aws_iam_role" "lambda_notify_slack" {
-  name = "lambda_notify_slack"
+resource "aws_iam_role" "lambda_notify" {
+  name = "lambda_notify"
 	assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -94,10 +94,10 @@ EOF
 }
 
 # Here we ingest the template and create the role policies
-resource "aws_iam_role_policy" "lambda_notify_slack_policy" {
-	name = "lambda_notify_slack_policy"
-	policy = "${data.template_file.iam_lambda_notify_slack.rendered}"
-  role = "${aws_iam_role.lambda_notify_slack.id}"
+resource "aws_iam_role_policy" "lambda_notify_policy" {
+	name = "lambda_notify_policy"
+	policy = "${data.template_file.iam_lambda_notify.rendered}"
+  role = "${aws_iam_role.lambda_notify.id}"
 }
 
 resource "aws_iam_role_policy" "lambda_read_instances_policy" {

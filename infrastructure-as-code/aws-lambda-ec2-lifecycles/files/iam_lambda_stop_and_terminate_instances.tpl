@@ -18,12 +18,12 @@
         },
         {
             "Effect": "Allow",
-            "Action": "lambda:InvokeFunction",
-            "Resource": "*"
-        },
-        {
-            "Effect": "Allow",
-            "Action": "ec2:*",
+            "Action": [
+                "lambda:InvokeFunction",
+                "ses:SendEmail",
+                "ses:SendRawEmail",
+                "ec2:*"
+            ],
             "Resource": "*"
         }
     ]

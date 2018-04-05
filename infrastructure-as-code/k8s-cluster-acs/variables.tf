@@ -58,3 +58,7 @@ variable "environment" {
 variable "vault_user" {
   description = "Vault userid: determines location of secrets and affects path of k8s auth backend"
 }
+
+variable "vault_addr" {
+  description = "Address of Vault server including port"
+}

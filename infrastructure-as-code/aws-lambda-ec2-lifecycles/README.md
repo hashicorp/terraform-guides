@@ -35,8 +35,8 @@ A description of what each file does:
  main.tf - Main configuration file. REQUIRED
  data_collectors.tf - Lambda functions for gathering instance data. REQUIRED
  iam_roles.tf - Configures IAM role and policies for your Lambda functions. REQUIRED
- notify_slack_instance_usage.tf - sends reports to Slack about running instances.
- notify_slack_untagged.tf - sends reports to slack about untagged instances and their key names.
+ notify_instance_usage.tf - sends reports about running instances.
+ notify_untagged.tf - sends reports about untagged instances and their key names.
  instance_reaper.tf - Checks instance TTL tag, terminates instances that have expired.
  untagged_janitor.tf - Cleans up untagged instances after a set number of days.
  files/ - Contains all of the lambda source code, zip files, and IAM template files.
@@ -140,7 +140,7 @@ $ terraform apply
 data.aws_caller_identity.current: Refreshing state...
 data.template_file.iam_lambda_read_instances: Refreshing state...
 data.template_file.iam_lambda_stop_and_terminate_instances: Refreshing state...
-data.template_file.iam_lambda_notify_slack: Refreshing state...
+data.template_file.iam_lambda_notify: Refreshing state...
 
 An execution plan has been generated and is shown below.
 Resource actions are indicated with the following symbols:
@@ -199,7 +199,7 @@ def terminate_instance(instance_id,region):
 ### Optional - Enable KMS encryption
 You can optionally encrypt the Slack Webhook URL so that it cannot be viewed in plaintext in the AWS console. This also allows you to commit your webhook URL to source code without worrying about it getting into the wrong hands. This also provides some extra security if you are working with a shared AWS account. Here are the additional steps you need to follow to enable encryption:
 
-1. Uncomment the lines in `notifySlackUntaggedInstances.py` and `notifySlackInstanceUsage.py` (or other lambdas) that enable encryption. These are the lines you'll need to uncomment. Note how we are using the b64decode Python module to decrypt the encrypted Slack Webhook:
+1. Uncomment the lines in `notifyUntaggedInstances.py` and `notifyInstanceUsage.py` (or other lambdas) that enable encryption. These are the lines you'll need to uncomment. Note how we are using the b64decode Python module to decrypt the encrypted Slack Webhook:
 ```
 # from base64 import b64decode
 # ENCRYPTED_HOOK_URL = os.environ['slackHookUrl']
@@ -208,12 +208,55 @@ You can optionally encrypt the Slack Webhook URL so that it cannot be viewed in 
 2. Rename the `encryption.tf.disabled` file to `encryption.tf`. Terraform reads any file that ends with the *.tf extension.
 3. Run `terraform apply` to generate a new AWS KMS key called `notify_slack`.
 4. Log onto the AWS console and switch into the region where you deployed your Lambdas. Navigate to the AWS Lambda section of the dashboard.
-5. Find the `notifySlackInstanceUsage` Lambda and click on it.
+5. Find the `notifyInstanceUsage` Lambda and click on it.
 6. Scroll down to the Environment Variables section. Click the little arrow to expand the Encryption configuration options.
 7. Check the box under "Enable helpers for encryption in transit". This will enable a new menu that says "KMS key to encrypt in transit". From that pull-down menu select the `notify_slack` key. This is the KMS key that Terraform created in step #3.
 8. Click on the `Encrypt` button next to the webhook URL. This will encrypt your webhook URL. Now click on `Save` at the top right. If you don't save here the settings won't stick.
 9. Navigate back to the AWS Lambda functions and repeat steps #1-8 for any other functions where you want to configure the encrypted URL.
 10. If you want to make this configuration permanent, comment out the `aws_kms_key` and `aws_kms_alias` resources in encryption.tf. Then use the `terraform state rm` command to remove both of them from your state file. The key you created will now be persistent, and allow you to save your encrypted Slack Webhook URL in your variables file.  You can fetch the encrypted URL by running `terraform show` command.
+
+### Optional - Edit the Slack message and formatting
+If you'd like to customize the messages that get sent into your Slack channels, just edit the part of the code that calls the `send_slack_message` function. Note how you can put action buttons into your message to link your users to useful information or status pages.  The Slack API guide has examples and more info: https://api.slack.com/docs/message-formatting
+
+```
+    send_slack_message(
+        msg_text, 
+        title='AWS Instance Type Usage',        
+        text="```\n"+report+"\n```",
+        fallback='AWS Instance Type Usage',
+        color='warning',
+        actions = [
+            {
+                "type": "button",
+                "text": ":money-burning: AWS Cost Explorer",
+                "url": "http://amzn.to/2EBAfQu"
+            },
+            {
+                "type": "button",
+                "text": ":broom: AWS Console",
+                "url": "https://console.aws.amazon.com/ec2/v2/home"
+            },
+        ]
+    )
+```
+
+### Optional - Send email instead of Slack messages
+If you don't have access to Slack or would rather send reports via email, simply comment out the lines in each function that run `send_slack_message` and uncomment the lines to `send_email` instead. For example, look at this section of code in `notifyInstanceUsage.py`.  You will need to verify your email address first in the AWS Simple Email Service control panel. You'll also need to change the SENDER and RECIPIENT variables listed at the top of the file to your email address.
+
+```
+    # Uncomment these lines to use email for notifications
+    send_email(
+        SENDER,
+        RECIPIENT,
+        AWS_REGION,
+        SUBJECT,
+        report,
+        CHARSET)
+    
+    # send_slack_message(
+    #     msg_text, 
+    #     title=SUBJECT,        
+```
 
 ### Clean up
 Cleanup is simple, just run `terraform destroy` in your workspace and all resources will be cleaned up.
