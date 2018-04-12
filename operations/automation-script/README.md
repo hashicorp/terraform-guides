@@ -8,7 +8,7 @@ The script does the following steps:
 1. Packages main.tf into the myconfig.tar.gz file.
 1. Creates the workspace.
 1. Creates a new configuration version.
-1. Uploads the myconfig.tar.gz file as a new configuration. (This last step triggers an initial run which will error because we have not yet set the name variable in the workspace.  That is OK.)
+1. Uploads the myconfig.tar.gz file as a new configuration. (This last step triggers an initial run which will error because we have not yet set the name variable in the workspace.  That is OK. If uploading other Terraform code, make sure that you have at least one variable without a default value so that this first run will fail.)
 1. Adds one Terraform variable called "name" and one Environment variable called "CONFIRM_DESTROY" to the workspace, getting their values from the variables.csv file. You can edit this file to add as many variables as you want.
 1. Starts a new run.
 1. Enters a loop to check the run results periodically.
