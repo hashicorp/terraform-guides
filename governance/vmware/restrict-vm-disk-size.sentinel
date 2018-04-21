@@ -1,0 +1,26 @@
+import "tfplan"
+
+get_vms = func() {
+  vms = []
+  for tfplan.module_paths as path {
+    vms += values(tfplan.module(path).resources.vsphere_virtual_machine) else []
+  }
+  return vms
+}
+
+vms = get_vms()
+
+# Restrict size of VM disk in GiB
+disk_size_limit = rule {
+  all vms as _, instances {
+    all instances as index, r {
+      all r.applied.disk as disk {
+        disk.size < 100
+      }
+    }
+  }
+}
+
+main = rule {
+  (disk_size_limit) else true
+}

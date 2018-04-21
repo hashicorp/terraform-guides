@@ -1,0 +1,33 @@
+import "tfplan"
+
+get_vms = func() {
+  vms = []
+  for tfplan.module_paths as path {
+    vms += values(tfplan.module(path).resources.vsphere_virtual_machine) else []
+  }
+  return vms
+}
+
+vms = get_vms()
+
+# Restrict number of CPUs
+cpus_limit = rule {
+  all vms as _, instances {
+    all instances as index, r {
+  	  r.applied.num_cpus <= 4
+    }
+  }
+}
+
+# Restrict Memory (in MB)
+memory_limit = rule {
+  all vms as _, instances {
+    all instances as index, r {
+  	  r.applied.memory <= 8192
+    }
+  }
+}
+
+main = rule {
+  (cpus_limit and memory_limit) else true
+}
