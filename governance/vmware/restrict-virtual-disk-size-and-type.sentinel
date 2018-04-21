@@ -10,6 +10,7 @@ get_virtual_disks = func() {
 
 virtual_disks = get_virtual_disks()
 
+# Restrict size of disk in GB
 disk_size_limit = rule {
   all virtual_disks as _, instances {
     all instances as index, r {
