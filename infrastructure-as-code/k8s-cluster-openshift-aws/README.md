@@ -85,11 +85,11 @@ If you want to use open source Terraform instead of TFE, you can create a copy o
 You will see outputs providing the IPs and DNS addresses needed to access your OpenShift cluster in the AWS Console, TLS certs/keys for your cluster, the Vault Kubernetes auth method path, the Vault server address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your OpenShift cluster. You can also validate that the cluster was created in the AWS Console.
 
 ## Next Steps
-You can now use the guide in the [k8s-services-openshift](../../self-serve-infrastructure/k8s-services-openshift) directory of this repository to provision some pods and services against your OpenShift cluster. The workspace you configure in that guide will automatically use the outputs generated in the state of the workspace you created in this guide through Terraform's workspace state sharing.
+You can now use the guide in the [k8s-services-openshift](../../self-serve-infrastructure/k8s-services-openshift) directory of this repository to provision some pods and services against your OpenShift cluster. The workspace you configure in that guide will automatically use the outputs generated in the state of the k8s-cluster-openshift workspace through Terraform's workspace state sharing.
 
 ## Cleanup
 Execute the following steps to delete your OpenShift cluster and associated resources from AWS.
 
-1. On the Variables tab of your workspace, add the environment variable CONFIRM_DESTROY with value 1.
+1. On the Variables tab of your k8s-cluster-openshift workspace, add the environment variable CONFIRM_DESTROY with value 1.
 1. At the bottom of the Settings tab of your workspace, click the "Queue destroy plan" button to make TFE do a destroy run.
 1. On the Latest Run tab of your workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually destroy your OpenShift cluster and other resources that were provisioned by Terraform.

@@ -1,0 +1,3 @@
+tfe_organization = "<your_organization>"
+k8s_cluster_workspace = "k8s-cluster-openshift"
+private_key_data= "<contents_of_your_private_key>"

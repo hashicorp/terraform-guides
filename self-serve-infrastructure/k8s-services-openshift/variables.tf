@@ -1,6 +1,5 @@
 variable "tfe_organization" {
   description = "TFE organization"
-  default = "RogerBerlind"
 }
 
 variable "k8s_cluster_workspace" {
@@ -9,4 +8,4 @@ variable "k8s_cluster_workspace" {
 
 variable "private_key_data" {
   description = "contents of the private key"
-} 
+}

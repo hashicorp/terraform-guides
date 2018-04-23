@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.11.5"
+  required_version = ">= 0.11.7"
 }
 
 data "terraform_remote_state" "k8s_cluster" {
