@@ -36,8 +36,8 @@ resource "aws_instance" "bastion" {
   tags {
     Name    = "OpenShift Bastion"
     Project = "openshift"
-    owner = "roger@hashicorp.com"
-    TTL = "-1"
+    owner = "${var.owner}"
+    TTL = "${var.ttl}"
   }
 
   provisioner "remote-exec" {

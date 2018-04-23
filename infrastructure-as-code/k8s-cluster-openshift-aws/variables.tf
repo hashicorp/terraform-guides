@@ -12,6 +12,16 @@ variable "private_key_data" {
   description = "contents of the private key"
 }
 
+variable "owner" {
+  description = "value set on EC2 owner tag"
+  default = ""
+}
+
+variable "ttl" {
+  description = "value set on EC2 TTL tag. -1 means forever. Measured in hours."
+  default = "-1"
+}
+
 //  This map defines which AZ to put the 'Public Subnet' in, based on the
 //  region defined. You will typically not need to change this unless
 //  you are running in a new region!

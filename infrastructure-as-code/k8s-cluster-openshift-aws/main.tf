@@ -44,6 +44,8 @@ module "openshift" {
   subnet_cidr     = "10.0.1.0/24"
   key_name        = "${var.key_name}"
   private_key_data = "${var.private_key_data}"
+  owner           = "${var.owner}"
+  ttl             = "${var.ttl}"    
 }
 
 resource "null_resource" "post-install-master" {

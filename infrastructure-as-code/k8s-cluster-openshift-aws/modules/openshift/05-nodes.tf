@@ -37,8 +37,8 @@ resource "aws_instance" "master" {
   tags {
     Name    = "OpenShift Master"
     Project = "openshift"
-    owner = "roger@hashicorp.com"
-    TTL = "-1"
+    owner = "${var.owner}"
+    TTL = "${var.ttl}"
   }
 }
 
@@ -80,7 +80,7 @@ resource "aws_instance" "node1" {
   tags {
     Name    = "OpenShift Node 1"
     Project = "openshift"
-    owner = "roger@hashicorp.com"
-    TTL = "-1"
+    owner = "${var.owner}"
+    TTL = "${var.ttl}"
   }
 }

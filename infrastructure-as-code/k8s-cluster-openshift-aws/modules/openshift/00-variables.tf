@@ -26,3 +26,11 @@ variable "key_name" {
 variable "private_key_data" {
   description = "contents of the private key"
 }
+
+variable "owner" {
+  description = "value set on EC2 owner tag"
+}
+
+variable "ttl" {
+  description = "value set on EC2 TTL tag. -1 means forever. Measured in hours."
+}
