@@ -31,5 +31,5 @@ Execute the following commands to deploy the pods and services to your OpenShift
 Execute the following steps to delete the cats-and-dogs pods and services from your OpenShift cluster.
 
 1. Define an environment variable CONFIRM_DESTROY with value 1 on the Variables tab of your services workspace.
-1. Queue a Destroy plan in T:FE from the Settings tab of your services workspace.
+1. Queue a Destroy plan in TFE from the Settings tab of your services workspace.
 1. On the Latest Run tab of your services workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually remove the cats-and-dogs pods and services.
