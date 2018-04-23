@@ -2,11 +2,12 @@
 This guide gives an example of deploying OpenShift pods and services to an existing OpenShift cluster with Terraform Enterprise (TFE). It deploys two pods exposed as services:  The first runs a python application called "cats-and-dogs-frontend" that lets users vote for their favorite type of pet. It stores data in the second, "cats-and-dogs-backend", which runs a redis database. Before provisioning the pods, it provisions an OpenShift project (namespace) called "cats-and-dogs" and a Kubernetes service account called "cats-and-dogs" which the pods use. The two pods retrieve a shared database password from Vault.
 
 ## Reference Material
-[OpenShift Origin](https://www.openshift.org/): the open source version of OpenShift, Red Hat's commercial implementation of [Kubernetes](https://kubernetes.io/): the open source system for automating deployment and management of containerized applications.
-[kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/): the Kubernetes CLI.
-[Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/): Docker containers are deployed in Kubernetes pods.
-[Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/): Pods are exposed as services.
-[Vault](https://www.vaultproject.io/): HashiCorp's secrets management solution.
+* [OpenShift Origin](https://www.openshift.org/): the open source version of OpenShift, Red Hat's commercial implementation of Kubernetes.
+* [Kubernetes](https://kubernetes.io/): the open source system for automating deployment and management of containerized applications.
+* [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/): the Kubernetes CLI.
+* [Kubernetes Pods](https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/): Docker containers are deployed in Kubernetes pods.
+* [Kubernetes Services](https://kubernetes.io/docs/concepts/services-networking/service/): Pods are exposed as services.
+* [Vault](https://www.vaultproject.io/): HashiCorp's secrets management solution.
 
 
 ## Estimated Time to Complete
@@ -35,6 +36,8 @@ The frontend application and the redis database both get the redis password from
 
 ## Steps
 Execute the following commands to deploy the pods and services to your OpenShift cluster.
+
+If you want to use open source Terraform instead of TFE, you can create a copy of the included openshift.tfvars.example file, calling it openshift.auto.tfvars, set values for the variables in it, run `terraform init`, and then run `terraform apply`.
 
 ### Step 1: Create and Configure a Workspace
 1. Create a new TFE workspace called k8s-services-openshift.

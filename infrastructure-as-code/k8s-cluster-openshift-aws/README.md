@@ -4,9 +4,10 @@ This guide provisions an OpenShift Origin 3.7 cluster in AWS with 1 master node,
 While the original repository required the user to manually run ansible-playbook after provisioning the AWS infrastructure with Terraform, this guide uses a Terraform [remote-exec provisioner](https://www.terraform.io/docs/provisioners/remote-exec.html) to do that. It also uses several additional remote-exec and local-exec provisioners to automate the rest of the deployment, retrieve the OpenShift cluster keys, and write them to outputs. This is important since it allows workspaces that deploy pods and services to the cluster do that via workspace state sharing without any manual copying of the cluster keys.
 
 ## Reference Material
-[OpenShift Origin](https://www.openshift.org/): the open source version of OpenShift, Red Hat's commercial implementation of [Kubernetes](https://kubernetes.io/): the open source system for automating deployment and management of containerized applications.
-[openshift-ansible](https://github.com/openshift/openshift-ansible/tree/release-3.7): Ansible roles and playbooks for installing and managing OpenShift 3.7 clusters with Ansible.
-[ansible-playbook](https://docs.ansible.com/ansible/2.4/ansible-playbook.html): the actual ansible tool used to deploy the OpenShift cluster. This is used in the install-from-bastion.sh script.
+* [OpenShift Origin](https://www.openshift.org/): the open source version of OpenShift, Red Hat's commercial implementation of Kubernetes.
+* [Kubernetes](https://kubernetes.io/): the open source system for automating deployment and management of containerized applications.
+* [openshift-ansible](https://github.com/openshift/openshift-ansible/tree/release-3.7): Ansible roles and playbooks for installing and managing OpenShift 3.7 clusters with Ansible.
+* [ansible-playbook](https://docs.ansible.com/ansible/2.4/ansible-playbook.html): the actual ansible tool used to deploy the OpenShift cluster. This is used in the install-from-bastion.sh script.
 
 ## Estimated Time to Complete
 60 minutes
