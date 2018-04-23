@@ -36,7 +36,7 @@ The frontend application and the redis database both get the redis password from
 ## Steps
 Execute the following commands to deploy the pods and services to your OpenShift cluster.
 
-# Step 1: Create and Configure a Workspace
+### Step 1: Create and Configure a Workspace
 1. Create a new TFE workspace called k8s-services-openshift.
 1. Configure your workspace to connect to the fork of this repository in your own GitHub account.
 1. Set the Terraform Working Directory to "self-serve-infrastructure/k8s-services-openshift"
@@ -44,19 +44,19 @@ Execute the following commands to deploy the pods and services to your OpenShift
 1. Set the k8s-cluster-workspace Terraform variable in your workspace to the name of the workspace you used to deploy your OpenShift cluster.
 1. Set the private_key_data Terraform variable in your workspace to include the contents of the private key file you used when provisioning the cluster.  This is needed since the Terraform code uses a remote-exec provisioner to create the project and service account with the `oc` and `kubectl` CLIs respectively. (The service_account resource of the Kubernetes provider cannot be used in this case because OpenShift creates service accounts with two secrets while the resource expects each service account to only have one secret.)
 
-## Step 2: Change the Redis Password
+### Step 2: Change the Redis Password
 1. Login to the Vault UI using your username and password (or token if the userpass authentication method is not enabled).
 1. Change the value of the redis_pwd key under the path "secret/<user>/kubernetes/cats-and-dogs" to some arbitrary string containing letters and numbers.
 
-## Step 3: Plan and Apply the Deployment of the Pods and Services
+### Step 3: Plan and Apply the Deployment of the Pods and Services
 1. Queue a plan for the k8s-services-openshift workspace in TFE.
 1. Confirm that you want to apply the plan.
 
-## Step 4: Run the Cats-and-Dogs Application
+### Step 4: Run the Cats-and-Dogs Application
 1. Enter the cats_and_dogs_dns output in a browser. You should see the "Pets Voting App" page.
 1. Vote for your favorite pets.
 
-## Step 5: (Optional) Check the OpenShift Pod Logs
+### Step 5: (Optional) Check the OpenShift Pod Logs
 1. If you wish, you can examine the logs of the the two pods in the OpenShift Console.
 1. Point your browser to the k8s_endpoint output of your cluster workspace.
 1. Login with username "admin" and password "123".
