@@ -1,0 +1,4 @@
+# README
+This guide provisions an OpenShift 3.7 cluster in AWS with 1 master node, 1 client node, and 1 bastion host. It uses ansible-playbook to deploy OpenShift after using Terraform to provision the AWS infrastructure. It is based on a [terraform-aws-openshift](https://github.com/dwmkerr/terraform-aws-openshift) repository created by Dave Kerr.
+
+While the original repository required the user to manually run ansible-playbook after provisioning the AWS infrastructure with Terraform, this guide uses a Terraform remote-exec provisioner to do that. It also uses several additional remote-exec and local-exec provisioners to automate the rest of the deployment, retrieve the OpenShift cluster keys, and write them to outputs. This is important since it allows the k8s-services-openshift workspace to deploy pods and services to the cluster via workspace state sharing without any manual copying of the cluster keys. 

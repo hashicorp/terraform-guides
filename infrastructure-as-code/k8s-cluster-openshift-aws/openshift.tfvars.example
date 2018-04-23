@@ -1,0 +1,6 @@
+region = "us-east-1"
+key_name = ""
+private_key_data= ""
+vault_k8s_auth_path = "openshift"
+vault_user = ""
+vault_addr = ""
