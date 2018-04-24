@@ -1,0 +1,36 @@
+import "tfplan"
+
+get_nas_datastores = func() {
+  nas_datastores = []
+  for tfplan.module_paths as path {
+    nas_datastores += values(tfplan.module(path).resources.vsphere_nas_datastore) else []
+  }
+  return nas_datastores
+}
+
+nas_datastores = get_nas_datastores()
+
+# Require NAS datastore type be nfs41
+# Default is NFS (which means NFS v3)
+require_nfs41 = rule {
+  all nas_datastores as _, instances {
+    all instances as index, r {
+      r.applied.type is "NFS41"
+    }
+  }
+}
+
+# Require security type be one of two Kerberos options
+# Only applicable when type is NFS41.
+# Only other option is AUTH_SYS
+require_kerberos = rule {
+  all nas_datastores as _, instances {
+    all instances as index, r {
+      r.applied.security_type in ["SEC_KRB5", "SEC_KRB5I"]
+    }
+  }
+}
+
+main = rule {
+  (require_nfs41 and require_kerberos) else true
+}
