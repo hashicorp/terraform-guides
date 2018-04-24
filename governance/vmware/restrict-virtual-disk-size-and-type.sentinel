@@ -1,0 +1,34 @@
+import "tfplan"
+
+get_virtual_disks = func() {
+  virtual_disks = []
+  for tfplan.module_paths as path {
+    virtual_disks += values(tfplan.module(path).resources.vsphere_virtual_disk) else []
+  }
+  return virtual_disks
+}
+
+virtual_disks = get_virtual_disks()
+
+# Restrict size of disk in GB
+disk_size_limit = rule {
+  all virtual_disks as _, instances {
+    all instances as index, r {
+      r.applied.size < 100
+    }
+  }
+}
+
+# Specify disk type as thin.
+# Could also be eagerZeroedThick (the default) or lazy
+disk_type = rule {
+  all virtual_disks as _, instances {
+    all instances as index, r {
+      r.applied.type is "thin"
+    }
+  }
+}
+
+main = rule {
+  (disk_size_limit and disk_type) else true
+}

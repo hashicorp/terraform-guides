@@ -1,0 +1,25 @@
+import "tfplan"
+
+get_datastore_clusters = func() {
+  datastore_clusters = []
+  for tfplan.module_paths as path {
+    datastore_clusters += values(tfplan.module(path).resources.vsphere_datastore_cluster) else []
+  }
+  return datastore_clusters
+}
+
+datastore_clusters = get_datastore_clusters()
+
+# Require Storage DRS be enabled (true)
+# other option is false
+require_storage_drs = rule {
+  all datastore_clusters as _, instances {
+    all instances as index, r {
+      r.applied.sdrs_enabled is true
+    }
+  }
+}
+
+main = rule {
+  (require_storage_drs) else true
+}
