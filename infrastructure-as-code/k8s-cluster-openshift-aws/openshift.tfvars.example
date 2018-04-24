@@ -1,0 +1,7 @@
+key_name = "<name_of_your_key_pair>"
+private_key_data= "<contents_of_your_private_key>"
+vault_k8s_auth_path = "<user>-openshift"
+vault_user = "<user>"
+vault_addr = "http://<address>:8200"
+owner = "<your_email>"
+ttl = "-1"

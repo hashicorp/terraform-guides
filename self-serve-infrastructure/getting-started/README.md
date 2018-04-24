@@ -1,1 +1,1 @@
-View the [Self Service Getting Started Guide here](https://www.terraform.io/guides/self-service-getting-started.html)
+This directory includes some examples of provisioning networking infrastructure in AWS, Azure, and Google.
