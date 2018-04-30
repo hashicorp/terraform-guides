@@ -7,9 +7,10 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # Network Variables
 # ---------------------------------------------------------------------------------------------------------------------
-# vpc_cidr               = "172.19.0.0/16"
-# vpc_cidrs_public       = ["172.19.0.0/20", "172.19.16.0/20", "172.19.32.0/20",]
-# vpc_cidrs_private      = ["172.19.48.0/20", "172.19.64.0/20", "172.19.80.0/20",]
+# vpc_cidr          = "172.19.0.0/16"
+# vpc_cidrs_public  = ["172.19.0.0/20", "172.19.16.0/20", "172.19.32.0/20",]
+# vpc_cidrs_private = ["172.19.48.0/20", "172.19.64.0/20", "172.19.80.0/20",]
+
 # nat_count              = 1 # Number of NAT gateways to provision across public subnets, defaults to public subnet count.
 # bastion_servers        = 1 # Number of bastion hosts to provision across public subnets, defaults to public subnet count.
 # bastion_instance       = "t2.micro"

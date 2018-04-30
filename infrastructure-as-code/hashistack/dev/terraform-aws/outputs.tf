@@ -7,7 +7,7 @@ successfully provisioned!
 ${module.network_aws.zREADME}To force the generation of a new key, the private key instance can be
 "tainted" using the below command.
 
-  $ terraform taint -module=ssh_keypair_aws_override.tls_private_key \
+  $ terraform taint -module=ssh_keypair_aws.tls_private_key \
       tls_private_key.key
 
 # ------------------------------------------------------------------------------
