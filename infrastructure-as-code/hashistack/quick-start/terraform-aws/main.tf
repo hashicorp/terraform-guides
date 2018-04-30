@@ -74,7 +74,7 @@ data "template_file" "bastion_quick_start" {
 }
 
 module "network_aws" {
-  source = "github.com/hashicorp-modules/network-aws?ref=f-refactor"
+  source = "github.com/hashicorp-modules/network-aws"
 
   name              = "${var.name}"
   vpc_cidr          = "${var.vpc_cidr}"
@@ -122,7 +122,7 @@ data "template_file" "java_install" {
 }
 
 module "hashistack_aws" {
-  source = "github.com/hashicorp-modules/hashistack-aws?ref=f-refactor"
+  source = "github.com/hashicorp-modules/hashistack-aws"
 
   name          = "${var.name}" # Must match network_aws module name for Consul Auto Join to work
   vpc_id        = "${module.network_aws.vpc_id}"

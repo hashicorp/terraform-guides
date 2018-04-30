@@ -58,10 +58,10 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", inline: $script, privileged: false
 
   # Bootstrap the vm
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/base.sh | bash"
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/base.sh | bash"
 
   # Setup Consul user
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/setup-user.sh | bash",
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-user.sh | bash",
     env: {
       "GROUP" => consul_group,
       "USER" => consul_user,
@@ -70,7 +70,7 @@ Vagrant.configure("2") do |config|
     }
 
   # Install Consul
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/scripts/install-consul.sh | bash",
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-consul.sh | bash",
     env: {
       "VERSION" => consul_version,
       "URL" => consul_ent_url,
@@ -78,10 +78,10 @@ Vagrant.configure("2") do |config|
       "GROUP" => consul_group,
     }
 
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/consul/scripts/install-consul-systemd.sh | bash"
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-consul-systemd.sh | bash"
 
   # Setup Vault user
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/setup-user.sh | bash",
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-user.sh | bash",
     env: {
       "GROUP" => vault_group,
       "USER" => vault_user,
@@ -90,7 +90,7 @@ Vagrant.configure("2") do |config|
     }
 
   # Install Vault
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/vault/scripts/install-vault.sh | bash",
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/vault/scripts/install-vault.sh | bash",
     env: {
       "VERSION" => vault_version,
       "URL" => vault_ent_url,
@@ -98,10 +98,10 @@ Vagrant.configure("2") do |config|
       "GROUP" => vault_group,
     }
 
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/vault/scripts/install-vault-systemd.sh | bash"
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/vault/scripts/install-vault-systemd.sh | bash"
 
   # Install Nomad
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/nomad/scripts/install-nomad.sh | bash",
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-nomad.sh | bash",
     env: {
       "VERSION" => nomad_version,
       "URL" => nomad_ent_url,
@@ -109,12 +109,12 @@ Vagrant.configure("2") do |config|
       "GROUP" => nomad_group,
     }
 
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/nomad/scripts/install-nomad-systemd.sh | bash"
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/nomad/scripts/install-docker.sh | bash"
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/nomad/scripts/install-java.sh | bash"
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-nomad-systemd.sh | bash"
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-docker.sh | bash"
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-java.sh | bash"
 
   # Setup tests
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/setup-testing.sh | bash"
+  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-testing.sh | bash"
 
   # Run tests if `RUN_TESTS` env var is provided
   if (run_tests)
@@ -123,7 +123,7 @@ Vagrant.configure("2") do |config|
 
   # Cleanup if `CLEANUP` env var is provided
   if (cleanup)
-    config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/cleanup.sh | bash"
+    config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/cleanup.sh | bash"
   end
 
   # Increase memory for Parallels Desktop

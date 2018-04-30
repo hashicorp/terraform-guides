@@ -7,13 +7,13 @@ export VERSION=${nomad_version}
 export URL=${nomad_url}
 export USER=root
 export GROUP=root
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/nomad/scripts/install-nomad.sh | bash
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-nomad.sh | bash
 
 echo "Install Nomad Systemd"
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/nomad/scripts/install-nomad-systemd.sh | bash
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-nomad-systemd.sh | bash
 
 echo "Cleanup install files"
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/cleanup.sh | bash
+curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/cleanup.sh | bash
 
 echo "Set variables"
 NOMAD_CONFIG_FILE=/etc/nomad.d/default.hcl
