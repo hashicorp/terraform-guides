@@ -3,11 +3,12 @@
 *.tfstate.backup
 *.tfstate.lock.info
 
-# tfvars files
-*.tfvars
-
-# Module directory
+# Directories
 .terraform/
+.vagrant/
 
 # SSH Keys
 *.pem
+
+# Backup files
+*.bak
