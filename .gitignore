@@ -9,3 +9,6 @@
 
 # SSH Keys
 *.pem
+
+# Backup files
+*.bak

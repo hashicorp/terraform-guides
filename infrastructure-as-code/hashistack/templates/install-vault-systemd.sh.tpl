@@ -2,12 +2,6 @@
 
 echo "[---Begin install-vault-systemd.sh---]"
 
-echo "Wait for system to be ready"
-sleep 10
-
-echo "Run base script"
-curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/base.sh | bash
-
 echo "Setup Vault user"
 export GROUP=vault
 export USER=vault
@@ -25,5 +19,33 @@ curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor
 
 echo "Cleanup install files"
 curl https://raw.githubusercontent.com/hashicorp/guides-configuration/f-refactor/shared/scripts/cleanup.sh | bash
+
+echo "Set variables"
+VAULT_CONFIG_FILE=/etc/vault.d/default.hcl
+VAULT_CONFIG_OVERRIDE_FILE=/etc/vault.d/z-override.hcl
+
+echo "Minimal configuration for Vault"
+cat <<CONFIG | sudo tee $VAULT_CONFIG_FILE
+cluster_name = "${name}"
+CONFIG
+
+echo "Update Vault configuration file permissions"
+sudo chown vault:vault $VAULT_CONFIG_FILE
+
+if [ ${vault_override} == true ] || [ ${vault_override} == 1 ]; then
+  echo "Add custom Vault server override config"
+  cat <<CONFIG | sudo tee $VAULT_CONFIG_OVERRIDE_FILE
+${vault_config}
+CONFIG
+
+  echo "Update Vault configuration override file permissions"
+  sudo chown vault:vault $VAULT_CONFIG_OVERRIDE_FILE
+
+  echo "If Vault config is overridden, don't start Vault in -dev mode"
+  echo '' | sudo tee /etc/vault.d/vault.conf
+fi
+
+echo "Restart Vault"
+sudo systemctl restart vault
 
 echo "[---install-vault-systemd.sh Complete---]"

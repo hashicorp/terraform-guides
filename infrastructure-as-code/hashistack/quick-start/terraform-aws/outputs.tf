@@ -1,139 +1,80 @@
 output "zREADME" {
   value = <<README
-Your "${var.name}" HashiStack cluster has been successfully provisioned!
 
-A private RSA key has been generated and downloaded locally. The file permissions have been changed to 0600 so the key can be used immediately for SSH or scp.
+Your "${var.name}" AWS Nomad Quick Start cluster has been
+successfully provisioned!
 
-If you're not running Terraform locally (e.g. in TFE or Jenkins) but are using remote state and need the private key locally for SSH, run the below command to download.
+${module.network_aws.zREADME}
+# ------------------------------------------------------------------------------
+# Local HTTP API Requests
+# ------------------------------------------------------------------------------
 
-  ${format("$ echo \"$(terraform output private_key_pem)\" > %s && chmod 0600 %s", module.network_aws.private_key_filename, module.network_aws.private_key_filename)}
+If you're making HTTP API requests outside the Bastion (locally), set
+the below env vars.
 
-Run the below command to add this private key to the list maintained by ssh-agent so you're not prompted for it when using SSH or scp to connect to hosts with your public key.
+The `hashistack_public` variable must be set to true for requests to work.
 
-  ${format("$ ssh-add %s", module.network_aws.private_key_filename)}
+`hashistack_public`: ${var.hashistack_public}
 
-The public part of the key loaded into the agent ("public_key_openssh" output) has been placed on the target system in ~/.ssh/authorized_keys.
+  $ export NOMAD_ADDR=http://${module.hashistack_aws.nomad_lb_dns}:4646
+  $ export VAULT_ADDR=http://${module.hashistack_aws.vault_lb_dns}:8200
+  $ export CONSUL_ADDR=http://${module.hashistack_aws.consul_lb_dns}:8500
 
-To SSH into a Bastion host using this private key, run one of the below commands.
+# ------------------------------------------------------------------------------
+# Nomad Quick Start
+# ------------------------------------------------------------------------------
 
-  ${join("\n  ", formatlist("$ ssh -A -i %s %s@%s", module.network_aws.private_key_filename, module.network_aws.bastion_username, module.network_aws.bastion_ips_public))}
+Once on the Bastion host, you can use Consul's DNS functionality to seamlessly
+SSH into other Consul or Nomad nodes if they exist.
 
-You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html) or API (https://www.consul.io/api/index.html) commands.
-
-  # Use the CLI to retrieve the Consul members, write a key/value, and read that key/value
-  $ consul members
-  $ consul kv put cli bar=baz
-  $ consul kv get cli
-
-  # Use the API to retrieve the Consul members, write a key/value, and read that key/value
-  $ curl \
-      http://127.0.0.1:8500/v1/agent/members | jq '.'
-  $ curl \
-      -X PUT \
-      -d '{"bar=baz"}' \
-      http://127.0.0.1:8500/v1/kv/api | jq '.'
-  $ curl \
-      http://127.0.0.1:8500/v1/kv/api | jq '.'
-
-To SSH into one of the Consul server nodes from the Bastion host, run the below command and it will use Consul DNS to lookup the address of one of the healthy Consul server nodes and SSH you in.
-
+  $ ssh -A ${module.hashistack_aws.hashistack_username}@nomad.service.consul
+  $ ssh -A ${module.hashistack_aws.hashistack_username}@nomad-client.service.consul
   $ ssh -A ${module.hashistack_aws.hashistack_username}@consul.service.consul
 
-You won't be able to start interacting with Vault from the Bastion host yet as the Vault server has not been initialized & unsealed. Follow the below steps to set this up.
-
-1.) SSH into one of the Vault servers registered with Consul, you can use the below command to accomplish this automatically (we'll use Consul DNS moving forward once Vault is unsealed)
-
-  $ ssh -A ${module.hashistack_aws.hashistack_username}@$(curl http://127.0.0.1:8500/v1/agent/members | jq -M -r '[.[] | select(.Name | contains ("${var.name}-hashistack")) | .Addr][0]')
-
-2.) Initialize Vault
-
-  $ vault init
-
-3.) Unseal Vault using the "Unseal Keys" output from the `vault init` command and check the seal status
-
-  $ vault unseal <unsealkey1>
-  $ vault unseal <unsealkey2>
-  $ vault unseal <unsealkey3>
-  $ vault status
-
-Repeat steps 1.) and 3.) to unseal the other "standby" Vault servers as well to achieve high availablity.
-
-4.) Logout of the Vault server (ctrl+d) and check Vault's seal status from the Bastion host to verify you can interact with the Vault cluster from the Bastion host Vault CLI
-
-  $ vault status
-
-5.) You can now interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html) or API (https://www.vaultproject.io/api/index.html) commands from your Bastion host
-
-  # Set your Vault token to authenticate requests, to start we can use the "Root Token" that was output from the `vault init` command above
-  $ export VAULT_TOKEN=<roottoken>
-
-  # Use Vault's CLI to write and read a generic secret
-  $ vault write secret/cli foo=bar
-  $ vault read secret/cli
-
-  # Use Vault's API with Consul DNS to write and read a generic secret
-  $ curl \
-      -H "X-Vault-Token: $VAULT_TOKEN" \
-      -X POST \
-      -d '{"foo":"bar"}' \
-      http://vault.service.consul:8200/v1/secret/api | jq '.'
-  $ curl \
-      -H "X-Vault-Token: $VAULT_TOKEN" \
-      http://vault.service.consul:8200/v1/secret/api | jq '.'
-
-Now that Vault is unsealed, you can seemlessly SSH back into unsealed Vault servers using Consul DNS (rather than using the command in Step 1). The nodes returned will be both active and standby Vault servers as long as they're unsealed.
-
+  # Vault must be initialized & unsealed for this command to work
   $ ssh -A ${module.hashistack_aws.hashistack_username}@vault.service.consul
 
-You can now interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html) or API (https://www.nomadproject.io/api/index.html) commands.
+${module.hashistack_aws.zREADME}
+# ------------------------------------------------------------------------------
+# Nomad Quick Start - Vault Integration
+# ------------------------------------------------------------------------------
 
-  $ nomad server-members # Check Nomad's server members
-  $ nomad node-status # Check Nomad's client nodes
-  $ nomad init # Create a skeletion job file to deploy a Redis Docker container
+The Vault integration for Nomad can be enabled by initializing Vault
+and running the below commands.
 
-  # Use the CLI to deploy a Redis Docker container
-  $ nomad plan example.nomad # Run a nomad plan on the example job
-  $ nomad run example.nomad # Run the example job
-  $ nomad status # Check that the job is running
-  $ nomad status example # Check job details
-  $ nomad stop example # Stop the example job
-  $ nomad status # Check that the job is stopped
+  $ export VAULT_TOKEN=<ROOT_TOKEN>
+  $ consul exec -node ${var.name}-server-nomad - <<EOF
+echo "VAULT_TOKEN=$VAULT_TOKEN" | sudo tee -a /etc/nomad.d/nomad.conf
 
-  # Use the API to deploy a Redis Docker container
-  $ nomad run -output example.nomad > example.json # Convert the example Nomad HCL job file to JSON
-  $ curl \
-      -X POST \
-      -d @example.json \
-      http://nomad-server.service.consul:4646/v1/job/example/plan | jq '.' # Run a nomad plan on the example job
-  $ curl \
-      -X POST \
-      -d @example.json \
-      http://nomad-server.service.consul:4646/v1/job/example | jq '.' # Run the example job
-  $ curl \
-      -X GET \
-      http://nomad-server.service.consul:4646/v1/jobs | jq '.' # Check that the job is running
-  $ curl \
-      -X GET \
-      http://nomad-server.service.consul:4646/v1/job/example | jq '.' # Check job details
-  $ curl \
-      -X DELETE \
-      http://nomad-server.service.consul:4646/v1/job/example | jq '.' # Stop the example job
-  $ curl \
-      -X GET \
-      http://nomad-server.service.consul:4646/v1/jobs | jq '.' # Check that the job is stopped
+cat <<CONFIG | sudo tee /etc/nomad.d/z-vault.hcl
+vault {
+  enabled = true
+  address = "http://vault.service.consul:8200"
 
-To SSH into Nomad server nodes, you can also leverage Consul's DNS functionality.
+  tls_skip_verify = true
+}
+CONFIG
 
-  $ ssh -A ${module.hashistack_aws.hashistack_username}@nomad-server.service.consul
+sudo systemctl restart nomad
+EOF
 
-To force the generation of a new key, the private key instance can be "tainted" using the below command.
+  $ consul exec -node ${var.name}-client-nomad - <<EOF
+cat <<CONFIG | sudo tee /etc/nomad.d/z-vault.hcl
+vault {
+  enabled = true
+  address = "http://vault.service.consul:8200"
 
-  $ terraform taint -module=network_aws.ssh_keypair_aws.tls_private_key tls_private_key.key
+  tls_skip_verify = true
+}
+CONFIG
+
+sudo systemctl restart nomad
+EOF
 README
 }
 
-output "vpc_cidr_block" {
-  value = "${module.network_aws.vpc_cidr_block}"
+output "vpc_cidr" {
+  value = "${module.network_aws.vpc_cidr}"
 }
 
 output "vpc_id" {
@@ -192,10 +133,46 @@ output "consul_sg_id" {
   value = "${module.hashistack_aws.consul_sg_id}"
 }
 
+output "consul_lb_sg_id" {
+  value = "${module.hashistack_aws.consul_lb_sg_id}"
+}
+
+output "consul_tg_http_8500_arn" {
+  value = "${module.hashistack_aws.consul_tg_http_8500_arn}"
+}
+
+output "consul_lb_dns" {
+  value = "${module.hashistack_aws.consul_lb_dns}"
+}
+
 output "vault_sg_id" {
   value = "${module.hashistack_aws.vault_sg_id}"
 }
 
+output "vault_lb_sg_id" {
+  value = "${module.hashistack_aws.vault_lb_sg_id}"
+}
+
+output "vault_tg_http_8200_arn" {
+  value = "${module.hashistack_aws.vault_tg_http_8200_arn}"
+}
+
+output "vault_lb_dns" {
+  value = "${module.hashistack_aws.vault_lb_dns}"
+}
+
 output "nomad_sg_id" {
   value = "${module.hashistack_aws.nomad_sg_id}"
+}
+
+output "nomad_lb_sg_id" {
+  value = "${module.hashistack_aws.nomad_lb_sg_id}"
+}
+
+output "nomad_tg_http_4646_arn" {
+  value = "${module.hashistack_aws.nomad_tg_http_4646_arn}"
+}
+
+output "nomad_lb_dns" {
+  value = "${module.hashistack_aws.nomad_lb_dns}"
 }
