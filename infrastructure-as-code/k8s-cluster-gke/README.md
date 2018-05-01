@@ -26,44 +26,21 @@ Execute the following commands to deploy your Kubernetes cluster to GKE.
 
 1. Fork this repository by clicking the Fork button in the upper right corner of the screen and selecting your own personal GitHub account or organization.
 1. Clone the fork to your laptop by running `git clone https://github.com/<your_github_account>/terraform-guides.git`.
-1. If you would like to provision both dev and prod GKE clusters, please do the next two steps. If you only want to provision a single cluster, you can just work with the master branch.
-    * Run `git checkout dev` to create a new dev branch of your fork.
-    * Run `git push origin dev` to push your dev branch to your fork.
-1. Create a workspace in your TFE organization called k8s-cluster-gke-dev if you plan to provision both dev and prod clusters, otherwise k8s-cluster-gke.
-1. Configure the k8s-cluster-gke-dev or k8s-cluster-gke workspace to connect to the fork of this repository in your own GitHub account.
-1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-gke" and the VCS Branch to "dev" or "master", matching the branch you are actually using. (If you leave this blank, the master branch will be used.)
+1. Create a workspace in your TFE organization called k8s-cluster-gke.
+1. Configure the k8s-cluster-gke workspace to connect to the fork of this repository in your own GitHub account.
+1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-gke".
 1. On the Variables tab of your workspace, add the following variables to the Terraform variables: gcp_project, gcp_region, gcp_zone, initial_node_count, node_machine_type, environment, vault_addr, and vault_user. The first of these must be the name of the GCP project you are using. The next two should be a valid GCP region and zone inside it (such as "us-east1" and "us-east1-b"). initial_node_count can be 1 while node_machine_type can be n1-standard-1. environment should be "dev". Be sure to set vault_addr to the address of your Vault server including the port (e.g., "http://<your_vault_dns>:8200") and vault_user to your username on your Vault server.
 1. Set the VAULT_TOKEN environment variable to your Vault token. Be sure to mark the VAULT_TOKEN variable as sensitive so that other people cannot read it.
 1. Click the "Queue Plan" button in the upper right corner of your workspace.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the GKE cluster will be created when you apply your plan.
-1. Click the "Confirm and Apply" button to actually provision your GKE dev cluster.
+1. Click the "Confirm and Apply" button to actually provision your GKE cluster.
 
-You will see outputs representing the URLs to access your GKE dev cluster in the Google Console, the FQDN of your cluster, TLS certs/keys for your cluster, the Vault Kubernetes authentication backend, the Vault address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your dev cluster. However, if you configure a workspace against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository to provision your pods and services, the outputs will automatically be used by that workspace.
-
-You can also validate that the cluster was created in the Google Console.
-
-## Adding a Prod Environment
-You can execute the following steps if you want to create a production GKE cluster and walk through the process of promoting Terraform code from a dev environent to a production environment in TFE.
-
-1. Create a second Google project and configure it as instructed in the Deployment Prerequisites section above. Creating a second project will keep all production GCP infrastructure provisioned by TFE isolated from the dev GCP infrastructure you previously provisioned.
-1. On your local machine, run `git checkout prod` to create a new prod branch of your fork.
-1. Run `git push origin prod` to push your prod branch to your fork.
-1. Create a workspace in your TFE organization called k8s-cluster-gke-prod.
-1. Configure the k8s-cluster-gke-prod workspace to connect to the fork of this repository in your own GitHub account.
-1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-gke" and the VCS Branch to "prod".
-1. On the Variables tab of your workspace, add the following variables to the Terraform variables: gcp_project, gcp_region, gcp_zone, initial_node_count, node_machine_type, environment, vault_addr, and vault_user. The first of these must be the name of the second GCP project you are using. The next two should be a valid GCP region and zone inside it (such as "us-east1" and "us-east1-b"). initial_node_count can be 1 while node_machine_type can be n1-standard-1. environment should be "prod". Be sure to set vault_server to your Vault server including the port and vault_user to your username on your Vault server.
-1. Set the VAULT_TOKEN environment variable just as you did for your k8s-cluster-gke-dev workspace.
-1. In GitHub, do a pull request to merge your dev branch into your prod branch within your fork. (You might need to make some small change in your dev branch so that the two branches differ before doing this.)
-1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the GKE cluster will be created when you apply your plan.
-1. However, you will not yet see the "Confirm and Apply" button. To see it, you must first go back to GitHub and merge the pull request. At that point, a new run will be triggered within TFE which will allow you to apply the plan if you want.
-1. Click the "Confirm and Apply" button to actually provision your GKE production cluster.
-
-You will see outputs representing the URLs to access your GKE prod cluster in the Google Console, the FQDN of your cluster, TLS certs/keys for your cluster, the Vault Kubernetes authentication backend, your Vault address, and your Vault username.  You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your prod GKE cluster.
+You will see outputs representing the URLs to access your GKE cluster in the Google Console, the FQDN of your cluster, TLS certs/keys for your cluster, the Vault Kubernetes authentication backend, the Vault address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your cluster. However, if you configure a workspace against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository to provision your pods and services, the outputs will automatically be used by that workspace.
 
 You can also validate that the cluster was created in the Google Console.
 
 ## Cleanup
-Execute the following steps for your workspaces to delete your Kubernetes clusters and associated resources from GKE.
+Execute the following steps for your workspaces to delete your Kubernetes cluster and associated resources from GKE.
 
 1. On the Variables tab of your workspace, add the environment variable CONFIRM_DESTROY with value 1.
 1. At the bottom of the Settings tab of your workspace, click the "Queue destroy plan" button to make TFE do a destroy run.
