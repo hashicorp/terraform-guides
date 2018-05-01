@@ -1,0 +1,36 @@
+import "tfplan"
+
+# Get all master instances from openshift module
+get_master_instances = func() {
+    instances = values(tfplan.module(["openshift"]).resources.aws_instance.master) else []
+    return instances
+}
+  
+masters = get_master_instances()
+
+# Rule to restrict Master instance type
+master_type_allowed = rule {
+    all masters as index, r {
+  	   r.applied.instance_type is "m4.xlarge"
+    }
+}
+
+# Get all bastion instances from openshift module
+get_bastion_instances = func() {
+    instances = values(tfplan.module(["openshift"]).resources.aws_instance.bastion) else []
+    return instances
+}
+  
+bastions = get_bastion_instances()
+
+# Rule to restrict Bastion instance type
+bastion_type_allowed = rule {
+    all bastions as index, r {
+  	   r.applied.instance_type is "t2.micro"
+    }
+}
+  
+# Main rule that requires other rules to be true
+main = rule {
+  (master_type_allowed and bastion_type_allowed) else true
+}
