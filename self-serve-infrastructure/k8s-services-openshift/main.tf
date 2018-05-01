@@ -28,8 +28,7 @@ resource "null_resource" "service_account" {
       "oc new-project cats-and-dogs --description=\"cats and dogs project\" --display-name=\"cats-and-dogs\"",
       "kubectl create -f cats-and-dogs.yaml",
       "kubectl get serviceaccount cats-and-dogs -o yaml > cats-and-dogs-service.yaml",
-      "kubectl get secret $(grep \"cats-and-dogs-token\" cats-and-dogs-service.yaml | cut -d ':' -f 2 | sed 's/ //') -o yaml > cats-and-dogs-secret.yaml",
-      "sed -n 6,6p cats-and-dogs-secret.yaml | cut -d ':' -f 2 | sed 's/ //' | base64 -d > cats-and-dogs-token"
+      "grep \"cats-and-dogs-token\" cats-and-dogs-service.yaml | cut -d ':' -f 2 | sed 's/ //' > cats-and-dogs-secret-name"
     ]
   }
 
@@ -43,10 +42,10 @@ resource "null_resource" "service_account" {
   }
 }
 
-resource "null_resource" "get_service_account_token" {
+resource "null_resource" "get_secret_name" {
   provisioner "remote-exec" {
     inline = [
-      "scp -o StrictHostKeyChecking=no -i ~/.ssh/private-key.pem ec2-user@${data.terraform_remote_state.k8s_cluster.master_public_dns}:~/cats-and-dogs-token cats-and-dogs-token"
+      "scp -o StrictHostKeyChecking=no -i ~/.ssh/private-key.pem ec2-user@${data.terraform_remote_state.k8s_cluster.master_public_dns}:~/cats-and-dogs-secret-name cats-and-dogs-secret-name"
     ]
 
     connection {
@@ -67,17 +66,17 @@ resource "null_resource" "get_service_account_token" {
   }
 
   provisioner "local-exec" {
-    command = "scp -o StrictHostKeyChecking=no -i private-key.pem  ec2-user@${data.terraform_remote_state.k8s_cluster.bastion_public_dns}:~/cats-and-dogs-token cats-and-dogs-token"
+    command = "scp -o StrictHostKeyChecking=no -i private-key.pem  ec2-user@${data.terraform_remote_state.k8s_cluster.bastion_public_dns}:~/cats-and-dogs-secret-name cats-and-dogs-secret-name"
   }
 
   depends_on = ["null_resource.service_account"]
 }
 
-data "null_data_source" "retrieve_token_from_file" {
+data "null_data_source" "retrieve_secret_name_from_file" {
   inputs = {
-    cats_and_dogs_token = "${file("cats-and-dogs-token")}"
+    secret_name = "${chomp(file("cats-and-dogs-secret-name"))}"
   }
-  depends_on = ["null_resource.get_service_account_token"]
+  depends_on = ["null_resource.get_secret_name"]
 }
 
 resource "kubernetes_pod" "cats-and-dogs-backend" {
@@ -109,7 +108,12 @@ resource "kubernetes_pod" "cats-and-dogs-backend" {
       }
       env = {
         name = "K8S_TOKEN"
-        value = "${data.null_data_source.retrieve_token_from_file.outputs["cats_and_dogs_token"]}"
+        value_from {
+          secret_key_ref {
+            name = "${data.null_data_source.retrieve_secret_name_from_file.outputs["secret_name"]}"
+            key = "token"
+          }
+        }
       }
       port {
         container_port = 6379
@@ -166,7 +170,12 @@ resource "kubernetes_pod" "cats-and-dogs-frontend" {
       }
       env = {
         name = "K8S_TOKEN"
-        value = "${data.null_data_source.retrieve_token_from_file.outputs["cats_and_dogs_token"]}"
+        value_from {
+          secret_key_ref {
+            name = "${data.null_data_source.retrieve_secret_name_from_file.outputs["secret_name"]}"
+            key = "token"
+          }
+        }
       }
       port {
         container_port = 80
