@@ -3,14 +3,12 @@
 
 # Networking
 private_ip = ENV['PRIVATE_IP'] || "192.168.50.150"
-consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
-vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
-nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
 
 # Base box selection
 base_box = ENV['BASE_BOX'] || "bento/ubuntu-16.04"
 
 # Consul variables
+consul_host_port = ENV['CONSUL_HOST_PORT'] || 8500
 consul_version = ENV['CONSUL_VERSION'] || "1.0.6"
 consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
@@ -19,6 +17,7 @@ consul_comment = "Consul"
 consul_home = "/srv/consul"
 
 # Vault variables
+vault_host_port = ENV['VAULT_HOST_PORT'] || 8200
 vault_version = ENV['VAULT_VERSION'] || "0.10.0"
 vault_ent_url = ENV['VAULT_ENT_URL']
 vault_group = "vault"
@@ -27,18 +26,34 @@ vault_comment = "Vault"
 vault_home = "/srv/vault"
 
 # Nomad variables
+nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
 nomad_version = ENV['NOMAD_VERSION'] || "0.8.0"
 nomad_ent_url = ENV['NOMAD_ENT_URL']
 nomad_group = "root"
 nomad_user = "root"
+docker_install = ENV['DOCKER_INSTALL'] || true
+java_install = ENV['JAVA_INSTALL'] || true
 
 # Tests & cleanup
 run_tests = ENV['RUN_TESTS']
 cleanup = ENV['CLEANUP']
 
-$script = <<SCRIPT
-# Set hostname's IP to make advertisement work
-sudo sed -i -e "s/.*nomad.*/$(ip route get 1 | awk '{print $NF;exit}') nomad/" /etc/hosts
+$nomad_setup = <<SCRIPT
+LOCAL_IP=$(ip route | grep eth1 | awk '{print $NF;exit}')
+
+echo "Set hostname's IP to make advertisement work"
+sudo sed -i -e "s/.*nomad.*/$(ip route get 1 | awk '{print $NF;exit}')       nomad/" /etc/hosts
+
+echo "Minimal configuration for Nomad UI"
+cat <<CONFIG | sudo tee /etc/nomad.d/default.hcl
+bind_addr = "0.0.0.0"
+
+advertise {
+  http = "$LOCAL_IP:4646"
+  rpc  = "$LOCAL_IP:4647"
+  serf = "$LOCAL_IP:4648"
+}
+CONFIG
 SCRIPT
 
 Vagrant.configure("2") do |config|
@@ -47,18 +62,17 @@ Vagrant.configure("2") do |config|
 
   # Setup networking
   config.vm.network :private_network, ip: private_ip
-  config.vm.network :forwarded_port, guest: 8500, host: consul_host_port, auto_correct: true
-  config.vm.network :forwarded_port, guest: 8200, host: vault_host_port, auto_correct: true
-  config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
   config.vm.network "private_network", type: "dhcp"
 
   # Use base_box set at the top of this file
   config.vm.box = base_box
   config.vm.hostname = "hashistack"
-  config.vm.provision "shell", inline: $script, privileged: false
 
   # Bootstrap the vm
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/base.sh | bash"
+
+  # Forward Consul port
+  config.vm.network :forwarded_port, guest: 8500, host: consul_host_port, auto_correct: true
 
   # Setup Consul user
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-user.sh | bash",
@@ -80,6 +94,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-consul-systemd.sh | bash"
 
+  # Forward Vault port
+  config.vm.network :forwarded_port, guest: 8200, host: vault_host_port, auto_correct: true
+
   # Setup Vault user
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-user.sh | bash",
     env: {
@@ -100,6 +117,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/vault/scripts/install-vault-systemd.sh | bash"
 
+  # Forward Nomad port
+  config.vm.network :forwarded_port, guest: 4646, host: nomad_host_port, auto_correct: true
+
   # Install Nomad
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-nomad.sh | bash",
     env: {
@@ -110,8 +130,15 @@ Vagrant.configure("2") do |config|
     }
 
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-nomad-systemd.sh | bash"
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-docker.sh | bash"
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-java.sh | bash"
+  config.vm.provision "shell", inline: $nomad_setup, privileged: false
+
+  if (docker_install)
+    config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-docker.sh | bash"
+  end
+
+  if (java_install)
+    config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/consul/scripts/install-java.sh | bash"
+  end
 
   # Setup tests
   config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-testing.sh | bash"
@@ -144,8 +171,67 @@ Vagrant.configure("2") do |config|
   end
 
    config.vm.post_up_message = "
-Consul: http://#{private_ip}:#{consul_host_port}/
-Vault: http://#{private_ip}:#{vault_host_port}/
-Nomad: http://#{private_ip}:#{nomad_host_port}/
-Vault Root Token: #{vault_home}/.vault-token"
+Your HashiStack dev cluster has been successfully provisioned!
+
+To SSH into the Consul host, run the below command.
+
+  $ vagrant ssh
+
+You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html) or API (https://www.consul.io/api/index.html) commands.
+
+  # Use the CLI to retrieve the Consul members, write a key/value, and read that key/value
+  $ consul members
+  $ consul kv put cli bar=baz
+  $ consul kv get cli
+
+  # Use the API to retrieve the Consul members, write a key/value, and read that key/value
+  $ curl http://127.0.0.1:8500/v1/agent/members | jq '.'
+  $ curl -X PUT -d '{\"bar=baz\"}' http://127.0.0.1:8500/v1/kv/api | jq '.'
+  $ curl http://127.0.0.1:8500/v1/kv/api | jq '.'
+
+You can interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html) or API (https://www.vaultproject.io/api/index.html) commands.
+
+  # The Root token for your Vault -dev instance is set to `root` and placed in /srv/vault/.vault-token, the `VAULT_TOKEN` environment variable has already been set for you
+  $ echo $VAULT_TOKEN
+  $ sudo cat /srv/vault/.vault-token
+
+  # Use the CLI to write and read a generic secret
+  $ vault kv put secret/cli foo=bar
+  $ vault kv get secret/cli
+
+  # Use the API to write and read a generic secret
+  $ curl -H \"X-Vault-Token: $VAULT_TOKEN\" -X POST -d '{\"data\": {\"bar\":\"baz\"}}' http://127.0.0.1:8200/v1/secret/data/api | jq '.'
+  $ curl -H \"X-Vault-Token: $VAULT_TOKEN\" http://127.0.0.1:8200/v1/secret/data/api | jq '.'
+
+You can interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html) or API (https://www.nomadproject.io/api/index.html) commands.
+
+  $ nomad server-members # Check Nomad's server members
+  $ nomad node-status # Check Nomad's client nodes
+  $ nomad init # Create a skeletion job file to deploy a Redis Docker container
+
+  # Use the CLI to deploy a Redis Docker container
+  $ nomad plan example.nomad # Run a nomad plan on the example job
+  $ nomad run example.nomad # Run the example job
+  $ nomad status # Check that the job is running
+  $ nomad status example # Check job details
+  $ nomad stop example # Stop the example job
+  $ nomad status # Check that the job is stopped
+
+  # Use the API to deploy a Redis Docker container
+  $ nomad run -output example.nomad > example.json # Convert the example Nomad HCL job file to JSON
+  $ curl -X POST -d @example.json http://127.0.0.1:4646/v1/job/example/plan | jq '.' # Run a nomad plan on the example job
+  $ curl -X POST -d @example.json http://127.0.0.1:4646/v1/job/example | jq '.' # Run the example job
+  $ curl -X GET http://127.0.0.1:4646/v1/jobs | jq '.' # Check that the job is running
+  $ curl -X GET http://127.0.0.1:4646/v1/job/example | jq '.' # Check job details
+  $ curl -X DELETE http://127.0.0.1:4646/v1/job/example | jq '.' # Stop the example job
+  $ curl -X GET http://127.0.0.1:4646/v1/jobs | jq '.' # Check that the job is stopped
+
+Visit the Consul UI: http://#{private_ip}:#{consul_host_port}/
+Visit the Vault UI: http://#{private_ip}:#{vault_host_port}/
+Visit the Nomad UI: http://#{private_ip}:#{nomad_host_port}/
+
+Don't forget to tear your VM down after.
+
+  $ vagrant destroy
+"
 end
