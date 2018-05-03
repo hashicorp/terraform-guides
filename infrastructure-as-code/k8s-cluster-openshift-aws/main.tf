@@ -15,9 +15,11 @@ data "vault_aws_access_credentials" "aws_creds" {
   role = "deploy"
 }
 
+# Insert 15 second delay so AWS credentials definitely available
+# at all AWS endpoints
 data "external" "region" {
   # Delay so that new keys are available across AWS
-  program = ["./delay-vault-aws"]
+  program = ["./delay-vault-aws", "${var.region}"]
 }
 
 # Vault Kubernetes Auth Backend

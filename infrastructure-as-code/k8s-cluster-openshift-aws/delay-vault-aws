@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
+region=$1
 sleep 15
-echo '{ "region": "us-east-1" }'
+echo "{ \"region\": \"$region\" }"
