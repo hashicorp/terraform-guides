@@ -70,7 +70,6 @@ If you want to use open source Terraform instead of TFE, you can create a copy o
 
 ### Step 3: Configure a Terraform Enterprise Workspace
 1. Fork this repository by clicking the Fork button in the upper right corner of the screen and selecting your own personal GitHub account or organization.
-1. Clone the fork to your laptop by running `git clone https://github.com/<your_github_account>/terraform-guides.git`.
 1. Create a workspace in your TFE organization called k8s-cluster-openshift.
 1. Configure the workspace to connect to the fork of this repository in your own Github account.
 1. Set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-openshift-aws".
