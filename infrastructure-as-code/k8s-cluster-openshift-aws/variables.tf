@@ -12,6 +12,16 @@ variable "private_key_data" {
   description = "contents of the private key"
 }
 
+variable "vpc_cidr" {
+  description = "VPC CIDR"
+  default "10.0.0.0/16"
+}
+
+variable "subnet_cidr" {
+  description = "Subnet CIDR"
+  default "10.0.1.0/24"
+}
+
 //  This map defines which AZ to put the 'Public Subnet' in, based on the
 //  region defined. You will typically not need to change this unless
 //  you are running in a new region!
