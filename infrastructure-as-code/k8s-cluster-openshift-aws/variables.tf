@@ -14,12 +14,12 @@ variable "private_key_data" {
 
 variable "vpc_cidr" {
   description = "VPC CIDR"
-  default "10.0.0.0/16"
+  default = "10.0.0.0/16"
 }
 
 variable "subnet_cidr" {
   description = "Subnet CIDR"
-  default "10.0.1.0/24"
+  default = "10.0.1.0/24"
 }
 
 //  This map defines which AZ to put the 'Public Subnet' in, based on the
