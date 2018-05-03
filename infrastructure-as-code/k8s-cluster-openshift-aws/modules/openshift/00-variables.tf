@@ -27,6 +27,10 @@ variable "private_key_data" {
   description = "contents of the private key"
 }
 
+variable "name_tag_prefix" {
+  description = "prefixed to Name tag added to EC2 instances and other AWS resources"
+}
+
 variable "owner" {
   description = "value set on EC2 owner tag"
 }

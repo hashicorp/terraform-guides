@@ -34,7 +34,7 @@ resource "aws_instance" "bastion" {
   key_name = "${var.key_name}"
 
   tags {
-    Name    = "OpenShift Bastion"
+    Name    = "${var.name_tag_prefix} Bastion"
     Project = "openshift"
     owner = "${var.owner}"
     TTL = "${var.ttl}"

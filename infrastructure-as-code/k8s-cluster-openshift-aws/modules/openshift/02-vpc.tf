@@ -4,7 +4,7 @@ resource "aws_vpc" "openshift" {
   enable_dns_hostnames = true
 
   tags {
-    Name    = "OpenShift VPC"
+    Name    = "${var.name_tag_prefix} VPC"
     Project = "openshift"
   }
 }
@@ -14,7 +14,7 @@ resource "aws_internet_gateway" "openshift" {
   vpc_id = "${aws_vpc.openshift.id}"
 
   tags {
-    Name    = "OpenShift IGW"
+    Name    = "${var.name_tag_prefix} IGW"
     Project = "openshift"
   }
 }
@@ -28,7 +28,7 @@ resource "aws_subnet" "public-subnet" {
   depends_on              = ["aws_internet_gateway.openshift"]
 
   tags {
-    Name    = "OpenShift Public Subnet"
+    Name    = "${var.name_tag_prefix} Public Subnet"
     Project = "openshift"
   }
 }
@@ -43,7 +43,7 @@ resource "aws_route_table" "public" {
   }
 
   tags {
-    Name    = "OpenShift Public Route Table"
+    Name    = "${var.name_tag_prefix} Public Route Table"
     Project = "openshift"
   }
 }

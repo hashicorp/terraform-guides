@@ -46,6 +46,7 @@ module "openshift" {
   subnet_cidr     = "10.0.1.0/24"
   key_name        = "${var.key_name}"
   private_key_data = "${var.private_key_data}"
+  name_tag_prefix = "${var.name_tag_prefix}"
   owner           = "${var.owner}"
   ttl             = "${var.ttl}"
 }
