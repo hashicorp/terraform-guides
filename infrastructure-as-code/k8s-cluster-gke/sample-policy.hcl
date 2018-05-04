@@ -5,6 +5,16 @@ path "secret/roger/*" {
   capabilities = ["create", "read", "update", "delete", "list"]
 }
 
+# Ability to change password
+path "auth/userpass/users/roger/password" {
+  capabilities = ["update"]
+}
+
+# Ability to see their own policy
+path "sys/policies/acl/roger" {
+  capabilities = ["read"]
+}
+
 # Additional access for UI
 path "secret/" {
   capabilities = ["list"]
@@ -14,6 +24,9 @@ path "secret/roger" {
 }
 path "sys/mounts" {
   capabilities = ["read", "list"]
+}
+path "sys/policies/acl/" {
+  capabilities = ["list"]
 }
 
 # Ability to provision Kubernetes auth backends
