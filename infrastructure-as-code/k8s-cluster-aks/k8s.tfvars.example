@@ -1,0 +1,4 @@
+resource_group_name = "<your_resource_group_name>"
+dns_prefix = "<your_dns_prefix>"
+vault_addr = "<your_vault_address>"
+vault_user = "<your_vault_username>"

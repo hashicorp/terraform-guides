@@ -1,22 +1,13 @@
-#  Output some useful variables for quick SSH access etc.
-output "master_url" {
-  value = "https://${module.openshift.master_public_ip}.xip.io:8443"
+output "private_key_pem" {
+  value = "${chomp(tls_private_key.ssh_key.private_key_pem)}"
 }
-output "master_public_dns" {
-  value = "${module.openshift.master_public_dns}"
-}
-output "master_public_ip" {
-  value = "${module.openshift.master_public_ip}"
-}
-output "bastion_public_dns" {
-  value = "${module.openshift.bastion_public_dns}"
-}
-output "bastion_public_ip" {
-  value = "${module.openshift.bastion_public_ip}"
+
+output "k8s_id" {
+  value = "${azurerm_kubernetes_cluster.k8sexample.id}"
 }
 
 output "k8s_endpoint" {
-  value = "https://${module.openshift.master_public_ip}.xip.io:8443"
+  value = "${azurerm_kubernetes_cluster.k8sexample.fqdn}"
 }
 
 output "k8s_master_auth_client_certificate" {

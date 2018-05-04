@@ -1,0 +1,29 @@
+import "tfplan"
+
+clusters = tfplan.resources.azurerm_kubernetes_cluster
+
+agent_node_count_limit = rule {
+  all clusters as name, instances {
+    all instances as index, r {
+      int(r.applied.agent_pool_profile[0].count) < 10
+    }
+  }
+}
+
+# Allowed VM Sizes
+allowed_vm_sizes = [
+  "Standard_A1",
+  "Standard_A2",
+  "Standard_A3",
+]
+
+vm_size_allowed = rule {
+  all clusters as name, instances {
+    all instances as index, r {
+  	  r.applied.agent_pool_profile[0].vm_size in allowed_vm_sizes
+    }
+  }
+}
+main = rule {
+  (agent_node_count_limit and vm_size_allowed) else true
+}

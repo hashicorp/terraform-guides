@@ -15,9 +15,11 @@ data "vault_aws_access_credentials" "aws_creds" {
   role = "deploy"
 }
 
+# Insert 15 second delay so AWS credentials definitely available
+# at all AWS endpoints
 data "external" "region" {
   # Delay so that new keys are available across AWS
-  program = ["./delay-vault-aws"]
+  program = ["./delay-vault-aws", "${var.region}"]
 }
 
 # Vault Kubernetes Auth Backend
@@ -39,11 +41,12 @@ module "openshift" {
   source          = "./modules/openshift"
   region          = "${var.region}"
   amisize         = "t2.large" //  Smallest that meets OS specs
-  vpc_cidr        = "10.0.0.0/16"
+  vpc_cidr        = "${var.vpc_cidr}"
+  subnet_cidr     = "${var.subnet_cidr}"
   subnetaz        = "${var.subnetaz}"
-  subnet_cidr     = "10.0.1.0/24"
   key_name        = "${var.key_name}"
   private_key_data = "${var.private_key_data}"
+  name_tag_prefix = "${var.name_tag_prefix}"
   owner           = "${var.owner}"
   ttl             = "${var.ttl}"
 }
