@@ -31,7 +31,7 @@ The frontend application and the redis database both get the redis password from
 ## Prerequisites
 
 1. First deploy an OpenShift cluster with Terraform by using the Terraform code in the [k8s-cluster-openshift-aws](../../infrastructure-as-code/k8s-cluster-openshift-aws) directory of this repository and pointing a TFE workspace against it.
-1. We assume you have already fulfilled all the prerequisites of that guide including configuration of your Vault server and creation of the redis_pwd key under the path "secret/<user>/kubernetes/cats-and-dogs".
+1. We assume you have already fulfilled all the prerequisites of that guide including configuration of your Vault server and creation of the redis_pwd key under the path "secret/\<user\>/kubernetes/cats-and-dogs".
 
 
 ## Steps
@@ -49,7 +49,7 @@ If you want to use open source Terraform instead of TFE, you can create a copy o
 
 ### Step 2: Change the Redis Password
 1. Login to the Vault UI using your username and password (or token if the userpass authentication method is not enabled).
-1. Change the value of the redis_pwd key under the path "secret/<user>/kubernetes/cats-and-dogs" to some arbitrary string containing letters and numbers.
+1. Change the value of the redis_pwd key under the path "secret/\<user\>/kubernetes/cats-and-dogs" to some arbitrary string containing letters and numbers.
 
 ### Step 3: Plan and Apply the Deployment of the Pods and Services
 1. Queue a plan for the k8s-services-openshift workspace in TFE.

@@ -22,15 +22,6 @@ path "secret/" {
 path "secret/roger" {
   capabilities = ["list"]
 }
-path "secret/data/roger/*" {
-  capabilities = ["create", "read", "update", "delete"]
-}
-path "secret/metadata/roger/*" {
-  capabilities = ["list"]
-}
-path "secret/metadata/" {
-  capabilities = ["list"]
-}
 path "sys/mounts" {
   capabilities = ["read", "list"]
 }
