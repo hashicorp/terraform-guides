@@ -16,8 +16,8 @@ chmod 400 /home/ec2-user/.ssh/private-key.pem
 #chown ec2-user:ec2-user /home/ec2-user/.ssh/private-key.pem
 eval $(ssh-agent)
 ssh-add /home/ec2-user/.ssh/private-key.pem
-ssh-keyscan -t rsa -H master.openshift.local >> /home/ec2-user/.ssh/known_hosts
-ssh-keyscan -t rsa -H node1.openshift.local >> /home/ec2-user/.ssh/known_hosts
+ssh-keyscan -t rsa -H master.${name_tag_prefix}-openshift.local >> /home/ec2-user/.ssh/known_hosts
+ssh-keyscan -t rsa -H node1.${name_tag_prefix}-openshift.local >> /home/ec2-user/.ssh/known_hosts
 
 # Create inventory.cfg file
 #cat > /home/inventory.cfg << EOF
@@ -71,16 +71,16 @@ template_service_broker_install=false
 # otherwise it will resolve to something like ip-10-0-1-98.ec2.internal and use
 # that as the node name.
 [masters]
-master.openshift.local openshift_hostname=master.openshift.local
+master.${name_tag_prefix}-openshift.local openshift_hostname=master.${name_tag_prefix}-openshift.local
 
 # host group for etcd
 [etcd]
-master.openshift.local openshift_hostname=master.openshift.local
+master.${name_tag_prefix}-openshift.local openshift_hostname=master.${name_tag_prefix}-openshift.local
 
 # host group for nodes, includes region info
 [nodes]
-master.openshift.local openshift_hostname=master.openshift.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
-node1.openshift.local openshift_hostname=node1.openshift.local openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+master.${name_tag_prefix}-openshift.local openshift_hostname=master.${name_tag_prefix}-openshift.local openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true
+node1.${name_tag_prefix}-openshift.local openshift_hostname=node1.${name_tag_prefix}-openshift.local openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
 EOF
 
 # Change ownership of file to ec2-user

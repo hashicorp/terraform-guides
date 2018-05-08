@@ -46,7 +46,7 @@ module "openshift" {
   subnetaz        = "${var.subnetaz}"
   key_name        = "${var.key_name}"
   private_key_data = "${var.private_key_data}"
-  name_tag_prefix = "${var.name_tag_prefix}"
+  name_tag_prefix = "${var.vault_user}"
   owner           = "${var.owner}"
   ttl             = "${var.ttl}"
 }
