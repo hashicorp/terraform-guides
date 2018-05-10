@@ -5,7 +5,7 @@ This repository contains sample Terraform configurations, Sentinel policies, and
 This directory contains sample Terraform configurations to provision VMs into AWS, Azure, and Google Cloud Platform (GCP) as well as Kubernetes clusters into Azure Container Service (ACS) and Google Kubernetes Engine (GKE).
 
 ## self-serve-infrastructure
-This directory contains sample Terraform configurations to enable self service infrastructure. In particular, it illustrates how developers can deploy applications to Kubernetes clusters provisioned by an operations team.
+This directory contains sample Terraform configurations to enable self-service infrastructure. In particular, it illustrates how developers can deploy applications to Kubernetes clusters provisioned by an operations team.
 
 ## governance
 This directory contains some sample Sentinel policies for several clouds which ensure that all infrastructure provisioned with Terraform Enterprise complies with an organization's provisioning rules.
