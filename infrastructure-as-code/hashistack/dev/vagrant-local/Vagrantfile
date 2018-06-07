@@ -31,17 +31,14 @@ nomad_version = ENV['NOMAD_VERSION'] || "0.8.0"
 nomad_ent_url = ENV['NOMAD_ENT_URL']
 nomad_group = "root"
 nomad_user = "root"
-docker_install = ENV['DOCKER_INSTALL'] || true
-java_install = ENV['JAVA_INSTALL'] || true
+docker_install = ["true", "1"].include?((ENV['DOCKER_INSTALL'] || true).to_s.downcase)
+java_install = ["true", "1"].include?((ENV['JAVA_INSTALL'] || true).to_s.downcase)
 
 # Tests & cleanup
-run_tests = ENV['RUN_TESTS']
-cleanup = ENV['CLEANUP']
+run_tests = ["true", "1"].include?((ENV['RUN_TESTS'] || true).to_s.downcase)
+cleanup = ["true", "1"].include?((ENV['CLEANUP'] || true).to_s.downcase)
 
 $nomad_setup = <<SCRIPT
-echo "Set hostname's IP to make advertisement work"
-sudo sed -i -e "s/.*hashistack.*/$(ip route get 1 | awk '{print $NF;exit}')       nomad/" /etc/hosts
-
 echo "Minimal configuration for Nomad UI"
 cat <<CONFIG | sudo tee /etc/nomad.d/default.hcl
 bind_addr = "0.0.0.0"
@@ -177,7 +174,8 @@ To SSH into the Consul host, run the below command.
 
   $ vagrant ssh
 
-You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html) or API (https://www.consul.io/api/index.html) commands.
+You can now interact with Consul using any of the CLI (https://www.consul.io/docs/commands/index.html)
+or API (https://www.consul.io/api/index.html) commands.
 
   # Use the CLI to retrieve the Consul members, write a key/value, and read that key/value
   $ consul members
@@ -189,9 +187,11 @@ You can now interact with Consul using any of the CLI (https://www.consul.io/doc
   $ curl -X PUT -d '{\"bar=baz\"}' http://127.0.0.1:8500/v1/kv/api | jq '.'
   $ curl http://127.0.0.1:8500/v1/kv/api | jq '.'
 
-You can interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html) or API (https://www.vaultproject.io/api/index.html) commands.
+You can interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html)
+or API (https://www.vaultproject.io/api/index.html) commands.
 
-  # The Root token for your Vault -dev instance is set to `root` and placed in /srv/vault/.vault-token, the `VAULT_TOKEN` environment variable has already been set for you
+  # The Root token for your Vault -dev instance is set to `root` and placed in /srv/vault/.vault-token,
+  # the `VAULT_TOKEN` environment variable has already been set for you
   $ echo $VAULT_TOKEN
   $ sudo cat /srv/vault/.vault-token
 
@@ -203,7 +203,8 @@ You can interact with Vault using any of the CLI (https://www.vaultproject.io/do
   $ curl -H \"X-Vault-Token: $VAULT_TOKEN\" -X POST -d '{\"data\": {\"bar\":\"baz\"}}' http://127.0.0.1:8200/v1/secret/data/api | jq '.'
   $ curl -H \"X-Vault-Token: $VAULT_TOKEN\" http://127.0.0.1:8200/v1/secret/data/api | jq '.'
 
-You can interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html) or API (https://www.nomadproject.io/api/index.html) commands.
+You can interact with Nomad using any of the CLI (https://www.nomadproject.io/docs/commands/index.html)
+or API (https://www.nomadproject.io/api/index.html) commands.
 
   $ nomad server-members # Check Nomad's server members
   $ nomad node-status # Check Nomad's client nodes
