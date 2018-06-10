@@ -34,10 +34,6 @@ nomad_user = "root"
 docker_install = ["true", "1"].include?((ENV['DOCKER_INSTALL'] || true).to_s.downcase)
 java_install = ["true", "1"].include?((ENV['JAVA_INSTALL'] || true).to_s.downcase)
 
-# Tests & cleanup
-run_tests = ["true", "1"].include?((ENV['RUN_TESTS'] || true).to_s.downcase)
-cleanup = ["true", "1"].include?((ENV['CLEANUP'] || true).to_s.downcase)
-
 $nomad_setup = <<SCRIPT
 echo "Minimal configuration for Nomad UI"
 cat <<CONFIG | sudo tee /etc/nomad.d/default.hcl
@@ -137,19 +133,6 @@ Vagrant.configure("2") do |config|
     config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/nomad/scripts/install-java.sh | bash"
   end
 
-  # Setup tests
-  config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/setup-testing.sh | bash"
-
-  # Run tests if `RUN_TESTS` env var is provided
-  if (run_tests)
-    config.vm.provision "shell", inline: "cd /tmp && rake hashistack:spec"
-  end
-
-  # Cleanup if `CLEANUP` env var is provided
-  if (cleanup)
-    config.vm.provision "shell", inline: "curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/cleanup.sh | bash"
-  end
-
   # Increase memory for Parallels Desktop
   config.vm.provider "parallels" do |p, o|
     p.memory = "1024"
@@ -184,7 +167,7 @@ or API (https://www.consul.io/api/index.html) commands.
 
   # Use the API to retrieve the Consul members, write a key/value, and read that key/value
   $ curl http://127.0.0.1:8500/v1/agent/members | jq '.'
-  $ curl -X PUT -d '{\"bar=baz\"}' http://127.0.0.1:8500/v1/kv/api | jq '.'
+  $ curl -X PUT -d 'bar=baz' http://127.0.0.1:8500/v1/kv/api | jq '.'
   $ curl http://127.0.0.1:8500/v1/kv/api | jq '.'
 
 You can interact with Vault using any of the CLI (https://www.vaultproject.io/docs/commands/index.html)
