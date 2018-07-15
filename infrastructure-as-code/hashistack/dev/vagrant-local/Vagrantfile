@@ -27,7 +27,7 @@ vault_comment = "Vault"
 vault_home = "/srv/vault"
 
 # Nomad variables
-nomad_version = ENV['NOMAD_VERSION'] || "0.8.0"
+nomad_version = ENV['NOMAD_VERSION'] || "0.8.4"
 nomad_ent_url = ENV['NOMAD_ENT_URL']
 nomad_group = "root"
 nomad_user = "root"
