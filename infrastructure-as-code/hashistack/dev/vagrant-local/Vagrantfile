@@ -19,7 +19,7 @@ consul_comment = "Consul"
 consul_home = "/srv/consul"
 
 # Vault variables
-vault_version = ENV['VAULT_VERSION'] || "0.10.0"
+vault_version = ENV['VAULT_VERSION'] || "0.10.3"
 vault_ent_url = ENV['VAULT_ENT_URL']
 vault_group = "vault"
 vault_user = "vault"
