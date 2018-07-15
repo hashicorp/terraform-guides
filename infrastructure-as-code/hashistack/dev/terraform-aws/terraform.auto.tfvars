@@ -23,7 +23,7 @@
 # ---------------------------------------------------------------------------------------------------------------------
 # hashistack_servers        = 3
 # hashistack_instance       = "t2.micro"
-# hashistack_consul_version = "1.0.6" # Consul Version for runtime install, defaults to 1.0.6
+# hashistack_consul_version = "1.2.0" # Consul Version for runtime install, defaults to 1.2.0
 # hashistack_vault_version  = "0.10.0" # Vault Version for runtime install, defaults to 0.10.0
 # hashistack_nomad_version  = "0.8.0" # Nomad Version for runtime install, defaults to 0.8.0
 # hashistack_consul_url     = "" # Consul Enterprise download URL for runtime install, defaults to Consul OSS

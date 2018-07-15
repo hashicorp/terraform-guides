@@ -36,7 +36,7 @@ variable "network_tags" {
 
 variable "hashistack_servers"        { default = 1 }
 variable "hashistack_instance"       { default = "t2.micro" }
-variable "hashistack_consul_version" { default = "1.0.6" }
+variable "hashistack_consul_version" { default = "1.2.0" }
 variable "hashistack_vault_version"  { default = "0.10.0" }
 variable "hashistack_nomad_version"  { default = "0.8.0" }
 variable "hashistack_consul_url"     { default = "" }

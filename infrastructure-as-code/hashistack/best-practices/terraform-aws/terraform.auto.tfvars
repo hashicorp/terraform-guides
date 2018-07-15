@@ -15,7 +15,7 @@
 # bastion_servers        = 1 # Number of bastion hosts to provision across public subnets, defaults to public subnet count.
 # bastion_instance       = "t2.micro"
 # bastion_release        = "0.1.0" # Release version tag (e.g. 0.1.0, 0.1.0-rc1, 0.1.0-beta1, 0.1.0-dev1)
-# bastion_consul_version = "1.0.6" # Consul version tag (e.g. 1.0.6 or 1.0.6-ent) - https://releases.hashicorp.com/consul/
+# bastion_consul_version = "1.2.0" # Consul version tag (e.g. 1.2.0 or 1.2.0-ent) - https://releases.hashicorp.com/consul/
 # bastion_vault_version  = "0.10.0" # Vault version tag (e.g. 0.10.0 or 0.10.0-ent) - https://releases.hashicorp.com/vault/
 # bastion_nomad_version  = "0.8.0" # Nomad version tag (e.g. 0.8.0 or 0.8.0-ent) - https://releases.hashicorp.com/nomad/
 # bastion_os             = "Ubuntu" # OS (e.g. RHEL, Ubuntu), defaults to RHEL
@@ -30,7 +30,7 @@
 # hashistack_servers        = 3 # Number of Nomad server nodes to provision across public subnets, defaults to public subnet count.
 # hashistack_instance       = "t2.micro"
 # hashistack_release        = "0.1.0" # Release version tag (e.g. 0.1.0, 0.1.0-rc1, 0.1.0-beta1, 0.1.0-dev1)
-# hashistack_consul_version = "1.0.6" # Consul version tag (e.g. 1.0.6 or 1.0.6-ent) - https://releases.hashicorp.com/consul/
+# hashistack_consul_version = "1.2.0" # Consul version tag (e.g. 1.2.0 or 1.2.0-ent) - https://releases.hashicorp.com/consul/
 # hashistack_vault_version  = "0.10.0" #  Version tag (e.g. 0.10.0 or 0.10.0-ent) - https://releases.hashicorp.com/vault/
 # hashistack_nomad_version  = "0.8.0" # Nomad version tag (e.g. 0.8.0 or 0.8.0-ent) - https://releases.hashicorp.com/nomad/
 # hashistack_os             = "RHEL" # OS (e.g. RHEL, Ubuntu)

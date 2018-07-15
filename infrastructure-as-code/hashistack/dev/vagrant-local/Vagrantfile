@@ -11,7 +11,7 @@ nomad_host_port = ENV['NOMAD_HOST_PORT'] || 4646
 base_box = ENV['BASE_BOX'] || "bento/ubuntu-16.04"
 
 # Consul variables
-consul_version = ENV['CONSUL_VERSION'] || "1.0.6"
+consul_version = ENV['CONSUL_VERSION'] || "1.2.0"
 consul_ent_url = ENV['CONSUL_ENT_URL']
 consul_group = "consul"
 consul_user = "consul"
