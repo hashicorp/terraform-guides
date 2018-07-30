@@ -8,4 +8,7 @@ sleep 10
 echo "Run base script"
 curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/base.sh | bash
 
+echo "Install Wetty"
+sudo curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/web-terminal.sh | bash
+
 echo "[---install-base.sh Complete---]"

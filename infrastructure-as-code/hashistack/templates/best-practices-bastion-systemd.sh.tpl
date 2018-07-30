@@ -111,4 +111,7 @@ echo "Don't start Nomad in -dev mode stop Nomad now that the CLI is pointing to 
 echo '' | sudo tee /etc/nomad.d/nomad.conf
 sudo systemctl stop nomad
 
+echo "Install Wetty"
+sudo curl https://raw.githubusercontent.com/hashicorp/guides-configuration/master/shared/scripts/web-terminal.sh | bash
+
 echo "[---best-practices-bastion-systemd.sh Complete---]"
