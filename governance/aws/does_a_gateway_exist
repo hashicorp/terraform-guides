@@ -1,0 +1,24 @@
+import "tfplan"
+
+aws_internet_gateway = [ ]
+
+#import all resource from modules
+
+all_resources = func() {
+    resources = []
+    for tfplan.module_paths as path {
+        resources += values(tfplan.module(path).resources.aws_internet_gateway) else []
+    }
+    print(resources)
+    return resources
+}
+
+aws_internet_gateway = all_resources()
+
+gateway_check = rule {
+  (length(aws_internet_gateway) else 0) > 0
+}
+
+main = rule {
+  !gateway_check
+}
