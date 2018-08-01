@@ -15,5 +15,5 @@ variable "instance_type" {
 
 variable "name" {
   description = "name to pass to Name tag"
-  default = "Provisioned by Terraform"
+  default = "Provisioned by Terraform - with Sentinel"
 }
