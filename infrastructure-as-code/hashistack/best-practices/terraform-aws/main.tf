@@ -82,6 +82,11 @@ module "leaf_tls_self_signed_cert" {
   ]
 }
 
+resource "random_string" "wetty_password" {
+  length  = 16
+  special = true
+}
+
 data "template_file" "bastion_user_data" {
   template = "${file("${path.module}/../../templates/best-practices-bastion-systemd.sh.tpl")}"
 
@@ -95,6 +100,9 @@ data "template_file" "bastion_user_data" {
     consul_encrypt  = "${random_id.consul_encrypt.b64_std}"
     consul_override = "${var.consul_client_config_override != "" ? true : false}"
     consul_config   = "${var.consul_client_config_override}"
+    wetty_user      = "wetty-${var.name}"
+    wetty_pass      = "${random_string.wetty_password.result}"
+
   }
 }
 
@@ -173,4 +181,24 @@ module "hashistack_aws" {
   ssh_key_name     = "${module.ssh_keypair_aws_override.name}"
   tags             = "${var.hashistack_tags}"
   tags_list        = "${var.hashistack_tags_list}"
+}
+
+resource "aws_security_group" "wetty" {
+  count = "${var.hashistack_public ? 1 : 0}"
+
+  name_prefix = "${var.name}-wetty-"
+  description = "Security Group for ${var.name} Wetty"
+  vpc_id      = "${module.network_aws.vpc_id}"
+  tags        = "${merge(var.network_tags, map("Name", format("%s", var.name)))}"
+}
+
+resource "aws_security_group_rule" "wetty_tcp" {
+  count = "${var.hashistack_public ? 1 : 0}"
+
+  security_group_id = "${aws_security_group.wetty.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 3030
+  to_port           = 3030
+  cidr_blocks       = ["0.0.0.0/0"]
 }

@@ -5,6 +5,14 @@ Your "${var.name}" AWS Nomad Quick Start cluster has been
 successfully provisioned!
 
 ${module.network_aws.zREADME}
+You can interact with this cluster from the below web terminal
+if set public.
+
+Wetty Username: "wetty-${var.name}"
+Wetty Password: "${random_string.wetty_password.result}"
+
+  ${formatlist("http://%s:3030/wetty\n", module.network_aws.bastion_ips_public)}
+
 # ------------------------------------------------------------------------------
 # Local HTTP API Requests
 # ------------------------------------------------------------------------------

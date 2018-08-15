@@ -4,7 +4,16 @@ output "zREADME" {
 Your "${var.name}" AWS HashiStack Best Practices cluster has been
 successfully provisioned!
 
-${module.network_aws.zREADME}To force the generation of a new key, the private key instance can be "tainted"
+${module.network_aws.zREADME}
+You can interact with this cluster from the below web terminal
+if set public.
+
+Wetty Username: "wetty-${var.name}"
+Wetty Password: "${random_string.wetty_password.result}"
+
+  ${formatlist("http://%s:3030/wetty\n", module.network_aws.bastion_ips_public)}
+
+To force the generation of a new key, the private key instance can be "tainted"
 using the below command.
 
   $ terraform taint -module=ssh_keypair_aws_override.tls_private_key \

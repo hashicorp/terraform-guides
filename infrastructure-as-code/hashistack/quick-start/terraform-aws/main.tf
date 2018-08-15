@@ -18,8 +18,18 @@ data "aws_ami" "base" {
   }
 }
 
+resource "random_string" "wetty_password" {
+  length  = 16
+  special = true
+}
+
 data "template_file" "base_install" {
   template = "${file("${path.module}/../../templates/install-base.sh.tpl")}"
+
+  vars = {
+    wetty_user = "wetty-${var.name}"
+    wetty_pass = "${random_string.wetty_password.result}"
+  }
 }
 
 data "template_file" "consul_install" {
@@ -145,4 +155,24 @@ ${data.template_file.hashistack_quick_start.rendered} # Configure HashiStack qui
 ${var.nomad_client_docker_install ? data.template_file.docker_install.rendered : "echo \"Skip Docker install\""} # Runtime install Docker
 ${var.nomad_client_java_install ? data.template_file.java_install.rendered : "echo \"Skip Java install\""} # Runtime install Java
 EOF
+}
+
+resource "aws_security_group" "wetty" {
+  count = "${var.hashistack_public ? 1 : 0}"
+
+  name_prefix = "${var.name}-wetty-"
+  description = "Security Group for ${var.name} Wetty"
+  vpc_id      = "${module.network_aws.vpc_id}"
+  tags        = "${merge(var.network_tags, map("Name", format("%s", var.name)))}"
+}
+
+resource "aws_security_group_rule" "wetty_tcp" {
+  count = "${var.hashistack_public ? 1 : 0}"
+
+  security_group_id = "${aws_security_group.wetty.id}"
+  type              = "ingress"
+  protocol          = "tcp"
+  from_port         = 3030
+  to_port           = 3030
+  cidr_blocks       = ["0.0.0.0/0"]
 }

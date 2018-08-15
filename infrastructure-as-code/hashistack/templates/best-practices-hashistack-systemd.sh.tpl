@@ -10,24 +10,29 @@ VAULT_TLS_DIR=/opt/vault/tls
 VAULT_CONFIG_DIR=/etc/vault.d
 NOMAD_TLS_DIR=/opt/nomad/tls
 NOMAD_CONFIG_DIR=/etc/nomad.d
+WETTY_TLS_DIR=/opt/wetty/tls
 
 echo "Update resolv.conf"
 sudo sed -i '1i nameserver 127.0.0.1\n' /etc/resolv.conf
 
+echo "Create TLS dirs for certs"
+sudo mkdir -pm 0755 $CONSUL_TLS_DIR $VAULT_TLS_DIR $NOMAD_TLS_DIR $WETTY_TLS_DIR
+
 echo "Write certs to TLS directories"
-cat <<EOF | sudo tee $CONSUL_TLS_DIR/consul-ca.crt $VAULT_TLS_DIR/consul-ca.crt $VAULT_TLS_DIR/vault-ca.crt $NOMAD_TLS_DIR/consul-ca.crt $NOMAD_TLS_DIR/vault-ca.crt $NOMAD_TLS_DIR/nomad-ca.crt
+cat <<EOF | sudo tee $CONSUL_TLS_DIR/consul-ca.crt $VAULT_TLS_DIR/vault-ca.crt $NOMAD_TLS_DIR/nomad-ca.crt $WETTY_TLS_DIR/wetty-ca.crt
 ${ca_crt}
 EOF
-cat <<EOF | sudo tee $CONSUL_TLS_DIR/consul.crt $VAULT_TLS_DIR/consul.crt $VAULT_TLS_DIR/vault.crt $NOMAD_TLS_DIR/consul.crt $NOMAD_TLS_DIR/vault.crt $NOMAD_TLS_DIR/nomad.crt
+cat <<EOF | sudo tee $CONSUL_TLS_DIR/consul.crt $VAULT_TLS_DIR/vault.crt $NOMAD_TLS_DIR/nomad.crt $WETTY_TLS_DIR/wetty.crt
 ${leaf_crt}
 EOF
-cat <<EOF | sudo tee $CONSUL_TLS_DIR/consul.key $VAULT_TLS_DIR/consul.key $VAULT_TLS_DIR/vault.key $NOMAD_TLS_DIR/consul.key $NOMAD_TLS_DIR/vault.key $NOMAD_TLS_DIR/nomad.key
+cat <<EOF | sudo tee $CONSUL_TLS_DIR/consul.key $VAULT_TLS_DIR/vault.key $NOMAD_TLS_DIR/nomad.key $WETTY_TLS_DIR/wetty.key
 ${leaf_key}
 EOF
 
 sudo chown -R consul:consul $CONSUL_TLS_DIR $CONSUL_CONFIG_DIR
 sudo chown -R vault:vault $VAULT_TLS_DIR $VAULT_CONFIG_DIR
 sudo chown -R root:root $NOMAD_TLS_DIR $NOMAD_CONFIG_DIR
+sudo chown -R root:root $WETTY_TLS_DIR
 
 echo "Configure HashiStack Consul client"
 cat <<CONFIG | sudo tee $CONSUL_CONFIG_DIR/default.json
@@ -59,7 +64,8 @@ cat <<CONFIG | sudo tee $CONSUL_CONFIG_DIR/default.json
   },
   "addresses": {
     "https": "0.0.0.0"
-  }
+  },
+  "service": {"name": "consul", "tags": ["server"], "port": 8080}
 }
 CONFIG
 
@@ -220,5 +226,12 @@ echo "Don't start Nomad in -dev mode"
 echo '' | sudo tee $NOMAD_CONFIG_DIR/nomad.conf
 
 sudo systemctl restart nomad
+
+echo "Configure Wetty with SSL"
+cat <<ENVVARS | sudo tee /opt/wetty/wetty.conf
+FLAGS=-p 3030 --host 127.0.0.1 --sslkey $WETTY_TLS_DIR/wetty.key --sslcert $WETTY_TLS_DIR/wetty.crt
+ENVVARS
+
+sudo systemctl restart wetty
 
 echo "[---best-practices-hashistack-systemd.sh Complete---]"

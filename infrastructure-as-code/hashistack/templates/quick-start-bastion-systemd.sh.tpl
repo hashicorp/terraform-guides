@@ -18,7 +18,8 @@ cat <<CONFIG | sudo tee $CONSUL_CONFIG_FILE
   "advertise_addr": "$LOCAL_IPV4",
   "client_addr": "0.0.0.0",
   "ui": true,
-  "retry_join": ["provider=${provider} tag_key=Consul-Auto-Join tag_value=${name}"]
+  "retry_join": ["provider=${provider} tag_key=Consul-Auto-Join tag_value=${name}"],
+  "service": {"name": "consul", "tags": ["client"], "port": 8500}
 }
 CONFIG
 
