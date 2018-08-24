@@ -15,7 +15,7 @@ disk_size_limit = rule {
   all vms as _, instances {
     all instances as index, r {
       all r.applied.disk as disk {
-        disk.size < 100
+        int(disk.size) < 100
       }
     }
   }
