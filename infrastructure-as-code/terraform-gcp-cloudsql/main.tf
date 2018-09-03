@@ -1,11 +1,17 @@
 provider "google" {
-  # Google provider credentials via environment variable: GOOGLE_CLOUD_KEYFILE_JSON
-  # Google project name configured via environment variable: GOOGLE_PROJECT
-  region  = "${var.region}"
+  credentials = "${var.gcp_credentials}"
+  project     = "${var.gcp_project}"
+  region      = "${var.region}"
+}
+
+# Random identifier for Database name
+resource "random_pet" "database_name" {
+  prefix = "${var.database_name_prefix}"
+  separator = "-"
 }
 
 resource "google_sql_database_instance" "cloudsql-postgres-master" {
-  name = "${var.database_name}"
+  name = "${random_pet.database_name.id}"
   database_version = "${var.database_version}"
   region = "${var.region}"
 
