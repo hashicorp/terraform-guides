@@ -1,6 +1,6 @@
 # Provision a Cloud SQL instance for PostgreSQL on Google Cloud Platform.
 
-[Cloud SQL for PostgreSQL(https://cloud.google.com/sql/docs/postgres/) is a fully-managed PostgreSQL relational database service on Google Cloud Platform. This Terraform configuration will create a Cloud SQL PostgreSQL V9.6 instance in Google Cloud. It can also be used as a Module to instantiate one or more instances quickly.
+[Cloud SQL for PostgreSQL](https://cloud.google.com/sql/docs/postgres/) is a fully-managed PostgreSQL relational database service on Google Cloud Platform. This Terraform configuration will create a Cloud SQL PostgreSQL V9.6 instance in Google Cloud. It can also be used as a Module to instantiate one or more instances quickly.
 
 ### Pre-requisites:
 - A [Google Cloud](https://cloud.google.com/) account and [project](https://cloud.google.com/docs/overview/#projects).
@@ -16,10 +16,10 @@
 
 **Download and configure provider:**
 - Clone this repository via `git` or HTTP and change to working directory: `cd terraform-gcp-cloudsql`.
-- Set the following environment variables appropriately to setup the [Terraform Google Provider](https://www.terraform.io/docs/providers/google/index.html).
+- Set the following Terraform configuration variables appropriately to setup the [Terraform Google Provider](https://www.terraform.io/docs/providers/google/index.html).
 ```
-export GOOGLE_CLOUD_KEYFILE_JSON=<path-to-service-account-keyfile>
-export GOOGLE_PROJECT=<name-of-project>
+export TF_VAR_gcp_credentials=$(cat <path-to-gcp-service-account-json>)
+export TF_VAR_gcp_project="<gcp-project-name>"
 ```
 
 **Set Configuration variables:**
@@ -63,8 +63,7 @@ SELECT * from cities;
 - To destroy the Cloud SQL instance, issue: `terraform destroy`.
 - Unset environment variables:
 ```
-unset GOOGLE_CLOUD_KEYFILE_JSON
-unset GOOGLE_PROJECT
+unset TF_VAR_gcp_credentials
+unset TF_VAR_gcp_project
 unset TF_VAR_gcp_sql_root_user_pw
-unset GOOGLE_PROJECT
 ```
