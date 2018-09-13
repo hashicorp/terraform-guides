@@ -24,8 +24,8 @@ Execute the following commands to deploy the pods and services to your Kubernete
 1. Create a new TFE workspace called k8s-services-acs-dev or k8s-services-gke-dev depending on whether you are deploying to ACS or GKE.
 1. Configure your workspace to connect to the fork of this repository in your own GitHub account.
 1. Click the "More options" link, set the Terraform Working Directory to "self-serve-infrastructure/k8s-services" and the VCS Branch to "dev". (If you are only using one cluster and did not create a dev branch on your fork, use "master" instead or just leave the VCS Branch blank.)
-1. Set the tfe-organization Terraform variable in your new workspace to the name of the TFE organization containing your Kubernetes cluster workspace.
-1. Set the k8s-cluster-workspace Terraform variable in your new workspace to the name of the workspace you used to deploy your Kubernetes cluster.
+1. Set the *tfe_organization* Terraform variable in your new workspace to the name of the TFE organization containing your Kubernetes cluster workspace.
+1. Set the *k8s_cluster_workspace* Terraform variable in your new workspace to the name of the workspace you used to deploy your Kubernetes cluster.
 1. Queue a plan for the services workspace in TFE by clicking the "Queue Plan" button in the upper right corner of your workspace.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the pods and services will be created when you apply your plan.
 1. Click the "Confirm and Apply" button to actually deploy the pods and services.
