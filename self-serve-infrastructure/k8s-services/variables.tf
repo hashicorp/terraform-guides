@@ -8,11 +8,11 @@ variable "k8s_cluster_workspace" {
 }
 
 variable "frontend_image" {
-  default = 'rberlind/cats-and-dogs-frontend:k8s-auth'
+  default = "rberlind/cats-and-dogs-frontend:k8s-auth"
   description = "Docker image location of the frontend app"
 }
 
 variable "backend_image" {
-  default = 'rberlind/cats-and-dogs-backend:k8s-auth'
+  default = "rberlind/cats-and-dogs-backend:k8s-auth"
   description = "Docker image location of the frontend app"
 }
