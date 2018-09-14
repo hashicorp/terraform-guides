@@ -33,7 +33,7 @@ join = func(l, sep) {
 	s = ""
 
 	if types.type_of(l) is not "list" {
-		error("not a list: " + l)
+		error("not a list:", l)
 	}
 
 	if length(l) < 1 {
@@ -52,7 +52,7 @@ join = func(l, sep) {
 		if types.type_of(e) is "list" {
 			s += join(e, sep)
 		} else {
-			s += string(e)
+			s += string(e) else error("no implicit conversion of", e, "to string")
 		}
 	}
 
