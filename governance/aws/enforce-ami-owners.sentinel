@@ -1,0 +1,121 @@
+import "tfconfig"
+import "types"
+
+// This policy enforces that all aws_ami data sources in use on the workspace
+// have the exact owner set defined *in configuration*.
+//
+// Locking down an AMI search in AWS to a specific owner or owners is very
+// important to ensure that Terraform does not launch a malicious AMI by
+// mistake. Future versions of the aws_ami data source will require the owners
+// field to be set, but for the time being, this policy will help mitigate any
+// oversights. After aws_ami has been updated, this policy will still have
+// value in that it will allow you to lock down your searches to a specific
+// owner.
+//
+// For some background on the need to enforce owners on aws_ami, see:
+//   https://github.com/terraform-providers/terraform-provider-aws/pull/5576
+
+// The owner list to enforce AMI searches to. Data sources can have a subset of
+// this list, but cannot have owners outside of this list.
+expected_owner_list = [
+	"self",
+]
+
+// join takes a list and concatenates it into a single string with each element
+// joined with the separator string sep.
+//
+// It traverses inner lists but otherwise will fail if given an element type
+// that cannot be converted into a string.
+//
+// Note that this function should only be needed until the strings import
+// supports joining natively.
+join = func(l, sep) {
+	s = ""
+
+	if types.type_of(l) is not "list" {
+		error("not a list: " + l)
+	}
+
+	if length(l) < 1 {
+		return ""
+	}
+
+	if length(l) == 1 {
+		return l[0]
+	}
+
+	for l as i, e {
+		if i > 0 {
+			s += "."
+		}
+
+		if types.type_of(e) is "list" {
+			s += join(e, sep)
+		} else {
+			s += string(e)
+		}
+	}
+
+	return s
+}
+
+// all_aws_ami fetches all configuration instances of the aws_ami data source.
+// This traverses all modules in the configuration to ensure that no data
+// sources are missed.
+//
+// This returns a map keyed on the human-readable address of the data source so
+// that config instances in violation can be reported in print messages.
+all_aws_ami = func() {
+	m = {}
+
+	for tfconfig.module_paths as path {
+		for tfconfig.module(path).data.aws_ami as k, v {
+			m[join(path + ["aws_ami", k], ".")] = v
+		}
+	}
+
+	return m
+}
+
+// enforce_expected_ami_owners takes a resource address as a string, and an
+// aws_ami data source config instance, and ensures that its declared owners
+// key matches expected_owner_list. If it does not, a debug message is logged
+// so it can be traced, in addition to returning false.
+enforce_expected_ami_owners = func(addr, d) {
+	actual_owner_list = d.config.owners else []
+
+	if length(actual_owner_list) < 1 {
+		print(addr + ": owners must be provided")
+		return false
+	}
+
+	for actual_owner_list as actual_owner {
+		if actual_owner not in expected_owner_list {
+			print(addr + ": expected owners list", actual_owner_list, "to be within", expected_owner_list)
+			return false
+		}
+	}
+
+	return true
+}
+
+// collect_enforcement_results loops over our AMIs and collects the results for
+// each test.
+//
+// This is done to get around Sentinel short-circuiting so that we can log
+// every aws_ami instance that violated our rules.
+collect_enforcement_results = func() {
+	results = []
+
+	for all_aws_ami() as addr, d {
+		append(results, enforce_expected_ami_owners(addr, d))
+	}
+
+	return results
+}
+
+main = rule {
+	all collect_enforcement_results() as result {
+		result
+	}
+}
