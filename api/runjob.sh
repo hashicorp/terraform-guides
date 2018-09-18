@@ -8,7 +8,7 @@
 # Optionally default or comment these and set env variable outside.
 if [ -z "$WORKSPACE_NAME" ]
 then
-	export WORKSPACE_NAME="${3:-[yourworkspace]}"
+	export WORKSPACE_NAME="${1:-[yourworkspace]}"
 fi
 
 if [ -z "$ORGNAME" ]
@@ -18,7 +18,7 @@ fi
 
 if [ -z "$TOKEN" ]
 then
-	export TOKEN="${1:-[yourtoken]}"
+	export TOKEN="${3:-[yourtoken]}"
 fi
 
 # If private Terraform Enterprise, change this to your API:
@@ -53,3 +53,4 @@ export RES=$(curl -0 -X POST "$TFEAPI/runs" \
 EOF
 )
 
+echo $RES | jq
