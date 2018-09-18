@@ -1,12 +1,29 @@
 #!/bin/bash -x
 # John Boero - EMEA SE team
 # A script to trigger a workspace run.  Can be used via CI/CD pipeline.
+# Usage: ./runjob.sh "MyWorkspace" "MyOrg" "[MYTOKEN]"
+# Usage (environment variables): ./runjob.sh "MyWorkspace"
+# Prereqs: must have curl and jq installed and a valid TFE API token.
 
-# Optionally comment this and set env variable outside.
-export TOKEN="${1:-[yourtoken]}"
-export ORGNAME="${2:-[yourorg]}"
-export WORKSPACE_NAME="${3:-[yourworkspace]}"
+# Optionally default or comment these and set env variable outside.
+if [ -z "$WORKSPACE_NAME" ]
+then
+	export WORKSPACE_NAME="${3:-[yourworkspace]}"
+fi
+
+if [ -z "$ORGNAME" ]
+then
+	export ORGNAME="${2:-[yourorg]}"
+fi
+
+if [ -z "$TOKEN" ]
+then
+	export TOKEN="${1:-[yourtoken]}"
+fi
+
+# If private Terraform Enterprise, change this to your API:
 export TFEAPI="https://app.terraform.io/api/v2"
+
 export WORKSPACE_ID=$(curl -0 "$TFEAPI/organizations/$ORGNAME/workspaces" \
  --header "Authorization: Bearer $TOKEN" \
  --header "Content-Type: application/vnd.api+json" \
