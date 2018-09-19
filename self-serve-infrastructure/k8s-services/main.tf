@@ -32,7 +32,7 @@ resource "kubernetes_pod" "cats-and-dogs-backend" {
   spec {
     service_account_name = "${kubernetes_service_account.cats-and-dogs.metadata.0.name}"
     container {
-      image = "rberlind/cats-and-dogs-backend:k8s-auth"
+      image = "${var.backend_image}"
       image_pull_policy = "Always"
       name  = "cats-and-dogs-backend"
       command = ["/app/start_redis.sh"]
@@ -89,7 +89,7 @@ resource "kubernetes_pod" "cats-and-dogs-frontend" {
   spec {
     service_account_name = "${kubernetes_service_account.cats-and-dogs.metadata.0.name}"
     container {
-      image = "rberlind/cats-and-dogs-frontend:k8s-auth"
+      image = "${var.frontend_image}"
       image_pull_policy = "Always"
       name  = "cats-and-dogs-frontend"
       env = {
