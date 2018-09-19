@@ -30,16 +30,16 @@ Execute the following commands to deploy your Kubernetes cluster to GKE.
 1. Configure the k8s-cluster-gke workspace to connect to the fork of this repository in your own GitHub account.
 1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-gke".
 1. On the Variables tab of your workspace, add the following variables to the Terraform variables: 
-```
-gcp_project           # The name of the GCP project you are using
-gcp_region            # Valid GCP Region e.g. us-east1
-gcp_zone              # Valid GCP Zone e.g. us-east1-b
-initial_node_count    # Default 1
-node_machine_type     # Default n1-standard-1
-environment           # Should be dev.  Could be any other value needed, but make sure to align environments properly
-vault_addr            # Address of Vault server.  e.g. http://<vault_server_dns/ip>:8200
-vault_user            # Username to login as to add secrets.
-```
+    ```
+    gcp_project           # The name of the GCP project you are using
+    gcp_region            # Valid GCP Region e.g. us-east1
+    gcp_zone              # Valid GCP Zone e.g. us-east1-b
+    initial_node_count    # Default 1
+    node_machine_type     # Default n1-standard-1
+    environment           # Should be dev.  Could be any other value needed, but make sure to align environments properly
+    vault_addr            # Address of Vault server.  e.g. http://<vault_server_dns/ip>:8200
+    vault_user            # Username to login as to add secrets.
+    ```
 1. Set the VAULT_TOKEN environment variable to your Vault token. Be sure to mark the VAULT_TOKEN variable as sensitive so that other people cannot read it.
 1. Click the "Queue Plan" button in the upper right corner of your workspace.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the GKE cluster will be created when you apply your plan.
