@@ -1,0 +1,56 @@
+# This policy is an example of using a Data Source in Sentinel evaluation 
+# It restricts the creation of EC2 instances based on "Env" tag value
+# The allowable value of the "Env" tag is obtained from an aws_subnet Datasource
+# The Env tag from EC2 must match the Env tag of aws_subnet for the policy to pass. 
+
+import "tfplan"
+
+# Get all aws_instance resources from all modules
+get_aws_instances = func() {
+    aws_instances = []
+    for tfplan.module_paths as path {
+      aws_instances += values(tfplan.module(path).resources.aws_instance) else []
+    }
+    return aws_instances
+}
+
+aws_instances = get_aws_instances()
+
+# Search for Env tag value in aws_subnet
+get_subnet_env = func() {
+    # Get all aws_subnet Data Sources
+    aws_subnets = []
+    for tfplan.module_paths as path {
+      aws_subnets += values(tfplan.state.module(path).data.aws_subnet) else []
+    }
+      
+    # Iterate through each subnet and return first Env tag value found (if any)
+    for aws_subnets as _, subnets { 
+       for subnets as index, subnet {
+         env_tag = subnet.attr.tags["Env"]
+         if length(env_tag) >= 0 {
+           print("Using subnet environment tag:", env_tag)
+           return env_tag
+         }
+       }
+    }
+    
+    # Return undefined if there were no aws_subnet or none with Env tag.
+    return undefined
+}
+  
+# Store aws_subnet Env tag value as a variable
+aws_subnet_env_tag = get_subnet_env()
+  
+#Ensure Env tag from each aws_instance matches that of aws_subnet
+validate_vm_tags_from_subnet = rule {
+  all aws_instances as _, instances { 
+    all instances as index, ec2 {
+      ec2.applied.tags["Env"] == aws_subnet_env_tag
+    }
+  }
+}
+
+main = rule {
+  (validate_vm_tags_from_subnet) else true
+}
