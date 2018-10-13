@@ -15,9 +15,9 @@
 # bastion_servers        = 1 # Number of bastion hosts to provision across public subnets, defaults to public subnet count.
 # bastion_instance       = "t2.micro"
 # bastion_release        = "0.1.0" # Release version tag (e.g. 0.1.0, 0.1.0-rc1, 0.1.0-beta1, 0.1.0-dev1)
-# bastion_consul_version = "1.2.0" # Consul version tag (e.g. 1.2.0 or 1.2.0-ent) - https://releases.hashicorp.com/consul/
-# bastion_vault_version  = "0.10.3" # Vault version tag (e.g. 0.10.3 or 0.10.3-ent) - https://releases.hashicorp.com/vault/
-# bastion_nomad_version  = "0.8.4" # Nomad version tag (e.g. 0.8.4 or 0.8.4-ent) - https://releases.hashicorp.com/nomad/
+# bastion_consul_version = "1.2.3" # Consul version tag (e.g. 1.2.3 or 1.2.3-ent) - https://releases.hashicorp.com/consul/
+# bastion_vault_version  = "0.11.3" # Vault version tag (e.g. 0.11.3 or 0.11.3-ent) - https://releases.hashicorp.com/vault/
+# bastion_nomad_version  = "0.8.6" # Nomad version tag (e.g. 0.8.6 or 0.8.6-ent) - https://releases.hashicorp.com/nomad/
 # bastion_os             = "Ubuntu" # OS (e.g. RHEL, Ubuntu), defaults to RHEL
 # bastion_os_version     = "16.04" # OS Version (e.g. 7.3 for RHEL, 16.04 for Ubuntu), defaults to 7.3
 # bastion_image_id       = "" # AMI ID override, defaults to base RHEL AMI
@@ -30,9 +30,9 @@
 # hashistack_servers        = 3 # Number of Nomad server nodes to provision across public subnets, defaults to public subnet count.
 # hashistack_instance       = "t2.micro"
 # hashistack_release        = "0.1.0" # Release version tag (e.g. 0.1.0, 0.1.0-rc1, 0.1.0-beta1, 0.1.0-dev1)
-# hashistack_consul_version = "1.2.0" # Consul version tag (e.g. 1.2.0 or 1.2.0-ent) - https://releases.hashicorp.com/consul/
-# hashistack_vault_version  = "0.10.3" #  Version tag (e.g. 0.10.3 or 0.10.3-ent) - https://releases.hashicorp.com/vault/
-# hashistack_nomad_version  = "0.8.4" # Nomad version tag (e.g. 0.8.4 or 0.8.4-ent) - https://releases.hashicorp.com/nomad/
+# hashistack_consul_version = "1.2.3" # Consul version tag (e.g. 1.2.3 or 1.2.3-ent) - https://releases.hashicorp.com/consul/
+# hashistack_vault_version  = "0.11.3" #  Version tag (e.g. 0.11.3 or 0.11.3-ent) - https://releases.hashicorp.com/vault/
+# hashistack_nomad_version  = "0.8.6" # Nomad version tag (e.g. 0.8.6 or 0.8.6-ent) - https://releases.hashicorp.com/nomad/
 # hashistack_os             = "RHEL" # OS (e.g. RHEL, Ubuntu)
 # hashistack_os_version     = "7.3" # OS Version (e.g. 7.3 for RHEL, 16.04 for Ubuntu)
 # hashistack_image_id       = "" # AMI ID override, defaults to base RHEL AMI
