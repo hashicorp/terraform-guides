@@ -1,11 +1,11 @@
 variable "aws_region" {
   description = "AWS region"
-  default = "us-east-1"
+  default = "eu-west-2"
 }
 
 variable "ami_id" {
-  description = "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image"
-  default = "ami-0444ebc1fa6fdf8ee"
+  description = "ID of the AMI to provision. Default is CentOS Hashistack Base Image"
+  default = "ami-090b7b12bc73152c3"
 }
 
 variable "instance_type" {
@@ -15,5 +15,5 @@ variable "instance_type" {
 
 variable "name" {
   description = "name to pass to Name tag"
-  default = "Provisioned by Terraform - with Sentinel"
+  default = "demo-vm-jboero"
 }
