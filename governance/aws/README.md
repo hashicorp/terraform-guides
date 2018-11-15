@@ -1,2 +1,2 @@
 # Sentinel Policies for AWS
-The sample Sentinel policy files in this directory can be used with Terraform Enterprise to ensure that provisioned AWS VPCs and EC2 instances comply with your organization's provisioning rules.
+The sample Sentinel policy files in this directory can be used with Terraform Enterprise to ensure that provisioned AWS VPCs, EC2 instances, S3 buckets, Lambda functions, and other resources comply with your organization's provisioning rules. There are also policies that restrict AMI owner IDs and the region or availability zones into which resources can be provisioned.

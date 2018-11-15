@@ -1,0 +1,19 @@
+import "tfplan"
+
+# Get instances of  from root module
+check_account_balance = tfplan.state.data.external.check_balance
+
+# Rule to validate that account has balance > 50
+balance_test = rule {
+  # If you wanted every single workspace to include the check_balance
+  # data source, you could uncomment the following line.  Use caution!
+  #(length(check_account_balance) > 0) and
+  all check_account_balance as _, r {
+      print( r.attr.result.balance ) and (int(r.attr.result.balance) else 0) > 50
+  }
+}
+
+# Main rule that requires other rules to be true
+main = rule {
+  (balance_test) else true
+}
