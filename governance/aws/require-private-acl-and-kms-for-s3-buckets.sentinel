@@ -1,0 +1,42 @@
+import "tfplan"
+
+# Get all S3 buckets from all modules
+get_s3_buckets = func() {
+    buckets = []
+    for tfplan.module_paths as path {
+        buckets += values(tfplan.module(path).resources.aws_s3_bucket) else []
+    }
+    return buckets
+}
+
+s3_buckets = get_s3_buckets()
+
+# Allowed S3 ACLs
+# Don't allow public-read-write
+allowed_acls = [
+  "private",
+]
+
+# Rule to restrict S3 bucket ACLs
+acl_allowed = rule {
+    all s3_buckets as _, instances {
+      all instances as index, r {
+  	   r.applied.acl in allowed_acls
+      }
+    }
+}
+
+# Rule to require server-side encryption
+require_encryption = rule {
+    all s3_buckets as _, instances {
+      all instances as index, r {
+        (length(r.applied.server_side_encryption_configuration) > 0 and r.applied.server_side_encryption_configuration[0]["rule"][0].apply_server_side_encryption_by_default[0].sse_algorithm is "aws:kms") else false
+      }
+   }
+}
+
+# Main rule that requires other rules to be true
+main = rule {
+  (acl_allowed and require_encryption) else true
+}
+

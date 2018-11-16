@@ -1,0 +1,38 @@
+import "tfstate"
+
+# Get VMs that already exist in the state of this workspace
+get_vms = func() {
+    vms = []
+    for tfstate.module_paths as path {
+        vms += values(tfstate.module(path).resources.azurerm_virtual_machine) else []
+    }
+    return vms
+}
+
+# List of allowed publishers
+allowed_publishers = [
+  "RedHat",
+  "Canonical",
+]
+
+vms = get_vms()
+
+# This rule uses a double negative expression (two nots) so that
+# only VMs that are NOT in the list of approved publishers
+# will be printed.
+# If we had used all instead of any and left out the nots,
+# only the valid VMs would have been printed.
+# Or, if we had done that and put the print() statement before
+# testing the VM's publisher, all VMs would have been printed.
+vm_publisher_allowed = rule {
+  not (
+    any vms as _, instances {
+      any instances as index, r {
+         (r.attr.storage_image_reference[0].publisher not in allowed_publishers) and print("Existing VM publisher ", r.attr.storage_image_reference[0].publisher, "for VM ", r.attr.name, "is invalid")
+      }
+    })
+}
+
+main = rule {
+  (vm_publisher_allowed) else true
+}

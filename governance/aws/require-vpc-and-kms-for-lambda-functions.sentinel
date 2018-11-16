@@ -1,0 +1,38 @@
+import "tfplan"
+
+# Get all Lambda functions from all modules
+get_lambda_functions = func() {
+    lambdas = []
+    for tfplan.module_paths as path {
+        lambdas += values(tfplan.module(path).resources.aws_lambda_function) else []
+    }
+    return lambdas
+}
+
+lambda_functions = get_lambda_functions()
+
+# Rule to require KMS key
+require_kms_key = rule {
+    all lambda_functions as _, instances {
+      all instances as index, r {
+  	   (r.applied.kms_key_arn is not "") else false
+      }
+    }
+}
+
+# Rule to require VPC
+require_vpc = rule {
+    all lambda_functions as _, instances {
+      all instances as index, r {
+        (length(r.applied.vpc_config) > 0 and
+         length(r.applied.vpc_config[0].security_group_ids) > 0 and
+         length(r.applied.vpc_config[0].subnet_ids) > 0) else false
+      }
+   }
+}
+
+# Main rule that requires other rules to be true
+main = rule {
+  (require_kms_key and require_vpc) else true
+}
+
