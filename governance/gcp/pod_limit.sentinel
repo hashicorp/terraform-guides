@@ -1,0 +1,16 @@
+import "tfplan"
+
+pods_limit = tfplan.resources.kubernetes_resource_quota
+
+pod_count_limit = rule {
+  all pods_limit as name, instances {
+    all instances as index, r {
+      int(r.applied.spec[0].hard.pods) < 10
+    }
+  }
+}
+
+main = rule {
+  (pod_count_limit) else true
+}
+
