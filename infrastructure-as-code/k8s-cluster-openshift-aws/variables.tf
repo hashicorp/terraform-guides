@@ -40,11 +40,6 @@ variable "subnetaz" {
   }
 }
 
-variable "name_tag_prefix" {
-  description = "prefixed to Name tag added to EC2 instances and other AWS resources"
-  default     = "OpenShift"
-}
-
 variable "owner" {
   description = "value set on EC2 owner tag"
   default = ""

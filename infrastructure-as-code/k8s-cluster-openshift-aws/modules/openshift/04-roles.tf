@@ -2,7 +2,7 @@
 //  This role has a policy saying it can be assumed by ec2
 //  instances.
 resource "aws_iam_role" "openshift-instance-role" {
-  name = "openshift-instance-role"
+  name = "${var.name_tag_prefix}-openshift-instance-role"
 
   assume_role_policy = <<EOF
 {
@@ -24,7 +24,7 @@ EOF
 //  This policy allows an instance to forward logs to CloudWatch, and
 //  create the Log Stream or Log Group if it doesn't exist.
 resource "aws_iam_policy" "openshift-policy-forward-logs" {
-  name        = "openshift-instance-forward-logs"
+  name        = "${var.name_tag_prefix}-openshift-instance-forward-logs"
   path        = "/"
   description = "Allows an instance to forward logs to CloudWatch"
 
@@ -52,14 +52,13 @@ EOF
 
 //  Attach the policies to the role.
 resource "aws_iam_policy_attachment" "openshift-attachment-forward-logs" {
-  name       = "openshift-attachment-forward-logs"
+  name       = "${var.name_tag_prefix}-openshift-attachment-forward-logs"
   roles      = ["${aws_iam_role.openshift-instance-role.name}"]
   policy_arn = "${aws_iam_policy.openshift-policy-forward-logs.arn}"
 }
 
 //  Create a instance profile for the role.
 resource "aws_iam_instance_profile" "openshift-instance-profile" {
-  name  = "openshift-instance-profile"
+  name  = "${var.name_tag_prefix}-openshift-instance-profile"
   role = "${aws_iam_role.openshift-instance-role.name}"
 }
-

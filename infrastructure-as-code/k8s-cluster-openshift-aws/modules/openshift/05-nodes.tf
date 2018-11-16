@@ -35,7 +35,7 @@ resource "aws_instance" "master" {
   key_name = "${var.key_name}"
 
   tags {
-    Name    = "${var.name_tag_prefix} Master"
+    Name    = "${var.name_tag_prefix} OpenShift Master"
     Project = "openshift"
     owner = "${var.owner}"
     TTL = "${var.ttl}"
@@ -78,7 +78,7 @@ resource "aws_instance" "node1" {
   key_name = "${var.key_name}"
 
   tags {
-    Name    = "${var.name_tag_prefix} Node 1"
+    Name    = "${var.name_tag_prefix} OpenShift Node 1"
     Project = "openshift"
     owner = "${var.owner}"
     TTL = "${var.ttl}"

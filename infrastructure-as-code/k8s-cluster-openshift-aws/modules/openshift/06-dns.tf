@@ -3,7 +3,7 @@
 
 //  Create the internal DNS.
 resource "aws_route53_zone" "internal" {
-  name = "openshift.local"
+  name = "${var.name_tag_prefix}-openshift.local"
   comment = "OpenShift Cluster Internal DNS"
   vpc_id = "${aws_vpc.openshift.id}"
   tags {
@@ -15,7 +15,7 @@ resource "aws_route53_zone" "internal" {
 //  Routes for 'master' and 'node1'.
 resource "aws_route53_record" "master-a-record" {
     zone_id = "${aws_route53_zone.internal.zone_id}"
-    name = "master.openshift.local"
+    name = "master.${var.name_tag_prefix}-openshift.local"
     type = "A"
     ttl  = 300
     records = [
@@ -24,7 +24,7 @@ resource "aws_route53_record" "master-a-record" {
 }
 resource "aws_route53_record" "node1-a-record" {
     zone_id = "${aws_route53_zone.internal.zone_id}"
-    name = "node1.openshift.local"
+    name = "node1.${var.name_tag_prefix}-openshift.local"
     type = "A"
     ttl  = 300
     records = [

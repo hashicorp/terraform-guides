@@ -1,7 +1,7 @@
 //  This security group allows intra-node communication on all ports with all
 //  protocols.
 resource "aws_security_group" "openshift-vpc" {
-  name        = "openshift-vpc"
+  name        = "${var.name_tag_prefix}-openshift-vpc"
   description = "Default security group that allows all instances in the VPC to talk to each other over any port and protocol."
   vpc_id      = "${aws_vpc.openshift.id}"
 
@@ -28,7 +28,7 @@ resource "aws_security_group" "openshift-vpc" {
 //  This security group allows public ingress to the instances for HTTP, HTTPS
 //  and common HTTP/S proxy ports.
 resource "aws_security_group" "openshift-public-ingress" {
-  name        = "openshift-public-ingress"
+  name        = "${var.name_tag_prefix}-openshift-public-ingress"
   description = "Security group that allows public ingress to instances, HTTP, HTTPS and more."
   vpc_id      = "${aws_vpc.openshift.id}"
 
@@ -74,7 +74,7 @@ resource "aws_security_group" "openshift-public-ingress" {
 //  HTTPS, which is needed for yum updates, git access etc etc.
 // Also for Vault on port 8200
 resource "aws_security_group" "openshift-public-egress" {
-  name        = "openshift-public-egress"
+  name        = "${var.name_tag_prefix}-openshift-public-egress"
   description = "Security group that allows egress to the internet for instances over HTTP and HTTPS."
   vpc_id      = "${aws_vpc.openshift.id}"
 
@@ -110,7 +110,7 @@ resource "aws_security_group" "openshift-public-egress" {
 
 //  Security group which allows SSH access to a host. Used for the bastion.
 resource "aws_security_group" "openshift-ssh" {
-  name        = "openshift-ssh"
+  name        = "${var.name_tag_prefix}-openshift-ssh"
   description = "Security group that allows public ingress over SSH."
   vpc_id      = "${aws_vpc.openshift.id}"
 

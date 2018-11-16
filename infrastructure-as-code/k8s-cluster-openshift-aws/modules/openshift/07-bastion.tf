@@ -11,6 +11,7 @@ data "template_file" "inventory" {
     wait = "${data.external.delay.result["wait"]}"
     master_ip = "${aws_instance.master.public_ip}"
     private_key = "${var.private_key_data}"
+    name_tag_prefix = "${var.name_tag_prefix}"
   }
 }
 
@@ -34,7 +35,7 @@ resource "aws_instance" "bastion" {
   key_name = "${var.key_name}"
 
   tags {
-    Name    = "${var.name_tag_prefix} Bastion"
+    Name    = "${var.name_tag_prefix} OpenShift Bastion"
     Project = "openshift"
     owner = "${var.owner}"
     TTL = "${var.ttl}"
