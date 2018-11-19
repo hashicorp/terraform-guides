@@ -1,0 +1,51 @@
+# This policy allows you to define a list of forbidden IAM policy statement actions
+# to prevent Terraform from creating.   Put all statements in the forbidden_actions.
+# This does not do by-resource level restrictions, but restricts all resources with 
+# these actions
+
+import "json"
+import "tfplan"
+
+forbidden_actions = [
+  "iam:*",
+  "iam:Create*",
+  "iam:Delete*",
+]
+
+# get all IAM policy resources from the tfplan
+all_policy_resources = func() {
+    policies = []
+    for tfplan.module_paths as path {
+        resources = values(tfplan.module(path).resources.aws_iam_policy) else []
+        for resources as _, r {
+            policies += values(r)
+        }
+    }
+
+    return policies
+}
+
+# get all IAM Policy statements
+policy_statements = func() {
+    statements = []
+    for all_policy_resources() as r {
+        statements += json.unmarshal(r.applied.policy).Statement
+    }
+    return statements
+}
+
+valid_statement = func(s,a) {
+    if s.Action contains a {
+      return false
+    }
+  return true
+}
+ 
+# Main rule that requires other rules to be true
+main = rule {
+    all policy_statements() as s {
+        all forbidden_actions as a {
+            valid_statement(s, a)
+        }
+    }
+}
