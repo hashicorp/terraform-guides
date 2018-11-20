@@ -1,6 +1,8 @@
 {
   "variables": {
-    "version": ""
+    "version": "",
+    "memory" : "8192",
+    "cpucorecount": "8"
   },
   "provisioners": [
     {
@@ -8,7 +10,7 @@
       "inline": [
         "curl https://install.terraform.io/ptfe/stable > install_ptfe.sh",
         "chmod 500 install_ptfe.sh",
-        "sudo ./install_ptfe.sh no-proxy bypass-storagedriver-warnings "
+      "sudo ./install_ptfe.sh no-proxy bypass-storagedriver-warnings"
       ]
     }
   ],
@@ -23,11 +25,11 @@
       "guest_os_type": "RedHat_64",
       "headless": true,
       "http_directory": "ks",
-      "iso_url": "/aux/iso/CentOS-7-x86_64-Minimal-1804.iso",
-      "iso_checksum": "714acc0aefb32b7d51b515e25546835e55a90da9fb00417fbee2d03a62801efd",
+      "iso_url": "https://mirror.umd.edu/centos/7/isos/x86_64/CentOS-7-x86_64-Everything-1804.iso",
+      "iso_checksum": "99723c8b87dcec21df8aed23de1eb810346d42cfd2a3fafafe70a68296053417",
       "iso_checksum_type": "sha256",
-      "ssh_username": "vagrant",
-      "ssh_password": "vagrant",
+      "ssh_username": "root",
+      "ssh_password": "captainamerica",
       "ssh_port": 22,
       "ssh_wait_timeout": "10000s",
       "shutdown_command": "sudo shutdown -P now",
@@ -45,9 +47,11 @@
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "6"
+          "8"
+          
         ]
       ]
     }
   ]
 }
+
