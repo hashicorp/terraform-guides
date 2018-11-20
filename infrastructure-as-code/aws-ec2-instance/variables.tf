@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "ami_id" {
   description = "ID of the AMI to provision. Default is CentOS Hashistack Base Image"
-  default = "ami-090b7b12bc73152c3"
+  default = "ami-03a0ef6f0d2067f46"
 }
 
 variable "instance_type" {
