@@ -16,7 +16,7 @@
     {
       "type": "virtualbox-iso",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.conf<enter><wait>"
+        "I<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.conf<enter><wait>"
       ],
       "boot_wait": "10s",
       "disk_size": 81920,
