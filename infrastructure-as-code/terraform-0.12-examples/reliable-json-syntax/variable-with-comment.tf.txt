@@ -1,0 +1,8 @@
+{
+  "variable": {
+    "example": {
+      "//": "This property is a comment and ignored",
+      "default": "foo"
+    }
+  }
+}
