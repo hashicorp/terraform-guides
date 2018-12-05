@@ -11,7 +11,7 @@ organization="<your_organization>"
 workspace="workspace-from-api"
 
 # You can change sleep duration if desired
-sleep_duration=15
+sleep_duration=5
 
 # Override soft-mandatory policy checks that fail.
 # Set to "yes" or "no" in second argument passed to script.
@@ -59,6 +59,11 @@ do
   upload_variable_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 done < variables.csv
 
+# List Sentinel Policies
+sentinel_list_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/policies")
+sentinel_policy_count=$(echo $sentinel_list_result | python -c "import sys, json; print(json.load(sys.stdin)['meta']['pagination']['total-count'])")
+echo "Number of Sentinel policies: " $sentinel_policy_count
+
 # Do a run
 sed "s/workspace_id/$workspace_id/" < run.template.json  > run.json
 run_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @run.json https://${address}/api/v2/runs)
@@ -77,13 +82,31 @@ while [ $continue -ne 0 ]; do
   # Check the status of run
   check_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id})
 
-  # Parse out the run status
+  # Parse out the run status and is-confirmable
   run_status=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['status'])")
   echo "Run Status: " $run_status
+  is_confirmable=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['actions']['is-confirmable'])")
+  echo "Run can be applied: " $is_confirmable
 
   # Apply in some cases
+
+  # planned means plan finished and no Sentinel policies
+  # exist or are applicable to the workspace
+  if [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]] ; then
+    continue=0
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Check the run in Terraform Enterprise UI and apply there if desired."
+  # planned means plan finished and no Sentinel policies
+  # exist or are applicable to the workspace
+  elif [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]] ; then
+      continue=0
+      echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+      echo "Since override was set to \"yes\", we are applying."
+      # Do the apply
+      echo "Doing Apply"
+      apply_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
   # policy_checked means all Sentinel policies passed
-  if [[ "$run_status" == "policy_checked" ]] ; then
+  elif [[ "$run_status" == "policy_checked" ]] ; then
     continue=0
     # Do the apply
     echo "Policies passed. Doing Apply"
@@ -118,6 +141,6 @@ while [ $continue -ne 0 ]; do
     continue=0
   else
     # Sleep a bit and then check status again in next loop
-    sleep $sleep_duration
+    echo "We will sleep a bit and try again soon."
   fi
 done

@@ -8,14 +8,18 @@ The script does the following steps:
 1. Packages main.tf into the myconfig.tar.gz file.
 1. Creates the workspace.
 1. Creates a new configuration version.
-1. Uploads the myconfig.tar.gz file as a new configuration. (This step used to trigger an initial run which caused an error because we had not yet set the name variable in the workspace. But we now have configversion.json configured to use auto-queue-runs set to false. So, this run is no longer triggered.) 
+1. Uploads the myconfig.tar.gz file as a new configuration. (This step used to trigger an initial run which caused an error because we had not yet set the name variable in the workspace. But we now have configversion.json configured to use auto-queue-runs set to false. So, this run is no longer triggered.)
 1. Adds one Terraform variable called "name" and one Environment variable called "CONFIRM_DESTROY" to the workspace, getting their values from the variables.csv file. You can edit this file to add as many variables as you want.
+1. Determines the number of Sentinel policies.
 1. Starts a new run.
 1. Enters a loop to check the run results periodically.
+    - If $run_status is "planned", $is_confirmable is "True", and $override is "no", the script stops. In this case, no Sentinel policies existed or none of them were applicable to this workspace. The script will stop.  The user should can apply the run in the Terraform Enterprise UI.
+    - If $run_status is "planned", $is_confirmable is "True", and $override is "yes", the script will do an apply. As in the previous case, no Sentinel policies existed or none of them were applicable to this workspace.
     - If $run_status is "policy_checked", it does an Apply. In this case, all Sentinel policies passed.
     - If $run_status is "policy_override" and $override is "yes", it overrides the failed policy checks and does an Apply. In this case, one or more Sentinel policies failed, but they were marked "advisory" or "soft-mandatory" and the script was configured to override the failure.
     - If $run_status is "policy_override" and $override is "no", it prints out a message indicating that some policies failed and are not being overridden.
     - If $run_status is "errored", either the plan failed or a Sentinel policy marked "hard-mandatory" failed. The script terminates.
+    - Other values of $run_status cause the loop to repeat after a brief sleep.
 
 Note that some json template files are included from which other json files are generated so that they can be passed to the curl commands.
 
@@ -45,7 +49,7 @@ Follow these instructions to run the script with the included main.tf and variab
 1. `export ATLAS_TOKEN=<owners_token>` where \<owners_token\> is the token generated in the previous step.
 1. If you want, you can also change the name of the workspace that will be created and the sleep_duration variable which controls how often the script checks the status of the triggered run (in seconds).
 1. Edit variables.csv to specify the name you would like to set the name variable to by replacing "Roger" with some other name.
-1. Run `./loadAndRunWorkspace.sh` or `./loadAndRunWorkspace.sh <override>` where \<override\> is "yes" or "no". If you do not specify a value for \<override\>, the script will set it to "no".
+1. Run `./loadAndRunWorkspace.sh` or `./loadAndRunWorkspace.sh <override>` where \<override\> is "yes" or "no". If you do not specify a value for \<override\>, the script will set it to "no". The override variable is used in two ways: a) to automatically do an apply when no Sentinel policies exist or none of them are applicable to the workspace, and b) to override any soft-mandatory Sentinel policies that failed.
 
 ### Examples
 `./loadAndRunWorkspace` (no override will be done)
@@ -55,7 +59,7 @@ Follow these instructions to run the script with the included main.tf and variab
 `./loadAndRunWorkspace no` (no override will be done)
 
 ### Running with other Terraform code
-If you would like to load other Terraform code into a workspace with the script, replace main.tf in the config directory with your own Terraform code.  All files in the config directory will be uploaded to your TFE server.  Also edit variables.csv to remove the first row with the name variable and add rows for any Terraform and Environment variables that are required by your Terraform code.   
+If you would like to load other Terraform code into a workspace with the script, replace main.tf in the config directory with your own Terraform code.  All files in the config directory will be uploaded to your TFE server.  Also edit variables.csv to remove the first row with the name variable and add rows for any Terraform and Environment variables that are required by your Terraform code.  If your code has a terraform.tfvars file, please rename it to terraform.auto.tfvars since TFE overwrites any instance of terraform.tfvars with the variables set in the workspace. Adding variables already in a `*.auto.tfvars` file is not strictly necessary, but is recommended so that users looking at the workspace can see the values set on the variables.
 
 ## Cleaning Up
 If you want to run the script again, delete the workspace from the Settings tab of the workspace in the TFE UI. You do not need to delete or touch any of the files in the directory containing the script and other files.
