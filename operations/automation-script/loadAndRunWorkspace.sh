@@ -6,7 +6,7 @@
 # Set address if using private Terraform Enterprise server.
 # Set organization and workspace to create.
 # You should edit these before running.
-address="atlas.hashicorp.com"
+address="app.terraform.io"
 organization="<your_organization>"
 workspace="workspace-from-api"
 
@@ -36,15 +36,15 @@ sed "s/placeholder/$workspace/" < workspace.template.json > workspace.json
 workspace_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @workspace.json "https://${address}/api/v2/organizations/${organization}/workspaces")
 
 # Parse workspace_id from workspace_result
-workspace_id=$(echo $workspace_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
+workspace_id=$(echo $workspace_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
 echo "Workspace ID: " $workspace_id
 
 # Create configuration version
 configuration_version_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @configversion.json "https://${address}/api/v2/workspaces/${workspace_id}/configuration-versions")
 
 # Parse configuration_version_id and upload_url
-config_version_id=$(echo $configuration_version_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
-upload_url=$(echo $configuration_version_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['upload-url'])")
+config_version_id=$(echo $configuration_version_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
+upload_url=$(echo $configuration_version_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['upload-url'])")
 echo "Config Version ID: " $config_version_id
 echo "Upload URL: " $upload_url
 
@@ -64,7 +64,7 @@ sed "s/workspace_id/$workspace_id/" < run.template.json  > run.json
 run_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @run.json https://${address}/api/v2/runs)
 
 # Parse run_result
-run_id=$(echo $run_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
+run_id=$(echo $run_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
 echo "Run ID: " $run_id
 
 # Check run result in loop
@@ -78,7 +78,7 @@ while [ $continue -ne 0 ]; do
   check_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id})
 
   # Parse out the run status
-  run_status=$(echo $check_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['status'])")
+  run_status=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['status'])")
   echo "Run Status: " $run_status
 
   # Apply in some cases
@@ -97,7 +97,7 @@ while [ $continue -ne 0 ]; do
     echo "Getting policy check ID"
     policy_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" https://${address}/api/v2/runs/${run_id}/policy-checks)
     # Parse out the policy check ID
-    policy_check_id=$(echo $policy_result | python3 -c "import sys, json; print(json.load(sys.stdin)['data'][0]['id'])")
+    policy_check_id=$(echo $policy_result | python -c "import sys, json; print(json.load(sys.stdin)['data'][0]['id'])")
     echo "Policy Check ID: " $policy_check_id
     # Override policy
     echo "Overriding policy check"

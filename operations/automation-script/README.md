@@ -8,7 +8,7 @@ The script does the following steps:
 1. Packages main.tf into the myconfig.tar.gz file.
 1. Creates the workspace.
 1. Creates a new configuration version.
-1. Uploads the myconfig.tar.gz file as a new configuration. (This last step triggers an initial run which will error because we have not yet set the name variable in the workspace.  That is OK. If uploading other Terraform code, make sure that you have at least one variable without a default value so that this first run will fail.)
+1. Uploads the myconfig.tar.gz file as a new configuration. (This step used to trigger an initial run which caused an error because we had not yet set the name variable in the workspace. But we now have configversion.json configured to use auto-queue-runs set to false. So, this run is no longer triggered.) 
 1. Adds one Terraform variable called "name" and one Environment variable called "CONFIRM_DESTROY" to the workspace, getting their values from the variables.csv file. You can edit this file to add as many variables as you want.
 1. Starts a new run.
 1. Enters a loop to check the run results periodically.
@@ -34,12 +34,12 @@ Do the following before using this script:
 
 1. `git clone https://github.com/hashicorp/terraform-guides.git`
 1. `cd operations/automation-script`
-1. Make sure [python3](https://www.python.org/downloads/) is installed on your machine and in your path since the script uses python to parse JSON documents returned by the Terraform Enterprise REST API.
+1. Make sure [python](https://www.python.org/downloads/) is installed on your machine and in your path since the script uses python to parse JSON documents returned by the Terraform Enterprise REST API.
 
 ## Instructions
 Follow these instructions to run the script with the included main.tf and variables.csv files:
 
-1. If you are using a private Terraform Enterprise server, edit the script and set the address variable to the address of your server. Otherwise, you would leave the address set to "atlas.hashicorp.com" which is the address of the SaaS Terraform Enterprise server.
+1. If you are using a private Terraform Enterprise server, edit the script and set the address variable to the address of your server. Otherwise, you would leave the address set to "app.terraform.io" which is the address of the SaaS Terraform Enterprise server.
 1. Edit the script and set the organization variable to the name of your Terraform Enterprise organization.
 1. Generate a [team token](https://www.terraform.io/docs/enterprise/users-teams-organizations/service-accounts.html#team-service-accounts) for the owners team in your organization in the Terraform Enterprise UI by selecting your organization settings, then Teams, then owners, and then clicking the Generate button and saving the token that is displayed.
 1. `export ATLAS_TOKEN=<owners_token>` where \<owners_token\> is the token generated in the previous step.
