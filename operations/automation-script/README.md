@@ -40,6 +40,12 @@ Do the following before using this script:
 1. `cd operations/automation-script`
 1. Make sure [python](https://www.python.org/downloads/) is installed on your machine and in your path since the script uses python to parse JSON documents returned by the Terraform Enterprise REST API.
 
+## Using with Private Terraform Enteprise Server using private CA
+If you use this script with a Private Terraform Enterprise (PTFE) server that uses a private CA instead of a public CA, you will need to ensure that the curl commands run by the script will trust the private CA.  There are several ways to do this.  The first is easiest for enabling the automation script to run, but it only affects curl. The second and third are useful for using the Terraform and TFE CLIs against your PTFE server. The third is a permanent solution.
+1. `export  CURL_CA_BUNDLE=<path_to_ca_bundle>`
+1. Export the Golang SSL_CERT_FILE and/or SSL_CERT_DIR environment variables. For instance, you could set the first of these to the same CA bundle used in option 1.
+1. Copy your certificate bundle to /etc/pki/ca-trust/source/anchors and then run `update-ca-trust extract`.
+
 ## Instructions
 Follow these instructions to run the script with the included main.tf and variables.csv files:
 
