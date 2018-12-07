@@ -8,6 +8,7 @@ provider "aws" {
 
 resource "aws_vpc" "my_vpc" {
   cidr_block = "172.16.0.0/16"
+
   tags = {
     Name = "tf-0.12-for-example"
   }
@@ -16,18 +17,30 @@ resource "aws_vpc" "my_vpc" {
 resource "aws_subnet" "my_subnet" {
   vpc_id = aws_vpc.my_vpc.id
   cidr_block = "172.16.10.0/24"
-  availability_zone = "us-east-1a"
+
   tags = {
     Name = "tf-0.12-for-example"
   }
 }
 
+data "aws_ami" "ubuntu_14_04" {
+  most_recent      = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm/ubuntu-trusty-14.04-amd64-server-*"]
+  }
+
+  owners     = ["099720109477"]
+}
+
 resource "aws_instance" "ubuntu" {
   count = 3
-  ami           = "ami-2e1ef954"
+  ami = data.aws_ami.ubuntu_14_04.image_id
   instance_type = "t2.micro"
   associate_public_ip_address = ( count.index == 1 ? true : false)
   subnet_id = aws_subnet.my_subnet.id
+
   tags = {
     Name  = format("terraform-0.12-for-demo-%d", count.index)
   }

@@ -1,6 +1,8 @@
 # Terraform 0.12 Examples
 This repository contains some Terraform 0.12 examples that demonstrate new HCL features and other Terraform enhancements that are being added to Terraform 0.12. Each sub-directory contains a separate example that can be run separately from the others by running `terraform init` followed by `terraform apply`.
 
+These examples have been tested with terraform 0.12 alpha-2. Unfortunately, the AWS provider distributed with alpha-3 is not working correctly, so please use alpha-2.
+
 The examples are:
 1. [First Class Expressions](./first-class-expressions)
 1. [For Expressions](./for-expressions)
@@ -29,6 +31,8 @@ export AWS_ACCESS_KEY_ID=<access_key>
 export AWS_SECRET_ACCESS_KEY=<secret_key>
 ```
 On Windows, use `set` instead of `export`.
+
+Some examples use the AWS provider and have the region attribute set for it.  You can change that region if desired. While Terraform normally supports specifying the region by exporting the AWS_DEFAULT_REGION environment variable, that is not working with Terraform 0.12 alpha-2.
 
 ## First Class Expressions Example
 The [First Class Expressions](./first-class-expressions) example creates an AWS VPC, a subnet, a network interface, and an EC2 instance. It illustrates the following new features:

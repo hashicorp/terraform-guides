@@ -49,13 +49,25 @@ module "network" {
 resource "aws_network_interface" "rvt" {
   subnet_id = module.network.subnet_id
   private_ips = var.interface_ips
+  
   tags = {
     Name = "tf-0.12-rvt-example-interface"
   }
 }
 
+data "aws_ami" "ubuntu_14_04" {
+  most_recent      = true
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm/ubuntu-trusty-14.04-amd64-server-*"]
+  }
+
+  owners     = ["099720109477"]
+}
+
 resource "aws_instance" "rvt" {
-  ami = "ami-22b9a343" # us-west-2
+  ami = data.aws_ami.ubuntu_14_04.image_id
   instance_type = "t2.micro"
 
   tags = {
