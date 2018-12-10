@@ -1,0 +1,6 @@
+{
+  "variable": {
+    "name": "foo",
+    "example": "foo"
+  }
+}
