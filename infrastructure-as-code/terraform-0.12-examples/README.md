@@ -1,7 +1,7 @@
 # Terraform 0.12 Examples
 This repository contains some Terraform 0.12 examples that demonstrate new HCL features and other Terraform enhancements that are being added to Terraform 0.12. Each sub-directory contains a separate example that can be run separately from the others by running `terraform init` followed by `terraform apply`.
 
-These examples have been tested with terraform 0.12 alpha-2. Unfortunately, the AWS provider distributed with alpha-3 is not working correctly, so please use alpha-2.
+These examples have been tested with terraform 0.12 alpha-4.
 
 The examples are:
 1. [First Class Expressions](./first-class-expressions)
@@ -11,18 +11,18 @@ The examples are:
 1. [New Template Syntax](./new-template-syntax)
 1. [Reliable JSON Syntax](./reliable-json-syntax)
 
-## Installing Terraform 0.12 Alpha-2
+## Installing Terraform 0.12 Alpha-4
 1. Determine the location of the Terraform binary in your path. On a Mac of Linux machine, run `which terraform`. On a Windows machine, run `where terraform`.
 1. Move your current copy of the Terraform binary to a different location outside your path and remember where so you can restore it after using the Terraform 0.12 alpha. Also note the old location.
 1. On a Mac or Linux machine, rename the `~/.terraform.d` directory to something like `.terraformd`; on a Windows machine, rename `%USERPROFILE%\terraform.d` to `%USERPROFILE%\terraformd`. This way, you can restore the directory (if anything was in it) after the class.
-1. Download the Terraform 0.12 alpha-2 for your OS from https://releases.hashicorp.com/terraform/0.12.0-alpha2.
+1. Download the Terraform 0.12 alpha-4 for your OS from https://releases.hashicorp.com/terraform/0.12.0-alpha4.
 1. Unzip the file and copy the terraform or terraform.exe binary to the location where your original terraform binary was. If you did not previously have the terraform binary deployed, copy it to a location within your path or edit your PATH environment variable to include the directory you put it in.
 1. Create a directory for the included providers and copy them to it:
-  1. On a Mac, run `mkdir -p ~/.terraform.d/plugins/darwin_amd64` followed by `cp <install_directory>/terraform_0.12.0-alpha2_darwin_amd64/terraform-provider-* ~/.terraform.d/plugins/darwin_amd64/.`
-  1. On a Linux machine, run `mkdir -p ~/.terraform.d/plugins/linux_amd64` followed by `cp <install_directory>/terraform_0.12.0-alpha2_darwin_amd64/terraform-provider-* ~/.terraform.d/plugins/amd_amd64/.`
-  1. On a Windows laptop, run `mkdir %USERPROFILE%\terraform.d\plugins\windows_amd64` followed by `cp <install_directory>/terraform_0.12.0-alpha2_darwin_amd64/terraform-provider-* %USERPROFILE%/terraform.d/plugins/amd_amd64/.`  
-1. Clone this repository to your laptop with the command `git clone https://github.com/rberlind/terraform-0.12-examples.git`.
-1. Use `cd terraform-0.12-examples` to change into the directory that was created.
+  1. On a Mac, run `mkdir -p ~/.terraform.d/plugins/darwin_amd64` followed by `cp <install_directory>/terraform-provider-* ~/.terraform.d/plugins/darwin_amd64/.`
+  1. On a Linux machine, run `mkdir -p ~/.terraform.d/plugins/linux_amd64` followed by `cp <install_directory>/terraform-provider-* ~/.terraform.d/plugins/linux_amd64/.`
+  1. On a Windows laptop, run `mkdir %USERPROFILE%\terraform.d\plugins\windows_amd64` followed by `cp <install_directory>/terraform-provider-* %USERPROFILE%/terraform.d/plugins/windows_amd64/.`  
+1. Clone this repository to your laptop with the command `git clone https://github.com/hashicorp/terraform-guides.git`.
+1. Use `cd terraform-guides/infrastructure-as-code/terraform-0.12-examples` to change into the directory containing the Terraform 0.12 examples.
 
 ## Exporting AWS Environment Variables
 Several of the examples provision some simple infrastructure into AWS.  You will therefore need to export your AWS keys. On Mac or Linux, do this with these commands:
@@ -32,7 +32,7 @@ export AWS_SECRET_ACCESS_KEY=<secret_key>
 ```
 On Windows, use `set` instead of `export`.
 
-Some examples use the AWS provider and have the region attribute set for it.  You can change that region if desired. While Terraform normally supports specifying the region by exporting the AWS_DEFAULT_REGION environment variable, that is not working with Terraform 0.12 alpha-2.
+Some examples use the AWS provider and have the region attribute set for it.  You can change that region if desired. While Terraform normally supports specifying the region by exporting the AWS_DEFAULT_REGION environment variable, that is not working with Terraform 0.12 alpha-4.
 
 ## First Class Expressions Example
 The [First Class Expressions](./first-class-expressions) example creates an AWS VPC, a subnet, a network interface, and an EC2 instance. It illustrates the following new features:
@@ -82,7 +82,7 @@ private_addresses_new = [
 ]
 ```
 
-Note that we also tried using the new [Full Splat Operator](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator) with an expression like `aws_instance.ubuntu[*].private_dns` but this does not yet work in either alpha-1 or alpha-2. However, the generalized splat operator with the `*` referencing multiple blocks within a single resource instance does work.  See the [generalized-splat-operator](./generalized-splat-operator) example.
+Note that we also tried using the new [Full Splat Operator](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator) with an expression like `aws_instance.ubuntu[*].private_dns` but this does not yet work in alpha-4. However, the generalized splat operator with the `*` referencing multiple blocks within a single resource instance does work.  See the [generalized-splat-operator](./generalized-splat-operator) example.
 
 When creating the EC2 instances, we only assign a public IP to one of them by using the conditional operator like this: `associate_public_ip_address = ( count.index == 1 ? true : false)`
 
