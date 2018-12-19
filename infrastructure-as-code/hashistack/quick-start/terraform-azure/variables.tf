@@ -4,6 +4,7 @@
 variable "name" {
   description = "The name to use on all of the resources."
   type        = "string"
+  default     = "hashistack-azure-quick-start"
 }
 
 variable "provider" {
@@ -39,9 +40,9 @@ variable "admin_password" {
 # Azure Variables
 # ---------------------------------------------------------------------------------------------------------------------
 variable "azure_region" {
-  description = "The Azure Region to use for all resources (ex: westus, eastus)."
+  description = "The Azure Region to use for all resources (ex: eastus, westus)."
   type        = "string"
-  default     = "westus"
+  default     = "eastus"
 }
 
 variable "azure_os" {
