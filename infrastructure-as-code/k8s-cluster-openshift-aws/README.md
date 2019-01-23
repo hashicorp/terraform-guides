@@ -64,14 +64,14 @@ EOF
 
 1. If you do not already have a Terraform Enterprise (TFE) account, self-register for an evaluation at https://app.terraform.io/account/new.
 1. After getting access to your TFE account, create an organization for yourself. You might also want to review the [Getting Started](https://www.terraform.io/docs/enterprise/getting-started/index.html) documentation.
-1. Connect your TFE organization to GitHub. See the [Configuring Github Access](https://www.terraform.io/docs/enterprise/vcs/github.html)documentation.
+1. Connect your TFE organization to GitHub. See the [Configuring GitHub Access](https://www.terraform.io/docs/enterprise/vcs/github.html) documentation.
 
 If you want to use open source Terraform instead of TFE, you can create a copy of the included openshift.tfvars.example file, calling it openshift.auto.tfvars, set values for the variables in it, run `terraform init`, and then run `terraform apply`.
 
 ### Step 3: Configure a Terraform Enterprise Workspace
 1. Fork this repository by clicking the Fork button in the upper right corner of the screen and selecting your own personal GitHub account or organization.
 1. Create a workspace in your TFE organization called k8s-cluster-openshift.
-1. Configure the workspace to connect to the fork of this repository in your own Github account.
+1. Configure the workspace to connect to the fork of this repository in your own GitHub account.
 1. Set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-openshift-aws".
 1. On the Variables tab of your workspace, add the following variables to the Terraform variables: key_name, private_key_data, vault_addr, vault_user, and vault_k8s_auth_path. The first of these must be the name of the key pair you created above. The second must be the actual contents of the private key you downloaded as a pem file.  Be sure to mark this variable as sensitive so that it will not be visible after you save your variables. Set vault_addr to the address of your Vault server (e.g., "http://<your_vault_dns>:8200") and vault_user to your username on your Vault server. Finally, set vault_k8s_auth_path to something like "\<your username\>-openshift".
 1. HashiCorp SEs should also set the owner and ttl variables which are used by the AWS Lambda reaper function that terminates old EC2 instances.
