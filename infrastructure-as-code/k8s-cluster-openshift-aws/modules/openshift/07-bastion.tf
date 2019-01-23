@@ -12,6 +12,7 @@ data "template_file" "inventory" {
     master_ip = "${aws_instance.master.public_ip}"
     private_key = "${var.private_key_data}"
     name_tag_prefix = "${var.name_tag_prefix}"
+    region = "${var.region}"
   }
 }
 

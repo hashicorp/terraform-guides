@@ -1,12 +1,12 @@
 # Openshift Cluster in AWS
-This guide provisions an OpenShift Origin 3.7 cluster in AWS with 1 master node, 1 client node, and 1 bastion host. It uses ansible-playbook to deploy OpenShift to the master and client nodes from the bastion host after using Terraform to provision the AWS infrastructure. It is based on a [terraform-aws-openshift](https://github.com/dwmkerr/terraform-aws-openshift) repository created by Dave Kerr.
+This guide provisions an OpenShift Origin 3.11 cluster in AWS with 1 master node, 1 client node, and 1 bastion host. It uses ansible-playbook to deploy OpenShift to the master and client nodes from the bastion host after using Terraform to provision the AWS infrastructure. It is based on a [terraform-aws-openshift](https://github.com/dwmkerr/terraform-aws-openshift) repository created by Dave Kerr.
 
 While the original repository required the user to manually run ansible-playbook after provisioning the AWS infrastructure with Terraform, this guide uses a Terraform [remote-exec provisioner](https://www.terraform.io/docs/provisioners/remote-exec.html) to do that. It also uses several additional remote-exec and local-exec provisioners to automate the rest of the deployment, retrieve the OpenShift cluster keys, and write them to outputs. This is important since it allows workspaces that deploy pods and services to the cluster do that via workspace state sharing without any manual copying of the cluster keys.
 
 ## Reference Material
 * [OpenShift Origin](https://www.openshift.org/): the open source version of OpenShift, Red Hat's commercial implementation of Kubernetes.
 * [Kubernetes](https://kubernetes.io/): the open source system for automating deployment and management of containerized applications.
-* [openshift-ansible](https://github.com/openshift/openshift-ansible/tree/release-3.7): Ansible roles and playbooks for installing and managing OpenShift 3.7 clusters with Ansible.
+* [openshift-ansible](https://github.com/openshift/openshift-ansible/tree/release-3.11): Ansible roles and playbooks for installing and managing OpenShift 3.11 clusters with Ansible.
 * [ansible-playbook](https://docs.ansible.com/ansible/2.4/ansible-playbook.html): the actual ansible tool used to deploy the OpenShift cluster. This is used in the install-from-bastion.sh script.
 
 ## Estimated Time to Complete
@@ -16,7 +16,7 @@ While the original repository required the user to manually run ansible-playbook
 Our target persona is a developer or operations engineer who wants to provision an OpenShift cluster into AWS.
 
 ## Challenge
-The [advanced installation method](https://docs.openshift.com/container-platform/3.7/install_config/install/advanced_install.html) for OpenShift uses ansible-playbook to deploy OpenShift. Before doing that, the deployer must first provision some infrastructure and then configure an Ansible inventory file with suitable settings. Typically, ansible-playbook would be manually run on a bastion host even if a tool like Terraform had been used to provision the infrastructure.
+The [installation method](https://docs.openshift.com/container-platform/3.11/install/index.html) for OpenShift uses ansible-playbook to deploy OpenShift. Before doing that, the deployer must first provision some infrastructure and then configure an Ansible inventory file with suitable settings. Typically, ansible-playbook would be manually run on a bastion host even if a tool like Terraform had been used to provision the infrastructure.
 
 ## Solution
 This guide combines and completely automates the two steps mentioned above:

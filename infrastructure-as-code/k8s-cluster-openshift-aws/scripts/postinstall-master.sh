@@ -6,6 +6,7 @@
 sleep 120
 
 # Create an htpasswd file, we'll use htpasswd auth for OpenShift.
+sudo mkdir -p /etc/origin/master
 sudo htpasswd -cb /etc/origin/master/htpasswd admin 123
 oc adm policy add-cluster-role-to-user cluster-admin admin
 
