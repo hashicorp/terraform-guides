@@ -8,7 +8,14 @@ sudo yum install -y "@Development Tools" python2-pip openssl-devel python-devel 
 sudo pip install -Iv ansible==2.6.5
 
 # Clone the openshift-ansible repo, which contains the installer.
-git clone -b release-3.11 https://github.com/openshift/openshift-ansible
+#git clone -b release-3.11 https://github.com/openshift/openshift-ansible
+
+# Using specific commit since later one made it illegal to use the openshift_hostname variable
+git clone -n https://github.com/openshift/openshift-ansible
+cd openshift-ansible
+git checkout 7c8b4f07a46089640bc61b8a9b35fd8b5ed86245
+cd ..
+
 
 # Set up bastion to SSH to other servers
 echo "${private_key}" > /home/ec2-user/.ssh/private-key.pem
