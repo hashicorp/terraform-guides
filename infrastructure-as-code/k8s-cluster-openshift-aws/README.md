@@ -1,12 +1,12 @@
 # Openshift Cluster in AWS
-This guide provisions an OpenShift Origin 3.7 cluster in AWS with 1 master node, 1 client node, and 1 bastion host. It uses ansible-playbook to deploy OpenShift to the master and client nodes from the bastion host after using Terraform to provision the AWS infrastructure. It is based on a [terraform-aws-openshift](https://github.com/dwmkerr/terraform-aws-openshift) repository created by Dave Kerr.
+This guide provisions an OpenShift Origin 3.11 cluster in AWS with 1 master node, 1 client node, and 1 bastion host. It uses ansible-playbook to deploy OpenShift to the master and client nodes from the bastion host after using Terraform to provision the AWS infrastructure. It is based on a [terraform-aws-openshift](https://github.com/dwmkerr/terraform-aws-openshift) repository created by Dave Kerr.
 
 While the original repository required the user to manually run ansible-playbook after provisioning the AWS infrastructure with Terraform, this guide uses a Terraform [remote-exec provisioner](https://www.terraform.io/docs/provisioners/remote-exec.html) to do that. It also uses several additional remote-exec and local-exec provisioners to automate the rest of the deployment, retrieve the OpenShift cluster keys, and write them to outputs. This is important since it allows workspaces that deploy pods and services to the cluster do that via workspace state sharing without any manual copying of the cluster keys.
 
 ## Reference Material
 * [OpenShift Origin](https://www.openshift.org/): the open source version of OpenShift, Red Hat's commercial implementation of Kubernetes.
 * [Kubernetes](https://kubernetes.io/): the open source system for automating deployment and management of containerized applications.
-* [openshift-ansible](https://github.com/openshift/openshift-ansible/tree/release-3.7): Ansible roles and playbooks for installing and managing OpenShift 3.7 clusters with Ansible.
+* [openshift-ansible](https://github.com/openshift/openshift-ansible/tree/release-3.11): Ansible roles and playbooks for installing and managing OpenShift 3.11 clusters with Ansible.
 * [ansible-playbook](https://docs.ansible.com/ansible/2.4/ansible-playbook.html): the actual ansible tool used to deploy the OpenShift cluster. This is used in the install-from-bastion.sh script.
 
 ## Estimated Time to Complete
@@ -16,7 +16,7 @@ While the original repository required the user to manually run ansible-playbook
 Our target persona is a developer or operations engineer who wants to provision an OpenShift cluster into AWS.
 
 ## Challenge
-The [advanced installation method](https://docs.openshift.com/container-platform/3.7/install_config/install/advanced_install.html) for OpenShift uses ansible-playbook to deploy OpenShift. Before doing that, the deployer must first provision some infrastructure and then configure an Ansible inventory file with suitable settings. Typically, ansible-playbook would be manually run on a bastion host even if a tool like Terraform had been used to provision the infrastructure.
+The [installation method](https://docs.openshift.com/container-platform/3.11/install/index.html) for OpenShift uses ansible-playbook to deploy OpenShift. Before doing that, the deployer must first provision some infrastructure and then configure an Ansible inventory file with suitable settings. Typically, ansible-playbook would be manually run on a bastion host even if a tool like Terraform had been used to provision the infrastructure.
 
 ## Solution
 This guide combines and completely automates the two steps mentioned above:
@@ -64,14 +64,14 @@ EOF
 
 1. If you do not already have a Terraform Enterprise (TFE) account, self-register for an evaluation at https://app.terraform.io/account/new.
 1. After getting access to your TFE account, create an organization for yourself. You might also want to review the [Getting Started](https://www.terraform.io/docs/enterprise/getting-started/index.html) documentation.
-1. Connect your TFE organization to GitHub. See the [Configuring Github Access](https://www.terraform.io/docs/enterprise/vcs/github.html)documentation.
+1. Connect your TFE organization to GitHub. See the [Configuring GitHub Access](https://www.terraform.io/docs/enterprise/vcs/github.html) documentation.
 
 If you want to use open source Terraform instead of TFE, you can create a copy of the included openshift.tfvars.example file, calling it openshift.auto.tfvars, set values for the variables in it, run `terraform init`, and then run `terraform apply`.
 
 ### Step 3: Configure a Terraform Enterprise Workspace
 1. Fork this repository by clicking the Fork button in the upper right corner of the screen and selecting your own personal GitHub account or organization.
 1. Create a workspace in your TFE organization called k8s-cluster-openshift.
-1. Configure the workspace to connect to the fork of this repository in your own Github account.
+1. Configure the workspace to connect to the fork of this repository in your own GitHub account.
 1. Set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-openshift-aws".
 1. On the Variables tab of your workspace, add the following variables to the Terraform variables: key_name, private_key_data, vault_addr, vault_user, and vault_k8s_auth_path. The first of these must be the name of the key pair you created above. The second must be the actual contents of the private key you downloaded as a pem file.  Be sure to mark this variable as sensitive so that it will not be visible after you save your variables. Set vault_addr to the address of your Vault server (e.g., "http://<your_vault_dns>:8200") and vault_user to your username on your Vault server. Finally, set vault_k8s_auth_path to something like "\<your username\>-openshift".
 1. HashiCorp SEs should also set the owner and ttl variables which are used by the AWS Lambda reaper function that terminates old EC2 instances.

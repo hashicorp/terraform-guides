@@ -131,6 +131,7 @@ resource "null_resource" "configure_k8s" {
 
   provisioner "remote-exec" {
     inline = [
+      "sleep 180",
       "kubectl create -f vault-reviewer.yaml",
       "kubectl create -f vault-reviewer-rbac.yaml",
       "kubectl get serviceaccount vault-reviewer -o yaml > vault-reviewer-service.yaml",
