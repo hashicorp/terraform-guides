@@ -13,24 +13,38 @@ mandatory_tags = [
 get_aws_instances = func() {
     instances = []
     for tfplan.module_paths as path {
-        instances += values(tfplan.module(path).resources.aws_instance) else []
+        aws_instance = tfplan.module(path).resources.aws_instance else {}
+        append(instances, aws_instance)
     }
     return instances
 }
     
 aws_instances = get_aws_instances()
 
-# Instance tag rule
-instance_tags = rule {
-    all aws_instances as _, instances {
-    	all instances as index, r {
-            all mandatory_tags as t {
-                r.applied.tags contains t
+# Instance tag check
+instance_tags = func() {
+    result = true
+    for aws_instances as temp, instances_map {
+        for instances_map as name, instances {
+            first_fail = true
+            for instances as index, r {
+                for mandatory_tags as t {
+                    local_result = r.applied.tags contains t
+                    if local_result == false {
+                        result = false
+                        if first_fail == true {
+                            first_fail = false
+                            print("Failure because of missing tag(s) in aws_instance:", name)
+                        }
+                        print("  ", t)
+                    }
+                }
             }
         }
     }
+    return result
 }
 
 main = rule {
-    (instance_tags) else true
+    (instance_tags()) else true
 }
