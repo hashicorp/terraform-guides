@@ -1,0 +1,61 @@
+import "tfplan"
+
+# Warning, this is case sensitive.  
+# This is on purpose especially for organizations that do cost analysis on tag names.
+# where case sensitivity will cause grouping issues
+
+mandatory_tags = [
+  "TTL", 
+  "Owner",
+]
+
+# Get all Azure instances contained in all modules being used
+get_azure_instances = func() {
+    instances = []
+    for tfplan.module_paths as path {
+        azurerm_virtual_machine = tfplan.module(path).resources.azurerm_virtual_machine else {}
+        append(instances, azurerm_virtual_machine)
+    }
+    return instances
+}
+    
+azure_instances = get_azure_instances()
+
+instance_tags = func() {
+    result = true
+    // https://docs.hashicorp.com/sentinel/language/loops#for-statements
+    for azure_instances as temp, instances_map {
+        //instances_map_defined = instances_map else {}
+        // An error occurred: Azure_Mandatory_Tags.sentinel:30:13: unsupported type for looping: undefined
+        instances_map_length = length(instances_map)
+        print("instance_tags(): length(instances_map) =", instances_map_length) // undefined
+        for instances_map as name, instances {
+            print("instance_tags(): name =", name)
+            first_fail = true
+            print("instance_tags(): instances =", instances)
+            for instances as index, r {
+                print("instance_tags(): index =", index)
+                print("instance_tags(): r =", r)
+                for mandatory_tags as t {
+                    print("instance_tags(): t =", t)
+                    local_result = r.applied.tags contains t
+                    print("instance_tags(): local_result =", local_result)
+                    if local_result == false {
+                        result = false
+                        if first_fail == true {
+                            first_fail = false
+                            print("Failure because of missing tag(s) in azurerm_virtual_machine:", name)
+                        }
+                        print("  ", t)
+                    }
+                }
+            }
+        }
+    }
+    print("instance_tags()-", result)
+    return result
+}
+
+main = rule {
+    (instance_tags()) else true
+}
