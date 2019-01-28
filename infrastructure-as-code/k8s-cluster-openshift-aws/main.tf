@@ -1,11 +1,12 @@
 terraform {
-  required_version = ">= 0.11.7"
+  required_version = ">= 0.11.11"
 }
 
 
 # Set VAULT_TOKEN environment variable
 provider "vault" {
   address = "${var.vault_addr}"
+  max_lease_ttl_seconds = 3600
 }
 
 # AWS credentials from Vault
@@ -185,20 +186,22 @@ data "null_data_source" "get_certs" {
   depends_on = ["null_resource.get_vault_reviewer_token"]
 }
 
-resource "null_resource" "auth_config" {
-  provisioner "local-exec" {
-    command = "curl --header \"X-Vault-Token: $VAULT_TOKEN\" --header \"Content-Type: application/json\" --request POST --data '{ \"kubernetes_host\": \"https://${module.openshift.master_public_ip}.xip.io:8443\", \"kubernetes_ca_cert\": \"${chomp(replace(base64decode(data.null_data_source.get_certs.outputs["ca_certificate"]), "\n", "\\n"))}\", \"token_reviewer_jwt\": \"${data.null_data_source.get_certs.outputs["vault_reviewer_token"]}\" }' ${var.vault_addr}/v1/auth/${vault_auth_backend.k8s.path}config"
-  }
+# Use the vault_kubernetes_auth_backend_config resource
+# instead of the a curl command in local-exec
+resource "vault_kubernetes_auth_backend_config" "auth_config" {
+  backend = "${vault_auth_backend.k8s.path}"
+  kubernetes_host = "https://${module.openshift.master_public_ip}.xip.io:8443"
+  kubernetes_ca_cert = "${chomp(base64decode(data.null_data_source.get_certs.outputs["ca_certificate"]))}"
+  token_reviewer_jwt = "${data.null_data_source.get_certs.outputs["vault_reviewer_token"]}"
 }
 
-resource "vault_generic_secret" "role" {
-  path = "auth/${vault_auth_backend.k8s.path}role/demo"
-  data_json = <<EOT
-  {
-    "bound_service_account_names": "cats-and-dogs",
-    "bound_service_account_namespaces": "default, cats-and-dogs",
-    "policies": "${var.vault_user}",
-    "ttl": "24h"
-  }
-  EOT
+# Use vault_kubernetes_auth_backend_role instead of
+# vault_generic_secret
+resource "vault_kubernetes_auth_backend_role" "role" {
+  backend = "${vault_auth_backend.k8s.path}"
+  role_name = "demo"
+  bound_service_account_names = ["cats-and-dogs"]
+  bound_service_account_namespaces = ["default", "cats-and-dogs"]
+  policies = ["${var.vault_user}"]
+  ttl = 7200
 }
