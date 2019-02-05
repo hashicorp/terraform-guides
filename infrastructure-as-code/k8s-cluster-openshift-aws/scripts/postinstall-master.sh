@@ -3,7 +3,7 @@
 # Note: This script runs after the ansible install, use it to make configuration
 # changes which would otherwise be overwritten by ansible.
 
-sleep 120
+sleep 180
 
 # Create an htpasswd file, we'll use htpasswd auth for OpenShift.
 sudo mkdir -p /etc/origin/master
