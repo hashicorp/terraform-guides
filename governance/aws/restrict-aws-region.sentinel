@@ -1,6 +1,6 @@
 # This policy restricts the AWS region based on the region set for
 # instances of the AWS provider in the root module of the workspace.
-# It does not check providers in nested modules
+# It does not check providers in nested modules.
 
 import "tfconfig"
 import "tfplan"
@@ -8,6 +8,15 @@ import "strings"
 
 # Initialize array of regions found in AWS providers
 region_values = []
+
+# Allowed Regions
+allowed_regions = [
+  "us-east-1",
+  "us-east-2",
+  "us-west-1",
+  "us-west-2",
+]
+
 
 # Iterate through all AWS providers in root module
 if ((length(tfconfig.providers) else 0) > 0) {
@@ -27,11 +36,10 @@ if ((length(tfconfig.providers) else 0) > 0) {
       	  region_value = tfplan.variables[region_variable]
           region_values += [region_value]
     	} else {
-          # AWS provider was had hard-coded region
-          print ( "region is a hard-coded value" )
-      	  print ( "Value of region is: ", region )
-      	  region_value = region
-          region_values += [region_value]
+            print ( "region is a hard-coded value" )
+      	    print ( "Value of region is: ", region )
+      	    region_value = region
+            region_values += [region_value]
     	}
      }
   }
@@ -42,7 +50,7 @@ print ( "region_values is: ", region_values )
 
 aws_region_valid = rule {
   all region_values as rv {
-  	rv == "us-east-1"
+    rv in allowed_regions
   }
 }
 
