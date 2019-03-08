@@ -8,9 +8,9 @@
 
 # Set address if using private Terraform Enterprise server.
 # You should edit these before running.
-address="roger-ptfe.hashidemos.io"
+address="app.terraform.io"
 # Set organization to use
-organization="TestPolicies"
+organization="<organization>"
 
 echo "Using address: $address"
 echo "Using organization: $organization"
