@@ -29,3 +29,5 @@ The script uses curl to interact with Terraform Enterprise via the TFE API. It p
 
 ## Deleting Policies
 The delete_policies.sh script deletes all policies from a TFE organization. It uses curl to invoke the [List Policies API](https://www.terraform.io/docs/enterprise/api/policies.html#list-policies) to retrieve all Sentinel policies. It then iterates through these and invokes the [Delete a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#delete-a-policy) to delete them one at a time.  It also prints out the ID of each deleted policy and finally gives a count of how many were deleted.
+
+Currently, it will only delete 150 policies at a time since that is the largest value that we can set the page[size] parameter to. But if you need to delete more policies, just run the delete_policies.sh script again until you have deleted all of them.
