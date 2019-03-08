@@ -1,5 +1,5 @@
-# Scripts to Export and Import Sentinel Policies
-These are scripts that can be used to export and import Sentinel policies between TFE organizations using the [Terraform Enterprise REST API](https://www.terraform.io/docs/enterprise/api/index.html).
+# Scripts to Export, Import, and Delete Sentinel Policies
+These are scripts that can be used to export and import Sentinel policies between TFE organizations and to delete all policies using the [Terraform Enterprise REST API](https://www.terraform.io/docs/enterprise/api/index.html).
 
 ## Exporting Policies
 The export_policies.sh script exports all the policies from a TFE organization to the directory in which you run the script. It currently is limited to exporting 150 policies since it does not handle multiple pages from the List Policies API that retrieves them.
@@ -26,3 +26,6 @@ The script uses curl to interact with Terraform Enterprise via the TFE API. It p
 1. It uses curl to invoke the [Create a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#create-a-policy), passing the generated create-policy.json file in the --data argument of the curl command.
 1. It uses curl to invoke the [Upload a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#upload-a-policy).
 1. Finally, it prints out the number of policies found and imported.
+
+## Deleting Policies
+The delete_policies.sh script deletes all policies from a TFE organization. It uses curl to invoke the [List Policies API](https://www.terraform.io/docs/enterprise/api/policies.html#list-policies) to retrieve all Sentinel policies. It then iterates through these and invokes the [Delete a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#delete-a-policy) to delete them one at a time.  It also prints out the ID of each deleted policy and finally gives a count of how many were deleted.
