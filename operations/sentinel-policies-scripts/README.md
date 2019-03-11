@@ -17,7 +17,7 @@ The script uses curl to interact with Terraform Enterprise via the TFE API.  It 
 1. Finally, it prints out the number of policies it exported.
 
 ## Importing Policies
-The import_policies.sh script imports all policies in a directory into a specified organization on a specified server. It also adds all of them to a specified policy set, using a policy set ID (which can be determined by looking at the policy set's URL).
+The import_policies.sh script imports all policies in a directory into a specified organization on a specified server. It also adds all of them to a specified policy set, using a policy set ID (which can be determined by looking at the policy set's URL). Note that you must use the policy set's ID (e.g., polset-rCLeCwoSBUHXDC7L), not the name of the policy set.
 
 The script uses curl to interact with Terraform Enterprise via the TFE API. It performs the following steps:
 
