@@ -1,7 +1,7 @@
 # Terraform 0.12 Examples
 This repository contains some Terraform 0.12 examples that demonstrate new HCL features and other Terraform enhancements that are being added to Terraform 0.12. Each sub-directory contains a separate example that can be run separately from the others by running `terraform init` followed by `terraform apply`.
 
-These examples have been tested with terraform 0.12 alpha-4.
+These examples have been tested with terraform 0.12 beta1.
 
 The examples are:
 1. [First Class Expressions](./first-class-expressions)
@@ -11,16 +11,19 @@ The examples are:
 1. [New Template Syntax](./new-template-syntax)
 1. [Reliable JSON Syntax](./reliable-json-syntax)
 
-## Installing Terraform 0.12 Alpha-4
+## Installing Terraform 0.12 Beta1
 1. Determine the location of the Terraform binary in your path. On a Mac of Linux machine, run `which terraform`. On a Windows machine, run `where terraform`.
-1. Move your current copy of the Terraform binary to a different location outside your path and remember where so you can restore it after using the Terraform 0.12 alpha. Also note the old location.
+1. Move your current copy of the Terraform binary to a different location outside your path and remember where so you can restore it after using the Terraform 0.12 beta. Also note the old location.
 1. On a Mac or Linux machine, rename the `~/.terraform.d` directory to something like `.terraformd`; on a Windows machine, rename `%USERPROFILE%\terraform.d` to `%USERPROFILE%\terraformd`. This way, you can restore the directory (if anything was in it) after the class.
-1. Download the Terraform 0.12 alpha-4 for your OS from https://releases.hashicorp.com/terraform/0.12.0-alpha4.
+1. Download the Terraform 0.12 beta1 zip file for your OS from https://releases.hashicorp.com/terraform/0.12.0-beta1.
 1. Unzip the file and copy the terraform or terraform.exe binary to the location where your original terraform binary was. If you did not previously have the terraform binary deployed, copy it to a location within your path or edit your PATH environment variable to include the directory you put it in.
-1. Create a directory for the included providers and copy them to it:
-  1. On a Mac, run `mkdir -p ~/.terraform.d/plugins/darwin_amd64` followed by `cp <install_directory>/terraform-provider-* ~/.terraform.d/plugins/darwin_amd64/.`
-  1. On a Linux machine, run `mkdir -p ~/.terraform.d/plugins/linux_amd64` followed by `cp <install_directory>/terraform-provider-* ~/.terraform.d/plugins/linux_amd64/.`
-  1. On a Windows laptop, run `mkdir %USERPROFILE%\terraform.d\plugins\windows_amd64` followed by `cp <install_directory>/terraform-provider-* %USERPROFILE%/terraform.d/plugins/windows_amd64/.`  
+1. Download the AWS and template providers for your OS from the [AWS provider](http://terraform-0.12.0-dev-snapshots.s3-website-us-west-2.amazonaws.com/terraform-provider-aws/1.60.0-dev20190216H00-dev/) and the [Template provider](http://terraform-0.12.0-dev-snapshots.s3-website-us-west-2.amazonaws.com/terraform-provider-template/2.1.0-dev20190216H00-dev/) directories.
+1. Unzip the provider binaries from the zip files.
+1. Create a directory to contain the providers:
+  1. On a Mac, run `mkdir -p ~/.terraform.d/plugins/darwin_amd64`.
+  1. On a Linux machine, run `mkdir -p ~/.terraform.d/plugins/linux_amd64`.
+  1. On a Windows laptop, run `mkdir %USERPROFILE%\terraform.d\plugins\windows_amd64`.
+1. Copy the AWS and template provider binaries to the directory you created.
 1. Clone this repository to your laptop with the command `git clone https://github.com/hashicorp/terraform-guides.git`.
 1. Use `cd terraform-guides/infrastructure-as-code/terraform-0.12-examples` to change into the directory containing the Terraform 0.12 examples.
 
@@ -32,39 +35,57 @@ export AWS_SECRET_ACCESS_KEY=<secret_key>
 ```
 On Windows, use `set` instead of `export`.
 
-Some examples use the AWS provider and have the region attribute set for it.  You can change that region if desired. While Terraform normally supports specifying the region by exporting the AWS_DEFAULT_REGION environment variable, that is not working with Terraform 0.12 alpha-4.
+Some examples use the AWS provider and have the region argument set for it.  You can change th region in the Terraform code if desired.
+
+## Running the Examples
+To run the example, do the following unless otherwise instructed:
+1. Navigate to the example's directory.
+1. Run `terraform init`.
+1. Run `terraform apply`.
 
 ## First Class Expressions Example
 The [First Class Expressions](./first-class-expressions) example creates an AWS VPC, a subnet, a network interface, and an EC2 instance. It illustrates the following new features:
-1. Referencing of Terraform variables and resource attributes without interpolation using [First Class Expressions](https://www.hashicorp.com/blog/terraform-0-12-preview-first-class-expressions).
-1. The need to include `=` when setting the value for attributes of type map or list.
+1. Referencing of Terraform variables and resource arguments without interpolation using [First Class Expressions](https://www.hashicorp.com/blog/terraform-0-12-preview-first-class-expressions). (Note that this blog post refers to "attributes" instead of to "arguments".)
+1. The need to include `=` when setting the value for arguments of type map or list.
 
 In particular, the Terraform code that creates the VPC refers to the variable called vpc_name directly (`Name = var.vpc_name`) without using interpolation which would have used `${var.vpc_name}`. Other code in this example also directly refers to the id of the VPC (`vpc_id = aws_vpc.my_vpc.id`) in the subnet resource, to the id of the subnet (`subnet_id = aws_subnet.my_subnet.id`) in the network interface resource, and to the id of the network interface (`network_interface_id = aws_network_interface.foo.id`) in the EC2 instance. In a similar fashion, the output refers to the private_dns attribute (`value = aws_instance.foo.private_dns`) of the EC2 instance.
 
-Additionally, the code uses `=` when setting the tags attributes of all the resources to the maps that include the Name key/value pairs.  For example the tags for the subnet are added with:
+Additionally, the code uses `=` when setting the tags arguments of all the resources to the maps that include the Name key/value pairs.  For example the tags for the subnet are added with:
 ```
 tags = {
   Name = "tf-0.12-example"
 }
 ```
-This is required in Terraform 0.12 since tags is an attribute rather than a block which would not use `=`. In contrast, we do not include `=` when specifying the network_interface block of the EC2 instance since this is a block.
+This is required in Terraform 0.12 since tags is an argument rather than a block which would not use `=`. In contrast, we do not include `=` when specifying the network_interface block of the EC2 instance since this is a block.
 
-It is not easy to distinguish blocks from attributes of type map when looking at pre-0.12 Terraform code. But if you look at the documentation for a resource, all blocks have their own sub-topic describing the block. So, there is a [Network Interfaces](https://www.terraform.io/docs/providers/aws/r/instance.html#network-interfaces) sub-topic for the network_interface block of the aws_instance resource, but there is no sub-topic for the tags attribute of the same resource.
+It is not easy to distinguish blocks from arguments of type map when looking at pre-0.12 Terraform code. But if you look at the documentation for a resource, all blocks have their own sub-topic describing the block. So, there is a [Network Interfaces](https://www.terraform.io/docs/providers/aws/r/instance.html#network-interfaces) sub-topic for the network_interface block of the aws_instance resource, but there is no sub-topic for the tags argument of the same resource.
 
-For more on the difference between attributes and blocks, see [Attributes and Blocks](https://github.com/hashicorp/terraform/blob/v0.12-alpha/website/docs/configuration/syntax.html.md#attributes-and-blocks)
+For more on the difference between arguments and blocks, see [Arguments and Blocks](https://www.terraform.io/docs/configuration/syntax.html#arguments-and-blocks).
+
+For more on expressions in general, see [Expressions](https://www.terraform.io/docs/configuration/expressions.html).
 
 ## For Expressions Examples
-The [For Expressions](./for-expressions) example illustrates how the new [For Expression](https://github.com/hashicorp/terraform/blob/v0.12-alpha/website/docs/configuration/expressions.html.md#for-expressions) can be used to iterate across multiple items in lists. It does this for several outputs, illustrating the usefulness and power of the **for** expression in several ways.  We use two tf files in this example:
+The [For Expressions](./for-expressions) example illustrates how the new [For Expression](https://www.terraform.io/docs/configuration/expressions.html#for-expressions) can be used to iterate across multiple items in lists. It does this for several outputs, illustrating the usefulness and power of the **for** expression in several ways.  We use two tf files in this example:
 1. main.tf creates a VPC, subnet, and 3 EC2 instances and then generates outputs related to the DNS and IP addresses of the EC2 instances.
 1. lists-and-maps-with-for.tf shows how the **for** expression can be used inside lists and maps.
 
-We first generate outputs that give the list of private DNS addresses for the 3 EC2 instances in two ways, first using the **old splat syntax**:
+We first generate outputs that give the list of private DNS addresses for the 3 EC2 instances in several ways, first using the **old splat syntax**:
 ```
 output "private_addresses_old" {
   value = aws_instance.ubuntu.*.private_dns
 }
 ```
-and then using the new **for** expression:
+
+We also use the new [Full Splat Operator](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator):
+```
+output "private_addresses_full_splat" {
+  value = [ aws_instance.ubuntu[*].private_dns ]
+}
+```
+
+For more on splat expressions, see [Splat Expressions](https://www.terraform.io/docs/configuration/expressions.html#splat-expressions).
+
+We next use the new **for** expression:
 ```
 output "private_addresses_new" {
   value = [
@@ -73,7 +94,7 @@ output "private_addresses_new" {
   ]
 }
 ```
-Both of these give an output like this:
+All three of these give an output like this (with different output names):
 ```
 private_addresses_new = [
   "ec2-54-159-217-16.compute-1.amazonaws.com",
@@ -82,20 +103,31 @@ private_addresses_new = [
 ]
 ```
 
-Note that we also tried using the new [Full Splat Operator](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator) with an expression like `aws_instance.ubuntu[*].private_dns` but this does not yet work in alpha-4. However, the generalized splat operator with the `*` referencing multiple blocks within a single resource instance does work.  See the [generalized-splat-operator](./generalized-splat-operator) example.
-
 When creating the EC2 instances, we only assign a public IP to one of them by using the conditional operator like this: `associate_public_ip_address = ( count.index == 1 ? true : false)`
 
-We then use the conditional operator with lists in an output to show all the private and public IPs of the 3 instances:
+We then use the conditional operator with lists inside the **for** expression in an output to show all the private and public IPs of the 3 instances.  We do this in two ways, using the list() interpolation and using brackets.
+
+This is the version with the list() interpolation:
 ```
-output "ips" {
+output "ips_with_list_interpolation" {
   value = [
     for instance in aws_instance.ubuntu:
     (instance.public_ip != "" ? list(instance.private_ip, instance.public_ip) : list(instance.private_ip))
   ]
 }
 ```
-Note that this will eventually work using `[...]` instead of `list()`. This gives an output like:
+
+This is the version with brackets:
+```
+output "ips_with_list_in_brackets" {
+  value = [
+    for instance in aws_instance.ubuntu:
+    (instance.public_ip != "" ? [instance.private_ip, instance.public_ip] : [instance.private_ip])
+  ]
+}
+```
+
+Both of these give outputs like:
 ```
 ips = [
   [
@@ -143,7 +175,7 @@ upper-case-map = {
 ```
 
 ## Generalized Splat Operator
-The [Generalized Splat Operator](./generalized-splat-operator) example shows how the splat operator (`*`) can now be used to iterate across multiple blocks within a single resource instance. Recall that the old splat operator could only iterate across top-level attributes of a resource that had a count metadata attribute with a value greater than 1. While we mentioned above that the full splat operator (`[*]`) does not yet work, the generalized splat operator does work using `*` without brackets.
+The [Generalized Splat Operator](./generalized-splat-operator) example shows how the splat operator/expression (`*`) can now be used to iterate across multiple blocks within a single resource instance. Recall that the old splat operator could only iterate across top-level arguments of a resource that had a count meta-argument with a value greater than 1. While we mentioned above that the full splat operator (`[*]`) does not yet work, the generalized splat operator does work using `*` without brackets.
 
 In this example, we create an AWS security group with 2 ingress blocks and then create an output that iterates across the ingress blocks to give us both ports.
 
@@ -183,6 +215,8 @@ ports = [
   8200,
 ]
 ```
+
+For more on splat expressions, see [Splat Expressions](https://www.terraform.io/docs/configuration/expressions.html#splat-expressions).
 
 ## Rich Value Types
 The [Rich Value Types](./rich-value-types) example illustrates how the new [Rich Value Types](https://www.hashicorp.com/blog/terraform-0-12-rich-value-types) can be passed into and out of a module. It also shows that entire resources can be returned as outputs of a module.
@@ -235,7 +269,7 @@ We also create an EC2 instance.
 ## New Template Syntax
 The [New Template Syntax](./new-template-syntax) example illustrates how the new [Template Syntax](https://www.hashicorp.com/blog/terraform-0-12-template-syntax) can be used to support **if** conditionals and **for** expressions inside `%{}` template strings which are also referred to as directives.
 
-Currently, the new template syntax can be used inside Terraform code just like the older `${}` interpolations. When the Template Provider 2.0 is released, it will also be possible to use the new template syntax inside template files loaded with the template_file data source. This example does include an example of the latter even though it does not work yet.
+The new template syntax can be used inside Terraform code just like the older `${}` interpolations. It can also be used inside template files loaded with the template_file data source provided that you use version 2.0 or higher of the Template Provider.
 
 The code in main.tf creates a variable called names with a list of 3 names and uses the code below to show all of them on their own rows in an output called all_names:
 ```
@@ -279,16 +313,22 @@ EOT
 }
 ```
 
-As mentioned above, when the Template Provider is released, it will also be possible to use the new template syntax inside template files. We include two templates here:
-1. actual_vote.txt that uses the old template syntax with expressions like `${voter}` and `${candidate}`
-1. rigged_vote.txt that uses the new template syntax `%{ if ${candidate} == "Beto O'Rourke" }Ted Cruz%{ else }${candidate}%{ endif }`.
+As mentioned above, you can also use the new template syntax inside template files if you use version 2.0 or newer of the Template Provider.
 
-For now, the output from the rigged template is suppressed since it treats the new template syntax strings as literals.
+We include two templates here:
+1. actual_vote.txt that uses the old template syntax with expressions like `${voter}` and `${candidate}`
+1. rigged_vote.txt that uses the new template syntax `%{ if candidate == "the Democrate" }the Republican%{ else }${candidate}%{ endif }`.
+
+In the latter, a vote for "the Democrat" is awarded to "the Republican". Other votes are processed as voted.
+
+For more on the new string templates, see [String Templates](https://www.terraform.io/docs/configuration/expressions.html#string-templates).
 
 ## Reliable JSON Syntax
 The [Reliable JSON Syntax](./reliable-json-syntax) example illustrates how the new [Reliable JSON Syntax](https://www.hashicorp.com/blog/terraform-0-12-reliable-json-syntax) makes life easier for customers using Terraform JSON files instead of HCL files.
 
-As you work through this example, you will need to change the extensions of the files so that only one has the `tf.json` extension at any time.
+As you work through this example, you will need to change the extensions of the files so that only one has the `tf.json` extension at any time. Be sure to change the extension to "tf.json" rather than to "tf".
+
+Also, if you run `terraform init`, you will be prompted to run the `terraform 0.12upgrade` or `terraform validate` command.  So, for this example, just run `terraform validate` for each file.
 
 Let's start by comparing the errors given for this JSON by Terraform 0.11.10 and 0.12:
 
@@ -300,7 +340,7 @@ variable1.tf.json
   }
 }
 ```
-Running `terraform init` with Terraform 0.11.10 gives:
+Running `terraform validate` with Terraform 0.11.10 gives:
 ```
 Error: Error loading /home/ubuntu/test_json/variable1.tf.json: -: "variable" must be followed by a name
 ```
@@ -358,7 +398,7 @@ variable4.tf.json
 }
 ```
 
-Running `terraform init` with Terraform 0.11.10 gives:
+Running `terraform validate` with Terraform 0.11.10 gives:
 ```
 Error: Error loading /home/ubuntu/test_json/variable4.tf.json: 1 error(s) occurred:
 
@@ -375,7 +415,7 @@ on variable4.tf.json line 4, in variable.example:
 No argument or block type is named "label".
 ```
 
-Both of these errors are telling us that "label" is not a valid atribute for a variable. If we look at the [variables](https://www.terraform.io/docs/configuration/variables.html) documentation, we see that the valid attributes for a Terraform variable are type, default, and description.
+Both of these errors are telling us that "label" is not a valid atribute for a variable. If we look at the [variables](https://www.terraform.io/docs/configuration/variables.html) documentation, we see that the valid arguments for a Terraform variable are type, default, and description.
 
 So, let's try changing "label" to "default" so that we have this:
 
@@ -390,7 +430,7 @@ variable-correct.tf.json
 }
 ```
 
-Now running `terraform init` runs without error for both Terraform 0.11.10 and 0.12.
+Now running `terraform validate` runs without error for both Terraform 0.11.10 and 0.12.
 
 Additionally, we can even now include comments in our JSON code:
 
@@ -411,4 +451,4 @@ In summary, the error messages for parsing Terraform JSON configuraitons are muc
 
 
 ## Cleanup
-When done with the Terraform 0.12 alpha, delete the terraform.d or .terraform.d directory under your home directory and rename the original version of the directory to what it was before. Replace the Terraform 0.12 binary with the Terraform binary you were previously using in your path.
+When done with the Terraform 0.12 beta, delete the terraform.d or .terraform.d directory under your home directory and rename the original version of the directory to what it was before. Replace the Terraform 0.12 binary with the Terraform binary you were previously using in your path.
