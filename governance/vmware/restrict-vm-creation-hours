@@ -16,7 +16,7 @@ vms = get_vms()
 restrict_hours = rule {
   all vms as _, instances {
     all instances as index, r {
-  	  time.now.hour >= 22 or time.now.hour <= 4
+      time.now.hour >= 22 or time.now.hour <= 4
     }
   }
 }
