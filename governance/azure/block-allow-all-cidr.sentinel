@@ -12,6 +12,7 @@ network_sgs = get_sgs()
 
 disallowed_cidr_blocks = [
   "0.0.0.0/0",
+  "0.0.0.0",
   "*",
 ]
 
