@@ -33,6 +33,16 @@ data "template_file" "iam_lambda_stop_and_terminate_instances" {
   }
 }
 
+# Template for our 'terminate_asgs' lambda IAM policy
+data "template_file" "iam_lambda_terminate_asgs" {
+  template = "${file("./files/iam_lambda_terminate_asgs.tpl")}"
+
+  vars {
+    account_id = "${data.aws_caller_identity.current.account_id}"
+    region = "${var.region}"
+  }
+}
+
 # Role for our 'notify' lambda to assume
 # This role is allowed to use the data collector lambda functions.
 resource "aws_iam_role" "lambda_notify" {
@@ -93,6 +103,25 @@ resource "aws_iam_role" "lambda_stop_and_terminate_instances" {
 EOF
 }
 
+# Role for our 'terminate_asgs' lambda to assume.
+resource "aws_iam_role" "lambda_terminate_asgs" {
+  name = "lambda_terminate_asgs"
+	assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "lambda.amazonaws.com"
+      }
+    }
+  ]
+}
+EOF
+}
+
 # Here we ingest the template and create the role policies
 resource "aws_iam_role_policy" "lambda_notify_policy" {
 	name = "lambda_notify_policy"
@@ -110,4 +139,10 @@ resource "aws_iam_role_policy" "lambda_stop_and_terminate_instances" {
 	name = "lambda_stop_and_terminate_instances"
 	policy = "${data.template_file.iam_lambda_stop_and_terminate_instances.rendered}"
   role = "${aws_iam_role.lambda_stop_and_terminate_instances.id}"
+}
+
+resource "aws_iam_role_policy" "lambda_terminate_asgs" {
+	name = "lambda_terminate_asgs"
+	policy = "${data.template_file.iam_lambda_terminate_asgs.rendered}"
+  role = "${aws_iam_role.lambda_terminate_asgs.id}"
 }
