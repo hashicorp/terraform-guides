@@ -64,7 +64,7 @@ output "private_addresses_new" {
   ]
 }
 
-# This uses the new conditional operator
+# This uses the new conditional expression
 # that can work with lists
 # This uses the list interpolation function
 output "ips_with_list_interpolation" {

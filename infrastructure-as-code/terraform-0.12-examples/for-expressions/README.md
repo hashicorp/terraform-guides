@@ -37,9 +37,9 @@ private_addresses_new = [
 ]
 ```
 
-When creating the EC2 instances, we only assign a public IP to one of them by using the conditional operator like this: `associate_public_ip_address = ( count.index == 1 ? true : false)`
+When creating the EC2 instances, we only assign a public IP to one of them by using the [conditional expression](https://www.terraform.io/docs/configuration/expressions.html#conditional-expressions) like this: `associate_public_ip_address = ( count.index == 1 ? true : false)`
 
-We then use the conditional operator with lists inside the **for** expression in an output to show all the private and public IPs of the 3 instances.  We do this in two ways, using the list() interpolation and using brackets.
+We then use the conditional expression with lists inside the **for** expression in an output to show all the private and public IPs of the 3 instances.  We do this in two ways, using the list() interpolation and using brackets.
 
 This is the version with the list() interpolation:
 ```
