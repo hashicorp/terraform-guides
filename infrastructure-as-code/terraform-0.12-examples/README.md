@@ -6,7 +6,7 @@ These examples have been tested with terraform 0.12 beta1.
 The examples are:
 1. [First Class Expressions](./first-class-expressions)
 1. [For Expressions](./for-expressions)
-1. [Generalized Splat Operator](./generalized-splat-operator)
+1. [Dynamic Blocks and Splat Expresions](./dynamic-blocks-and-splat-expressions)
 1. [Rich Value Types](./rich-value-types)
 1. [New Template Syntax](./new-template-syntax)
 1. [Reliable JSON Syntax](./reliable-json-syntax)
@@ -76,7 +76,7 @@ output "private_addresses_old" {
 }
 ```
 
-We also use the new [Full Splat Operator](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator):
+We also use the new [Splat Espression](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator) (`[*]`):
 ```
 output "private_addresses_full_splat" {
   value = [ aws_instance.ubuntu[*].private_dns ]
@@ -174,44 +174,60 @@ upper-case-map = {
 }
 ```
 
-## Generalized Splat Operator
-The [Generalized Splat Operator](./generalized-splat-operator) example shows how the splat operator/expression (`*`) can now be used to iterate across multiple blocks within a single resource instance. Recall that the old splat operator could only iterate across top-level arguments of a resource that had a count meta-argument with a value greater than 1. While we mentioned above that the full splat operator (`[*]`) does not yet work, the generalized splat operator does work using `*` without brackets.
+## Dynamic Blocks and Splat Expressions
+The [Dynamic Blocks and Splat Expresions](./dynamic-blocks-and-splat-expressions) example shows how the [dynamic blocks](https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks) can be used to dynamically create multiple instances of a block within a resource and how [splat expressions](https://www.terraform.io/docs/configuration/expressions.html#splat-expressions) (`[*]`) can now be used to iterate across those blocks. Recall that the old splat expression (`.*`) could only iterate across top-level attributes of a resource.
 
-In this example, we create an AWS security group with 2 ingress blocks and then create an output that iterates across the ingress blocks to give us both ports.
+In this example, we create an AWS security group with 2 dynamically generated ingress blocks and then create an output that iterates across the ingress blocks to give us both ports.
 
-Here is the entire code:
+Here is the variable with the list of ports for the ingress rules:
 ```
-resource "aws_security_group" "allow_some_ingress" {
-  name        = "allow_some_ingress"
-  description = "Allow some inbound traffic"
-  vpc_id      = "vpc-0e56931573507c9dd"
+variable "ingress_ports" {
+  type        = list(number)
+  description = "list of ingress ports"
+  default     = [8200, 8201]
+}
+```
 
-  ingress {
-    from_port   = 8200
-    to_port     = 8200
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+Note that we have explicitly declared the variable to have type `list(number)`. This was not necessary, but it illustrates the expanded types available within Terraform 0.12.
 
-  ingress {
-    from_port   = 8500
-    to_port     = 8500
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+Here is the aws_security_group resource:
+```
+resource "aws_security_group" "vault" {
+  name        = "vault"
+  description = "Ingress for Vault"
+  vpc_id      = aws_vpc.my_vpc.id
+
+  dynamic "ingress" {
+    iterator = port
+    for_each = var.ingress_ports
+    content {
+      from_port   = port.value
+      to_port     = port.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
   }
 }
+```
 
+Instead of declaring two separate ingress blocks, we declared a single dynamic ingress block. We also specified the iterator argument as port. (Don't use quotes.) If we had not done that, then we would have used `ingress.value` instead of `port.value` in the code since the default iterator is the label of the dynamic block.
+
+The repetition of dynamic blocks is generated from the `for_each` argument which say what variable to iterate over. The referenced variable should be a list or a map. For lists, you can refer to the "value" of each member. For maps, you can refer to the "key" and "value" of each member. The actual repeated block is generated from the nested `content` block.
+
+Here is the output which uses the new splat expression:
+```
 output "ports" {
-  value = aws_security_group.allow_some_ingress.ingress.*.from_port
+  value = aws_security_group.vault.ingress[*].from_port
+  #value = aws_security_group.vault.ingress.*.from_port
 }
 ```
 
-Note that the splat operator, `*`, occurs after "ingress". Before Terraform 0.12, this would not have worked.
+Note that the splat expression occurs after "ingress" and that we used the new version `[*]` instead of the old version `.*` which we show in a comment. You can use either version in Terraform 0.12, but neither would have worked in older versions for nested blocks.
 
-The output is:
+The actual output generated by the apply is:
 ```
-ports = [
-  8500,
+from_ports = [
+  8201,
   8200,
 ]
 ```
