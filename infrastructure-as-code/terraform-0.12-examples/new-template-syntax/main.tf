@@ -14,7 +14,7 @@ variable "voter" {
 
 variable "candidate" {
   description = "name of candidate voter is voting for"
-  default = "the Democrat"
+  default = "Dan McCready"
 }
 
 data "template_file" "actual_vote" {

@@ -1,2 +1,2 @@
 
-I cast my vote for %{ if candidate == "the Democrat" }the Republican%{ else }${candidate}%{ endif }
+I cast my vote for %{ if candidate == "Dan McCready" }Mark Harris%{ else }${candidate}%{ endif }
