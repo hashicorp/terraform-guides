@@ -42,11 +42,13 @@ Execute the following commands to deploy your OpenShift cluster to AWS.
 1. Set up the Vault AWS Secrets Engine following these commands:
 ```
 vault secrets enable -path=aws-tf aws
+
 vault write aws-tf/config/root \
-  access_key=<your_aws_access_key>
-  secret_key=<your_aws_secret_key>
+  access_key=<your_aws_access_key> \
+  secret_key=<your_aws_secret_key> \
   region=us-east-1
-vault write aws-tf/roles/deploy policy=-<<EOF
+  
+vault write aws-tf/roles/deploy policy_document=-<<EOF
 {
   "Version": "2012-10-17",
   "Statement": [
