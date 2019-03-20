@@ -26,16 +26,29 @@ provider "kubernetes" {
   cluster_ca_certificate = "${base64decode(data.terraform_remote_state.k8s_cluster.k8s_master_auth_cluster_ca_certificate)}"
 }
 
-resource "kubernetes_service_account" "vault-reviewer" {
+resource "kubernetes_service_account" "vault_reviewer" {
   metadata {
     name = "vault-reviewer"
   }
 }
 
-data "kubernetes_secret" "vault-reviewer-token" {
+data "kubernetes_secret" "vault_reviewer_token" {
   metadata {
-    name = "${kubernetes_service_account.vault-reviewer.default_secret_name}"
+    name = "${kubernetes_service_account.vault_reviewer.default_secret_name}"
   }
+}
+
+resource "null_resource" "write_token" {
+  provisioner "local-exec" {
+    command = "echo ${data.kubernetes_secret.vault_reviewer_token.data.token} > vault-reviewer-token"
+  }
+}
+
+data "null_data_source" "read_token" {
+  inputs = {
+    token = "${file("vault-reviewer-token")}"
+  }
+  depends_on = ["null_resource.write_token"]
 }
 
 # Use the vault_kubernetes_auth_backend_config resource
@@ -44,7 +57,7 @@ resource "vault_kubernetes_auth_backend_config" "auth_config" {
   backend = "${vault_auth_backend.k8s.path}"
   kubernetes_host = "https://${data.terraform_remote_state.k8s_cluster.k8s_endpoint}:443"
   kubernetes_ca_cert = "${chomp(base64decode(data.terraform_remote_state.k8s_cluster.k8s_master_auth_cluster_ca_certificate))}"
-  token_reviewer_jwt = "${data.kubernetes_secret.vault-reviewer-token.data.token}"
+  token_reviewer_jwt = "${data.null_data_source.read_token.outputs["token"]}"
 }
 
 # Use vault_kubernetes_auth_backend_role instead of
