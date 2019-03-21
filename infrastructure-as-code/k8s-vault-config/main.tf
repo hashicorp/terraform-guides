@@ -46,7 +46,7 @@ resource "null_resource" "write_token" {
 
 data "null_data_source" "read_token" {
   inputs = {
-    token = "${file("vault-reviewer-token")}"
+    token = "${chomp(file("vault-reviewer-token"))}"
   }
   depends_on = ["null_resource.write_token"]
 }
