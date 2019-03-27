@@ -42,7 +42,7 @@ lam = boto3.client('lambda')
 def lambda_handler(event, context):
     """Sleeps instances after SLEEPDAYS and terminates them after REAPDAYS. Times are measured beginning from LaunchDate."""
     
-    msg_text = 'Enter the Sandman :sleeping:'
+    msg_text = 'EC2 Janitor Bot'
     untagged = get_untagged_instances()
     stop_dict = generate_stop_dict(untagged)
     

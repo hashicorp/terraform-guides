@@ -41,7 +41,7 @@ lam = boto3.client('lambda')
 def lambda_handler(event, context):
     """Terminates untagged ASGs after REAPDAYS. Times are measured beginning from LaunchDate."""
     
-    msg_text = 'The ASG Reaper Cometh :reaper:'
+    msg_text = 'ASG Janitor Bot'
     untagged = get_untagged_asgs()
     terminate_dict = generate_terminate_dict(untagged)
     

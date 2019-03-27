@@ -40,7 +40,7 @@ lam = boto3.client('lambda')
 def lambda_handler(event, context):
     """Sends out a formatted slack message.  Edit to your liking."""
     
-    msg_text = 'The Reaper Cometh :reaper:'
+    msg_text = 'ASG Reaper Bot'
     tagged = get_tagged_asgs()
     #logger.info(tagged)
     expired = generate_expired_dict(tagged)
