@@ -60,13 +60,14 @@ def lambda_handler(event, context):
     else:
         title_text = ':broom: ASG Janitor - ACTIVE MODE'
     
-    send_slack_message(
-        msg_text, 
-        title=title_text,
-        text="```\n"+str(contents)+"\n```",
-        fallback='Untagged ASG Report',
-        color='warning'
-    )
+    if terminate_dict:
+        send_slack_message(
+            msg_text, 
+            title=title_text,
+            text="```\n"+str(contents)+"\n```",
+            fallback='Untagged ASG Report',
+            color='warning'
+        )
 
     # Uncomment send_email to use email instead of slack
     # send_email(
