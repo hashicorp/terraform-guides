@@ -68,6 +68,8 @@ def lambda_handler(event, context):
             fallback='Expired Instance Cleanup',
             color='warning'
         )
+    else:
+        logger.info("No expired instances to reap.")
 
         # Uncomment send_email to use email instead of slack
         # send_email(

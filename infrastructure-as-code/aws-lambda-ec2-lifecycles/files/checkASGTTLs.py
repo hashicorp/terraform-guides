@@ -71,6 +71,8 @@ def lambda_handler(event, context):
             fallback='Expired ASG Cleanup',
             color='warning'
         )
+    else:
+        logger.info("No expired ASGs to reap.")
 
         # Uncomment send_email to use email instead of slack
         # send_email(

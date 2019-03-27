@@ -68,6 +68,8 @@ def lambda_handler(event, context):
             fallback='Untagged ASG Report',
             color='warning'
         )
+    else:
+        logger.info("No untagged ASGs older than asg_reap_days.")
 
     # Uncomment send_email to use email instead of slack
     # send_email(

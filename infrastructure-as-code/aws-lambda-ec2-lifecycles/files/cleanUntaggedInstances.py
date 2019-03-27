@@ -77,6 +77,8 @@ def lambda_handler(event, context):
             fallback='Untagged EC2 Instance Report',
             color='warning'
         )
+    else:
+        logger.info("No instances to stop or terminate.")
 
     # Uncomment send_email to use email instead of slack
     # send_email(
