@@ -53,8 +53,7 @@ def get_tagged_asgs():
     that includes some identifying information as key-value pairs.
     """
     global_tagged_asgs = {}
-    #for r in get_regions():
-    for r in ['us-west-2']:
+    for r in get_regions():
         client = boto3.client('autoscaling',region_name=r)
         # Get our list of tagged asgs
         asg_ids = check_asg_tags(r)
