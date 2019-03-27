@@ -49,8 +49,8 @@ def get_untagged_asgs():
     that includes some identifying information as key-value pairs.
     """
     global_untagged_asgs = {}
-    #for r in get_regions():
-    for r in ['us-west-2']:
+    for r in get_regions():
+    #for r in ['us-west-2']:
         client = boto3.client('autoscaling',region_name=r)
         # Get our list of untagged asgs
         asg_ids = check_asg_tags(r)
