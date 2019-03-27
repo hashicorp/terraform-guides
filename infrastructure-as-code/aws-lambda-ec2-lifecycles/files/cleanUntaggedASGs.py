@@ -56,15 +56,15 @@ def lambda_handler(event, context):
     contents = output.getvalue()
 
     if str_to_bool(ISACTIVE) == False:
-        title_text = ':broom: Untagged Janitor - TESTING MODE'
+        title_text = ':broom: ASG Janitor - TESTING MODE'
     else:
-        title_text = ':broom: Untagged Janitor - ACTIVE MODE'
+        title_text = ':broom: ASG Janitor - ACTIVE MODE'
     
     send_slack_message(
         msg_text, 
         title=title_text,
         text="```\n"+str(contents)+"\n```",
-        fallback='Untagged asg Report',
+        fallback='Untagged ASG Report',
         color='warning'
     )
 
