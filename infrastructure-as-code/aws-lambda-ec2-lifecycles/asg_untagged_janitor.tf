@@ -7,7 +7,7 @@ resource "aws_lambda_function" "cleanUntaggedASGs" {
   source_code_hash = "${base64sha256(file("./files/cleanUntaggedASGs.zip"))}"
   runtime          = "python3.6"
   timeout          = "120"
-  description      = "Stops or terminates untagged ASGs after a pre-set number of days."
+  description      = "Terminates untagged ASGs after a pre-set number of days."
   environment {
     variables = {
       slackChannel = "${var.slack_channel}"
