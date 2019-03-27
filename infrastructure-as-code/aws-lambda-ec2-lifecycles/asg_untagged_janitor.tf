@@ -12,7 +12,7 @@ resource "aws_lambda_function" "cleanUntaggedASGs" {
     variables = {
       slackChannel = "${var.slack_channel}"
       slackHookUrl = "${var.slack_hook_url}"
-      asgReapDays = "${var.reap_days}"
+      asgReapDays = "${var.asg_reap_days}"
       isActive = "${var.is_active}"
     }
   }
