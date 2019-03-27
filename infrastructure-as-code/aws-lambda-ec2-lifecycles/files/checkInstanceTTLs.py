@@ -38,7 +38,7 @@ lam = boto3.client('lambda')
 def lambda_handler(event, context):
     """Sends out a formatted slack message.  Edit to your liking."""
     
-    msg_text = 'The Reaper Cometh :reaper:'
+    msg_text = 'The EC2 Reaper Cometh :reaper:'
     tagged = get_tagged_instances()
     expired = generate_expired_dict(tagged)
     # logger.info(expired)
@@ -55,9 +55,9 @@ def lambda_handler(event, context):
     contents = output.getvalue()
 
     if str_to_bool(ISACTIVE) == False:
-        title_text = ':reaper: Instance Reaper - TESTING MODE'
+        title_text = ':reaper: EC2 Instance Reaper - TESTING MODE'
     else:
-        title_text = ':reaper: Instance Reaper - ACTIVE MODE'
+        title_text = ':reaper: EC2 Instance Reaper - ACTIVE MODE'
 
     # If there are any instances on the list, notify slack.
     if expired:

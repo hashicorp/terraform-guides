@@ -53,27 +53,27 @@ def lambda_handler(event, context):
     output = io.StringIO()
     writer = csv.writer(output, delimiter='\t')
     writer.writerow(['*********************************************', '', ''])
-    writer.writerow(['These instances will be put to sleep:', '', ''])
+    writer.writerow(['These EC2 instances will be put to sleep:', '', ''])
     writer.writerow(['Instance_Id        ', 'Region   ', 'Stop_On'])
     for key, value in stop_dict.items():
         writer.writerow([key, value['RegionName'], value['StopOn']])
     writer.writerow(['*********************************************', '', ''])
-    writer.writerow(['These instances will be terminated:', '', ''])
+    writer.writerow(['These EC2 instances will be terminated:', '', ''])
     writer.writerow(['Instance_Id        ', 'Region   ', 'Terminate_On'])
     for key, value in terminate_dict.items():
         writer.writerow([key, value['RegionName'], value['TerminateOn']])
     contents = output.getvalue()
 
     if str_to_bool(ISACTIVE) == False:
-        title_text = ':broom: Untagged Janitor - TESTING MODE'
+        title_text = ':broom: EC2 Instance Janitor - TESTING MODE'
     else:
-        title_text = ':broom: Untagged Janitor - ACTIVE MODE'
+        title_text = ':broom: EC2 Instance Janitor - ACTIVE MODE'
     
     send_slack_message(
         msg_text, 
         title=title_text,
         text="```\n"+str(contents)+"\n```",
-        fallback='Untagged Instance Report',
+        fallback='Untagged EC2 Instance Report',
         color='warning'
     )
 
