@@ -189,7 +189,6 @@ def terminate_asg(asg_name,region):
     if str_to_bool(ISACTIVE) == True:
         try:
             client = boto3.client('autoscaling',region_name=region)
-            # Uncomment to make this live!
             response = client.delete_auto_scaling_group(AutoScalingGroupName=asg_name, ForceDelete=True)
             logger.info(response)
             logger.info("I terminated "+asg_name+" in "+region)
