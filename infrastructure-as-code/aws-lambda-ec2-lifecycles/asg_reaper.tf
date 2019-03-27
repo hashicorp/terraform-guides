@@ -13,6 +13,7 @@ resource "aws_lambda_function" "checkASGTTLs" {
       slackChannel = "${var.slack_channel}"
       slackHookUrl = "${var.slack_hook_url}"
       isActive = "${var.is_active}"
+      asgReapDays = "${var.asg_reap_days}"
     }
   }
 }

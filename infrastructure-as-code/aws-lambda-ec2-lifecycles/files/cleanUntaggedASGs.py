@@ -23,7 +23,7 @@ SLACK_CHANNEL = os.environ['slackChannel']
 # HOOK_URL = boto3.client('kms').decrypt(CiphertextBlob=b64decode(os.environ['slackHookUrl']))['Plaintext'].decode('utf-8')
 HOOK_URL = os.environ['slackHookUrl']
 
-REAPDAYS = os.environ['reapDays']
+REAPDAYS = os.environ['asgReapDays']
 ISACTIVE = os.environ['isActive']
 
 ############################################################################
@@ -184,7 +184,6 @@ def terminate_asg(asg_name,region):
     """Terminates asgs"""
     if str_to_bool(ISACTIVE) == True:
         try:
-            # Uncomment to make this live!
             client = boto3.client('autoscaling',region_name=region)
             response = client.delete_auto_scaling_group(AutoScalingGroupName=asg_name, ForceDelete=True)
             logger.info(response)

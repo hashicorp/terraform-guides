@@ -30,6 +30,11 @@ variable "reap_days" {
   description = "Days after launch after which untagged instances are terminated."
 }
 
+variable "asg_reap_days" {
+  default = "3"
+  description = "Days after launch after which untagged ASGs are destroyed."
+}
+
 variable "is_active" {
   default = "False"
   description = "Determines whether scripts will actually stop and terminate instances or do a dry run instead."

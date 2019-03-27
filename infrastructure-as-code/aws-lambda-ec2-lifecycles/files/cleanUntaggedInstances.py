@@ -219,8 +219,7 @@ def sleep_instance(instance_id,region):
     """Stops instances"""
     if str_to_bool(ISACTIVE) == True:
         try:
-            # Uncomment to make this live!
-            #ec2.instances.filter(InstanceIds=[instance_id]).stop()
+            ec2.instances.filter(InstanceIds=[instance_id]).stop()
             logger.info("I stopped "+instance_id+" in "+region)
         except Exception as e:
             logger.info("Problem stopping instance: "+instance_id)
@@ -233,8 +232,7 @@ def terminate_instance(instance_id,region):
     """Terminates instances"""
     if str_to_bool(ISACTIVE) == True:
         try:
-            # Uncomment to make this live!
-            #ec2.instances.filter(InstanceIds=[instance_id]).terminate()
+            ec2.instances.filter(InstanceIds=[instance_id]).terminate()
             logger.info("I terminated "+instance_id+" in "+region)
         except Exception as e:
             logger.info("Problem terminating instance: "+instance_id)
