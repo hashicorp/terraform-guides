@@ -95,3 +95,7 @@ output "subnet" {
 output "interface_sec_groups" {
   value = aws_network_interface.rvt.security_groups
 }
+
+/*output "network_module" {
+  value = module.network
+}*/

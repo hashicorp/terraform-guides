@@ -52,10 +52,9 @@ output "private_addresses_old" {
 }
 
 # This uses the new full splat operator (*)
-# But this does not work in 0.12 alpha-4
-/*output "private_addresses_full_splat" {
+output "private_addresses_full_splat" {
   value = [ aws_instance.ubuntu[*].private_dns ]
-}*/
+}
 
 # This uses the new for expression
 output "private_addresses_new" {
@@ -65,12 +64,20 @@ output "private_addresses_new" {
   ]
 }
 
-# This uses the new conditional operator
+# This uses the new conditional expression
 # that can work with lists
-# It should work with lists in [x, y, z] form, but does not yet do that in alpha-4
-output "ips" {
+# This uses the list interpolation function
+output "ips_with_list_interpolation" {
   value = [
     for instance in aws_instance.ubuntu:
     (instance.public_ip != "" ? list(instance.private_ip, instance.public_ip) : list(instance.private_ip))
+  ]
+}
+
+# It also works with lists in [x, y, z] form
+output "ips_with_list_in_brackets" {
+  value = [
+    for instance in aws_instance.ubuntu:
+    (instance.public_ip != "" ? [instance.private_ip, instance.public_ip] : [instance.private_ip])
   ]
 }
