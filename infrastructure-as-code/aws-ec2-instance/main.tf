@@ -15,7 +15,7 @@ resource "aws_instance" "ubuntu" {
     Name = "${var.name}"
   }
 }
-
+# Code below finds the latest Ubuntu image.
 data "aws_ami" "ubuntu" {
   most_recent = true
 
