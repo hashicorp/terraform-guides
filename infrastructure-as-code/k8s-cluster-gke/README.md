@@ -29,15 +29,16 @@ Execute the following commands to deploy your Kubernetes cluster to GKE.
 1. Create a workspace in your TFE organization called k8s-cluster-gke.
 1. Configure the k8s-cluster-gke workspace to connect to the fork of this repository in your own GitHub account.
 1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-gke".
-1. On the Variables tab of your workspace, add the following variables to the Terraform variables: 
+1. On the Variables tab of your workspace, add the following variables to the Terraform variables:
     ```
     gcp_project           # The name of the GCP project you are using
     gcp_region            # Valid GCP Region e.g. us-east1
     gcp_zone              # Valid GCP Zone e.g. us-east1-b
     initial_node_count    # Default 1
     node_machine_type     # Default n1-standard-1
-    environment           # Should be dev.  Could be any other value needed, but make sure to align environments properly
-    vault_addr            # Address of Vault server.  e.g. http://<vault_server_dns/ip>:8200
+    environment           # Can be dev or any other value.
+    vault_addr            # Address of Vault server.  e.g.
+                          # http://<vault_server_dns/ip>:8200
     vault_user            # Username to login as to add secrets.
     ```
 1. Set the VAULT_TOKEN environment variable to your Vault token. Be sure to mark the VAULT_TOKEN variable as sensitive so that other people cannot read it.
@@ -45,7 +46,7 @@ Execute the following commands to deploy your Kubernetes cluster to GKE.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the GKE cluster will be created when you apply your plan.
 1. Click the "Confirm and Apply" button to actually provision your GKE cluster.
 
-You will see outputs representing the URLs to access your GKE cluster in the Google Console, the FQDN of your cluster, TLS certs/keys for your cluster, the Vault Kubernetes authentication backend, the Vault address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your cluster. However, if you configure a workspace against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository to provision your pods and services, the outputs will automatically be used by that workspace.
+You will see outputs representing the URLs to access your GKE cluster in the Google Console, the FQDN of your cluster, TLS certs/keys for your cluster, the environment, the Vault address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your cluster. However, if you configure the Vault Kubernetes authentication method in a workspace that uses the Terraform code in the [k8s-vault-config](./infrastructure-as-code/k8s-vault-config) directory of this repository and deploy your pods and services against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository, the outputs will automatically be used by those workspaces.
 
 You can also validate that the cluster was created in the Google Console.
 
