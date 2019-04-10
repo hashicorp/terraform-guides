@@ -5,6 +5,8 @@
 # triggers a run, checks the results of Sentinel policies (if any)
 # checked against the workspace, and if $override=true and there were
 # no hard-mandatory violations of Sentinel policies, does an apply.
+# If an apply is done, the script waits for it to finish and then
+# downloads the apply log and the before and after state files.
 
 # Make sure ATLAS_TOKEN environment variable is set
 # to owners team token for organization
@@ -19,9 +21,10 @@ workspace="workspace-from-api"
 # You can change sleep duration if desired
 sleep_duration=5
 
-# Clone git repository if one is specified
-# Set to git clone URL
-# If not specified, then code loaded from config directory
+# Get first argument.
+# If not "", Set to git clone URL
+# and clone the git repository
+# If "", then load code from config directory
 if [ ! -z $1 ]; then
   git_url=$1
   config_dir=$(echo $git_url | cut -d "/" -f 5 | cut -d "." -f 1)
@@ -37,12 +40,20 @@ else
   config_dir="config"
 fi
 
+# Set workspace if provided as the second argument
+if [ ! -z $2 ]; then
+  workspace=$2
+  echo "Using workspace provided as argument: " $workspace
+else
+  echo "Using workspace set in the script."
+fi
+
 # Override soft-mandatory policy checks that fail.
 # Set to "yes" or "no" in second argument passed to script.
 # If not specified, then this is set to "no"
 # If not cloning a git repository, set first argument to ""
-if [ ! -z $2 ]; then
-  override=$2
+if [ ! -z $3 ]; then
+  override=$3
   echo "override set to ${override} on command line."
 else
   override="no"
@@ -127,7 +138,7 @@ echo "Run ID: " $run_id
 # Check run result in loop
 continue=1
 while [ $continue -ne 0 ]; do
-  # Sleep a bit
+  # Sleep
   sleep $sleep_duration
   echo "Checking run status"
 
@@ -141,6 +152,7 @@ while [ $continue -ne 0 ]; do
   echo "Run can be applied: " $is_confirmable
 
   # Apply in some cases
+  applied="false"
 
   # planned means plan finished and no Sentinel policies
   # exist or are applicable to the workspace
@@ -157,12 +169,14 @@ while [ $continue -ne 0 ]; do
       # Do the apply
       echo "Doing Apply"
       apply_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+      applied="true"
   # policy_checked means all Sentinel policies passed
   elif [[ "$run_status" == "policy_checked" ]]; then
     continue=0
     # Do the apply
     echo "Policies passed. Doing Apply"
     apply_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
   # policy_override means at least 1 Sentinel policy failed
   # but since $override is "yes", we will override and then apply
   elif [[ "$run_status" == "policy_override" ]] && [[ "$override" == "yes" ]]; then
@@ -180,6 +194,7 @@ while [ $continue -ne 0 ]; do
     # Do the apply
     echo "Doing Apply"
     apply_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
   # policy_override means at least 1 Sentinel policy failed
   # but since $override is "no", we will not override
   # and will not apply
@@ -192,7 +207,91 @@ while [ $continue -ne 0 ]; do
     echo "Plan errored or hard-mandatory policy failed"
     continue=0
   else
-    # Sleep a bit and then check status again in next loop
-    echo "We will sleep a bit and try again soon."
+    # Sleep and then check status again in next loop
+    echo "We will sleep and try again soon."
   fi
 done
+
+# Get the apply log and state files (before and after) if an apply was done
+if [[ "$applied" == "true" ]]; then
+
+  echo "An apply was done."
+  echo "Will download apply log and state file."
+
+  # Get run details including apply information
+  check_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id}?include=apply)
+
+  # Get apply ID
+  apply_id=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['included'][0]['id'])")
+  echo "Apply ID:" $apply_id
+
+  # Check apply status periodically in loop
+  continue=1
+  while [ $continue -ne 0 ]; do
+
+    sleep $sleep_duration
+    echo "Checking apply status"
+
+    # Check the apply status
+    check_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/applies/${apply_id})
+
+    # Parse out the apply status
+    apply_status=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['status'])")
+    echo "Apply Status: ${apply_status}"
+
+    # Decide whether to continue
+    if [[ "$apply_status" == "finished" ]]; then
+      echo "Apply finished."
+      continue=0
+    else
+      # Sleep and then check apply status again in next loop
+      echo "We will sleep and try again soon."
+    fi
+  done
+
+  # Get apply log URL
+  apply_log_url=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['log-read-url'])")
+  echo "Apply Log URL:"
+  echo "${apply_log_url}"
+
+  # Retrieve Apply Log from the URL
+  # and output to shell and file
+  curl $apply_log_url | tee ${apply_id}.log
+
+  # Get state version IDs from after the apply
+  state_id_before=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['relationships']['state-versions']['data'][1]['id'])")
+  echo "State ID 1:" ${state_id_before}
+
+  # Call API to get information about the state version including its URL
+  state_file_before_url_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" https://${address}/api/v2/state-versions/${state_id_before})
+
+  # Get state file URL from the result
+  state_file_before_url=$(echo $state_file_before_url_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['hosted-state-download-url'])")
+  echo "URL for state file before apply:"
+  echo ${state_file_before_url}
+
+  # Retrieve state file from the URL
+  # and output to shell and file
+  echo "State file before the apply:"
+  curl $state_file_before_url | tee ${apply_id}-before.tfstate
+
+  # Get state version IDs from before the apply
+  state_id_after=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['relationships']['state-versions']['data'][0]['id'])")
+  echo "State ID 0:" ${state_id_after}
+
+  # Call API to get information about the state version including its URL
+  state_file_after_url_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" https://${address}/api/v2/state-versions/${state_id_after})
+
+  # Get state file URL from the result
+  state_file_after_url=$(echo $state_file_after_url_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['hosted-state-download-url'])")
+  echo "URL for state file after apply:"
+  echo ${state_file_after_url}
+
+  # Retrieve state file from the URL
+  # and output to shell and file
+  echo "State file after the apply:"
+  curl $state_file_after_url | tee ${apply_id}-after.tfstate
+
+fi
+
+echo "Finished"

@@ -8,9 +8,16 @@
 # Set organization and workspace to create.
 # You should edit these before running.
 address="app.terraform.io"
-#organization="<your_organization>"
-organization="RogerBerlind"
+organization="<your_organization>"
 workspace="workspace-from-api"
+
+# Set workspace if provided as the second argument
+if [ ! -z $1 ]; then
+  workspace=$1
+  echo "Using workspace provided as argument: " $workspace
+else
+  echo "Using workspace set in the script."
+fi
 
 # Try to delete the workspace.
 echo "Attempting to delete the workspace"
