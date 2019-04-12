@@ -16,6 +16,7 @@
 # You should edit these before running.
 address="app.terraform.io"
 organization="<your_organization>"
+# workspace name should not have spaces
 workspace="workspace-from-api"
 
 # You can change sleep duration if desired
@@ -41,11 +42,18 @@ else
 fi
 
 # Set workspace if provided as the second argument
-if [ ! -z $2 ]; then
+if [ ! -z "$2" ]; then
   workspace=$2
   echo "Using workspace provided as argument: " $workspace
 else
   echo "Using workspace set in the script."
+fi
+
+# Make sure $workspace does not have spaces
+if [[ "${workspace}" != "${workspace% *}" ]] ; then
+    echo "The workspace name cannot contain spaces."
+    echo "Please pick a name without spaces and run again."
+    exit
 fi
 
 # Override soft-mandatory policy checks that fail.
@@ -65,7 +73,7 @@ echo "Tarring configuration directory."
 tar -czf ${config_dir}.tar.gz -C ${config_dir} --exclude .git .
 
 #Set name of workspace in workspace.json
-sed "s/placeholder/$workspace/" < workspace.template.json > workspace.json
+sed "s/placeholder/${workspace}/" < workspace.template.json > workspace.json
 
 # Check to see if the workspace already exists
 echo "Checking to see if workspace exists"
@@ -117,7 +125,7 @@ fi
 # Add variables to workspace
 while IFS=',' read -r key value category hcl sensitive
 do
-  sed -e "s/my-organization/$organization/" -e "s/my-workspace/$workspace/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
+  sed -e "s/my-organization/$organization/" -e "s/my-workspace/${workspace}/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
   echo "Adding variable $key with value $value in category $category with hcl $hcl and sensitive $sensitive"
   upload_variable_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 done < ${variables_file}

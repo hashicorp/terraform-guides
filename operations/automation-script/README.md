@@ -6,12 +6,14 @@ This script uses curl to interact with Terraform Enterprise via the Terraform En
 
 Three arguments can be provided on the command line when calling the script:
 1. The first, git_url, is an optional URL for a git repository from which the script should clone some Terraform code.
-1. The second, workspace, is the name of the workspace to use or create if it does not already exist.
+1. The second, workspace, is the name of the workspace to use or create if it does not already exist. Note that TFE workspace names are not allowed to contain spaces. The script checks for this and will exit if workspace contains any spaces.
 1. The third, override, is used in two ways:
     1. to automatically do an apply when no Sentinel policies exist or none of them are applicable to the workspace.
     1. to override any soft-mandatory Sentinel policies that failed.
 
 If you only want to set override to "yes" without passing values for the first two arguments, please use `./loadAndRunWorkspace.sh "" "" yes` to run the script.
+
+The script uses several json templates which must be placed in the same directory as the script itself.
 
 The script does the following steps:
 1. Clones a git repository containing Terraform configuration code or uses the code in the config directory if no git URL was provided.
@@ -46,6 +48,8 @@ In addition to the loadAndRunWorkspace.sh script, this example includes the foll
 1. variables.csv which contains the variables that are uploaded to the workspace if no file with the same name is found in the root directory of the cloned repository. The columns are key, value, category, hcl, and sensitive with the last two corresponding to the hcl and sensitive checkboxes of TFE variables.
 1. [deleteWorkspace.sh](./deleteWorkspace.sh): a script that can be used to delete the workspace.
 1. [restrict-name-variable.sentinel](./restrict-name-variable.sentinel): a Sentinel policy you can add to your TFE organization in order to see how the script can check Sentinel policies and even override soft-mandatory failures.
+
+Note that the json templates file need to be in the same directory as the script itself. The variables.csv file should also be in the same directory as the script unless you include a file with the same name in your git repository.
 
 ## Preparation
 Do the following before using this script:
