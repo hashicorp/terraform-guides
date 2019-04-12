@@ -18,7 +18,7 @@ variable "dns_prefix" {
 
 variable "k8s_version" {
   description = "Version of Kubernetes to use"
-  default = "1.7.12"
+  default = "1.12.7" #was 1.7.12, but that is no longer available
 }
 
 variable "admin_user" {
@@ -38,7 +38,7 @@ variable "agent_count" {
 
 variable "vm_size" {
   description = "Azure VM type"
-  default = "Standard_A1"
+  default = "Standard_D2"
 }
 
 variable "os_type" {
@@ -52,14 +52,14 @@ variable "os_disk_size" {
 }
 
 variable "environment" {
-  description = "value passed to ACS Environment tag"
-  default = "dev"
+  description = "value passed to Environment tag and used in name of Vault k8s auth backend in the associated k8s-vault-config workspace"
+  default = "aks-dev"
 }
 
 variable "vault_user" {
-  description = "Vault userid: determines location of secrets and affects path of k8s auth backend"
+  description = "Vault userid: determines location of secrets and affects path of k8s auth backend that is created in the associated k8s-vault-config workspace"
 }
 
 variable "vault_addr" {
-  description = "Address of Vault server including port"
+  description = "Address of Vault server including port that is used in the associated k8s-vault-config and k8s-services workspaces"
 }
