@@ -6,6 +6,8 @@ This Terraform configuration deploys two pods exposed as services. It is meant t
 
 This configuration is intended to be used with two other configurations, either [k8s-cluster-aks](../../infrastructure-as-code/k8s-cluster-aks) or [k8s-cluster-gke](../../infrastructure-as-code/k8s-cluster-gke), which provision Kubernetes clusters in AKS and GKE respectively, and [k8s-vault-config](../../infrastructure-as-code/k8s-vault-config), which provisions an instance of Vault's Kubernetes authentication method against the cluster.
 
+The source code and docker files for the applications is in the [cats-and-dogs](../cats-and-dogs) directory of this repository.
+
 It uses the kubernetes_namespace and kubernetes_service_account resources of Terraform's Kubernetes Provider to create a namespace and service account, both called "cats-and-dogs". It then uses the kubernetes_pod and kubernetes_service resources of the Kubernetes Provider to deploy the pods and services into a Kubernetes cluster previously provisioned by Terraform. The pods and services use the cats-and-dogs service account and therefore run in the cats-and-dogs namespace.
 
 It also uses two instances of the terraform_remote_state data source to copy the outputs of the targeted cluster's workspace and the targeted vault configuration workspace. The k8s cluster connection details are copied directly into the Kubernetes Provider block, avoiding the need to manually copy the outputs into variables of the TFE services workspace. It also uses the vault_addr and vault_user outputs from the cluster workspace and the vault_k8s_auth_backend output from the vault configuration workspace.
