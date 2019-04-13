@@ -13,7 +13,7 @@ variable "dns_prefix" {
 
 variable "k8s_version" {
   description = "Version of Kubernetes to use"
-  default = "1.12.7" #was 1.7.12, but that is no longer available
+  default = "1.12.7"
 }
 
 variable "admin_user" {
