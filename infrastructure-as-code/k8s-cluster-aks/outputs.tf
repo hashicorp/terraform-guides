@@ -22,17 +22,6 @@ output "k8s_master_auth_cluster_ca_certificate" {
   value = "${azurerm_kubernetes_cluster.k8sexample.kube_config.0.cluster_ca_certificate}"
 }
 
-# These support deploying cats-and-dogs apps against all 3 clouds from single workspace
-output "master_public_dns" {
-  value = ""
-}
-output "master_public_ip" {
-  value = ""
-}
-output "bastion_public_dns" {
-  value = ""
-}
-
 output "environment" {
   value = "${var.environment}"
 }

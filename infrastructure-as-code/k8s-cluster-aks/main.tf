@@ -29,7 +29,7 @@ resource "azurerm_resource_group" "k8sexample" {
 
 # Azure Container Service (AKS) Cluster
 resource "azurerm_kubernetes_cluster" "k8sexample" {
-  name = "${var.cluster_name}"
+  name = "${var.vault_user}-k8sexample-cluster"
   location = "${azurerm_resource_group.k8sexample.location}"
   resource_group_name = "${azurerm_resource_group.k8sexample.name}"
   dns_prefix = "${var.dns_prefix}"

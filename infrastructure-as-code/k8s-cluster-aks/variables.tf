@@ -7,11 +7,6 @@ variable "azure_location" {
   default = "East US"
 }
 
-variable "cluster_name" {
-  description = "Name of the K8s cluster"
-  default = "k8sexample-cluster"
-}
-
 variable "dns_prefix" {
   description = "DNS prefix for your cluster"
 }
