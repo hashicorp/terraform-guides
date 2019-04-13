@@ -18,7 +18,7 @@ Another important aspect of this configuration is that both the frontend applica
     - [k8s-cluster-aks](../../infrastructure-as-code/k8s-cluster-aks)
     - [k8s-cluster-gke](../../infrastructure-as-code/k8s-cluster-gke)
 1. We assume that you have already satisfied all the prerequisites for deploying a Kubernetes cluster in AKS or GKE described by the above links.
-1. We also assume that you have configured the [Vault Kubernetes Authentication Method](https://www.vaultproject.io/docs/auth/kubernetes.html) against your cluster using a workspace that points against the [k8s-vault-configuration](../../infrastructure-as-code/k8s-vault-configuration) repository.
+1. We also assume that you have configured the [Vault Kubernetes Authentication Method](https://www.vaultproject.io/docs/auth/kubernetes.html) against your cluster using a workspace that points against the [k8s-vault-config](../../infrastructure-as-code/k8s-vault-config) repository.
 1. We also assume that you have already forked this repository and cloned your fork to your laptop.
 
 

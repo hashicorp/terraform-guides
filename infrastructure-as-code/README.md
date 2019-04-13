@@ -10,17 +10,14 @@ This example provides a simple example to provision an Azure Windows VM and requ
 ## gcp-compute-instance
 This example provides a simple example to provision a Google compute instance in GCP.
 
-## k8s-cluster-acs
-This example illustrates how you can provision an Azure Container Service (ACS) cluster. If you use this, also check out the [k8s-services](../self-serve-infrastructure/k8s-services) directory which lets you provision a web app and redis database as Kubernetes pods to the ACS cluster.
-
 ## k8s-cluster-aks
-This example illustrates how you can provision an Azure Container Service (AKS) cluster using the new AKS service that is replacing ACS. If you use this, also check out the [k8s-services](../self-serve-infrastructure/k8s-services) directory which lets you provision a web app and redis database as Kubernetes pods to the AKS cluster.
+This example illustrates how you can provision an Azure Kubernetes Service (AKS) cluster using the AKS service. If you use this, also check out the [k8s-vault-config](./k8s-vault-config) and [k8s-services](../self-serve-infrastructure/k8s-services) directories. The first provisions the Vault Kubernetes authentication method against your cluster while the second provisions a web app and redis database as Kubernetes pods to the AKS cluster.
 
 ## k8s-cluster-gke
-This example illustrates how you can provision a Google Kubernetes Engine (GKE) cluster. If you use this, also check out the [k8s-services](../self-serve-infrastructure/k8s-services) directory which lets you provision a web app and redis database as Kubernetes pods to the GKE cluster.
+This example illustrates how you can provision a Google Kubernetes Engine (GKE) cluster. If you use this, also check out the [k8s-vault-config](./k8s-vault-config) and [k8s-services](../self-serve-infrastructure/k8s-services) directories. The first provisions the Vault Kubernetes authentication method against your cluster while the second provisions a web app and redis database as Kubernetes pods to the GKE cluster.
 
 ## k8s-cluster-openshift-aws
-This example illustrates how you can provision an OpenShift 3.7 cluster into AWS using Terraform and ansible-playbook. If you use this, also check out the [k8s-services-openshift](../self-serve-infrastructure/k8s-services-openshift) directory which lets you provision a web app and redis database as Kubernetes pods to the OpenShift cluster.
+This example illustrates how you can provision an OpenShift 3.11 cluster into AWS using Terraform and ansible-playbook. If you use this, also check out the [k8s-services-openshift](../self-serve-infrastructure/k8s-services-openshift) directory which provisions a web app and redis database as Kubernetes pods to the OpenShift cluster.
 
 ## aws-lambda-ec2-lifecycles
 This example illustrates how you can provision some AWS Lambda functions to help you terminate EC2 instances that are running longer than desired.
