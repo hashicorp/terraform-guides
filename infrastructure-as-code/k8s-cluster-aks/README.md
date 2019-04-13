@@ -37,9 +37,13 @@ Execute the following commands to deploy your Kubernetes cluster to AKS.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the AKS cluster will be created when you apply your plan.
 1. Click the "Confirm and Apply" button to actually provision your AKS dev cluster.
 
-You will see outputs representing the URL to access your AKS cluster in the Azure Portal, your private key PEM, the FQDN of your cluster, TLS certs/keys for your cluster, the Vault address, and your Vault username.  You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your dev cluster. However, if you configure the Vault Kubernetes authentication method in a workspace that uses the Terraform code in the [k8s-vault-config](./infrastructure-as-code/k8s-vault-config) directory of this repository and deploy your pods and services against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository, the outputs will automatically be used by those workspaces.
+You will see outputs representing the URL to access your AKS cluster in the Azure Portal, your private key PEM, the FQDN of your cluster, TLS certs/keys for your cluster, the Vault address, and your Vault username.  You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your dev cluster. However, if you configure the Vault Kubernetes authentication method in a workspace that uses the Terraform code in the [k8s-vault-config](../k8s-vault-config) directory of this repository and deploy your pods and services against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository, the outputs will automatically be used by those workspaces.
 
 You can also validate that the cluster was created in the Azure Portal.
+
+## Next Steps
+1. Provision an instance of the Vault Kubernetes authentication method against your cluster using the [k8s-vault-config](../k8s-vault-config) configuration in this repository.
+1. Provision some Kubernetes pods and services using the [k8s-services](../../self-serve-infrastructure/k8s-services) configuration in this repository.
 
 ## Cleanup
 Execute the following steps for your workspace to delete your Kubernetes cluster and associated resources from Azure.

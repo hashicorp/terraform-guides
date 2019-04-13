@@ -42,6 +42,10 @@ You will see outputs representing the URLs to access your GKE cluster in the Goo
 
 You can also validate that the cluster was created in the Google Console.
 
+## Next Steps
+1. Provision an instance of the Vault Kubernetes authentication method against your cluster using the [k8s-vault-config](../k8s-vault-config) configuration in this repository.
+1. Provision some Kubernetes pods and services using the [k8s-services](../../self-serve-infrastructure/k8s-services) configuration in this repository.
+
 ## Cleanup
 Execute the following steps for your workspaces to delete your Kubernetes cluster and associated resources from GKE.
 

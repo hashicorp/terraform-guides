@@ -7,8 +7,8 @@ This Terraform configuration configures the [Vault Kubernetes authentication met
 ## Deployment Prerequisites
 
 1. First deploy a Kubernetes cluster with Terraform Enterprise (TFE) by using one of these Terraform configurations and pointing a TFE workspace against it:
-    - [k8s-cluster-aks](../../infrastructure-as-code/k8s-cluster-aks)
-    - [k8s-cluster-gke](../../infrastructure-as-code/k8s-cluster-gke)
+    - [k8s-cluster-aks](../k8s-cluster-aks)
+    - [k8s-cluster-gke](../k8s-cluster-gke)
 1. We assume that you have already satisfied all the prerequisites for deploying a Kubernetes cluster in AKS or GKE described by the above links. That includes setting up a Vault server.
 1. We also assume that you have already forked this repository and cloned your fork to your laptop.
 1. If you do not already have a Terraform Enterprise (TFE) account, request one from sales@hashicorp.com.
@@ -26,6 +26,9 @@ Execute the following commands to deploy Vault authentication method to your Kub
 1. Queue a plan for the k8s-vault-configuation workspace in TFE by clicking the "Queue Plan" button in the upper right corner of your workspace.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the Vault Kubernetes authentication method will be created when you apply your plan.
 1. Click the "Confirm and Apply" button to actually deploy the authentication method.
+
+## Next Steps
+1. Provision some Kubernetes pods and services using the [k8s-services](../../self-serve-infrastructure/k8s-services) configuration in this repository.
 
 ## Cleanup
 Execute the following steps to delete Vault Kubernetes authentication method from your Kubernetes cluster.
