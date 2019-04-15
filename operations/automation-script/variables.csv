@@ -1,2 +1,3 @@
 name,Roger,terraform,false,false
 CONFIRM_DESTROY,1,env,false,false
+TF_CLI_ARGS,-no-color,env,false,false
