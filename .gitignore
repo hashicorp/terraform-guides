@@ -3,6 +3,9 @@
 *.tfstate.backup
 *.tfstate.lock.info
 
+# logs
+*.log
+
 # Directories
 .terraform/
 .vagrant/
