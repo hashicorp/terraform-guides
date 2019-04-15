@@ -4,7 +4,7 @@ terraform {
 
 resource "vault_auth_backend" "k8s" {
   type = "kubernetes"
-  path = "${data.terraform_remote_state.k8s_cluster.vault_user}-gke-${data.terraform_remote_state.k8s_cluster.environment}"
+  path = "${data.terraform_remote_state.k8s_cluster.vault_user}-${data.terraform_remote_state.k8s_cluster.environment}"
   description = "Vault Auth backend for Kubernetes"
 }
 
