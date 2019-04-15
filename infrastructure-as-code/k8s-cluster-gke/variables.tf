@@ -12,11 +12,6 @@ variable "gcp_project" {
   description = "GCP project name"
 }
 
-variable "cluster_name" {
-  description = "Name of the K8s cluster"
-  default = "k8sexample-cluster"
-}
-
 variable "initial_node_count" {
   description = "Number of worker VMs to initially create"
   default = 1
@@ -34,7 +29,7 @@ variable "master_password" {
 
 variable "node_machine_type" {
   description = "GCE machine type"
-  default = "n1-standard-2"
+  default = "n1-standard-1"
 }
 
 variable "node_disk_size" {

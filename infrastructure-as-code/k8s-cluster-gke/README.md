@@ -1,5 +1,5 @@
 # Kubernetes Cluster in Google Kubernetes Engine (GKE)
-Terraform configuration for deploying a Kubernetes cluster in the [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) in the Google Cloud Platform (GCP).
+The Terraform configuration in this directory can be used to deploy a Kubernetes cluster in [Google Kubernetes Engine (GKE)](https://cloud.google.com/kubernetes-engine/) in the Google Cloud Platform (GCP).
 
 ## Introduction
 This Terraform configuration deploys a Kubernetes cluster into Google's managed Kubernetes service, Google Kubernetes Engine (GKE). It replicates what a GCP customer could do with the `gcloud container clusters create` CLI [command](https://cloud.google.com/sdk/gcloud/reference/container/clusters/create).
@@ -7,6 +7,8 @@ This Terraform configuration deploys a Kubernetes cluster into Google's managed 
 It uses Google Cloud Provider's google_container_cluster resource to create an entire Kubernetes cluster in GKE including required VMs, networks, and other GCP constructs.
 
 This Terraform configuration gets the GCP credentials from a [Vault](https://www.vaultproject.io/) server.
+
+This configuration is intended to be used with two other configurations, [k8s-vault-config](../k8s-vault-config) and [k8s-services](../../self-serve-infrastructure/k8s-services). The first provisions an instance of the Vault Kubernetes authentication method against the cluster while the second provisions some pods, services, and other Kubernetes contstructs.
 
 ## Deployment Prerequisites
 
@@ -29,26 +31,20 @@ Execute the following commands to deploy your Kubernetes cluster to GKE.
 1. Create a workspace in your TFE organization called k8s-cluster-gke.
 1. Configure the k8s-cluster-gke workspace to connect to the fork of this repository in your own GitHub account.
 1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-cluster-gke".
-1. On the Variables tab of your workspace, add the following variables to the Terraform variables:
-    ```
-    gcp_project           # The name of the GCP project you are using
-    gcp_region            # Valid GCP Region e.g. us-east1
-    gcp_zone              # Valid GCP Zone e.g. us-east1-b
-    initial_node_count    # Default 1
-    node_machine_type     # Default n1-standard-1
-    environment           # Can be dev or any other value.
-    vault_addr            # Address of Vault server.  e.g.
-                          # http://<vault_server_dns/ip>:8200
-    vault_user            # Username to login as to add secrets.
-    ```
+1. On the Variables tab of your workspace, add the following variables to the Terraform variables: gcp_project, node_machine_type, vault_addr, and vault_user. gcp_project must be set to the ID of the GCP project in which you want to create the cluster; this will usually but not always be the name of the project. node_machine_type indicates the [machine type](https://cloud.google.com/compute/docs/machine-types) of the VMs that will be deployed in the cluster; for demo purposes, the default of n1-standard-1 is fine. Be sure to set vault_addr to the address of your Vault server including the port (e.g., "http://<your_vault_dns>:8200") and vault_user to your username on your Vault server.
+1. You can also set these other Terraform variables: gcp_region, gcp_zone, initial_node_count, master_username, master_password, node_disk_size, and environment. See the descriptions in [variables.tf](./variables.tf). The environment and vault_user variables determine the name of the Vault Kubernetes authentication method provisioned in the k8s-vault-configuration workspace.
 1. Set the VAULT_TOKEN environment variable to your Vault token. Be sure to mark the VAULT_TOKEN variable as sensitive so that other people cannot read it.
 1. Click the "Queue Plan" button in the upper right corner of your workspace.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the GKE cluster will be created when you apply your plan.
 1. Click the "Confirm and Apply" button to actually provision your GKE cluster.
 
-You will see outputs representing the URLs to access your GKE cluster in the Google Console, the FQDN of your cluster, TLS certs/keys for your cluster, the environment, the Vault address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your cluster. However, if you configure the Vault Kubernetes authentication method in a workspace that uses the Terraform code in the [k8s-vault-config](./infrastructure-as-code/k8s-vault-config) directory of this repository and deploy your pods and services against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository, the outputs will automatically be used by those workspaces.
+You will see outputs representing the URLs to access your GKE cluster in the Google Console, the FQDN of your cluster, TLS certs/keys for your cluster, the environment, the Vault address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your cluster. However, if you configure the Vault Kubernetes authentication method in a workspace that uses the Terraform code in the [k8s-vault-config](../k8s-vault-config) directory of this repository and deploy your pods and services against the Terraform code in the [k8s-services](../../self-serve-infrastructure/k8s-services) directory of this repository, the outputs will automatically be used by those workspaces.
 
 You can also validate that the cluster was created in the Google Console.
+
+## Next Steps
+1. Provision an instance of the Vault Kubernetes authentication method against your cluster using the [k8s-vault-config](../k8s-vault-config) configuration in this repository.
+1. Provision some Kubernetes pods and services using the [k8s-services](../../self-serve-infrastructure/k8s-services) configuration in this repository.
 
 ## Cleanup
 Execute the following steps for your workspaces to delete your Kubernetes cluster and associated resources from GKE.
