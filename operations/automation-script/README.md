@@ -1,13 +1,15 @@
 # TFE Automation Script
 Script to automate interactions with Terraform Enterprise, including the cloning of a repository containing Terraform configuration code, creation of a workspace, tarring and uploading of the Terraform code, setting of variables, triggering a run, checking Sentinel policies, and finally doing an apply if permitted. If an apply is done, the script waits for it to finish and then downloads the apply log and the before and after state files.
 
+There is also a script to delete the workspace.
+
 ## Introduction
 This script uses curl to interact with Terraform Enterprise via the Terraform Enterprise REST API. The same APIs could be used from Jenkins or other solutions to incorporate Terraform Enterprise into your CI/CD pipeline.
 
 Three arguments can be provided on the command line when calling the script:
-1. The first, git_url, is an optional URL for a git repository from which the script should clone some Terraform code.
-1. The second, workspace, is the name of the workspace to use or create if it does not already exist. Note that TFE workspace names are not allowed to contain spaces. The script checks for this and will exit if workspace contains any spaces.
-1. The third, override, is used in two ways:
+1. The first, **git_url**, is an optional URL for a git repository from which the script should clone some Terraform code.
+1. The second, **workspace**, is the name of the workspace to use or create if it does not already exist. Note that TFE workspace names are not allowed to contain spaces. The script checks for this and will exit if workspace contains any spaces.
+1. The third, **override**, is used in two ways:
     1. to automatically do an apply when no Sentinel policies exist or none of them are applicable to the workspace.
     1. to override any soft-mandatory Sentinel policies that failed.
 
