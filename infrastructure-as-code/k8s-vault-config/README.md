@@ -18,12 +18,12 @@ This Terraform configuration configures the [Vault Kubernetes authentication met
 ## Deployment Steps
 Execute the following commands to deploy Vault authentication method to your Kubernetes cluster:
 
-1. Create a new TFE workspace called k8s-vault-configuation.
+1. Create a new TFE workspace called k8s-vault-config.
 1. Configure your workspace to connect to the fork of this repository in your own GitHub account.
-1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-vault-configuration".
-1. On the Variables tab of your workspace, set the tfe_organization Terraform variable to the name of the TFE organization containing your Kubernetes cluster workspace and set the k8s_cluster_workspace Terraform variable to the name of the workspace you used to deploy your Kubernetes cluster.
-1. Set the VAULT_TOKEN environment variable to your Vault token. Be sure to mark the VAULT_TOKEN variable as sensitive so that other people cannot read it.
-1. Queue a plan for the k8s-vault-configuation workspace in TFE by clicking the "Queue Plan" button in the upper right corner of your workspace.
+1. Click the "More options" link, set the Terraform Working Directory to "infrastructure-as-code/k8s-vault-config".
+1. On the Variables tab of your workspace, set the **tfe_organization** Terraform variable to the name of the TFE organization containing your Kubernetes cluster workspace and set the **k8s_cluster_workspace** Terraform variable to the name of the workspace you used to deploy your Kubernetes cluster.
+1. Set the **VAULT_TOKEN** environment variable to your Vault token. Be sure to mark the VAULT_TOKEN variable as sensitive so that other people cannot read it.
+1. Queue a plan for the k8s-vault-config workspace in TFE by clicking the "Queue Plan" button in the upper right corner of your workspace.
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the Vault Kubernetes authentication method will be created when you apply your plan.
 1. Click the "Confirm and Apply" button to actually deploy the authentication method.
 
@@ -33,6 +33,6 @@ Execute the following commands to deploy Vault authentication method to your Kub
 ## Cleanup
 Execute the following steps to delete Vault Kubernetes authentication method from your Kubernetes cluster.
 
-1. Define an environment variable CONFIRM_DESTROY with value 1 on the Variables tab of your k8s-vault-configuation workspace.
-1. Queue a Destroy plan in TFE from the Settings tab of your k8s-vault-configuation workspace.
-1. On the Latest Run tab of your k8s-vault-configuation workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually remove the cats-and-dogs pods and services.
+1. Define an environment variable CONFIRM_DESTROY with value 1 on the Variables tab of your k8s-vault-config workspace.
+1. Queue a Destroy plan in TFE from the Settings tab of your k8s-vault-config workspace.
+1. On the Latest Run tab of your k8s-vault-config workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually remove the cats-and-dogs pods and services.
