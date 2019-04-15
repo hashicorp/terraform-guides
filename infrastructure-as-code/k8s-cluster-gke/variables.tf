@@ -39,7 +39,7 @@ variable "node_disk_size" {
 
 variable "environment" {
   description = "value passed to Environment tag and used in name of Vault auth backend later"
-  default = "dev"
+  default = "gke-dev"
 }
 
 variable "vault_user" {
