@@ -26,6 +26,24 @@ provider "kubernetes" {
   cluster_ca_certificate = "${base64decode(data.terraform_remote_state.k8s_cluster.k8s_master_auth_cluster_ca_certificate)}"
 }
 
+resource "kubernetes_cluster_role_binding" "k8sexampleRBAC" {
+  metadata {
+    name = "terraform-example"
+  }
+
+  subject {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "User"
+    name      = "73b8ba3b-90e0-4a66-83d9-57882d37bf83"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind  = "ClusterRole"
+    name = "cluster-admin"
+  }
+}
+
 resource "kubernetes_service_account" "vault_reviewer" {
   metadata {
     name = "vault-reviewer"
