@@ -14,7 +14,7 @@ vms = get_vms()
 cpus_limit = rule {
   all vms as _, instances {
     all instances as index, r {
-  	  r.applied.num_cpus <= 4
+  	  int(r.applied.num_cpus) <= 4
     }
   }
 }
@@ -23,7 +23,7 @@ cpus_limit = rule {
 memory_limit = rule {
   all vms as _, instances {
     all instances as index, r {
-  	  r.applied.memory <= 8192
+  	  int(r.applied.memory) <= 8192
     }
   }
 }
