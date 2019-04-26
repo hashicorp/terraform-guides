@@ -12,7 +12,7 @@ variable "vpc_name" {
 }
 
 resource "aws_vpc" "my_vpc" {
-  cidr_block = "172.16.0.0/16"
+  cidr_block = "172.17.0.0/16"
 
   tags = {
     Name = var.vpc_name
