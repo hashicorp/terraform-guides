@@ -1,5 +1,5 @@
 # TFE Automation Script
-Script to automate interactions with Terraform Enterprise, including the cloning of a repository containing Terraform configuration code, creation of a workspace, tarring and uploading of the Terraform code, setting of variables, triggering a run, checking Sentinel policies, and finally doing an apply if permitted. If an apply is done, the script waits for it to finish and then downloads the apply log and the before and after state files.
+Script to automate interactions with Terraform Enterprise, including the cloning of a repository containing Terraform configuration code, creation of a workspace, tarring and uploading of the Terraform code, setting of variables, triggering a run, checking Sentinel policies, and finally doing an apply if permitted. If an apply is done, the script waits for it to finish and then downloads the apply log and the before and after state files. If an apply cannot be done, it downloads the plan log instead.
 
 There is also a script to delete the workspace.
 
@@ -34,6 +34,7 @@ The script does the following steps:
     - If $run_status is "policy_override" and $override is "no", it prints out a message indicating that some policies failed and are not being overridden.
     - If $run_status is "errored", either the plan failed or a Sentinel policy marked "hard-mandatory" failed. The script terminates.
     - Other values of $run_status cause the loop to repeat after a brief sleep.
+1. If $save_plan was set to "true" in the above loop, the script outputs and saves the plan log.
 1. If any apply was done, the script goes into a second loop to wait for it to finish.
 1. When the apply is finished, the script downloads the apply log and the state files from before and after the apply.
 

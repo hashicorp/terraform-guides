@@ -77,7 +77,7 @@ sed "s/placeholder/${workspace}/" < workspace.template.json > workspace.json
 
 # Check to see if the workspace already exists
 echo "Checking to see if workspace exists"
-check_workspace_result=$(curl -s -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/workspaces/${workspace}")
+check_workspace_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/workspaces/${workspace}")
 
 # Parse workspace_id from check_workspace_result
 workspace_id=$(echo $check_workspace_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
@@ -159,6 +159,9 @@ while [ $continue -ne 0 ]; do
   is_confirmable=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['actions']['is-confirmable'])")
   echo "Run can be applied: " $is_confirmable
 
+  # Save plan log in some cases
+  save_plan="false"
+
   # Apply in some cases
   applied="false"
 
@@ -166,20 +169,11 @@ while [ $continue -ne 0 ]; do
   # exist or are applicable to the workspace
 
   # Run is planning - get the plan
-  if [[ "$run_status" == "planning" ]] && [[ "$is_confirmable" == "False" ]] && [[ "$override" == "no" ]]; then
-    continue=1
-    echo "Getting the result of the Terraform Plan."
-    plan_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id}?include=plan)
-    plan_log_url=$(echo $plan_result | python -c "import sys, json; print(json.load(sys.stdin)['included'][0]['attributes']['log-read-url'])")
-    echo "Plan Log:"
-    # Retrieve Plan Log from the URL
-    # and output to shell
-    curl -s $plan_log_url
-
-  elif [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
+  if [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
     continue=0
     echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
     echo "Check the run in Terraform Enterprise UI and apply there if desired."
+    save_plan="true"
   # planned means plan finished and no Sentinel policies
   # exist or are applicable to the workspace
   elif [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]]; then
@@ -220,17 +214,30 @@ while [ $continue -ne 0 ]; do
   # and will not apply
   elif [[ "$run_status" == "policy_override" ]] && [[ "$override" == "no" ]]; then
     echo "Some policies failed, but will not override. Check run in Terraform Enterprise UI."
+    save_plan="true"
     continue=0
   # errored means that plan had an error or that a hard-mandatory
   # policy failed
   elif [[ "$run_status" == "errored" ]]; then
     echo "Plan errored or hard-mandatory policy failed"
+    save_plan="true"
     continue=0
   else
     # Sleep and then check status again in next loop
     echo "We will sleep and try again soon."
   fi
 done
+
+# Get the plan log if $save_plan is true
+if [[ "$save_plan" == "true" ]]; then
+  echo "Getting the result of the Terraform Plan."
+  plan_result=$(curl -s --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id}?include=plan)
+  plan_log_url=$(echo $plan_result | python -c "import sys, json; print(json.load(sys.stdin)['included'][0]['attributes']['log-read-url'])")
+  echo "Plan Log:"
+  # Retrieve Plan Log from the URL
+  # and output to shell and file
+  curl -s $plan_log_url | tee ${run_id}.log
+fi
 
 # Get the apply log and state files (before and after) if an apply was done
 if [[ "$applied" == "true" ]]; then
