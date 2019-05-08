@@ -1,0 +1,59 @@
+import "tfplan"
+
+mandatory_labels = [
+  "ttl", 
+  "owner",
+]
+
+# Get an array of all resources of the given type (or an empty array).
+get_resources = func(type) {
+	if length(tfplan.module_paths else []) > 0 { # always true in the real tfplan import
+		return get_resources_all_modules(type)
+	} else { # fallback for tests
+		return get_resources_root_only(type)
+	}
+}
+
+get_resources_root_only = func(type) {
+	resources = []
+	named_and_counted_resources = tfplan.resources[type] else {}
+	# Get resource bodies out of nested resource maps, from:
+	# {"name": {"0": {"applied": {...}, "diff": {...} }, "1": {...}}, "name": {...}}
+	# to:
+	# [{"applied": {...}, "diff": {...}}, {"applied": {...}, "diff": {...}}, ...]
+	for named_and_counted_resources as _, instances {
+		for instances as _, body {
+			append(resources, body)
+		}
+	}
+	return resources
+}
+
+get_resources_all_modules = func(type) {
+	resources = []
+	for tfplan.module_paths as path {
+		named_and_counted_resources = tfplan.module(path).resources[type] else {}
+		# Get resource bodies out of nested resource maps, from:
+		# {"name": {"0": {"applied": {...}, "diff": {...} }, "1": {...}}, "name": {...}}
+		# to:
+		# [{"applied": {...}, "diff": {...}}, {"applied": {...}, "diff": {...}}, ...]
+		for named_and_counted_resources as _, instances {
+			for instances as _, body {
+				append(resources, body)
+			}
+		}
+	}
+	return resources
+}
+
+instance_labels = rule {
+	all get_resources("google_compute_instance") as r {
+    all mandatory_labels as t {
+      r.applied.labels contains t
+    }
+	}
+}
+
+main = rule {
+	(instance_labels) else true
+}
