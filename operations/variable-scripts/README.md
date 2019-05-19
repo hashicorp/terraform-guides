@@ -25,7 +25,19 @@ The set-variables.sh script accepts two arguments:
 
 The delimited file containing your variables should normally be comma-separated. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive` in that order with the last two corresponding to the hcl and sensitive checkboxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"`.
 
-If you do want to set HCL variables with the `hcl` flag set to `"true"` and the values of your variables include commas, you will need to change the variable `delimiter` to some character such as a semicolon not used in any variable values. Additionally, you need to double escape any quotes in the values of your HCL variables, using `\\"` instead of `"`; the first escape is needed to avoid illegal json while the second is needed because the `sed` commands used in the script will remove the first one. We have provided a file called hcl-variables.csv with one list variables and one map variable as an example.
+If you do want to set HCL variables with the `hcl` flag set to `"true"` and the values of your variables include commas, you will need to change the variable `delimiter` to some character such as a semicolon not used in any variable values. Additionally, you need to double escape any quotes in the values of your HCL variables, using `\\"` instead of `"`; the first escape is needed to avoid illegal json while the second is needed because the `sed` commands used in the script will remove the first one. We have provided a file called hcl-variables.csv with one list variables and one map variable as an example. Note that the values of HCL variables should not be enclosed in double quotes in your delimited file.
+
+If you want to set the GOOGLE_CREDENTIALS environment variable equal to the contents of a GCP credentials file, you need to do some pre-processing on a copy of the file in order to convert newlines to spaces, to double-escape double quotes (`"`), to single-escape forward slashes (`/`), and to triple-escape literal `\n` characters.  You can use the following substitution commands to do all that in vi:
+1. `:1,$s/\n//`
+1. `:s/"/\\\\"/g`
+1. `:s/\//\\\//g`
+1. `:s/\\n/\\\\\\\\n/g`
+Alternatively, you could do the following global substitutions in Atom or another text editor:
+1. Replace each newline with a single space. (In Atom, click the `.*` button in the Find control and then replace `\n` with an empty string. But then deselect the `.*` button before making the remaining substitutions.)
+1. Replace each `"` with `\\"`.
+1. Replace each `/` with `\/`.
+1. Replace each `\n` with `\\\\n`.
+When you paste the contents of the pre-processed GCP credentials file into your delimited variables file, be careful to not add an actual newline between it and `;env;false;true`.
 
 Be sure to set `sensitive` to `"true"` for any items such as cloud credentials that you would not want other people with access to the TFE workspace to see.
 

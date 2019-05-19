@@ -12,7 +12,8 @@
 # Set the organization to use.
 # You should edit these before running the script.
 address="app.terraform.io"
-organization="<your_organization>"
+#organization="<your_organization>"
+organization="Cloud-Operations"
 
 # Set delete_first to "true" if you want this script to always
 # call the delete-variables.sh script first to delete all
@@ -23,7 +24,7 @@ delete_first="false"
 # Set delimiter to a different value such as ";" if using HCL variables
 # that include commas in their values and then use the same character
 # as the delimiter in your delimited file.
-delimiter=","
+delimiter=";"
 
 # Set workspace from first argument
 if [ ! -z "$1" ]; then
@@ -71,8 +72,11 @@ fi
 while IFS=${delimiter} read -r key value category hcl sensitive
 do
   sed -e "s/my-workspace/${workspace_id}/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
-  echo "Seting $category variable $key with value $value: hcl: $hcl, sensitive: $sensitive"
+  echo "Setting $category variable $key with value $value, hcl: $hcl, sensitive: $sensitive"
   upload_variable_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  echo ""
+  echo ""
+  echo $upload_variable_result
 done < ${variables_file}
 
 echo "Set all variables."
