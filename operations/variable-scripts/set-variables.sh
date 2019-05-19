@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script that sets Terraform and environment variables in a
 # Terraform Enterprise (TFE) workspace
-# The variables must be set in variables.csv or in a similar
+# The variables must be set in <workspace>.csv, variables.csv or in a similar
 # delimited file named in the second, optional argument passed to the script.
 
 # Make sure the TFE_TOKEN environment variable is set
@@ -35,23 +35,38 @@ else
   exit
 fi
 
-# Set name of variables CSV file to use from second argument
+# Set name of delimited variables file to use from second argument
 if [ ! -z "$2" ]; then
   variables_file=$2
-  echo "Using variables CSV file provided in second argument: " $variables_file
+  if [ -f "${variables_file}" ]; then
+    echo "Found and using ${variables_file} file provided in second argument"
+  else
+    echo "Did not find ${variables_file} file provided in second argument"
+    echo "Please provide the name of a variables file in the current directory"
+    echo "or create and edit a file called ${workspace}.csv or variables.csv."
+    echo "Exiting"
+    exit
+  fi
 else
-  variables_file="variables.csv"
-  echo "Using variables.csv file as default."
-fi
-
-# Validate that variables_file exists
-if [ -f "${variables_file}" ]; then
-  echo "Found variables file, ${variables_file}."
-else
-  echo "Did not find variables file ${variables_file}."
-  echo "Please provide the name of a variables file in the current directory."
-  echo "Exiting"
-  exit
+  # If a second argument was not given, try to use <workspace>.csv
+  variables_file="${workspace}.csv"
+  if [ -f "${variables_file}" ]; then
+    echo "Found and using variables file, ${variables_file}, with same name as workspace."
+  else
+    # If <workspace.csv> was not found, try to use variables.csv
+    echo "Did not find variables file ${variables_file} with same name as workspace."
+    echo "Looking for variables.csv instead"
+    variables_file="variables.csv"
+    if [ -f "variables.csv" ]; then
+      echo "Found and using variables.csv."
+    else
+      echo "Could not find ${workspace}.csv or variables.csv."
+      echo "Please provide the name of a variables file in the current directory."
+      echo "or create and edit a file called ${workspace}.csv or variables.csv."
+      echo "Exiting"
+      exit
+    fi
+  fi
 fi
 
 # Write variable.template.json to file

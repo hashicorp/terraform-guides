@@ -14,7 +14,7 @@ organization="<your_organization>"
 # Set workspace from first argument
 if [ ! -z "$1" ]; then
   workspace=$1
-  echo "Using workspace: " $workspace
+  echo "Deleting all variables from workspace: ${workspace}"
 else
   echo "Please provide the name of an existing workspace."
   echo "Exiting."

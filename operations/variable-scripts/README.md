@@ -21,7 +21,7 @@ In addition to bash, these scripts require python. On Linux and Mac, make sure t
 ## Running the set-variables.sh Script
 The set-variables.sh script accepts two arguments:
 * `workspace`: the name of the TFE workspace in which you want to set variables.
-* `file`: the name of the delimited file in the current directory containing the variables and their values. If you do not provide a file name, then the script will look for and use variables.csv in the current directory. An example version of that file is provided. There is also a second delimited file called other-variables.csv so that you can test the script with this file as the second argument.
+* `file`: the optional name of a delimited file in the current directory containing the variables and their values. If you do not provide a file name, then the script will first look for and use one called "<workspace>.csv in the current directory. If it does not find that, it will look for and use "variables.csv" in the current directory. An example version of that file is provided. There is also a second delimited file called other-variables.csv so that you can test the script with this file as the second argument.
 
 The delimited file containing your variables should normally be separated with semicolons (`;`) with each variable on its own line. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive` in that order with the last two corresponding to the hcl and sensitive check boxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"`.
 
@@ -50,14 +50,14 @@ When you paste the contents of the processed GCP credentials file into your deli
 ### Examples
 Here are two examples for running the set_variables.sh script:
 ```
-./set-variables.sh test-workspace
-./set-variables.sh test-workspace other-variables.csv
+./set-variables.sh test-ws
+./set-variables.sh test-ws other-variables.csv
 ```
-In the first case, the file variables.csv will be used if found. In the second case, the file other-variables.csv  will be used if found.
+In the first case, test-ws.csv fill be used if it is found in the current directory. Otherwise, variables.csv will be used if found. In the second case, the file other-variables.csv will be used if found.
 
-Here is a third example that can be used with HCL variables after setting the `delimiter` variable to `;`:
+Here is a third example that can be used with HCL variables:
 ```
-./set-variables.sh test-workspace hcl-variables.csv
+./set-variables.sh test-ws hcl-variables.csv
 ```
 
 ## Running the delete-variables.sh Script
