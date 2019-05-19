@@ -1,17 +1,29 @@
 #!/bin/bash
-# Script that sets Terraform and environment variables in a Terraform Enterprise (TFE) workspace
-# The variables must be set in variables.csv or in a similar CSV file named in the second, optional
-# argument passed to the script.
+# Script that sets Terraform and environment variables in a
+# Terraform Enterprise (TFE) workspace
+# The variables must be set in variables.csv or in a similar
+# delimited file named in the second, optional argument passed to the script.
 
 # Make sure the TFE_TOKEN environment variable is set
 # to a user or team token that has the write or admin permission
 # for the workspace.
 
-# Set address if using private Terraform Enterprise server.
-# Set organization to use.
-# You should edit these before running.
+# Set address if using a private Terraform Enterprise server.
+# Set the organization to use.
+# You should edit these before running the script.
 address="app.terraform.io"
 organization="<your_organization>"
+
+# Set delete_first to "true" if you want this script to always
+# call the delete-variables.sh script first to delete all
+# variables from the workspace before setting new ones.
+# The script does not currently update existing values.
+delete_first="false"
+
+# Set delimiter to a different value such as ";" if using HCL variables
+# that include commas in their values and then use the same character
+# as the delimiter in your delimited file.
+delimiter=","
 
 # Set workspace from first argument
 if [ ! -z "$1" ]; then
@@ -50,8 +62,13 @@ check_workspace_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --h
 workspace_id=$(echo $check_workspace_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
 echo "Workspace ID: " $workspace_id
 
+# Delete all variables in the workspace if $delete_first is true
+if [ "$delete_first" == "true" ]; then
+  ./delete-variables.sh $workspace
+fi
+
 # Set variables in workspace
-while IFS=',' read -r key value category hcl sensitive
+while IFS=${delimiter} read -r key value category hcl sensitive
 do
   sed -e "s/my-workspace/${workspace_id}/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
   echo "Seting $category variable $key with value $value: hcl: $hcl, sensitive: $sensitive"
@@ -59,4 +76,3 @@ do
 done < ${variables_file}
 
 echo "Set all variables."
-
