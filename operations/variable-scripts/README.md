@@ -12,7 +12,7 @@ Please also make sure you do not check variables files containing sensitive item
 
 Before running, you should set the `address` and `organization` variables in the script to match the address of your TFE server and your organization on that server.  The default address, "app.terraform.io", is the address of the Terraform Enterprise SaaS (aka Terraform Cloud) server.
 
-As mentioned above, you can also set `delete_first` variable in the script to `"true"` if you want the set-variables.sh script to always call the delete-variables.sh script first. These is also a `delimiter` value which can be set if you are setting HCL variables and need to use a delimiter different from the default semicolon (`;`).
+As mentioned above, you can also set the `delete_first` variable in the script to `"true"` if you want the set-variables.sh script to always call the delete-variables.sh script first. These is also a `delimiter` value which can be set if you are setting HCL variables and need to use a delimiter different from the default semicolon (`;`).
 
 You must export or set the `TFE_TOKEN` environment variable, setting it to a user or team TFE token that has permission to write and delete variables in the workspace.
 
@@ -33,16 +33,18 @@ If you want to set the values of HCL variables that contain semicolons (`;`), yo
 
 We have provided a file called hcl-variables.csv with one list variable and one map variable as an example. Note that the values of HCL variables should not be enclosed in double quotes in your delimited variables file.
 
-An case in which all of the above substitutions and escapes are needed is the setting of the GOOGLE_CREDENTIALS environment variable to the contents of a GCP credentials file. You need to do the following pre-processing on a copy of the file in order to convert newlines to blanks, to double-escape double quotes (`"`), to single-escape forward slashes (`/`), and to triple-escape literal `\n` characters.  You can use the following substitution commands to do all that in vi:
+A case in which all of the above substitutions and escapes are needed is the setting of the GOOGLE_CREDENTIALS environment variable to the contents of a GCP credentials file. You need to do the following pre-processing on a copy of the file in order to convert newlines to blanks, to double-escape double quotes (`"`), to single-escape forward slashes (`/`), and to triple-escape literal `\n` characters.  You can use the following substitution commands to do all that in vi:
 1. `:1,$s/\n//`
 1. `:s/"/\\\\"/g`
 1. `:s/\//\\\//g`
 1. `:s/\\n/\\\\\\\\n/g`
+
 Alternatively, you can do the following global substitutions in Atom or another text editor:
 1. Replace each newline with a blank. (In Atom, click the `.*` button in the Find control and then replace `\n` with a blank value. But then deselect the `.*` button before making the remaining substitutions.)
 1. Replace each `"` with `\\"`.
 1. Replace each `/` with `\/`.
 1. Replace each `\n` with `\\\\n`.
+
 When you paste the contents of the processed GCP credentials file into your delimited variables file, be careful to not add an actual newline between it and `;env;false;true`.
 
 ### Examples
