@@ -12,8 +12,7 @@
 # Set the organization to use.
 # You should edit these before running the script.
 address="app.terraform.io"
-#organization="<your_organization>"
-organization="Cloud-Operations"
+organization="<your_organization>"
 
 # Set delete_first to "true" if you want this script to always
 # call the delete-variables.sh script first to delete all
@@ -21,8 +20,8 @@ organization="Cloud-Operations"
 # The script does not currently update existing values.
 delete_first="false"
 
-# Set delimiter to a different value such as ";" if using HCL variables
-# that include commas in their values and then use the same character
+# Set delimiter to a different value than ";" if using HCL variables
+# that include semicolons in their values and then use the same character
 # as the delimiter in your delimited file.
 delimiter=";"
 
@@ -55,6 +54,30 @@ else
   exit
 fi
 
+# Write variable.template.json to file
+cat > variable.template.json <<EOF
+{
+  "data": {
+    "type":"vars",
+    "attributes": {
+      "key":"my-key",
+      "value":"my-value",
+      "category":"my-category",
+      "hcl":my-hcl,
+      "sensitive":my-sensitive
+    }
+  },
+  "relationships": {
+    "workspace": {
+      "data": {
+        "id":"my-workspace",
+        "type":"workspaces"
+      }
+    }
+  }
+}
+EOF
+
 # Check to see if the workspace already exists and get workspace ID
 echo "Checking to see if workspace exists and getting workspace ID"
 check_workspace_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/workspaces/${workspace}")
@@ -80,3 +103,7 @@ do
 done < ${variables_file}
 
 echo "Set all variables."
+
+# Remove variable.template.json file and variable.json file
+rm variable.template.json
+rm variable.json

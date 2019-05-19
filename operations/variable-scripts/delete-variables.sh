@@ -37,7 +37,7 @@ parse_ids_and_names() { python -c '
 import sys, json
 parsed = json.load(sys.stdin)
 id_name_category_dict = ",".join(v["id"] + ":" + v["attributes"]["key"] + ":" + v["attributes"]["category"] for v in parsed["data"])
-print id_name_category_dict'
+print(id_name_category_dict)'
 }
 
 # Parse variables from list_variables_result
@@ -50,7 +50,7 @@ do
     v_id=$(echo $v | cut -f1 -d":")
     v_name=$(echo $v | cut -f2 -d":")
     v_category=$(echo $v | cut -f3 -d":")
-    
+
     # Delete variable
     echo "Deleting ${v_category} variable ${v_name}"
     curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" \
@@ -58,4 +58,3 @@ do
 done
 
 echo "Deleted all variables."
-

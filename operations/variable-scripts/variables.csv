@@ -1,2 +1,2 @@
-name,Roger,terraform,false,false
-CONFIRM_DESTROY,1,env,false,false
+name;Roger;terraform;false;false
+CONFIRM_DESTROY;1;env;false;false
