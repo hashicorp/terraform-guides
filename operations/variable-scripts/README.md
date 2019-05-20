@@ -4,24 +4,28 @@ The scripts in this directory let you set values of new variables in and delete 
 * The [set-variables.sh](./set-variables.sh) script sets Terraform and environment variables in a workspace from a delimited file.
 * The [delete-variables.sh](./delete-variables.sh) script deletes all Terraform and environment variables in a workspace.
 
+In addition to bash, these scripts require python. On Linux and Mac, make sure that python is installed. If you want to run the scripts on Windows, install Git, which includes Git Bash, and python if you don't already have them. Then run the scripts and your terraform commands inside a Git Bash shell.
+
 The set-variables.sh has a `delete_first` variable, which will call the delete-variables.sh script first if set to `"true"`. Most users will want to set this to `"true"`, but the default, hard-coded value is `"false"` since we do not want anyone to accidentally delete variables.
 
 The set-variables.sh script cannot currently update the values of existing variables. So, you should either set the `delete_first` variable to `"true"` or make sure the delimited file you use does not contain any variables that already exist in the workspace.
 
-Please also make sure you do not check variables files containing sensitive items such as cloud credentials into source code management systems.
+Before running these scripts, you must export or set the `TFE_TOKEN` environment variable, setting it to a user or team TFE token that has permission to write and delete variables in the workspace.
 
-Before running, you should set the `address` and `organization` variables in the script to match the address of your TFE server and your organization on that server.  The default address, "app.terraform.io", is the address of the Terraform Enterprise SaaS (aka Terraform Cloud) server.
+Before running these scripts, you must export or set the `TFE_ORG` environment variable, setting it to the name of the organization containing the workspaces you want to set variables in.
 
-As mentioned above, you can also set the `delete_first` variable in the script to `"true"` if you want the set-variables.sh script to always call the delete-variables.sh script first. These is also a `delimiter` value which can be set if you are setting HCL variables and need to use a delimiter different from the default semicolon (`;`).
+You can also export or set the `TFE_ADDR` environment variable, setting it to the address of your TFE server, for example `roger-ptfe.hashidemos.io`. If you do not do this, the scripts will use `app.terraform.io` which is the address of the Terraform Enterprise SaaS (aka Terraform Cloud) server.
 
-You must export or set the `TFE_TOKEN` environment variable, setting it to a user or team TFE token that has permission to write and delete variables in the workspace.
+As mentioned above, you can also set the `delete_first` variable in the script to `"true"` if you want the set-variables.sh script to always call the delete-variables.sh script first.
 
-In addition to bash, these scripts require python. On Linux and Mac, make sure that python is installed. If you want to run the scripts on Windows, install Git, which includes Git Bash, and python if you don't already have them. Then run the scripts and your terraform commands inside a Git Bash shell.
+These is also a `delimiter` value which can be set if you are setting HCL variables and need to use a delimiter different from the default semicolon (`;`).
 
 ## Running the set-variables.sh Script
 The set-variables.sh script accepts two arguments:
 * `workspace`: the name of the TFE workspace in which you want to set variables.
-* `file`: the optional name of a delimited file in the current directory containing the variables and their values. If you do not provide a file name, then the script will first look for and use one called "\<workspace\>.csv in the current directory. If it does not find that, it will look for and use "variables.csv" in the current directory. An example version of that file is provided. There is also a second delimited file called other-variables.csv so that you can test the script with this file as the second argument.
+* `file`: the optional name of a delimited variables file in the current directory containing the variables and their values. If you do not provide a file name, then the script will first look for and use one called "\<workspace\>.csv in the current directory. If it does not find that, it will look for and use "variables.csv" in the current directory. An example version of that file is provided. There is also a second delimited file called other-variables.csv so that you can test the script with this file as the second argument.
+
+Please make sure you do not check variables files containing sensitive items such as cloud credentials into source code management systems.
 
 The delimited file containing your variables should normally be separated with semicolons (`;`) with each variable on its own line. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive` in that order with the last two corresponding to the hcl and sensitive check boxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"`.
 
@@ -61,11 +65,20 @@ Here is a third example that can be used with HCL variables:
 ```
 
 ## Running the delete-variables.sh Script
-The delete-variables.sh script accepts a single argument:
+The delete-variables.sh script accepts two arguments, but you will only use the first when calling it directly:
 * `workspace`: the name of the TFE workspace from which you want to delete all variables.
+* `run_from_set_variables`: a flag that the set-variables.sh script uses when calling delete-variables.sh. It is used to suppress outputs about `TFE_TOKEN`, `TFE_ORG`, and `TFE_ADDR` that would be redundant with that already given from set-variables.sh itself. The set-variable.sh script sets it to "true", but any value could be used to suppress the redundant outputs.
 
 ### Example
 Here is an example of running the delete-variables.sh script:
 ```
 ./delete-variables.sh test-workspace
 ```
+
+## Troubleshooting
+If you encounter problems when running the set-variables.sh script, try uncommenting the line near the end of the script that has `echo $upload_variable_result`.
+
+The most likely problems are the following:
+1. The workspace you specified does not yet exist in the organization you specified.
+1. You are trying to set variables that already exist. Uncommenting the mentioned line will show this.
+1. Your TFE_TOKEN does not give you permissions to set variables on the workspace. This will typically give an error when trying to get the workspace ID. Use a different token.
