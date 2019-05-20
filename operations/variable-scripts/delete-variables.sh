@@ -1,15 +1,68 @@
 #!/bin/bash
 # Script that deletes all Terraform and environment variables in a Terraform Enterprise (TFE) workspace
 
-# Make sure the TFE_TOKEN environment variable is set
-# to a user or team token that has the write or admin permission
-# for the workspace.
+# Exit if any errors encountered
+set -e
 
-# Set address if using private Terraform Enterprise server.
-# Set organization to use.
-# You should edit these before running.
-address="app.terraform.io"
-organization="<your_organization>"
+# Check if this was run from set-variables.sh
+# So that we can suppress repeated outputs
+if [ ! -z "$2" ]; then
+  run_from_set_variables=$2
+  echo "Running delete-variables.sh"
+  echo ""
+fi
+
+# Only do full checks for TFE_TOKEN and TFE_ORG if this script
+# was not called from set-variables.sh
+if [ ! -z "${run_from_set_variables}" ]; then
+  token=$TFE_TOKEN
+  organization=$TFE_ORG
+else
+  # Make sure the $TFE_TOKEN environment variable is set
+  # to a user or team token that has the write or admin permission
+  # for the workspace.
+  if [ ! -z "$TFE_TOKEN" ]; then
+    token=$TFE_TOKEN
+    echo "TFE_TOKEN environment variable was found."
+  else
+    echo "TFE_TOKEN environment variable was not set."
+    echo "You must export/set the TFE_TOKEN environment variable."
+    echo "It should be a user or team token that has write or admin"
+    echo "permission on the workspace."
+    echo "Exiting."
+    exit
+  fi
+
+  # Evaluate $TFE_ORG environment variable
+  # If not set, give error and exit
+  if [ ! -z "$TFE_ORG" ]; then
+    organization=$TFE_ORG
+    echo "TFE_ORG environment variable was set to ${TFE_ORG}."
+    echo "Using organization, ${organization}."
+  else
+    echo "You must export/set the TFE_ORG environment variable."
+    echo "Exiting."
+    exit
+  fi
+fi
+
+# Evaluate $TFE_ADDR environment variable if it exists
+# Otherwise, use "app.terraform.io"
+# You should edit these before running the script.
+if [ ! -z "$TFE_ADDR" ]; then
+  address=$TFE_ADDR
+  if [ -z "${run_from_set_variables}" ]; then
+    echo "TFE_ADDR environment variable was set to ${TFE_ADDR}."
+    echo "Using address, ${address}"
+  fi
+else
+  address="app.terraform.io"
+  if [ -z "${run_from_set_variables}" ]; then
+    echo "TFE_ADDR environment variable was not set."
+    echo "Using Terraform Cloud (TFE SaaS) address, app.terraform.io."
+    echo "If you want to use a private TFE server, export/set TFE_ADDR."
+  fi
+fi
 
 # Set workspace from first argument
 if [ ! -z "$1" ]; then
@@ -53,8 +106,8 @@ do
 
     # Delete variable
     echo "Deleting ${v_category} variable ${v_name}"
-    curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" \
-    --request DELETE "https://${address}/api/v2/vars/${v_id}"
+    curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --request DELETE "https://${address}/api/v2/vars/${v_id}"
+
 done
 
 echo "Deleted all variables."
