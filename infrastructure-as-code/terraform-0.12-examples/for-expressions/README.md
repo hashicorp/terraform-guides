@@ -10,7 +10,7 @@ output "private_addresses_old" {
 }
 ```
 
-We also use the new [Splat Espression](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator) (`[*]`):
+We also use the new [Splat Expression](https://www.hashicorp.com/blog/terraform-0-12-generalized-splat-operator) (`[*]`):
 ```
 output "private_addresses_full_splat" {
   value = [ aws_instance.ubuntu[*].private_dns ]
