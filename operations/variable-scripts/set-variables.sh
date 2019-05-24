@@ -138,7 +138,8 @@ echo ""
 
 # Delete all variables in the workspace if $delete_first is true
 if [ "$delete_first" == "true" ]; then
-  ./delete-variables.sh $workspace true
+  script_location=$(dirname $0)
+  ${script_location}/delete-variables.sh $workspace true
 fi
 
 # Set variables in workspace

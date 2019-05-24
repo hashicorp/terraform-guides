@@ -6,7 +6,9 @@ The scripts in this directory let you set values of new variables in and delete 
 
 In addition to bash, these scripts require python. On Linux and Mac, make sure that python is installed. If you want to run the scripts on Windows, install Git, which includes Git Bash, and python if you don't already have them. Then run the scripts and your terraform commands inside a Git Bash shell.
 
-The set-variables.sh has a `delete_first` variable, which will call the delete-variables.sh script first if set to `"true"`. Most users will want to set this to `"true"`, but the default, hard-coded value is `"false"` since we do not want anyone to accidentally delete variables.
+The set-variables.sh has a `delete_first` variable, which will call the delete-variables.sh script first if set to `"true"`. Most users will want to set this to `"true"`, but the default, hard-coded value is `"false"` since we do not want anyone to accidentally delete variables. The set-variables.sh script will call the delete-variables.sh script from the same directory even if that directory is not your current working directory.
+
+We recommend copying both scripts to a directory such as /usr/local/bin that is in your PATH so that you can execute them from any directory containing a Terraform configuration. You will then only have to create a variables CSV file for that configuration in the configuration's directory.
 
 The set-variables.sh script cannot currently update the values of existing variables. So, you should either set the `delete_first` variable to `"true"` or make sure the delimited file you use does not contain any variables that already exist in the workspace.
 
