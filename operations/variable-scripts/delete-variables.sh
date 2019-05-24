@@ -8,7 +8,8 @@ set -e
 # So that we can suppress repeated outputs
 if [ ! -z "$2" ]; then
   run_from_set_variables=$2
-  echo "Running delete-variables.sh"
+  script_location=$(dirname $0)
+  echo "Running ${script_location}/delete-variables.sh"
   echo ""
 fi
 
