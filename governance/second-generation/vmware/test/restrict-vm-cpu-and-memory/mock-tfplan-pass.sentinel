@@ -1,0 +1,490 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"vsphere_virtual_machine": {
+				"vm": {
+					0: {
+						"applied": {
+							"boot_retry_delay":   "10000",
+							"change_version":     "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"cpu_limit":          "-1",
+							"cpu_share_count":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"cpu_share_level":    "normal",
+							"datastore_id":       "datastore-10",
+							"default_ip_address": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"disk": [
+								{
+									"attach":           false,
+									"datastore_id":     "<computed>",
+									"device_address":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"disk_mode":        "persistent",
+									"disk_sharing":     "sharingNone",
+									"eagerly_scrub":    false,
+									"io_limit":         "-1",
+									"io_reservation":   "0",
+									"io_share_count":   "0",
+									"io_share_level":   "normal",
+									"keep_on_remove":   false,
+									"key":              "0",
+									"label":            "disk0",
+									"path":             "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"size":             "20",
+									"thin_provisioned": true,
+									"unit_number":      "0",
+									"uuid":             "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"write_through":    false,
+								},
+							],
+							"ept_rvi_mode":         "automatic",
+							"firmware":             "bios",
+							"force_power_off":      true,
+							"guest_id":             "other3xLinux64Guest",
+							"guest_ip_addresses":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"host_system_id":       "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"hv_mode":              "hvAuto",
+							"id":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"imported":             "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"latency_sensitivity":  "normal",
+							"memory":               "1024",
+							"memory_limit":         "-1",
+							"memory_share_count":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"memory_share_level":   "normal",
+							"migrate_wait_timeout": "30",
+							"moid":                 "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"name":                 "terraform-roger",
+							"network_interface": [
+								{
+									"adapter_type":          "vmxnet3",
+									"bandwidth_limit":       "-1",
+									"bandwidth_reservation": "0",
+									"bandwidth_share_count": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"bandwidth_share_level": "normal",
+									"device_address":        "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"key":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"mac_address":           "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"network_id":            "network-11",
+								},
+							],
+							"num_cores_per_socket":                    "1",
+							"num_cpus":                                "2",
+							"reboot_required":                         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"resource_pool_id":                        "resgroup-17",
+							"run_tools_scripts_after_power_on":        true,
+							"run_tools_scripts_after_resume":          true,
+							"run_tools_scripts_before_guest_shutdown": true,
+							"run_tools_scripts_before_guest_standby":  true,
+							"scsi_bus_sharing":                        "noSharing",
+							"scsi_controller_count":                   "1",
+							"scsi_type":                               "pvscsi",
+							"shutdown_wait_timeout":                   "3",
+							"swap_placement_policy":                   "inherit",
+							"uuid":                                    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"vapp_transport":                          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"vmware_tools_status":                     "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"vmx_path":                                "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"wait_for_guest_ip_timeout":               "0",
+							"wait_for_guest_net_routable":             false,
+							"wait_for_guest_net_timeout":              "0",
+						},
+						"diff": {
+							"boot_retry_delay": {
+								"computed": false,
+								"new":      "10000",
+								"old":      "",
+							},
+							"change_version": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"cpu_limit": {
+								"computed": false,
+								"new":      "-1",
+								"old":      "",
+							},
+							"cpu_share_count": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"cpu_share_level": {
+								"computed": false,
+								"new":      "normal",
+								"old":      "",
+							},
+							"datastore_id": {
+								"computed": false,
+								"new":      "datastore-10",
+								"old":      "",
+							},
+							"default_ip_address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"disk.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "0",
+							},
+							"disk.0.attach": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"disk.0.datastore_id": {
+								"computed": false,
+								"new":      "<computed>",
+								"old":      "",
+							},
+							"disk.0.device_address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"disk.0.disk_mode": {
+								"computed": false,
+								"new":      "persistent",
+								"old":      "",
+							},
+							"disk.0.disk_sharing": {
+								"computed": false,
+								"new":      "sharingNone",
+								"old":      "",
+							},
+							"disk.0.eagerly_scrub": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"disk.0.io_limit": {
+								"computed": false,
+								"new":      "-1",
+								"old":      "",
+							},
+							"disk.0.io_reservation": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"disk.0.io_share_count": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"disk.0.io_share_level": {
+								"computed": false,
+								"new":      "normal",
+								"old":      "",
+							},
+							"disk.0.keep_on_remove": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"disk.0.key": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"disk.0.label": {
+								"computed": false,
+								"new":      "disk0",
+								"old":      "",
+							},
+							"disk.0.path": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"disk.0.size": {
+								"computed": false,
+								"new":      "20",
+								"old":      "",
+							},
+							"disk.0.thin_provisioned": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"disk.0.unit_number": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"disk.0.uuid": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"disk.0.write_through": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"ept_rvi_mode": {
+								"computed": false,
+								"new":      "automatic",
+								"old":      "",
+							},
+							"firmware": {
+								"computed": false,
+								"new":      "bios",
+								"old":      "",
+							},
+							"force_power_off": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"guest_id": {
+								"computed": false,
+								"new":      "other3xLinux64Guest",
+								"old":      "",
+							},
+							"guest_ip_addresses.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"host_system_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"hv_mode": {
+								"computed": false,
+								"new":      "hvAuto",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"imported": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"latency_sensitivity": {
+								"computed": false,
+								"new":      "normal",
+								"old":      "",
+							},
+							"memory": {
+								"computed": false,
+								"new":      "1024",
+								"old":      "",
+							},
+							"memory_limit": {
+								"computed": false,
+								"new":      "-1",
+								"old":      "",
+							},
+							"memory_share_count": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"memory_share_level": {
+								"computed": false,
+								"new":      "normal",
+								"old":      "",
+							},
+							"migrate_wait_timeout": {
+								"computed": false,
+								"new":      "30",
+								"old":      "",
+							},
+							"moid": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "terraform-roger",
+								"old":      "",
+							},
+							"network_interface.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "0",
+							},
+							"network_interface.0.adapter_type": {
+								"computed": false,
+								"new":      "vmxnet3",
+								"old":      "",
+							},
+							"network_interface.0.bandwidth_limit": {
+								"computed": false,
+								"new":      "-1",
+								"old":      "",
+							},
+							"network_interface.0.bandwidth_reservation": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"network_interface.0.bandwidth_share_count": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.bandwidth_share_level": {
+								"computed": false,
+								"new":      "normal",
+								"old":      "",
+							},
+							"network_interface.0.device_address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.key": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.mac_address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.network_id": {
+								"computed": false,
+								"new":      "network-11",
+								"old":      "",
+							},
+							"num_cores_per_socket": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"num_cpus": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
+							"reboot_required": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_pool_id": {
+								"computed": false,
+								"new":      "resgroup-17",
+								"old":      "",
+							},
+							"run_tools_scripts_after_power_on": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"run_tools_scripts_after_resume": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"run_tools_scripts_before_guest_shutdown": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"run_tools_scripts_before_guest_standby": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"scsi_bus_sharing": {
+								"computed": false,
+								"new":      "noSharing",
+								"old":      "",
+							},
+							"scsi_controller_count": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"scsi_type": {
+								"computed": false,
+								"new":      "pvscsi",
+								"old":      "",
+							},
+							"shutdown_wait_timeout": {
+								"computed": false,
+								"new":      "3",
+								"old":      "",
+							},
+							"swap_placement_policy": {
+								"computed": false,
+								"new":      "inherit",
+								"old":      "",
+							},
+							"uuid": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"vapp_transport.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"vmware_tools_status": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"vmx_path": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"wait_for_guest_ip_timeout": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"wait_for_guest_net_routable": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"wait_for_guest_net_timeout": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.13"
+
+variables = {}
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

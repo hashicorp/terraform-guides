@@ -1,0 +1,231 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_s3_bucket": {
+				"bucket": {
+					0: {
+						"applied": {
+							"acceleration_status": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"acl":                         "private",
+							"arn":                         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"bucket":                      "roger-test-bucket",
+							"bucket_domain_name":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"bucket_regional_domain_name": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"force_destroy":               false,
+							"hosted_zone_id":              "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"id":                          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"logging": [
+								{
+									"target_bucket": "roger-bucket",
+									"target_prefix": "",
+								},
+							],
+							"region":        "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"request_payer": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"tags": {
+								"Owner":            "roger@hashicorp.com",
+								"application_id":   "456",
+								"created_by":       "roger",
+								"data_class":       "protected",
+								"description":      "roger",
+								"environment":      "dev",
+								"name":             "Roger Test Bucket",
+								"stack_name":       "roger",
+								"termination_date": "12/25/2019",
+								"website":          true,
+							},
+							"versioning": [
+								{
+									"enabled":    true,
+									"mfa_delete": true,
+								},
+							],
+							"website_domain":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"website_endpoint": "74D93920-ED26-11E3-AC10-0800200C9A66",
+						},
+						"diff": {
+							"acceleration_status": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"acl": {
+								"computed": false,
+								"new":      "private",
+								"old":      "",
+							},
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"bucket": {
+								"computed": false,
+								"new":      "roger-test-bucket",
+								"old":      "",
+							},
+							"bucket_domain_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"bucket_regional_domain_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"force_destroy": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"hosted_zone_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"logging.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"logging.2040212525.target_bucket": {
+								"computed": false,
+								"new":      "roger-bucket",
+								"old":      "",
+							},
+							"logging.2040212525.target_prefix": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"region": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"request_payer": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "10",
+								"old":      "",
+							},
+							"tags.Owner": {
+								"computed": false,
+								"new":      "roger@hashicorp.com",
+								"old":      "",
+							},
+							"tags.application_id": {
+								"computed": false,
+								"new":      "456",
+								"old":      "",
+							},
+							"tags.created_by": {
+								"computed": false,
+								"new":      "roger",
+								"old":      "",
+							},
+							"tags.data_class": {
+								"computed": false,
+								"new":      "protected",
+								"old":      "",
+							},
+							"tags.description": {
+								"computed": false,
+								"new":      "roger",
+								"old":      "",
+							},
+							"tags.environment": {
+								"computed": false,
+								"new":      "dev",
+								"old":      "",
+							},
+							"tags.name": {
+								"computed": false,
+								"new":      "Roger Test Bucket",
+								"old":      "",
+							},
+							"tags.stack_name": {
+								"computed": false,
+								"new":      "roger",
+								"old":      "",
+							},
+							"tags.termination_date": {
+								"computed": false,
+								"new":      "12/25/2019",
+								"old":      "",
+							},
+							"tags.website": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"versioning.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"versioning.0.enabled": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"versioning.0.mfa_delete": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"website_domain": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"website_endpoint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.13"
+
+variables = {
+	"aws_region":  "us-east-1",
+	"bucket_acl":  "private",
+	"bucket_name": "roger-test-bucket",
+}
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

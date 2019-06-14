@@ -1,0 +1,183 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"azurerm_network_interface": {
+				"main": {
+					"config": {
+						"ip_configuration": [
+							{
+								"name": "testconfiguration1",
+								"private_ip_address_allocation": "Dynamic",
+								"subnet_id":                     "${azurerm_subnet.internal.id}",
+							},
+						],
+						"location":            "${azurerm_resource_group.main.location}",
+						"name":                "${var.prefix}-nic",
+						"resource_group_name": "${azurerm_resource_group.main.name}",
+					},
+					"provisioners": null,
+				},
+			},
+			"azurerm_resource_group": {
+				"main": {
+					"config": {
+						"location": "East US",
+						"name":     "${var.prefix}-resources",
+					},
+					"provisioners": null,
+				},
+			},
+			"azurerm_subnet": {
+				"internal": {
+					"config": {
+						"address_prefix":       "10.0.2.0/24",
+						"name":                 "internal",
+						"resource_group_name":  "${azurerm_resource_group.main.name}",
+						"virtual_network_name": "${azurerm_virtual_network.main.name}",
+					},
+					"provisioners": null,
+				},
+			},
+			"azurerm_virtual_machine": {
+				"first": {
+					"config": {
+						"delete_data_disks_on_termination": true,
+						"delete_os_disk_on_termination":    true,
+						"location":                         "${azurerm_resource_group.main.location}",
+						"name":                             "${var.prefix}-vm",
+						"network_interface_ids": [
+							"${azurerm_network_interface.main.id}",
+						],
+						"os_profile": [
+							{
+								"admin_password": "Password1234!",
+								"admin_username": "testadmin",
+								"computer_name":  "hostname",
+							},
+						],
+						"os_profile_linux_config": [
+							{
+								"disable_password_authentication": false,
+							},
+						],
+						"resource_group_name": "${azurerm_resource_group.main.name}",
+						"storage_image_reference": [
+							{
+								"offer":     "UbuntuServer",
+								"publisher": "Canonical",
+								"sku":       "16.04-LTS",
+								"version":   "latest",
+							},
+						],
+						"storage_os_disk": [
+							{
+								"caching":           "ReadWrite",
+								"create_option":     "FromImage",
+								"managed_disk_type": "Standard_LRS",
+								"name":              "myosdisk1",
+							},
+						],
+						"tags": [
+							{
+								"environment": "staging",
+							},
+						],
+						"vm_size": "Standard_D1_v2",
+					},
+					"provisioners": null,
+				},
+				"second": {
+					"config": {
+						"delete_data_disks_on_termination": true,
+						"delete_os_disk_on_termination":    true,
+						"location":                         "${azurerm_resource_group.main.location}",
+						"name":                             "${var.prefix}-vm",
+						"network_interface_ids": [
+							"${azurerm_network_interface.main.id}",
+						],
+						"os_profile": [
+							{
+								"admin_password": "Password1234!",
+								"admin_username": "testadmin",
+								"computer_name":  "hostname",
+							},
+						],
+						"os_profile_linux_config": [
+							{
+								"disable_password_authentication": false,
+							},
+						],
+						"resource_group_name": "${azurerm_resource_group.main.name}",
+						"storage_image_reference": [
+							{
+								"offer":     "UbuntuServer",
+								"publisher": "Canonical",
+								"sku":       "16.04-LTS",
+								"version":   "latest",
+							},
+						],
+						"storage_os_disk": [
+							{
+								"caching":           "ReadWrite",
+								"create_option":     "FromImage",
+								"managed_disk_type": "Standard_LRS",
+								"name":              "myosdisk1",
+							},
+						],
+						"tags": [
+							{
+								"environment": "staging",
+							},
+						],
+						"vm_size": "Standard_D1_v2",
+					},
+					"provisioners": null,
+				},
+			},
+			"azurerm_virtual_network": {
+				"main": {
+					"config": {
+						"address_space": [
+							"10.0.0.0/16",
+						],
+						"location":            "${azurerm_resource_group.main.location}",
+						"name":                "${var.prefix}-network",
+						"resource_group_name": "${azurerm_resource_group.main.name}",
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {
+			"prefix": {
+				"default":     "azurevmdemo",
+				"description": "",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

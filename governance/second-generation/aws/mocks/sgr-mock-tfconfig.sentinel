@@ -1,0 +1,47 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"aws_security_group_rule": {
+				"allow_all": {
+					"config": {
+						"cidr_blocks": [
+							"0.0.0.0/0",
+						],
+						"from_port":         0,
+						"protocol":          "tcp",
+						"security_group_id": "sg-0ecaf664fe45ff737",
+						"to_port":           65535,
+						"type":              "ingress",
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

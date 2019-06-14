@@ -1,0 +1,100 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_launch_configuration": {
+				"as_conf": {
+					0: {
+						"applied": {
+							"associate_public_ip_address": false,
+							"ebs_block_device":            "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"ebs_optimized":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"enable_monitoring":           true,
+							"id":                          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"image_id":                    "ami-00d4e9ff62bc40e03",
+							"instance_type":               "m5.large",
+							"key_name":                    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"name":                        "web_config",
+							"root_block_device":           "74D93920-ED26-11E3-AC10-0800200C9A66",
+						},
+						"diff": {
+							"associate_public_ip_address": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"ebs_block_device.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ebs_optimized": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"enable_monitoring": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"image_id": {
+								"computed": false,
+								"new":      "ami-00d4e9ff62bc40e03",
+								"old":      "",
+							},
+							"instance_type": {
+								"computed": false,
+								"new":      "m5.large",
+								"old":      "",
+							},
+							"key_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "web_config",
+								"old":      "",
+							},
+							"root_block_device.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.13"
+
+variables = {}
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

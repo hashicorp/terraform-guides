@@ -1,0 +1,120 @@
+##### restrict-vm-disk-size.sentinel #####
+# This policy uses the Sentinel tfplan import to require that
+# all VMware VMs obey a disk limit
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all resources of a specific type
+# from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resource_maps = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+
+    # Compute joined_path from the module path
+    if length(path) == 0 {
+      joined_path = ""
+    } else {
+      joined_path = "module." + strings.join(path, ".module.") + "."
+    }
+
+    # Append all resources of the specified type to resource_maps
+    # setting the key to joined_path. Append the empty map, {}, if the
+    # module does not have any resources of the specified type.
+    resource_maps[joined_path] = tfplan.module(path).resources[type] else {}
+  }
+
+  return resource_maps
+}
+
+# Get the full address of a resource instance including modules, type,
+# name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
+# module_path is like module paths returned by tfplan.module_paths
+get_instance_address = func(joined_path, type, name, index) {
+  address = joined_path + type + "." + name + "[" + string(index) + "]"
+  return address
+}
+
+# Validate that all VMware VMs have at most 4 CPUs
+validate_disk_size = func(disk_limit) {
+
+  # Initialize validated to true
+  # This will be set to false if any instances violate rule
+  validated = true
+
+  # Set resource_type
+  resource_type = "vsphere_virtual_machine"
+
+  # Get all resources of specified type
+  resource_maps = find_resources_from_plan(resource_type)
+
+  # Loop through the module-level resource maps
+  for resource_maps as module_path, resource_map {
+    # Loop through the named resources
+    for resource_map as name, instances {
+      # Loop through resource instances
+      for instances as index, r {
+
+        # Get addresses of the resource and the instance
+        address = get_instance_address(module_path, resource_type, name, index)
+
+        # Skip resources that are being destroyed
+        # to avoid unnecessary policy violations
+        if length(r.diff) == 0 {
+          print("Skipping resource", address,
+            "that is being destroyed.")
+          continue
+        }
+
+        # Initialize disk_count
+        disk_count = -1
+
+        # Get all disks for the VM
+        for r.applied.disk as disk {
+
+          # Increment disk_count for use in computed test
+          disk_count += 1
+
+          # Determine if the attribute is computed
+          if r.diff["disk." + string(disk_count) + ".size"].computed else false is true {
+            # Print message indicating a computed value was found
+            print("Virtual machine", address, "has disk", disk.label,
+              "with attribute, disk.size, that is computed.")
+            # If you want computed values to cause the policy to fail, uncomment the next line.
+            #validated = false
+          } else {
+            # Validate that each disk has valid disk size
+            # If not, print violation message
+            if int(disk.size) > disk_limit {
+              print("Virtual machine", address,
+              "has disk", disk.label, "with size",
+              disk.size, "that is greater than the limit", disk_limit)
+              validated = false
+            }
+          } // end computed check
+
+        } // end disks
+      } // end resource instances
+    } // end named resources
+  } // end resorce maps
+
+  # Return validated which will be false if any violators
+  return validated
+}
+
+##### Rules #####
+
+# Call the validation function and assign results
+vm_disks_validated = validate_disk_size(100)
+
+# Main rule
+main = rule {
+  vm_disks_validated is true
+}
