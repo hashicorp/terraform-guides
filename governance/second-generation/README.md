@@ -1,6 +1,6 @@
 # Second-Generation Sentinel Policies
 
-This directory and its sub-directories contain second-generation Sentinel policies which were created in 2018 for several clouds including AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware
+This directory and its sub-directories contain second-generation Sentinel policies which were created in 2019 for several clouds including AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware
 
 The files under this directory provide some sample Sentinel policies for several clouds including AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware.
 
