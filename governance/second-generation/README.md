@@ -18,7 +18,7 @@ Sentinel [mock files](https://www.terraform.io/docs/enterprise/sentinel/mock.htm
 
 ## Testing Policies
 To test the policies of any of the clouds, please do the following:
-1. Download the Sentinel Simulator from the [downloads](https://docs.hashicorp.com/sentinel/downloads) page.
+1. Download the Sentinel Simulator from the [Sentinel downloads](https://docs.hashicorp.com/sentinel/downloads) page.
 1. Unzip the zip file and place the sentinel binary in your path.
 1. Clone this repository to your local machine.
 1. Navigate to any of the cloud directories (aws, azure, gcp, or vmware).
