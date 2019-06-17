@@ -1,0 +1,121 @@
+##### restrict-ec2-instance-type.sentinel #####
+# This policy uses the Sentinel tfplan import to require that
+# all EC2 instances have instance types from an allowed list
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all resources of a specific type
+# from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resource_maps = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+
+    # Compute joined_path from the module path
+    if length(path) == 0 {
+      joined_path = ""
+    } else {
+      joined_path = "module." + strings.join(path, ".module.") + "."
+    }
+
+    # Append all resources of the specified type to resource_maps
+    # setting the key to joined_path. Append the empty map, {}, if the
+    # module does not have any resources of the specified type.
+    resource_maps[joined_path] = tfplan.module(path).resources[type] else {}
+  }
+
+  return resource_maps
+}
+
+# Get the full address of a resource instance including modules, type,
+# name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
+# module_path is like module paths returned by tfplan.module_paths
+get_instance_address = func(joined_path, type, name, index) {
+  address = joined_path + type + "." + name + "[" + string(index) + "]"
+  return address
+}
+
+# Validate that all EC2 instances have instance_type
+# in allowed_types list
+validate_instance_types = func(allowed_types) {
+
+  # Initialize validated to true
+  # This will be set to false if any instances violate rule
+  validated = true
+
+  # Set resource_type
+  resource_type = "aws_instance"
+
+  # Get all resources of specified type
+  resource_maps = find_resources_from_plan(resource_type)
+
+
+  # Loop through the module-level resource maps
+  for resource_maps as module_path, resource_map {
+    # Loop through the named resources
+    for resource_map as name, instances {
+      # Loop through resource instances
+      for instances as index, r {
+
+        # Get address of the resource instance
+        address = get_instance_address(module_path, resource_type, name, index)
+
+        # Skip resources that are being destroyed
+        # to avoid unnecessary policy violations
+        if length(r.diff) == 0 {
+          print("Skipping resource", address,
+            "that is being destroyed.")
+          continue
+        }
+
+        # Determine if the attribute is computed
+        if r.diff["instance_type"].computed else false is true {
+          # Print message indicating a computed value was found
+          print("EC2 instance", address,
+            "has attribute, instance_type, that is computed.")
+          # If you want computed values to cause the policy to fail, uncomment the next line.
+          #validated = false
+        } else {
+          # Validate that each instance has allowed value
+          # If not, print violation message
+          if r.applied.instance_type not in allowed_types {
+            print("EC2 instance", address, "has attribute",
+              r.applied.instance_type, "that is not in the allowed list:", allowed_types)
+            validated = false
+          }
+        } // end computed check
+
+      } // end resource instances
+    } // end named resources
+  } // end resorce maps
+
+  # Return validated which will be false if there were any violations
+  return validated
+}
+
+##### Lists #####
+
+# Allowed EC2 Instance Types
+# We don't include t2.micro to illustrate overriding failed policy
+allowed_types = [
+  "t2.small",
+  "t2.medium",
+  "t2.large",
+]
+
+##### Rules #####
+
+# Call the validation function and assign results
+instance_type_allowed = validate_instance_types(allowed_types)
+
+# Main rule that requires other rules to be true
+main = rule {
+  instance_type_allowed is true
+}

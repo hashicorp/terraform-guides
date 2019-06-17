@@ -1,0 +1,101 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_security_group_rule": {
+				"allow_all": {
+					0: {
+						"applied": {
+							"cidr_blocks": [
+								"0.0.0.0/0",
+							],
+							"from_port":         "0",
+							"id":                "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"protocol":          "tcp",
+							"security_group_id": "sg-0ecaf664fe45ff737",
+							"self":              false,
+							"source_security_group_id": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"to_port":                  "65535",
+							"type":                     "ingress",
+						},
+						"diff": {
+							"cidr_blocks.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"cidr_blocks.0": {
+								"computed": false,
+								"new":      "0.0.0.0/0",
+								"old":      "",
+							},
+							"from_port": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"security_group_id": {
+								"computed": false,
+								"new":      "sg-0ecaf664fe45ff737",
+								"old":      "",
+							},
+							"self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"source_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"to_port": {
+								"computed": false,
+								"new":      "65535",
+								"old":      "",
+							},
+							"type": {
+								"computed": false,
+								"new":      "ingress",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.14"
+
+variables = {}
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

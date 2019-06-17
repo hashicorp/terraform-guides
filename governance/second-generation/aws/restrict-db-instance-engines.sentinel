@@ -1,0 +1,119 @@
+##### restrict-db-instance-engines.sentinel #####
+# This policy uses the Sentinel tfplan import to require that
+# all RDS database instances have engines from an allowed list
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all resources of a specific type
+# from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resource_maps = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+
+    # Compute joined_path from the module path
+    if length(path) == 0 {
+      joined_path = ""
+    } else {
+      joined_path = "module." + strings.join(path, ".module.") + "."
+    }
+
+    # Append all resources of the specified type to resource_maps
+    # setting the key to joined_path. Append the empty map, {}, if the
+    # module does not have any resources of the specified type.
+    resource_maps[joined_path] = tfplan.module(path).resources[type] else {}
+  }
+
+  return resource_maps
+}
+
+# Get the full address of a resource instance including modules, type,
+# name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
+# module_path is like module paths returned by tfplan.module_paths
+get_instance_address = func(joined_path, type, name, index) {
+  address = joined_path + type + "." + name + "[" + string(index) + "]"
+  return address
+}
+
+# Validate that all RDS DB instances have engine
+# in allowed_engines list
+validate_engines = func(allowed_engines) {
+
+  # Initialize validated to true
+  # This will be set to false if any DB instances violate rule
+  validated = true
+
+  # Set resource_type
+  resource_type = "aws_db_instance"
+
+  # Get all resources of specified type
+  resource_maps = find_resources_from_plan(resource_type)
+
+  # Loop through the module-level resource maps
+  for resource_maps as module_path, resource_map {
+    # Loop through the named resources
+    for resource_map as name, instances {
+      # Loop through resource instances
+      for instances as index, r {
+
+        # Get addresses of the resource and the instance
+        address = get_instance_address(module_path, resource_type, name, index)
+
+        # Skip resources that are being destroyed
+        # to avoid unnecessary policy violations
+        if length(r.diff) == 0 {
+          print("Skipping resource", address,
+            "that is being destroyed.")
+          continue
+        }
+
+        # Determine if the attribute is computed
+        if r.diff["engine"].computed else false is true {
+          print("resource", address,
+            "has attribute, engine, that is computed.")
+          # If you want computed values to cause the policy to fail, uncomment the next line.
+          #validated = false
+        } else {
+          # Validate that each instance has allowed value
+          # If not, print violation message
+          if r.applied.engine not in allowed_engines {
+            print("RDS DB instance", address,
+              "has engine", r.applied.engine,
+              "that is not in the allowed list:", allowed_engines)
+            validated = false
+          }
+        } // end computed check
+
+      } // end resource instances
+    } // end named resources
+  } // end resorce maps
+
+  # Return validated which will be false if there were any violations
+  return validated
+}
+
+##### Lists #####
+# Allowed RDS DB Engines
+allowed_engines = [
+  "mysql",
+  "oracle-se1",
+  "oracle-se2",
+  "postgres",
+]
+
+##### Rules #####
+
+# Call the validation function and assign results
+engine_allowed = validate_engines(allowed_engines)
+
+# Main rule
+main = rule {
+  engine_allowed is true
+}

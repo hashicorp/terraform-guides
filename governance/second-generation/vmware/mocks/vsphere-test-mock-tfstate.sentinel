@@ -1,0 +1,92 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {
+			"vsphere_datacenter": {
+				"dc": {
+					0: {
+						"attr": {
+							"id":   "datacenter-2",
+							"name": "PacketDatacenter",
+						},
+						"depends_on": [],
+						"id":         "datacenter-2",
+						"tainted":    false,
+					},
+				},
+			},
+			"vsphere_datastore": {
+				"datastore": {
+					0: {
+						"attr": {
+							"datacenter_id": "datacenter-2",
+							"id":            "datastore-10",
+							"name":          "datastore1",
+						},
+						"depends_on": [
+							"data.vsphere_datacenter.dc",
+						],
+						"id":      "datastore-10",
+						"tainted": false,
+					},
+				},
+			},
+			"vsphere_network": {
+				"network": {
+					0: {
+						"attr": {
+							"datacenter_id": "datacenter-2",
+							"id":            "network-11",
+							"name":          "VM Network",
+							"type":          "Network",
+						},
+						"depends_on": [
+							"data.vsphere_datacenter.dc",
+						],
+						"id":      "network-11",
+						"tainted": false,
+					},
+				},
+			},
+			"vsphere_resource_pool": {
+				"pool": {
+					0: {
+						"attr": {
+							"datacenter_id": "datacenter-2",
+							"id":            "resgroup-17",
+							"name":          "MainCluster/Resources",
+						},
+						"depends_on": [
+							"data.vsphere_datacenter.dc",
+						],
+						"id":      "resgroup-17",
+						"tainted": false,
+					},
+				},
+			},
+		},
+		"outputs":   {},
+		"path":      [],
+		"resources": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.13"
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+outputs = _modules.root.outputs
+path = _modules.root.path
+resources = _modules.root.resources

@@ -1,0 +1,705 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"azurerm_resource_group": {
+				"arcade": {
+					0: {
+						"applied": {
+							"id":       "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo",
+							"location": "centralus",
+							"name":     "palace-arcade-containerapp-demo",
+							"tags":     {},
+						},
+						"diff": {
+							"id": {
+								"computed": false,
+								"new":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo",
+							},
+							"location": {
+								"computed": false,
+								"new":      "centralus",
+								"old":      "centralus",
+							},
+							"name": {
+								"computed": false,
+								"new":      "palace-arcade-containerapp-demo",
+								"old":      "palace-arcade-containerapp-demo",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+
+	"module.web_app_container": {
+		"data": {},
+		"path": [
+			"web_app_container",
+		],
+		"resources": {
+			"azurerm_app_service": {
+				"main": {
+					0: {
+						"applied": {
+							"app_service_plan_id": "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+							"app_settings": {
+								"DOCKER_REGISTRY_SERVER_PASSWORD":     "",
+								"DOCKER_REGISTRY_SERVER_URL":          "https://index.docker.io",
+								"DOCKER_REGISTRY_SERVER_USERNAME":     "",
+								"WEBSITES_CONTAINER_START_TIME_LIMIT": "230",
+								"WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+								"WEBSITES_PORT":                       "80",
+							},
+							"auth_settings": [
+								{
+									"active_directory":               [],
+									"additional_login_params":        {},
+									"allowed_external_redirect_urls": [],
+									"default_provider":               "",
+									"enabled":                        false,
+									"facebook":                       [],
+									"google":                         [],
+									"issuer":                         "",
+									"microsoft":                      [],
+									"runtime_version":                "",
+									"token_refresh_extension_hours":  0,
+									"token_store_enabled":            false,
+									"twitter":                        [],
+									"unauthenticated_client_action":  "",
+								},
+							],
+							"client_affinity_enabled": true,
+							"client_cert_enabled":     false,
+							"connection_string":       [],
+							"default_site_hostname":   "palace-arcade.azurewebsites.net",
+							"enabled":                 true,
+							"https_only":              true,
+							"id":                      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/sites/palace-arcade",
+							"identity": [
+								{
+									"principal_id": "34f79dca-b0d9-78a2-9f1d-b12ee36e113c",
+									"tenant_id":    "1e4e2c66-7cae-47cb-a4db-e4b22a7c32ad",
+									"type":         "SystemAssigned",
+								},
+							],
+							"location":                       "centralus",
+							"name":                           "palace-arcade",
+							"outbound_ip_addresses":          "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31",
+							"possible_outbound_ip_addresses": "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31,40.113.229.114,40.113.220.255,40.113.225.253,40.113.231.60,104.43.253.242",
+							"resource_group_name":            "palace-arcade-containerapp-demo",
+							"site_config": [
+								{
+									"always_on":        true,
+									"app_command_line": "",
+									"cors": [
+										{
+											"allowed_origins":     [],
+											"support_credentials": false,
+										},
+									],
+									"default_documents":         [],
+									"dotnet_framework_version":  "v4.0",
+									"ftps_state":                "Disabled",
+									"http2_enabled":             false,
+									"ip_restriction":            [],
+									"java_container":            "",
+									"java_container_version":    "",
+									"java_version":              "",
+									"linux_fx_version":          "DOCKER|tcarol/galaga",
+									"local_mysql_enabled":       false,
+									"managed_pipeline_mode":     "Integrated",
+									"min_tls_version":           "1.2",
+									"php_version":               "",
+									"python_version":            "",
+									"remote_debugging_enabled":  false,
+									"remote_debugging_version":  "VS2017",
+									"scm_type":                  "None",
+									"use_32_bit_worker_process": false,
+									"virtual_network_name":      "",
+									"websockets_enabled":        false,
+								},
+							],
+							"site_credential": [
+								{
+									"password": "sdfsdf9y8ydsfdsfklw3432sdflkj232",
+									"username": "$palace-arcade",
+								},
+							],
+							"source_control": [
+								{
+									"branch":   "master",
+									"repo_url": "",
+								},
+							],
+							"tags": {},
+						},
+						"diff": {
+							"app_service_plan_id": {
+								"computed": false,
+								"new":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+							},
+							"app_settings.%": {
+								"computed": false,
+								"new":      "6",
+								"old":      "6",
+							},
+							"app_settings.DOCKER_REGISTRY_SERVER_PASSWORD": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"app_settings.DOCKER_REGISTRY_SERVER_URL": {
+								"computed": false,
+								"new":      "https://index.docker.io",
+								"old":      "https://index.docker.io",
+							},
+							"app_settings.DOCKER_REGISTRY_SERVER_USERNAME": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"app_settings.WEBSITES_CONTAINER_START_TIME_LIMIT": {
+								"computed": false,
+								"new":      "230",
+								"old":      "230",
+							},
+							"app_settings.WEBSITES_ENABLE_APP_SERVICE_STORAGE": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"app_settings.WEBSITES_PORT": {
+								"computed": false,
+								"new":      "80",
+								"old":      "80",
+							},
+							"auth_settings.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"auth_settings.0.%": {
+								"computed": false,
+								"new":      "14",
+								"old":      "14",
+							},
+							"auth_settings.0.active_directory.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.additional_login_params.%": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.allowed_external_redirect_urls.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.default_provider": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"auth_settings.0.enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"auth_settings.0.facebook.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.google.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.issuer": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"auth_settings.0.microsoft.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.runtime_version": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"auth_settings.0.token_refresh_extension_hours": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.token_store_enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"auth_settings.0.twitter.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"auth_settings.0.unauthenticated_client_action": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"client_affinity_enabled": {
+								"computed": false,
+								"new":      "true",
+								"old":      "true",
+							},
+							"client_cert_enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"connection_string.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"default_site_hostname": {
+								"computed": false,
+								"new":      "palace-arcade.azurewebsites.net",
+								"old":      "palace-arcade.azurewebsites.net",
+							},
+							"enabled": {
+								"computed": false,
+								"new":      "true",
+								"old":      "true",
+							},
+							"https_only": {
+								"computed": false,
+								"new":      "true",
+								"old":      "true",
+							},
+							"id": {
+								"computed": false,
+								"new":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/sites/palace-arcade",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/sites/palace-arcade",
+							},
+							"identity.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"identity.0.%": {
+								"computed": false,
+								"new":      "3",
+								"old":      "3",
+							},
+							"identity.0.principal_id": {
+								"computed": false,
+								"new":      "34f79dca-b0d9-78a2-9f1d-b12ee36e113c",
+								"old":      "34f79dca-b0d9-78a2-9f1d-b12ee36e113c",
+							},
+							"identity.0.tenant_id": {
+								"computed": false,
+								"new":      "1e4e2c66-7cae-47cb-a4db-e4b22a7c32ad",
+								"old":      "1e4e2c66-7cae-47cb-a4db-e4b22a7c32ad",
+							},
+							"identity.0.type": {
+								"computed": false,
+								"new":      "SystemAssigned",
+								"old":      "SystemAssigned",
+							},
+							"location": {
+								"computed": false,
+								"new":      "centralus",
+								"old":      "centralus",
+							},
+							"name": {
+								"computed": false,
+								"new":      "palace-arcade",
+								"old":      "palace-arcade",
+							},
+							"outbound_ip_addresses": {
+								"computed": false,
+								"new":      "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31",
+								"old":      "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31",
+							},
+							"possible_outbound_ip_addresses": {
+								"computed": false,
+								"new":      "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31,40.113.229.114,40.113.220.255,40.113.225.253,40.113.231.60,104.43.253.242",
+								"old":      "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31,40.113.229.114,40.113.220.255,40.113.225.253,40.113.231.60,104.43.253.242",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "palace-arcade-containerapp-demo",
+								"old":      "palace-arcade-containerapp-demo",
+							},
+							"site_config.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"site_config.0.%": {
+								"computed": false,
+								"new":      "23",
+								"old":      "23",
+							},
+							"site_config.0.always_on": {
+								"computed": false,
+								"new":      "true",
+								"old":      "true",
+							},
+							"site_config.0.app_command_line": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"site_config.0.cors.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"site_config.0.cors.0.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "2",
+							},
+							"site_config.0.cors.0.allowed_origins.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"site_config.0.cors.0.support_credentials": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"site_config.0.default_documents.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"site_config.0.dotnet_framework_version": {
+								"computed": false,
+								"new":      "v4.0",
+								"old":      "v4.0",
+							},
+							"site_config.0.ftps_state": {
+								"computed": false,
+								"new":      "Disabled",
+								"old":      "Disabled",
+							},
+							"site_config.0.http2_enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"site_config.0.ip_restriction.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+							"site_config.0.java_container": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"site_config.0.java_container_version": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"site_config.0.java_version": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"site_config.0.linux_fx_version": {
+								"computed": false,
+								"new":      "DOCKER|tcarol/galaga",
+								"old":      "DOCKER|tcarol/pacman",
+							},
+							"site_config.0.local_mysql_enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"site_config.0.managed_pipeline_mode": {
+								"computed": false,
+								"new":      "Integrated",
+								"old":      "Integrated",
+							},
+							"site_config.0.min_tls_version": {
+								"computed": false,
+								"new":      "1.2",
+								"old":      "1.2",
+							},
+							"site_config.0.php_version": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"site_config.0.python_version": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"site_config.0.remote_debugging_enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"site_config.0.remote_debugging_version": {
+								"computed": false,
+								"new":      "VS2017",
+								"old":      "VS2017",
+							},
+							"site_config.0.scm_type": {
+								"computed": false,
+								"new":      "None",
+								"old":      "None",
+							},
+							"site_config.0.use_32_bit_worker_process": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"site_config.0.virtual_network_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"site_config.0.websockets_enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"site_credential.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"site_credential.0.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "2",
+							},
+							"site_credential.0.password": {
+								"computed": false,
+								"new":      "sdfsdf9y8ydsfdsfklw3432sdflkj232",
+								"old":      "sdfsdf9y8ydsfdsfklw3432sdflkj232",
+							},
+							"site_credential.0.username": {
+								"computed": false,
+								"new":      "$palace-arcade",
+								"old":      "$palace-arcade",
+							},
+							"source_control.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"source_control.0.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "2",
+							},
+							"source_control.0.branch": {
+								"computed": false,
+								"new":      "master",
+								"old":      "master",
+							},
+							"source_control.0.repo_url": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+						},
+					},
+				},
+			},
+			"azurerm_app_service_plan": {
+				"main": {
+					0: {
+						"applied": {
+							"app_service_environment_id": null,
+							"id":                        "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+							"kind":                      "linux",
+							"location":                  "centralus",
+							"maximum_number_of_workers": 3,
+							"name":             "palace-arcade-plan",
+							"per_site_scaling": false,
+							"properties": [
+								{
+									"app_service_environment_id": "",
+									"per_site_scaling":           false,
+									"reserved":                   true,
+								},
+							],
+							"reserved":            true,
+							"resource_group_name": "palace-arcade-containerapp-demo",
+							"sku": [
+								{
+									"capacity": 1,
+									"size":     "B1",
+									"tier":     "Basic",
+								},
+							],
+							"tags": {},
+						},
+						"diff": {
+							"app_service_environment_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": false,
+								"new":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+							},
+							"kind": {
+								"computed": false,
+								"new":      "linux",
+								"old":      "linux",
+							},
+							"location": {
+								"computed": false,
+								"new":      "centralus",
+								"old":      "centralus",
+							},
+							"maximum_number_of_workers": {
+								"computed": false,
+								"new":      "3",
+								"old":      "3",
+							},
+							"name": {
+								"computed": false,
+								"new":      "palace-arcade-plan",
+								"old":      "palace-arcade-plan",
+							},
+							"per_site_scaling": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"properties.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"properties.0.%": {
+								"computed": false,
+								"new":      "3",
+								"old":      "3",
+							},
+							"properties.0.app_service_environment_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"properties.0.per_site_scaling": {
+								"computed": false,
+								"new":      "false",
+								"old":      "false",
+							},
+							"properties.0.reserved": {
+								"computed": false,
+								"new":      "true",
+								"old":      "true",
+							},
+							"reserved": {
+								"computed": false,
+								"new":      "true",
+								"old":      "true",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "palace-arcade-containerapp-demo",
+								"old":      "palace-arcade-containerapp-demo",
+							},
+							"sku.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"sku.0.%": {
+								"computed": false,
+								"new":      "3",
+								"old":      "3",
+							},
+							"sku.0.capacity": {
+								"computed": false,
+								"new":      "1",
+								"old":      "1",
+							},
+							"sku.0.size": {
+								"computed": false,
+								"new":      "B1",
+								"old":      "B1",
+							},
+							"sku.0.tier": {
+								"computed": false,
+								"new":      "Basic",
+								"old":      "Basic",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "0",
+								"old":      "0",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"web_app_container",
+	],
+]
+
+terraform_version = "0.11.14"
+
+variables = {
+	"image":    "tcarol/galaga",
+	"location": "centralus",
+	"prefix":   "palace-arcade",
+}
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

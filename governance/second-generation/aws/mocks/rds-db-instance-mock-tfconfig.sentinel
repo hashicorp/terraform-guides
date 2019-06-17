@@ -1,0 +1,48 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"aws_db_instance": {
+				"default": {
+					"config": {
+						"allocated_storage":    20,
+						"engine":               "sqlserver-web",
+						"engine_version":       "5.7",
+						"instance_class":       "db.t2.micro",
+						"name":                 "mydb",
+						"parameter_group_name": "default.mysql5.7",
+						"password":             "foobarbaz",
+						"storage_type":         "gp2",
+						"username":             "foo",
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs
