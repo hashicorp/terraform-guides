@@ -1,4 +1,3 @@
-##### restrict-vm-cpu-and-memory.sentinel #####
 # This policy uses the Sentinel tfplan import to require that
 # all VMware VMs obey CPU and memory limits
 
@@ -36,7 +35,7 @@ find_resources_from_plan = func(type) {
 
 # Get the full address of a resource instance including modules, type,
 # name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# module_path is like module paths returned by tfplan.module_paths
+# joined_path is is returned in keys by find_resources_from_plan
 get_instance_address = func(joined_path, type, name, index) {
   address = joined_path + type + "." + name + "[" + string(index) + "]"
   return address
@@ -76,14 +75,12 @@ validate_cpu_and_memory_limits = func(cpu_limit, memory_limit) {
 
         # Determine if the attribute is computed
         if r.diff["num_cpus"].computed else false is true {
-          # Print message indicating a computed value was found
           print("resource", address,
             "has attribute, num_cpus, that is computed.")
           # If you want computed values to cause the policy to fail, uncomment the next line.
           #valid_cpu = false
         } else {
           # Validate that each instance has valid number of CPUs
-          # If not, print violation message
           if int(r.applied.num_cpus) > cpu_limit {
             print("Virtual machine", address,
               "has", r.applied.num_cpus, "CPUs,",
@@ -94,14 +91,12 @@ validate_cpu_and_memory_limits = func(cpu_limit, memory_limit) {
 
         # Determine if the attribute is computed
         if r.diff["memory"].computed else false is true {
-          # Print message indicating a computed value was found
           print("resource", address,
             "has attribute, memory, that is computed.")
           # If you want computed values to cause the policy to fail, uncomment the next line.
           #valid_memory = false
         } else {
           # Validate that each instance has valid amount of memory
-          # If not, print violation message
           if int(r.applied.memory) > memory_limit {
             print("Virtual machine", address,
               "has", r.applied.memory,

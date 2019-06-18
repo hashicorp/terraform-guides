@@ -1,4 +1,3 @@
-##### restrict-private-acl-and-kms-for-s3-buckets.sentinel #####
 # This policy uses the Sentinel tfplan import to require that
 # all S3 buckets have ACL "private" and be encrypted by a KMS key
 
@@ -36,7 +35,7 @@ find_resources_from_plan = func(type) {
 
 # Get the full address of a resource instance including modules, type,
 # name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# module_path is like module paths returned by tfplan.module_paths
+# joined_path is is returned in keys by find_resources_from_plan
 get_instance_address = func(joined_path, type, name, index) {
   address = joined_path + type + "." + name + "[" + string(index) + "]"
   return address
@@ -94,8 +93,7 @@ validate_private_acl_and_kms_encryption = func() {
           # If you want computed values to cause the policy to fail, uncomment the next line.
           #encrypted_by_kms = false
         } else {
-          # Check whether server-side encryption enabled
-          # by default with KMS encryption
+          # Check whether server-side encryption enabled by default with KMS encryption
           if length(r.applied.server_side_encryption_configuration) else 0 == 0 or r.applied.server_side_encryption_configuration[0].rule[0].apply_server_side_encryption_by_default[0].sse_algorithm is not "aws:kms" {
             print("S3 bucket", address,
             "is not encrypted by default with a KMS key.")

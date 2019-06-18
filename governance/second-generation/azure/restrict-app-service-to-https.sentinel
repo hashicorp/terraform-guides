@@ -1,4 +1,3 @@
-##### restrict-app-service-to-https.sentinel #####
 # This policy uses the Sentinel tfplan import to require that
 # all Azure app services have https_only set to true so that
 # they can only be accessed via HTTPS
@@ -37,7 +36,7 @@ find_resources_from_plan = func(type) {
 
 # Get the full address of a resource instance including modules, type,
 # name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# module_path is like module paths returned by tfplan.module_paths
+# joined_path is is returned in keys by find_resources_from_plan
 get_instance_address = func(joined_path, type, name, index) {
   address = joined_path + type + "." + name + "[" + string(index) + "]"
   return address
@@ -76,14 +75,12 @@ validate_app_services = func() {
 
         # Determine if the attribute is computed
         if r.diff["https_only"].computed else false is true {
-          # Print message indicating a computed value was found
           print("Azure app service", address,
             "has attribute, https_only, that is computed.")
           # If you want computed values to cause the policy to fail, uncomment the next line.
           #validated = false
         } else {
           # Validate that each app service has https_only set to true
-          # If not, print violation message
           if r.applied.https_only is not true {
             print("Azure app service", address,
               "has attribute https_only that is not set to true.")

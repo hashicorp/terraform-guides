@@ -1,4 +1,3 @@
-##### restrict-vm-disk-size.sentinel #####
 # This policy uses the Sentinel tfplan import to require that
 # all VMware VMs obey a disk limit
 
@@ -36,7 +35,7 @@ find_resources_from_plan = func(type) {
 
 # Get the full address of a resource instance including modules, type,
 # name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# module_path is like module paths returned by tfplan.module_paths
+# joined_path is is returned in keys by find_resources_from_plan
 get_instance_address = func(joined_path, type, name, index) {
   address = joined_path + type + "." + name + "[" + string(index) + "]"
   return address
@@ -84,14 +83,12 @@ validate_disk_size = func(disk_limit) {
 
           # Determine if the attribute is computed
           if r.diff["disk." + string(disk_count) + ".size"].computed else false is true {
-            # Print message indicating a computed value was found
             print("Virtual machine", address, "has disk", disk.label,
               "with attribute, disk.size, that is computed.")
             # If you want computed values to cause the policy to fail, uncomment the next line.
             #validated = false
           } else {
             # Validate that each disk has valid disk size
-            # If not, print violation message
             if int(disk.size) > disk_limit {
               print("Virtual machine", address,
               "has disk", disk.label, "with size",

@@ -1,0 +1,114 @@
+# This policy uses the Sentinel tfplan import to require that
+# all EC2 instances have specified tags
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all resources of a specific type
+# from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resource_maps = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+
+    # Compute joined_path from the module path
+    if length(path) == 0 {
+      joined_path = ""
+    } else {
+      joined_path = "module." + strings.join(path, ".module.") + "."
+    }
+
+    # Append all resources of the specified type to resource_maps
+    # setting the key to joined_path. Append the empty map, {}, if the
+    # module does not have any resources of the specified type.
+    resource_maps[joined_path] = tfplan.module(path).resources[type] else {}
+  }
+
+  return resource_maps
+}
+
+# Get the full address of a resource instance including modules, type,
+# name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
+# joined_path is is returned in keys by find_resources_from_plan
+get_instance_address = func(module_path, type, name, index) {
+  address = module_path + type + "." + name + "[" + string(index) + "]"
+  return address
+}
+
+validate_tags = func(required_tags) {
+
+   # Initialize validated to true
+   # This will be set to false if there are violations
+   validated = true
+
+   # Set the resource_type
+   resource_type = "aws_instance"
+
+   # Get all resources of the specified type
+   resource_maps = find_resources_from_plan(resource_type)
+
+   # Loop through the module-level resource maps
+   for resource_maps as module_path, resource_map {
+     # Loop through the named resources
+     for resource_map as name, instances {
+       # Loop through resource instances
+       for instances as index, r {
+
+         # Get address of the instance
+         address = get_instance_address(module_path, resource_type, name, index)
+
+         # Skip resources that are being destroyed
+         # to avoid unnecessary policy violations
+         if length(r.diff) == 0 {
+           print("Skipping resource", address,
+             "that is being destroyed.")
+           continue
+         }
+
+         if r.diff["tags.%"].computed else false is true {
+           print("EC2 instance", address,
+             "has attribute, tags, that is computed.")
+           # If you want computed values to cause the policy to fail, uncomment the next line.
+           #validated = false
+         } else {
+           # Validate that each instance has required tags
+           for required_tags as tag {
+             if r.applied.tags not contains tag {
+               print("EC2 instance", address,
+                 "is missing required tag", tag)
+               print("Required tags are:", required_tags)
+               validated = false
+             } // end tag check
+           } // end tag loop
+        } // end computed check
+
+      } // end resource instances
+    } // end named resources
+  } // end resorce maps
+
+  # Return validated
+  return validated
+
+}
+
+### List of mandatory tags ###
+mandatory_tags = [
+  "Name",
+  "ttl",
+  "owner",
+]
+
+### Rules ###
+
+# Call the validation function and assign results
+tags_validated = validate_tags(mandatory_tags)
+
+main = rule {
+  tags_validated is true
+}

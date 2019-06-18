@@ -1,4 +1,3 @@
-##### restrict-ingress-sg-rule-cidr-blocks.sentinel #####
 # This policy uses the Sentinel tfplan import to validate that
 # no security group rules have the CIDR "0.0.0.0/0"
 
@@ -37,7 +36,7 @@ find_resources_from_plan = func(type) {
 
 # Get the full address of a resource instance including modules, type,
 # name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# module_path is like module paths returned by tfplan.module_paths
+# joined_path is is returned in keys by find_resources_from_plan
 get_instance_address = func(joined_path, type, name, index) {
   address = joined_path + type + "." + name + "[" + string(index) + "]"
   return address
@@ -78,14 +77,12 @@ validate_sgr_cidr_blocks = func() {
         # Determine if the attribute is computed
         if r.diff["type"].computed else false or
           r.diff["cidr_blocks.#"].computed else false is true {
-          # Print message indicating a computed value was found
           print("Security group rule", address,
             "has attributes, type and/or cidr_blocks that are computed.")
           # If you want computed values to cause the policy to fail, uncomment the next line.
           #validated = false
         } else {
           # Validate that each SG rule does not have disallowed value
-          # If it does, print violation message
           # Since cidr_blocks is optional and could be computed,
           # We check that it is present and really a list
           # before checking whether it contains "0.0.0.0/0"

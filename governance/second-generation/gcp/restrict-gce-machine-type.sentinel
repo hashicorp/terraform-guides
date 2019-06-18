@@ -1,4 +1,3 @@
-##### restrict-gce-machine-type.sentinel #####
 # This policy uses the Sentinel tfplan import to require that
 # all Google compute instances have machine types from an allowed list
 
@@ -36,7 +35,7 @@ find_resources_from_plan = func(type) {
 
 # Get the full address of a resource instance including modules, type,
 # name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# module_path is like module paths returned by tfplan.module_paths
+# joined_path is is returned in keys by find_resources_from_plan
 get_instance_address = func(joined_path, type, name, index) {
   address = joined_path + type + "." + name + "[" + string(index) + "]"
   return address
@@ -76,14 +75,12 @@ validate_machine_types = func(allowed_types) {
 
         # Determine if the attribute is computed
         if r.diff["machine_type"].computed else false is true {
-          # Print message indicating a computed value was found
           print("GCP compute instance", address,
             "has attribute, machine_type, that is computed.")
           # If you want computed values to cause the policy to fail, uncomment the next line.
           #validated = false
         } else {
           # Validate that each instance has allowed value
-          # If not, print violation message
           if r.applied.machine_type not in allowed_types {
             print("GCP compute instance", address,
               "has attribute", r.applied.machine_type,
