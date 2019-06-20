@@ -3,7 +3,13 @@ Terraform configuration for lifecycle management of AWS instances.
 
 ![Lambda bot posting to Slack](./assets/good_morning.png)
 
-Are you spending too much on your AWS instances every month? Do your developers create instances and forget to turn them off? Perhaps you struggle with identifying which person or system created AWS resources? This guide is for you!
+Are you spending too much on your AWS instances every month? Do your developers create instances and forget to turn them off? Perhaps you struggle with identifying which person or system created AWS resources? This guide is for you! 
+
+The code and instructions contained in this directory will build two types of robot in your AWS account. Janitor bot cleans up untagged ec2 instances or autoscaling groups. Reaper bot cleans up ec2 instances or ASGs that are tagged properly, and have passed their time to live.
+
+Resources currently supported for lifecycle management:
+- EC2 instances
+- Auto-scaling groups (and their associated instances)
 
 ## Reference Material
  * [AWS Lambda & Slack Tutorial](https://api.slack.com/tutorials/aws-lambda)
@@ -23,22 +29,27 @@ Many organizations struggle to maintain control over spending on AWS resources. 
 ## Solution
 This Terraform configuration deploys AWS Lambda functions that can do the following:
 
- - Check for mandatory tags on AWS instances and notify via Slack if untagged instances are found.
+ - Check for mandatory tags on EC2 Instances and notify via Slack if untagged instances are found.
  - Notify on how many of each instance type are currently running across all regions.
  - Shutdown untagged instances after X days.
  - Delete untagged instances after Y days.
  - Delete machines whose TTL (time to live) has expired.
+ - Delete autoscaling groups whose TTL has expired.
+ - Delete untagged autoscaling groups after Z days.
 
 ### Directory Structure
 A description of what each file does:
 ```
  main.tf - Main configuration file. REQUIRED
- data_collectors.tf - Lambda functions for gathering instance data. REQUIRED
+ ec2_data_collectors.tf - Lambda functions for gathering instance data. REQUIRED
+ ec2_reaper.tf - Checks instance TTL tag, terminates instances that have expired.
+ ec2_janitor.tf - Cleans up untagged instances after a set number of days.
+ asg_data_collectors.tf - Lambda functions for gathering ASG data. REQUIRED
+ asg_reaper.tf - Checks ASG TTL tag, terminates ASGs that have expired.
+ asg_janitor.tf - Cleans up untagged ASGs after a set number of days.
  iam_roles.tf - Configures IAM role and policies for your Lambda functions. REQUIRED
  notify_instance_usage.tf - sends reports about running instances.
  notify_untagged.tf - sends reports about untagged instances and their key names.
- instance_reaper.tf - Checks instance TTL tag, terminates instances that have expired.
- untagged_janitor.tf - Cleans up untagged instances after a set number of days.
  files/ - Contains all of the lambda source code, zip files, and IAM template files.
 ```
 
@@ -168,30 +179,11 @@ Check your slack channel to see the messages posted from your bot.
 By default the reporting lambdas are set to run once per day. You can customize the schedule by adjusting the `aws_cloudwatch_event_rule` resources. The schedule follows a Unix cron-style format: `cron(0 8 * * ? *)`. The instance_reaper will be most effective if it is run every hour.
 
 ### Step 6: Go live
-_IMPORTANT_: If you want to actually stop and terminate instances in a live environment, you must uncomment/edit the code inside of `cleanUntaggedInstances.py` and `checkInstanceTTLs.py`. We have commented out the lines that do these actions so you can test before going live.  This is for your own safety and protection. In order to activate these scripts you must *both* uncomment those lines *and* set the is_active variable to True. You can uncomment the lines directly in the AWS Lambda editor, or make the changes locally and re-deploy your lambdas.
-
-See below for the lines that handle `stop()` and `terminate()` actions.
+_IMPORTANT_: If you want to actually stop and terminate instances and autoscaling groups in a live environment, you must change the is_active variable to "True". The default is "False", which will run the reaper and janitor bots in testing mode. When you run in testing mode, the logs will show you what the bot *would* have done if you ran it for real. Example:
 
 ```
-def sleep_instance(instance_id,region):
-    ec2 = boto3.resource('ec2', region_name=region)
-    """Stops instances that have gone beyond their TTL"""
-    if str_to_bool(ISACTIVE) == True:
-        # Uncomment to make this live!
-        #ec2.instances.filter(InstanceIds=instance_id).stop()
-        logger.info("I stopped "+instance_id+" in "+region)
-    else:
-        logger.info("I would have stopped "+instance_id+" in "+region)
-
-def terminate_instance(instance_id,region):
-    ec2 = boto3.resource('ec2', region_name=region)
-    """Stops instances that have gone beyond their TTL"""
-    if str_to_bool(ISACTIVE) == True:
-        # Uncomment to make this live!
-        #ec2.instances.filter(InstanceIds=instance_id).terminate()
-        logger.info("I terminated "+instance_id+" in "+region)
-    else:
-        logger.info("I would have terminated "+instance_id+" in "+region)
+[INFO]	2019-03-28T18:16:05.680Z	9326bb7a-1f27-4b59-b48f-84dbc0e9630f	I would have terminated Consul-Enterprise-client2019021100481465450000000a in ap-southeast-2
+[INFO]	2019-03-28T18:16:05.680Z	9326bb7a-1f27-4b59-b48f-84dbc0e9630f	I would have terminated Consul-Enterprise-server20190211004802777100000009 in ap-southeast-2
 ```
 
 ## Next Steps 
