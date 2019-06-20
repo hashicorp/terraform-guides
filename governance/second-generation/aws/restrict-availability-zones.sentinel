@@ -1,5 +1,6 @@
-# This policy uses the Sentinel tfplan import to require that
-# all RDS database instances have engines from an allowed list
+# This policy uses the Sentinel tfplan import to restrict
+# the availability zones used by EC2 instances. This can
+# be used to restrict the region by only listing zones in one.
 
 ##### Imports #####
 
@@ -41,19 +42,20 @@ get_instance_address = func(joined_path, type, name, index) {
   return address
 }
 
-# Validate that all RDS DB instances have engine
-# in allowed_engines list
-validate_engines = func(allowed_engines) {
+# Validate that all EC2 instances have availability_zone
+# in allowed_zones list
+restrict_azs = func(allowed_zones) {
 
   # Initialize validated to true
-  # This will be set to false if any DB instances violate rule
+  # This will be set to false if any instances violate rule
   validated = true
 
   # Set resource_type
-  resource_type = "aws_db_instance"
+  resource_type = "aws_instance"
 
   # Get all resources of specified type
   resource_maps = find_resources_from_plan(resource_type)
+
 
   # Loop through the module-level resource maps
   for resource_maps as module_path, resource_map {
@@ -62,7 +64,7 @@ validate_engines = func(allowed_engines) {
       # Loop through resource instances
       for instances as index, r {
 
-        # Get addresses of the resource and the instance
+        # Get address of the resource instance
         address = get_instance_address(module_path, resource_type, name, index)
 
         # Skip resources that are being destroyed
@@ -74,17 +76,16 @@ validate_engines = func(allowed_engines) {
         }
 
         # Determine if the attribute is computed
-        if r.diff["engine"].computed else false is true {
-          print("resource", address,
-            "has attribute, engine, that is computed.")
+        if r.diff["availability_zone"].computed else false is true {
+          print("EC2 instance", address,
+            "has attribute, availability_zone, that is computed.")
           # If you want computed values to cause the policy to fail, uncomment the next line.
           #validated = false
         } else {
           # Validate that each instance has allowed value
-          if r.applied.engine not in allowed_engines {
-            print("RDS DB instance", address,
-              "has engine", r.applied.engine,
-              "that is not in the allowed list:", allowed_engines)
+          if r.applied.availability_zone not in allowed_zones {
+            print("EC2 instance", address, "has attribute",
+              r.applied.availability_zone, "that is not in the allowed list:", allowed_zones)
             validated = false
           }
         } // end computed check
@@ -98,20 +99,24 @@ validate_engines = func(allowed_engines) {
 }
 
 ##### Lists #####
-# Allowed RDS DB Engines
-allowed_engines = [
-  "mysql",
-  "oracle-se1",
-  "oracle-se2",
-  "postgres",
+
+# Allowed EC2 Instance Types
+# We don't include t2.micro to illustrate overriding failed policy
+allowed_zones = [
+  "us-east-1a",
+  "us-east-1b",
+  "us-east-1c",
+  "us-east-1d",
+  "us-east-1e",
+  "us-east-1f",
 ]
 
 ##### Rules #####
 
 # Call the validation function and assign results
-engine_allowed = validate_engines(allowed_engines)
+availability_zone_allowed = restrict_azs(allowed_zones)
 
-# Main rule
+# Main rule that requires other rules to be true
 main = rule {
-  engine_allowed is true
+  availability_zone_allowed is true
 }
