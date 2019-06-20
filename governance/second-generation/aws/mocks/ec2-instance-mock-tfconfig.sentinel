@@ -1,23 +1,35 @@
 import "strings"
+import "types"
 
 _modules = {
 	"root": {
-		"data":    {},
-		"modules": {},
+		"data": {},
+		"modules": {
+			"nested": {
+				"config": {
+					"ami_id":        "${var.ami_id}",
+					"aws_region":    "${var.aws_region}",
+					"instance_type": "${var.instance_type}",
+					"key_name":      "${var.key_name}",
+					"name":          "${var.name}",
+					"volume_size":   "${var.volume_size}",
+				},
+				"source":  "./module",
+				"version": "",
+			},
+		},
 		"outputs": {
 			"public_dns": {
 				"depends_on":  [],
 				"description": "",
 				"sensitive":   false,
-				"value":       "${aws_instance.ubuntu.public_dns}",
+				"value":       "${aws_instance.ubuntu.*.public_dns}",
 			},
 		},
 		"providers": {
 			"aws": {
-				"alias": {},
-				"config": {
-					"region": "${var.aws_region}",
-				},
+				"alias":   {},
+				"config":  {},
 				"version": "",
 			},
 		},
@@ -27,12 +39,18 @@ _modules = {
 					"config": {
 						"ami": "${var.ami_id}",
 						"associate_public_ip_address": "true",
-						"availability_zone":           "${var.aws_region}b",
+						"availability_zone":           "${var.aws_region}a",
 						"instance_type":               "${var.instance_type}",
+						"key_name":                    "${var.key_name}",
+						"root_block_device": [
+							{
+								"volume_size": "${var.volume_size}",
+							},
+						],
 						"tags": [
 							{
 								"Name":  "${var.name}",
-								"owner": "roger@hashicorp.com",
+								"owner": "Roger",
 								"ttl":   "24",
 							},
 						],
@@ -54,9 +72,152 @@ _modules = {
 				"default":     "t2.micro",
 				"description": "type of EC2 instance to provision.",
 			},
+			"key_name": {
+				"default":     null,
+				"description": "name of the SSH key for accessing the instance",
+			},
 			"name": {
-				"default":     "Provisioned by Terraform",
+				"default":     "Provisioned very quickly by Terraform",
 				"description": "name to pass to Name tag",
+			},
+			"vault_addr": {
+				"default":     "http://kubernetes-vault-elb-1163802512.us-east-1.elb.amazonaws.com:8200",
+				"description": "address of the Vault server",
+			},
+			"volume_size": {
+				"default":     "10",
+				"description": "the size of root device",
+			},
+		},
+	},
+
+	"module.nested": {
+		"data": {},
+		"modules": {
+			"nested-again": {
+				"config": {
+					"ami_id":        "${var.ami_id}",
+					"aws_region":    "${var.aws_region}",
+					"instance_type": "${var.instance_type}",
+					"key_name":      "${var.key_name}",
+					"name":          "${var.name}",
+					"volume_size":   "${var.volume_size}",
+				},
+				"source":  "./module",
+				"version": "",
+			},
+		},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"aws_instance": {
+				"ubuntu-too": {
+					"config": {
+						"ami": "${var.ami_id}",
+						"associate_public_ip_address": "true",
+						"availability_zone":           "${var.aws_region}a",
+						"instance_type":               "${var.instance_type}",
+						"key_name":                    "${var.key_name}",
+						"root_block_device": [
+							{
+								"volume_size": "${var.volume_size}",
+							},
+						],
+						"tags": [
+							{
+								"Name":  "${var.name}",
+								"owner": "Roger",
+								"ttl":   "24",
+							},
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {
+			"ami_id": {
+				"default":     null,
+				"description": "",
+			},
+			"aws_region": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_type": {
+				"default":     null,
+				"description": "",
+			},
+			"key_name": {
+				"default":     null,
+				"description": "",
+			},
+			"name": {
+				"default":     null,
+				"description": "",
+			},
+			"volume_size": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+
+	"module.nested.module.nested-again": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"aws_instance": {
+				"ubuntu-three": {
+					"config": {
+						"ami": "${var.ami_id}",
+						"associate_public_ip_address": "true",
+						"availability_zone":           "${var.aws_region}a",
+						"instance_type":               "${var.instance_type}",
+						"key_name":                    "${var.key_name}",
+						"root_block_device": [
+							{
+								"volume_size": "${var.volume_size}",
+							},
+						],
+						"tags": [
+							{
+								"Name":  "${var.name}",
+								"owner": "Roger",
+								"ttl":   "24",
+							},
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {
+			"ami_id": {
+				"default":     null,
+				"description": "",
+			},
+			"aws_region": {
+				"default":     null,
+				"description": "",
+			},
+			"instance_type": {
+				"default":     null,
+				"description": "",
+			},
+			"key_name": {
+				"default":     null,
+				"description": "",
+			},
+			"name": {
+				"default":     null,
+				"description": "",
+			},
+			"volume_size": {
+				"default":     null,
+				"description": "",
 			},
 		},
 	},
@@ -64,14 +225,31 @@ _modules = {
 
 module_paths = [
 	[],
+	[
+		"nested",
+	],
+	[
+		"nested",
+		"nested-again",
+	],
 ]
 
 module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
 	if length(path) < 1 {
 		return _modules.root
 	}
 
-	return _modules[strings.join(["module", path], ".")]
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
 }
 
 data = _modules.root.data
