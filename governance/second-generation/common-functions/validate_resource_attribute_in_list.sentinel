@@ -1,0 +1,24 @@
+import "tfplan"
+
+# Validate that all instances of specific type have
+# a specific top-level attribute in a given list
+validate_resource_attribute_in_list = func(type, attribute, allowed_values) {
+    validated = true
+    resource_instances = find_resources_from_plan(type)
+    for resource_instances as address, r {
+        # Determine if the attribute is computed
+        if r.diff[attribute].computed else false is true {
+            print("Resource", address, "has attribute", attribute,
+                  "that is computed.")
+        } else {
+            # Validate that each instance has allowed value
+            if (r.applied[attribute] else "") not in allowed_values {
+                print("Resource", address, "has attribute", attribute,
+                      "with value", r.applied[attribute] else "",
+                      "that is not in the allowed list:", allowed_values)
+                validated = false
+            }
+        }
+    }
+    return validated
+}
