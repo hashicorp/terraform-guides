@@ -1,5 +1,9 @@
-# This policy uses the Sentinel tfplan import to require that
-# all EC2 instances have specified tags
+# This policy uses the Sentinel tfplan import to require that all EC2 instances
+# have specified tags.
+
+# Note that the comparison is case-sensitive since AWS tags are case-sensitive.
+# If you want to ignore case, make all items in the mandatory_tags list lower
+# case and then modify line 90 as indicated in the comment above it.
 
 ##### Imports #####
 
@@ -79,6 +83,9 @@ validate_tags = func(required_tags) {
          } else {
            # Validate that each instance has required tags
            for required_tags as tag {
+             # To make the comparison ignore case, change the next line to:
+             # if r.applied.tags not contains strings.to_lower(tag) {
+             # and make sure that all tags in mandatory_tags are lower case.
              if r.applied.tags not contains tag {
                print("EC2 instance", address,
                  "is missing required tag", tag)
