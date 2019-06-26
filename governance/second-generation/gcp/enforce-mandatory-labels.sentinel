@@ -1,7 +1,8 @@
-# This policy uses the Sentinel tfplan import to require that all EC2 instances
-# have all mandatory tags.
+# This policy uses the Sentinel tfplan import to require that all GCP compute
+# instances have all mandatory tags.
 
-# Note that the comparison is case-sensitive since AWS tags are case-sensitive.
+# Note that the comparison is case-insensitive since Google network tags are
+# only allowed to contain lowercase letters, numbers, and dashes.
 
 ##### Imports #####
 
@@ -99,9 +100,9 @@ validate_attribute_contains_list = func(type, attribute, required_values) {
   return validated
 }
 
-### List of mandatory tags ###
-mandatory_tags = [
-  "Name",
+### List of mandatory labels ###
+mandatory_labels = [
+  "name",
   "ttl",
   "owner",
 ]
@@ -109,10 +110,10 @@ mandatory_tags = [
 ### Rules ###
 
 # Call the validation function
-tags_validated = validate_attribute_contains_list("aws_instance",
-                 "tags", mandatory_tags)
+labels_validated = validate_attribute_contains_list("google_compute_instance",
+                   "labels", mandatory_labels)
 
 #Main rule that evaluates results
 main = rule {
-  tags_validated
+  labels_validated
 }

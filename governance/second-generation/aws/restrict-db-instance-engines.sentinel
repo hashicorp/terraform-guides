@@ -8,92 +8,74 @@ import "strings"
 
 ##### Functions #####
 
-# Find all resources of a specific type
-# from all modules using the tfplan import
+# Find all resources of a specific type from all modules using the tfplan import
 find_resources_from_plan = func(type) {
 
-  resource_maps = {}
+  resources = {}
 
   # Iterate over all modules in the tfplan import
   for tfplan.module_paths as path {
-
-    # Compute joined_path from the module path
-    if length(path) == 0 {
-      joined_path = ""
-    } else {
-      joined_path = "module." + strings.join(path, ".module.") + "."
-    }
-
-    # Append all resources of the specified type to resource_maps
-    # setting the key to joined_path. Append the empty map, {}, if the
-    # module does not have any resources of the specified type.
-    resource_maps[joined_path] = tfplan.module(path).resources[type] else {}
-  }
-
-  return resource_maps
-}
-
-# Get the full address of a resource instance including modules, type,
-# name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# joined_path is is returned in keys by find_resources_from_plan
-get_instance_address = func(joined_path, type, name, index) {
-  address = joined_path + type + "." + name + "[" + string(index) + "]"
-  return address
-}
-
-# Validate that all RDS DB instances have engine
-# in allowed_engines list
-validate_engines = func(allowed_engines) {
-
-  # Initialize validated to true
-  # This will be set to false if any DB instances violate rule
-  validated = true
-
-  # Set resource_type
-  resource_type = "aws_db_instance"
-
-  # Get all resources of specified type
-  resource_maps = find_resources_from_plan(resource_type)
-
-  # Loop through the module-level resource maps
-  for resource_maps as module_path, resource_map {
-    # Loop through the named resources
-    for resource_map as name, instances {
-      # Loop through resource instances
+    # Iterate over the named resources of desired type in the module
+    for tfplan.module(path).resources[type] else {} as name, instances {
+      # Iterate over resource instances
       for instances as index, r {
 
-        # Get addresses of the resource and the instance
-        address = get_instance_address(module_path, resource_type, name, index)
-
-        # Skip resources that are being destroyed
-        # to avoid unnecessary policy violations
-        if length(r.diff) == 0 {
-          print("Skipping resource", address,
-            "that is being destroyed.")
-          continue
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
         }
 
-        # Determine if the attribute is computed
-        if r.diff["engine"].computed else false is true {
-          print("resource", address,
-            "has attribute, engine, that is computed.")
-          # If you want computed values to cause the policy to fail, uncomment the next line.
-          #validated = false
-        } else {
-          # Validate that each instance has allowed value
-          if r.applied.engine not in allowed_engines {
-            print("RDS DB instance", address,
-              "has engine", r.applied.engine,
-              "that is not in the allowed list:", allowed_engines)
-            validated = false
-          }
-        } // end computed check
+        # Add the instance to resources map, setting the key to the address
+        resources[address] = r
+      }
+    }
+  }
 
-      } // end resource instances
-    } // end named resources
-  } // end resorce maps
+  return resources
+}
 
-  # Return validated which will be false if there were any violations
+# Validate that all instances of specific type have
+# a specific top-level attribute in a given list
+validate_attribute_in_list = func(type, attribute, allowed_values) {
+
+  validated = true
+
+  # Get all resource instances of the specified type
+  resource_instances = find_resources_from_plan(type)
+
+  # Loop through the resource instances
+  for resource_instances as address, r {
+
+    # Skip resource instances that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
+
+    # Determine if the attribute is computed
+    if r.diff[attribute].computed else false is true {
+      print("Resource", address, "has attribute", attribute,
+            "that is computed.")
+      # If you want computed values to cause the policy to fail,
+      # uncomment the next line.
+      # validated = false
+    } else {
+      # Validate that each instance has allowed value
+      if (r.applied[attribute] else "") not in allowed_values {
+        print("Resource", address, "has", attribute,
+              r.applied[attribute] else "",
+              "that is not in the allowed list:", allowed_values)
+        validated = false
+      }
+    }
+
+  }
   return validated
 }
 
@@ -108,10 +90,7 @@ allowed_engines = [
 
 ##### Rules #####
 
-# Call the validation function and assign results
-engine_allowed = validate_engines(allowed_engines)
-
-# Main rule
+# Main rule that calls the validation function and evaluates results
 main = rule {
-  engine_allowed is true
+  validate_attribute_in_list("aws_db_instance", "engine", allowed_engines)
 }

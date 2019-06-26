@@ -1,4 +1,5 @@
 import "strings"
+import "types"
 
 _modules = {
 	"root": {
@@ -16,11 +17,21 @@ module_paths = [
 terraform_version = "0.11.13"
 
 module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
 	if length(path) < 1 {
 		return _modules.root
 	}
 
-	return _modules[strings.join(["module", path], ".")]
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
 }
 
 data = _modules.root.data

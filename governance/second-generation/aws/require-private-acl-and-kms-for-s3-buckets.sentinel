@@ -8,115 +8,107 @@ import "strings"
 
 ##### Functions #####
 
-# Find all resources of a specific type
-# from all modules using the tfplan import
+# Find all resources of a specific type from all modules using the tfplan import
 find_resources_from_plan = func(type) {
 
-  resource_maps = {}
+  resources = {}
 
   # Iterate over all modules in the tfplan import
   for tfplan.module_paths as path {
+    # Iterate over the named resources of desired type in the module
+    for tfplan.module(path).resources[type] else {} as name, instances {
+      # Iterate over resource instances
+      for instances as index, r {
 
-    # Compute joined_path from the module path
-    if length(path) == 0 {
-      joined_path = ""
-    } else {
-      joined_path = "module." + strings.join(path, ".module.") + "."
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
+        }
+
+        # Add the instance to resources map, setting the key to the address
+        resources[address] = r
+      }
     }
-
-    # Append all resources of the specified type to resource_maps
-    # setting the key to joined_path. Append the empty map, {}, if the
-    # module does not have any resources of the specified type.
-    resource_maps[joined_path] = tfplan.module(path).resources[type] else {}
   }
 
-  return resource_maps
+  return resources
 }
 
-# Get the full address of a resource instance including modules, type,
-# name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# joined_path is is returned in keys by find_resources_from_plan
-get_instance_address = func(joined_path, type, name, index) {
-  address = joined_path + type + "." + name + "[" + string(index) + "]"
-  return address
-}
 
 # Function to validate that ACL is private and KMS encryption used
 validate_private_acl_and_kms_encryption = func() {
 
   # Initialize booleans to true
   # They will be set to false if any instances violate rules
-  private = true
-  encrypted_by_kms = true
-
-  # Set resource_type
-  resource_type = "aws_s3_bucket"
+  result = {
+    "private":          true,
+    "encrypted_by_kms": true,
+  }
 
   # Get all resources of specified type
-  resource_maps = find_resources_from_plan(resource_type)
+  resource_instances = find_resources_from_plan("aws_s3_bucket")
 
-  # Loop through the module-level resource maps
-  for resource_maps as module_path, resource_map {
-    # Loop through the named resources
-    for resource_map as name, instances {
-      # Loop through resource instances
-      for instances as index, r {
+  # Loop through the resource instances
+  for resource_instances as address, r {
 
-        # Get addresses of the resource and the instance
-        address = get_instance_address(module_path, resource_type, name, index)
+    # Skip resources that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
 
-        # Skip resources that are being destroyed
-        # to avoid unnecessary policy violations
-        if length(r.diff) == 0 {
-          print("Skipping resource", address,
-            "that is being destroyed.")
-          continue
-        }
-
-        # Determine if the attribute is computed
-        if r.diff["acl"].computed else false is true {
-          print("S3 bucket", address, "has attribute, acl, that is computed.")
-          # If you want computed values to cause the policy to fail, uncomment the next line.
-          #private = false
-        } else {
-          # Check whether ACL is private
-          if r.applied.acl is not "private" {
-            print("S3 bucket", address, "has ACL", r.applied.acl,
+    # Determine if the acl attribute is computed
+    if r.diff["acl"].computed else false is true {
+      print("S3 bucket", address, "has attribute, acl, that is computed.")
+      # If you want computed values to cause the policy to fail
+      # uncomment the next line.
+      # result["private"] = false
+    } else {
+      # Check whether ACL is private
+      if r.applied.acl is not "private" {
+        print("S3 bucket", address, "has ACL", r.applied.acl,
               "that is not private.")
-            private = false
-          }
-        } // end acl computed check
+        result["private"] = false
+      }
+    } // end acl computed check
 
-        # Determine if the attribute is computed.
-        if r.diff["server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm"].computed else false is true {
-          print("S3 bucket", address, "has attribute, server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm, that is computed.")
-          # If you want computed values to cause the policy to fail, uncomment the next line.
-          #encrypted_by_kms = false
-        } else {
-          # Check whether server-side encryption enabled by default with KMS encryption
-          if length(r.applied.server_side_encryption_configuration) else 0 == 0 or r.applied.server_side_encryption_configuration[0].rule[0].apply_server_side_encryption_by_default[0].sse_algorithm is not "aws:kms" {
-            print("S3 bucket", address,
-            "is not encrypted by default with a KMS key.")
-            encrypted_by_kms = false
-          }
-        } // end encryption computed check
+    # Determine if the kms encryption attribute is computed.
+    if r.diff["server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm"].computed else false is true {
+      print("S3 bucket", address, "has attribute sse_algorithm that is computed.")
+      # If you want computed values to cause the policy to fail,
+      # uncomment the next line.
+      # result["encrypted_by_kms"] = false
+    } else {
+      # Check whether server-side encryption enabled
+      # by default with KMS encryption
+      if length(r.applied.server_side_encryption_configuration) else 0 == 0 or
+         r.applied.server_side_encryption_configuration[0].rule[0].apply_server_side_encryption_by_default[0].sse_algorithm is not "aws:kms" {
+        print("S3 bucket", address,
+              "is not encrypted by default with a KMS key.")
+        result["encrypted_by_kms"] = false
+      }
+    } // end encryption computed check
 
-      } // end resource instances
-    } // end named resources
-  } // end resorce maps
+  } // end resource instances
 
-  # Return booleans which will be false if there were any violations
-  return [private, encrypted_by_kms]
+  # Return result with booleans which will be false if there were any violations
+  return result
 }
 
 ##### Rules #####
 
 # Call the validation function and assign results
 validations = validate_private_acl_and_kms_encryption()
-private = validations[0]
-encrypted_by_kms = validations[1]
+all_buckets_private = validations["private"]
+all_buckets_encrypted_by_kms = validations["encrypted_by_kms"]
 
 # Main rule
 main = rule {
-  private is true and encrypted_by_kms is true
+  all_buckets_private and all_buckets_encrypted_by_kms
 }

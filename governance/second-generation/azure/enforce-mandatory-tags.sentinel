@@ -1,7 +1,8 @@
-# This policy uses the Sentinel tfplan import to require that all EC2 instances
+# This policy uses the Sentinel tfplan import to require that all Azure VMs
 # have all mandatory tags.
 
-# Note that the comparison is case-sensitive since AWS tags are case-sensitive.
+# Note that the comparison is case-sensitive even though Azure tags are not.
+# If you want to allow case variations, include them in your mandatory_tags list
 
 ##### Imports #####
 
@@ -101,15 +102,13 @@ validate_attribute_contains_list = func(type, attribute, required_values) {
 
 ### List of mandatory tags ###
 mandatory_tags = [
-  "Name",
-  "ttl",
-  "owner",
+  "environment",
 ]
 
 ### Rules ###
 
 # Call the validation function
-tags_validated = validate_attribute_contains_list("aws_instance",
+tags_validated = validate_attribute_contains_list("azurerm_virtual_machine",
                  "tags", mandatory_tags)
 
 #Main rule that evaluates results

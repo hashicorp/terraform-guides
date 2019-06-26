@@ -8,101 +8,83 @@ import "strings"
 
 ##### Functions #####
 
-# Find all resources of a specific type
-# from all modules using the tfplan import
+# Find all resources of a specific type from all modules using the tfplan import
 find_resources_from_plan = func(type) {
 
-  resource_maps = {}
+  resources = {}
 
   # Iterate over all modules in the tfplan import
   for tfplan.module_paths as path {
-
-    # Compute joined_path from the module path
-    if length(path) == 0 {
-      joined_path = ""
-    } else {
-      joined_path = "module." + strings.join(path, ".module.") + "."
-    }
-
-    # Append all resources of the specified type to resource_maps
-    # setting the key to joined_path. Append the empty map, {}, if the
-    # module does not have any resources of the specified type.
-    resource_maps[joined_path] = tfplan.module(path).resources[type] else {}
-  }
-
-  return resource_maps
-}
-
-# Get the full address of a resource instance including modules, type,
-# name, and index in form module.<A>.module.<B>.<type>.<name>[<index>]
-# joined_path is is returned in keys by find_resources_from_plan
-get_instance_address = func(joined_path, type, name, index) {
-  address = joined_path + type + "." + name + "[" + string(index) + "]"
-  return address
-}
-
-# Validate that all VMware VMs have at most 4 CPUs
-validate_disk_size = func(disk_limit) {
-
-  # Initialize validated to true
-  # This will be set to false if any instances violate rule
-  validated = true
-
-  # Set resource_type
-  resource_type = "vsphere_virtual_machine"
-
-  # Get all resources of specified type
-  resource_maps = find_resources_from_plan(resource_type)
-
-  # Loop through the module-level resource maps
-  for resource_maps as module_path, resource_map {
-    # Loop through the named resources
-    for resource_map as name, instances {
-      # Loop through resource instances
+    # Iterate over the named resources of desired type in the module
+    for tfplan.module(path).resources[type] else {} as name, instances {
+      # Iterate over resource instances
       for instances as index, r {
 
-        # Get addresses of the resource and the instance
-        address = get_instance_address(module_path, resource_type, name, index)
-
-        # Skip resources that are being destroyed
-        # to avoid unnecessary policy violations
-        if length(r.diff) == 0 {
-          print("Skipping resource", address,
-            "that is being destroyed.")
-          continue
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
         }
 
-        # Initialize disk_count
-        disk_count = -1
+        # Add the instance to resources map, setting the key to the address
+        resources[address] = r
+      }
+    }
+  }
 
-        # Get all disks for the VM
-        for r.applied.disk as disk {
+  return resources
+}
 
-          # Increment disk_count for use in computed test
-          disk_count += 1
+# Validate that all VMware VMs have disk sizes beneath specified limit
+validate_disk_size = func(disk_limit) {
 
-          # Determine if the attribute is computed
-          if r.diff["disk." + string(disk_count) + ".size"].computed else false is true {
-            print("Virtual machine", address, "has disk", disk.label,
+  validated = true
+
+  # Get all resources of specified type
+  resource_instances = find_resources_from_plan("vsphere_virtual_machine")
+
+  # Loop through the resource instances
+  for resource_instances as address, r {
+
+    # Skip resources that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
+
+    # Initialize disk_count
+    disk_count = -1
+
+    # Get all disks for the VM
+    for r.applied.disk as disk {
+
+      # Increment disk_count for use in computed test
+      disk_count += 1
+
+      # Determine if the attribute is computed
+      if r.diff["disk." + string(disk_count) + ".size"].computed else false is true {
+        print("Virtual machine", address, "has disk", disk.label,
               "with attribute, disk.size, that is computed.")
-            # If you want computed values to cause the policy to fail, uncomment the next line.
-            #validated = false
-          } else {
-            # Validate that each disk has valid disk size
-            if int(disk.size) > disk_limit {
-              print("Virtual machine", address,
-              "has disk", disk.label, "with size",
-              disk.size, "that is greater than the limit", disk_limit)
-              validated = false
-            }
-          } // end computed check
+        # If you want computed values to cause the policy to fail,
+        # uncomment the next line.
+        # validated = false
+      } else {
+        # Validate that each disk has valid disk size
+        if int(disk.size) > disk_limit {
+          print("Virtual machine", address, "has disk", disk.label, "with size",
+                disk.size, "that is greater than the limit", disk_limit)
+          validated = false
+        }
+      } // end computed check
 
-        } // end disks
-      } // end resource instances
-    } // end named resources
-  } // end resorce maps
+    } // end disks
+  } // end resource instances
 
-  # Return validated which will be false if any violators
   return validated
 }
 
