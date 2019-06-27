@@ -1,15 +1,12 @@
-import "tfplan"
-import "strings"
-
-# Find all resources of specific type from all modules using the tfplan import
-find_resources_from_plan = func(type) {
+# Find all resources of specific type from all modules using the tfstate import
+find_resources_from_state = func(type) {
 
   resources = {}
 
-  # Iterate over all modules in the tfplan import
-  for tfplan.module_paths as path {
+  # Iterate over all modules in the tfstate import
+  for tfstate.module_paths as path {
     # Iterate over the named resources of desired type in the module
-    for tfplan.module(path).resources[type] else {} as name, instances {
+    for tfstate.module(path).resources[type] else {} as name, instances {
       # Iterate over resource instances
       for instances as index, r {
 

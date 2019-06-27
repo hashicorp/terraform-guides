@@ -1,6 +1,3 @@
-import "tfconfig"
-import "strings"
-
 # Find all resources of specific type from all modules using the tfconfig import
 find_resources_from_config = func(type) {
 

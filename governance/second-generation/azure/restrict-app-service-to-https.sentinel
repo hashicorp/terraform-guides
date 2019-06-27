@@ -40,9 +40,9 @@ find_resources_from_plan = func(type) {
   return resources
 }
 
-# Validate that all instances of specific type have
-# a specific top-level attribute in a given list
-validate_attribute_in_list = func(type, attribute, allowed_values) {
+# Validate that all instances of a specified resource type being modified have
+# a specified top-level attribute with a given value
+validate_attribute_has_value = func(type, attribute, value) {
 
   validated = true
 
@@ -67,29 +67,23 @@ validate_attribute_in_list = func(type, attribute, allowed_values) {
       # uncomment the next line.
       # validated = false
     } else {
-      # Validate that each instance has allowed value
-      if (r.applied[attribute] else "") not in allowed_values {
-        print("Resource", address, "has", attribute,
+      # Validate that each instance has desired value
+      if (r.applied[attribute] else "") is not value {
+        print("Resource", address, "has attribute", attribute, "with value",
               r.applied[attribute] else "",
-              "that is not in the allowed list:", allowed_values)
+              "that is not the required value:", value)
         validated = false
       }
     }
 
   }
+
   return validated
 }
-
-##### Lists #####
-
-# Allowed values of https_only
-allowed_values = [
-  true,
-]
 
 ##### Rules #####
 
 # Main rule that calls the validation function and evaluates results
 main = rule {
-  validate_attribute_in_list("azurerm_app_service", "https_only", allowed_values)
+  validate_attribute_has_value("azurerm_app_service", "https_only", true)
 }

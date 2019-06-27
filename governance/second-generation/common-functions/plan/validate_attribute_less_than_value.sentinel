@@ -1,44 +1,3 @@
-# This policy uses the Sentinel tfplan import to require that
-# all VMware VMs obey CPU and memory limits
-
-##### Imports #####
-
-import "tfplan"
-import "strings"
-
-##### Functions #####
-
-# Find all resources of a specific type from all modules using the tfplan import
-find_resources_from_plan = func(type) {
-
-  resources = {}
-
-  # Iterate over all modules in the tfplan import
-  for tfplan.module_paths as path {
-    # Iterate over the named resources of desired type in the module
-    for tfplan.module(path).resources[type] else {} as name, instances {
-      # Iterate over resource instances
-      for instances as index, r {
-
-        # Get the address of the instance
-        if length(path) == 0 {
-          # root module
-          address = type + "." + name + "[" + string(index) + "]"
-        } else {
-          # non-root module
-          address = "module." + strings.join(path, ".module.") + "." +
-                    type + "." + name + "[" + string(index) + "]"
-        }
-
-        # Add the instance to resources map, setting the key to the address
-        resources[address] = r
-      }
-    }
-  }
-
-  return resources
-}
-
 # Validate that all instances of a specified resource type being modified have
 # a specified top-level attribute with a value less than or equal to a max value
 validate_attribute_less_than_value = func(type, attribute, max_value) {
@@ -71,7 +30,7 @@ validate_attribute_less_than_value = func(type, attribute, max_value) {
         # Validate that each instance has desired value
         if float(r.applied[attribute]) > max_value {
           print("Resource", address, "has attribute", attribute, "with value",
-                r.applied[attribute],"that is bigger than the maximum allowed",
+                r.applied[attribute], "that is greater than the maximum allowed",
                 "value:", max_value)
           validated = false
         }
@@ -86,15 +45,4 @@ validate_attribute_less_than_value = func(type, attribute, max_value) {
   } // end resource instances
 
   return validated
-}
-
-##### Rules #####
-
-# Call the validation function and assign results for both num_cpus and memory
-valid_cpu = validate_attribute_less_than_value("vsphere_virtual_machine", "num_cpus", 4)
-valid_memory = validate_attribute_less_than_value("vsphere_virtual_machine", "memory", 8192)
-
-# Main rule
-main = rule {
-  valid_cpu and valid_memory
 }

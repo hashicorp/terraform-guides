@@ -130,9 +130,9 @@ _modules = {
 							"storage_image_reference": [
 								{
 									"id":        "",
-									"offer":     "UbuntuServer",
-									"publisher": "Canonical",
-									"sku":       "16.04-LTS",
+									"offer":     "WindowsServer",
+									"publisher": "MicrosoftWindowsServer",
+									"sku":       "2016-Datacenter",
 									"version":   "latest",
 								},
 							],
@@ -145,7 +145,7 @@ _modules = {
 									"managed_disk_id":           "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/roger-azurevmdemo-resources/providers/Microsoft.Compute/disks/myosdisk1",
 									"managed_disk_type":         "Standard_LRS",
 									"name":                      "myosdisk1",
-									"os_type":                   "Linux",
+									"os_type":                   "Windows",
 									"vhd_uri":                   "",
 									"write_accelerator_enabled": false,
 								},
@@ -198,9 +198,9 @@ _modules = {
 							"storage_image_reference": [
 								{
 									"id":        "",
-									"offer":     "UbuntuServer",
-									"publisher": "Canonical",
-									"sku":       "16.04-LTS",
+									"offer":     "WindowsServer",
+									"publisher": "MicrosoftWindowsServer",
+									"sku":       "2016-Datacenter",
 									"version":   "latest",
 								},
 							],
@@ -213,7 +213,7 @@ _modules = {
 									"managed_disk_id":           "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/roger-azurevmdemo-resources/providers/Microsoft.Compute/disks/myosdisk1",
 									"managed_disk_type":         "Standard_LRS",
 									"name":                      "myosdisk1",
-									"os_type":                   "Linux",
+									"os_type":                   "Windows",
 									"vhd_uri":                   "",
 									"write_accelerator_enabled": false,
 								},

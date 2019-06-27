@@ -1,9 +1,5 @@
-import "types"
-import "strings"
-
-# Validate that all instances of specific type have a specific top-level
+# Validate that all instances of specified type have a specified top-level
 # attribute that contains all members of a given list
-# Note that the comparisons are case-sensitive
 validate_attribute_contains_list = func(type, attribute, required_values) {
   validated = true
 

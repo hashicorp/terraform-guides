@@ -1,8 +1,5 @@
-import "tfplan"
-
-# Validate that all instances of specific type have
-# a specific top-level attribute in a given list
-# Note that the comparisons are case-sensitive
+# Validate that all instances of a specified resource type being modified have
+# a specified top-level attribute in a given list
 validate_attribute_in_list = func(type, attribute, allowed_values) {
 
   validated = true
@@ -30,7 +27,7 @@ validate_attribute_in_list = func(type, attribute, allowed_values) {
     } else {
       # Validate that each instance has allowed value
       if (r.applied[attribute] else "") not in allowed_values {
-        print("Resource", address, "has", attribute,
+        print("Resource", address, "has attribute", attribute, "with value",
               r.applied[attribute] else "",
               "that is not in the allowed list:", allowed_values)
         validated = false
