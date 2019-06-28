@@ -2,13 +2,13 @@
 This directory contains the common functions used in the second-generation Sentinel policies of this repository.
 
 ## Organization of the Functions
-The functions are organized by the type of Sentinel import they use: plan (using [tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html)), config (using [tfconfig](https://www.terraform.io/docs/enterprise/sentinel/import/tfconfig.html)), and state (using [tfstate](https://www.terraform.io/docs/enterprise/sentinel/import/tfstate.html)).
+The functions are organized by the type of Sentinel import they use: plan ([tfplan](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html)), config ([tfconfig](https://www.terraform.io/docs/enterprise/sentinel/import/tfconfig.html)), and state ([tfstate](https://www.terraform.io/docs/enterprise/sentinel/import/tfstate.html)).
 
 Each function has two files associated with it:
 * A file with name `<function>.md` that documents the function and contains examples of how to call it.
 * A file with name `<function>.sentinel` that contains the actual code of the function.
 
-Since most TFE Sentinel policies use the `tfplan` import, most of the functions are in the plan directory.  But we did include the [find_resources_from_config](./config/find_resources_from_config.md) and [find_resources_from_state](./state/find_resources_from_state.md) functions so that users who want to iterate across all resources of a specified type in the `tfconfig` and `tfstate` imports will be able to do that.  Additionally, we have provided policies, [prevent-remote-exec-provisioners-on-null-resources.sentinel](./cloud-agnostic/prevent-remote-exec-provisioners-on-null-resources.sentinel) and [restrict-publishers-of-current-vms](./azure/restrict-publishers-of-current-vms.sentinel), that use these functions.
+Since most TFE Sentinel policies use the `tfplan` import, most of the functions are in the plan directory.  But we did include the [find_resources_from_config(type)](./config/find_resources_from_config.md) and [find_resources_from_state(type)](./state/find_resources_from_state.md) functions so that users who want to iterate across all resources of a specified type in the `tfconfig` and `tfstate` imports will be able to do that.  Additionally, we have provided policies, [prevent-remote-exec-provisioners-on-null-resources](./cloud-agnostic/prevent-remote-exec-provisioners-on-null-resources.sentinel) and [restrict-publishers-of-current-vms](./azure/restrict-publishers-of-current-vms.sentinel), that use these functions.
 
 ## Types of Functions
 Apart from the organization of the functions based on the imports they use, the functions are also divided into two types:
