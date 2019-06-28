@@ -20,14 +20,19 @@ variable "mandatory_tags" {
   description = "Comma separated string mandatory tag values."
 }
 
-variable "sleep_days" {
+variable "ec2_sleep_days" {
   default = "14"
   description = "Days after launch after which untagged instances are stopped."
 }
 
-variable "reap_days" {
+variable "ec2_reap_days" {
   default = "90"
   description = "Days after launch after which untagged instances are terminated."
+}
+
+variable "asg_reap_days" {
+  default = "3"
+  description = "Days after launch after which untagged ASGs are destroyed."
 }
 
 variable "is_active" {

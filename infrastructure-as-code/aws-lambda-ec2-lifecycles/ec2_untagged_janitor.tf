@@ -1,11 +1,11 @@
 # This lambda is intended to deal with untagged instances by either stopping
 # and then terminating them according to your lifecycle policy.
-resource "aws_lambda_function" "cleanUntaggedInstances" {
-  filename         = "./files/cleanUntaggedInstances.zip"
-  function_name    = "cleanUntaggedInstances"
+resource "aws_lambda_function" "EC2Janitor" {
+  filename         = "./files/EC2Janitor.zip"
+  function_name    = "EC2Janitor"
   role             = "${aws_iam_role.lambda_stop_and_terminate_instances.arn}"
-  handler          = "cleanUntaggedInstances.lambda_handler"
-  source_code_hash = "${base64sha256(file("./files/cleanUntaggedInstances.zip"))}"
+  handler          = "EC2Janitor.lambda_handler"
+  source_code_hash = "${base64sha256(file("./files/EC2Janitor.zip"))}"
   runtime          = "python3.6"
   timeout          = "120"
   description      = "Stops or terminates untagged instances after a pre-set number of days."
@@ -13,8 +13,8 @@ resource "aws_lambda_function" "cleanUntaggedInstances" {
     variables = {
       slackChannel = "${var.slack_channel}"
       slackHookUrl = "${var.slack_hook_url}"
-      sleepDays = "${var.sleep_days}"
-      reapDays = "${var.reap_days}"
+      sleepDays = "${var.ec2_sleep_days}"
+      reapDays = "${var.ec2_reap_days}"
       isActive = "${var.is_active}"
     }
   }
@@ -30,17 +30,17 @@ resource "aws_cloudwatch_event_rule" "clean_untagged_instances" {
 
 resource "aws_cloudwatch_event_target" "untagged_instance_cleanup" {
   rule      = "${aws_cloudwatch_event_rule.clean_untagged_instances.name}"
-  target_id = "${aws_lambda_function.cleanUntaggedInstances.function_name}"
-  arn = "${aws_lambda_function.cleanUntaggedInstances.arn}"
+  target_id = "${aws_lambda_function.EC2Janitor.function_name}"
+  arn = "${aws_lambda_function.EC2Janitor.arn}"
 }
 
 resource "aws_lambda_permission" "allow_cloudwatch_clean_untagged_instances" {
   statement_id   = "AllowExecutionFromCloudWatch"
   action         = "lambda:InvokeFunction"
-  function_name  = "${aws_lambda_function.cleanUntaggedInstances.function_name}"
+  function_name  = "${aws_lambda_function.EC2Janitor.function_name}"
   principal      = "events.amazonaws.com"
   source_arn     = "${aws_cloudwatch_event_rule.clean_untagged_instances.arn}"
   depends_on = [
-    "aws_lambda_function.cleanUntaggedInstances"
+    "aws_lambda_function.EC2Janitor"
   ]
 }
