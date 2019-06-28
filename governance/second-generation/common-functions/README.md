@@ -33,7 +33,7 @@ To use any of the functions in a new policy, be sure to paste the entire functio
 ## How Computed Values are Handled
 Writers of Sentinel policies can adopt a strict or flexible attitude with regard to [computed values](https://www.terraform.io/docs/enterprise/sentinel/import/tfplan.html#value-computed):
 1. Those who adopt the strict attitude want to prevent any possible occurrences of attributes that violate policies.
-1. Those who adopt the fexible attitude want to prevent as many violations as Sentinel can detect, but might not necessarily want to force Terraform developers to change their code to avoid computed values.
+1. Those who adopt the flexible attitude want to prevent as many violations as Sentinel can detect, but might not necessarily want to force Terraform developers to change their code to avoid computed values.
 
 Someone adopting the strict attitude would want to fail a policy when an attribute being evaluated is computed since they cannot validate that the ultimate value will comply with their policy. However, someone adopting the flexible attitude might be willing to allow the policy to pass as long as there are no explicit violations for known values. Of course, a customer could adopt different attitudes with regard to different policies.
 
