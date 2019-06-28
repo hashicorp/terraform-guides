@@ -1,4 +1,4 @@
-# Kubernetes Cluster in Azure Container Service (AKS)
+# Kubernetes Cluster in Azure Kubernetes Service (AKS)
 The Terraform configuration in this directory can be used to deploy a Kubernetes cluster in the  [Azure Kubernetes Service (AKS)](https://azure.microsoft.com/en-us/services/kubernetes-service).
 
 ## Introduction
