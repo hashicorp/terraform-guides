@@ -19,7 +19,7 @@ title =         app.config['TITLE']
 try:
     client = hvac.Client(url=os.environ['VAULT_ADDR'])
     params = {'role':'demo', 'jwt':os.environ['K8S_TOKEN']}
-    result = client.auth('/v1/auth/' + os.environ['VAULT_K8S_BACKEND'] + 'login', json=params)
+    result = client.auth('/v1/auth/' + os.environ['VAULT_K8S_BACKEND'] + '/login', json=params)
     print(result)
 
     # Redis configurations
