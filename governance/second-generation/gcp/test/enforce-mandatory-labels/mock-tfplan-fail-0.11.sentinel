@@ -154,7 +154,7 @@ _modules = {
 							},
 							"labels.%": {
 								"computed": false,
-								"new":      "3",
+								"new":      "2",
 								"old":      "",
 							},
 							"labels.name": {
@@ -437,7 +437,7 @@ _modules = {
 							},
 							"labels.%": {
 								"computed": false,
-								"new":      "3",
+								"new":      "2",
 								"old":      "",
 							},
 							"labels.name": {

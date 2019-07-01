@@ -1,0 +1,553 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"google_compute_instance": {
+				"demo_1": {
+					0: {
+						"applied": {
+							"allow_stopping_for_update": true,
+							"attached_disk":             [],
+							"boot_disk": [
+								{
+									"auto_delete":             true,
+									"disk_encryption_key_raw": null,
+									"initialize_params": [
+										{
+											"image": "debian-cloud/debian-9",
+										},
+									],
+									"kms_key_self_link": null,
+								},
+							],
+							"can_ip_forward":      false,
+							"deletion_protection": false,
+							"description":         null,
+							"disk":                [],
+							"hostname":            null,
+							"labels": {
+								"name":  "roger-demo",
+								"owner": "roger",
+								"ttl":   "24",
+							},
+							"machine_type":            "n1-standard-2",
+							"metadata":                null,
+							"metadata_startup_script": null,
+							"min_cpu_platform":        null,
+							"name":                    "demo-1",
+							"network_interface": [
+								{
+									"access_config": [
+										{
+											"public_ptr_domain_name": null,
+										},
+									],
+									"alias_ip_range": [],
+									"network":        "default",
+								},
+							],
+							"scratch_disk": [],
+							"service_account": [
+								{
+									"scopes": [
+										"https://www.googleapis.com/auth/compute.readonly",
+										"https://www.googleapis.com/auth/monitoring",
+										"https://www.googleapis.com/auth/servicecontrol",
+									],
+								},
+							],
+							"shielded_instance_config": [],
+							"tags": [
+								"production",
+							],
+							"timeouts": null,
+							"zone":     "us-east1-b",
+						},
+						"diff": {
+							"allow_stopping_for_update": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"attached_disk.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"boot_disk.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"boot_disk.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"can_ip_forward": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"cpu_platform": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"deletion_protection": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"disk.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"guest_accelerator.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"hostname": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"label_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"labels.%": {
+								"computed": false,
+								"new":      "3",
+								"old":      "",
+							},
+							"labels.name": {
+								"computed": false,
+								"new":      "roger-demo",
+								"old":      "",
+							},
+							"labels.owner": {
+								"computed": false,
+								"new":      "roger",
+								"old":      "",
+							},
+							"labels.ttl": {
+								"computed": false,
+								"new":      "24",
+								"old":      "",
+							},
+							"machine_type": {
+								"computed": false,
+								"new":      "n1-standard-2",
+								"old":      "",
+							},
+							"metadata": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"metadata_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"metadata_startup_script": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"min_cpu_platform": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "demo-1",
+								"old":      "",
+							},
+							"network_interface.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"network_interface.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"project": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"scheduling.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"scratch_disk.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"self_link": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"service_account.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"service_account.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"shielded_instance_config.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"tags.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"tags.0": {
+								"computed": false,
+								"new":      "production",
+								"old":      "",
+							},
+							"tags_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"timeouts": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"zone": {
+								"computed": false,
+								"new":      "us-east1-b",
+								"old":      "",
+							},
+						},
+					},
+				},
+				"demo_2": {
+					0: {
+						"applied": {
+							"allow_stopping_for_update": true,
+							"attached_disk":             [],
+							"boot_disk": [
+								{
+									"auto_delete":             true,
+									"disk_encryption_key_raw": null,
+									"initialize_params": [
+										{
+											"image": "debian-cloud/debian-9",
+										},
+									],
+									"kms_key_self_link": null,
+								},
+							],
+							"can_ip_forward":      false,
+							"deletion_protection": false,
+							"description":         null,
+							"disk":                [],
+							"hostname":            null,
+							"labels": {
+								"name":  "roger-demo",
+								"owner": "roger",
+								"ttl":   "24",
+							},
+							"machine_type":            "n1-standard-2",
+							"metadata":                null,
+							"metadata_startup_script": null,
+							"min_cpu_platform":        null,
+							"name":                    "demo-2",
+							"network_interface": [
+								{
+									"access_config": [
+										{
+											"public_ptr_domain_name": null,
+										},
+									],
+									"alias_ip_range": [],
+									"network":        "default",
+								},
+							],
+							"scratch_disk": [],
+							"service_account": [
+								{
+									"scopes": [
+										"https://www.googleapis.com/auth/compute.readonly",
+										"https://www.googleapis.com/auth/monitoring",
+										"https://www.googleapis.com/auth/servicecontrol",
+									],
+								},
+							],
+							"shielded_instance_config": [],
+							"tags":     null,
+							"timeouts": null,
+							"zone":     "us-east1-b",
+						},
+						"diff": {
+							"allow_stopping_for_update": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"attached_disk.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"boot_disk.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"boot_disk.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"can_ip_forward": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"cpu_platform": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"deletion_protection": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"disk.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"guest_accelerator.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"hostname": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"label_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"labels.%": {
+								"computed": false,
+								"new":      "3",
+								"old":      "",
+							},
+							"labels.name": {
+								"computed": false,
+								"new":      "roger-demo",
+								"old":      "",
+							},
+							"labels.owner": {
+								"computed": false,
+								"new":      "roger",
+								"old":      "",
+							},
+							"labels.ttl": {
+								"computed": false,
+								"new":      "24",
+								"old":      "",
+							},
+							"machine_type": {
+								"computed": false,
+								"new":      "n1-standard-2",
+								"old":      "",
+							},
+							"metadata": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"metadata_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"metadata_startup_script": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"min_cpu_platform": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "demo-2",
+								"old":      "",
+							},
+							"network_interface.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"network_interface.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"project": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"scheduling.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"scratch_disk.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"self_link": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"service_account.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"service_account.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"shielded_instance_config.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"tags": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"tags_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"timeouts": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"zone": {
+								"computed": false,
+								"new":      "us-east1-b",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.12.3"
+
+variables = {
+	"gcp_project":     "roger-berlind-demos",
+	"gcp_region":      "us-east1",
+	"gcp_zone":        "us-east1-b",
+	"image":           "debian-cloud/debian-9",
+	"instance_name_1": "demo-1",
+	"instance_name_2": "demo-2",
+	"machine_type_1":  "n1-standard-2",
+	"machine_type_2":  "n1-standard-2",
+}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources
