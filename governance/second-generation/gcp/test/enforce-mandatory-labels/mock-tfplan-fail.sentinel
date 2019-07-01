@@ -34,7 +34,6 @@ _modules = {
 							"label_fingerprint":   "74D93920-ED26-11E3-AC10-0800200C9A66",
 							"labels": {
 								"name":  "roger-demo",
-								"owner": "roger",
 								"ttl":   "24",
 							},
 							"machine_type":         "n1-standard-2",
@@ -161,11 +160,6 @@ _modules = {
 							"labels.name": {
 								"computed": false,
 								"new":      "roger-demo",
-								"old":      "",
-							},
-							"labels.owner": {
-								"computed": false,
-								"new":      "roger",
 								"old":      "",
 							},
 							"labels.ttl": {
@@ -324,7 +318,6 @@ _modules = {
 							"labels": {
 								"name":  "roger-demo",
 								"owner": "roger",
-								"ttl":   "24",
 							},
 							"machine_type":         "n1-standard-2",
 							"metadata_fingerprint": "74D93920-ED26-11E3-AC10-0800200C9A66",
@@ -455,11 +448,6 @@ _modules = {
 							"labels.owner": {
 								"computed": false,
 								"new":      "roger",
-								"old":      "",
-							},
-							"labels.ttl": {
-								"computed": false,
-								"new":      "24",
 								"old":      "",
 							},
 							"machine_type": {

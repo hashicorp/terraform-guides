@@ -1,0 +1,48 @@
+# Validate that all instances of a specified resource type being modified have
+# a specified top-level attribute with a value greater than or equal to a min value
+validate_attribute_greater_than_value = func(type, attribute, min_value) {
+
+  validated = true
+
+  # Get all resource instances of the specified type
+  resource_instances = find_resources_from_plan(type)
+
+  # Loop through the resource instances
+  for resource_instances as address, r {
+
+    # Skip resource instances that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
+
+    # Determine if the attribute is computed
+    if r.diff[attribute].computed else false is true {
+      print("Resource", address, "has attribute", attribute,
+            "that is computed.")
+      # If you want computed values to cause the policy to fail,
+      # uncomment the next line.
+      # validated = false
+    } else {
+      # Validate that the attribute exists
+      if length(r.applied[attribute]) else 0 > 0 {
+        # Validate that each instance has desired value
+        if float(r.applied[attribute]) > min_value {
+          print("Resource", address, "has attribute", attribute, "with value",
+                r.applied[attribute], "that is less than the minimum allowed",
+                "value:", min_value)
+          validated = false
+        }
+      } else {
+        # The attribute did not exist
+        print("Resource", address, "is missing attribute", attribute)
+        validated = false
+      } // end attribute exists check
+
+    } // end computed check
+
+  } // end resource instances
+
+  return validated
+}
