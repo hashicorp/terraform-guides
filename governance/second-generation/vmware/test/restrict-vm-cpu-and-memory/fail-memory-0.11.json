@@ -1,6 +1,6 @@
 {
   "mock": {
-    "tfplan": "mock-tfplan-fail-memory.sentinel"
+    "tfplan": "mock-tfplan-fail-memory-0.11.sentinel"
   },
   "test": {
     "main": false
