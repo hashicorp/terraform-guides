@@ -47,4 +47,4 @@ Most of the second-generation policies and functions currently use the `tfplan` 
 New policies that use the tfconfig import will require the addition of mock-tfconfig-pass.sentinel and  mock-tfconfig-fail.sentinel files that mock the configuration of relevant resources. Policies that use the tfstate import will require the addition of mock-tfstate-pass.sentinel and mock-tfstate-fail.sentinel files that mock the state of relevant resources. The pass.json and fail.json files would have to be modified to refer to these additional mock files. You can look at the test cases of the two policies mentioned to see how these files should be configured. Note that unlike the `tfplan` and `tfstate` imports, the `tfconfig` import does not have a `terraform_version` key, so there is no need to create 0.11 and 0.12 mocks for policies that use the `tfconfig` import.
 
 ## Terraform Support
-These policies have been fully tested with Terraform 0.11.14. Only limited testing has been done with Terraform 0.12.
+Most of these policies have been tested with Terraform 0.11.14 and 0.12.3.
