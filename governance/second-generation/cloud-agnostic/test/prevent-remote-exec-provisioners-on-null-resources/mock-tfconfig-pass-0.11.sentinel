@@ -30,12 +30,11 @@ _modules = {
 						"associate_public_ip_address": "true",
 						"availability_zone":           "${var.aws_region}b",
 						"instance_type":               "${var.instance_type}",
-						"key_name":                    "${var.key_name}",
 						"tags": [
 							{
 								"Name":  "${var.name}",
 								"owner": "roger@hashicorp.com",
-								"ttl":   "24",
+								"ttl":   "48",
 							},
 						],
 					},
@@ -48,7 +47,9 @@ _modules = {
 					"provisioners": [
 						{
 							"config": {
-								"command": "ls",
+								"command": [
+									"${var.command}",
+								],
 							},
 							"type": "local-exec",
 						},
@@ -65,21 +66,17 @@ _modules = {
 				"default":     "us-east-1",
 				"description": "AWS region",
 			},
+			"command": {
+				"default":     "ls",
+				"description": "",
+			},
 			"instance_type": {
 				"default":     "t2.micro",
 				"description": "type of EC2 instance to provision.",
 			},
-			"key_name": {
-				"default":     null,
-				"description": "name of private key",
-			},
 			"name": {
 				"default":     "Provisioned by Terraform",
 				"description": "name to pass to Name tag",
-			},
-			"private_key_data": {
-				"default":     null,
-				"description": "private key data",
 			},
 		},
 	},

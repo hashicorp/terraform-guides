@@ -9,15 +9,21 @@ _modules = {
 			"public_dns": {
 				"depends_on":  [],
 				"description": "",
-				"sensitive":   false,
-				"value":       "${aws_instance.ubuntu.public_dns}",
+				"references": [
+					"aws_instance.ubuntu",
+				],
+				"sensitive": false,
+				"value":     undefined,
 			},
 		},
 		"providers": {
 			"aws": {
-				"alias": {},
-				"config": {
-					"region": "${var.aws_region}",
+				"alias":  {},
+				"config": {},
+				"references": {
+					"region": [
+						"var.aws_region",
+					],
 				},
 				"version": "",
 			},
@@ -26,20 +32,24 @@ _modules = {
 			"aws_instance": {
 				"ubuntu": {
 					"config": {
-						"ami": "${var.ami_id}",
 						"associate_public_ip_address": "true",
-						"availability_zone":           "${var.aws_region}b",
-						"instance_type":               "${var.instance_type}",
-						"key_name":                    "${var.key_name}",
-						"tags": [
-							{
-								"Name":  "${var.name}",
-								"owner": "roger@hashicorp.com",
-								"ttl":   "24",
-							},
-						],
 					},
 					"provisioners": null,
+					"references": {
+						"ami": [
+							"var.ami_id",
+						],
+						"associate_public_ip_address": [],
+						"availability_zone": [
+							"var.aws_region",
+						],
+						"instance_type": [
+							"var.instance_type",
+						],
+						"tags": [
+							"var.name",
+						],
+					},
 				},
 			},
 			"null_resource": {
@@ -47,14 +57,16 @@ _modules = {
 					"config": {},
 					"provisioners": [
 						{
-							"config": {
-								"inline": [
-									"ls",
+							"config": {},
+							"references": {
+								"command": [
+									"var.command",
 								],
 							},
-							"type": "remote-exec",
+							"type": "local-exec",
 						},
 					],
+					"references": {},
 				},
 			},
 		},
@@ -67,21 +79,17 @@ _modules = {
 				"default":     "us-east-1",
 				"description": "AWS region",
 			},
+			"command": {
+				"default":     "ls",
+				"description": "",
+			},
 			"instance_type": {
 				"default":     "t2.micro",
 				"description": "type of EC2 instance to provision.",
 			},
-			"key_name": {
-				"default":     null,
-				"description": "name of private key",
-			},
 			"name": {
 				"default":     "Provisioned by Terraform",
 				"description": "name to pass to Name tag",
-			},
-			"private_key_data": {
-				"default":     null,
-				"description": "private key data",
 			},
 		},
 	},
