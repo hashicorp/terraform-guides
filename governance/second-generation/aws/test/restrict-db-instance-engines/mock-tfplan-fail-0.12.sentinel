@@ -1,0 +1,377 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_db_instance": {
+				"default": {
+					0: {
+						"applied": {
+							"allocated_storage":               20,
+							"allow_major_version_upgrade":     null,
+							"auto_minor_version_upgrade":      true,
+							"copy_tags_to_snapshot":           false,
+							"deletion_protection":             null,
+							"domain":                          null,
+							"domain_iam_role_name":            null,
+							"enabled_cloudwatch_logs_exports": null,
+							"engine":                              "sqlserver-web",
+							"engine_version":                      "5.7",
+							"final_snapshot_identifier":           null,
+							"iam_database_authentication_enabled": null,
+							"instance_class":                      "db.t2.micro",
+							"iops":                                null,
+							"max_allocated_storage":               null,
+							"monitoring_interval":                 0,
+							"name":                                "mydb",
+							"parameter_group_name":                "default.mysql5.7",
+							"password":                            "foobarbaz",
+							"performance_insights_enabled":        false,
+							"publicly_accessible":                 false,
+							"replicate_source_db":                 null,
+							"s3_import":                           [],
+							"security_group_names":                null,
+							"skip_final_snapshot":                 false,
+							"snapshot_identifier":                 null,
+							"storage_encrypted":                   null,
+							"storage_type":                        "gp2",
+							"tags":                                null,
+							"timeouts":                            null,
+							"username":                            "foo",
+						},
+						"diff": {
+							"address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"allocated_storage": {
+								"computed": false,
+								"new":      "20",
+								"old":      "",
+							},
+							"allow_major_version_upgrade": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"apply_immediately": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"auto_minor_version_upgrade": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"availability_zone": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"backup_retention_period": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"backup_window": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ca_cert_identifier": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"character_set_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"copy_tags_to_snapshot": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"db_subnet_group_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"deletion_protection": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"domain": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"domain_iam_role_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"enabled_cloudwatch_logs_exports": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"endpoint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"engine": {
+								"computed": false,
+								"new":      "sqlserver-web",
+								"old":      "",
+							},
+							"engine_version": {
+								"computed": false,
+								"new":      "5.7",
+								"old":      "",
+							},
+							"final_snapshot_identifier": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"hosted_zone_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"iam_database_authentication_enabled": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"identifier": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"identifier_prefix": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_class": {
+								"computed": false,
+								"new":      "db.t2.micro",
+								"old":      "",
+							},
+							"iops": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"kms_key_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"license_model": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"maintenance_window": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"max_allocated_storage": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"monitoring_interval": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"monitoring_role_arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"multi_az": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "mydb",
+								"old":      "",
+							},
+							"option_group_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"parameter_group_name": {
+								"computed": false,
+								"new":      "default.mysql5.7",
+								"old":      "",
+							},
+							"password": {
+								"computed": false,
+								"new":      "foobarbaz",
+								"old":      "",
+							},
+							"performance_insights_enabled": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"performance_insights_kms_key_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"performance_insights_retention_period": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"port": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"publicly_accessible": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"replicas.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"replicate_source_db": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"s3_import.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"security_group_names": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"skip_final_snapshot": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"snapshot_identifier": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"status": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_encrypted": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_type": {
+								"computed": false,
+								"new":      "gp2",
+								"old":      "",
+							},
+							"tags": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"timeouts": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"timezone": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"username": {
+								"computed": false,
+								"new":      "foo",
+								"old":      "",
+							},
+							"vpc_security_group_ids.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.12.3"
+
+variables = {}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

@@ -44,7 +44,11 @@ Also be sure to temporarily set the attributes you are testing to be computed in
 ### Policies that Use the tfconfig or tfstate Imports
 Most of the second-generation policies and functions currently use the `tfplan` import. However, the cloud-agnostic policy [prevent-remote-exec-provisioners-on-null-resources](./cloud-agnostic/prevent-remote-exec-provisioners-on-null-resources.sentinel) policy uses the `tfconfig` import while the Azure policy [restrict-publishers-of-current-vms](./azure/restrict-publishers-of-current-vms.sentinel) policy uses the `tfstate` import.
 
-New policies that use the tfconfig import will require the addition of mock-tfconfig-pass.sentinel and  mock-tfconfig-fail.sentinel files that mock the configuration of relevant resources. Policies that use the tfstate import will require the addition of mock-tfstate-pass.sentinel and mock-tfstate-fail.sentinel files that mock the state of relevant resources. The pass.json and fail.json files would have to be modified to refer to these additional mock files. You can look at the test cases of the two policies mentioned to see how these files should be configured.
+New policies that use the tfconfig import will require the addition of pass-0.11.json, pass-0.12.json, fail-0.11.json, fail-0.12.json, mock-tfconfig-pass-0.11.sentinel, mock-tfconfig-pass-0.12.sentinel, mock-tfconfig-fail-0.11.sentinel and mock-tfconfig-fail0.12.sentinel files that mock the configuration of relevant resources.
+
+Policies that use the tfstate import will require the addition of pass-0.11.json, pass-0.12.json, fail-0.11.json, fail-0.12.json, mock-tfstate-pass-0.11.sentinel, mock-tfstate-pass-0.12.sentinel, mock-tfstate-fail-0.11.sentinel and mock-tfstate-fail0.12.sentinel files that mock the state of relevant resources.
+
+You can look at the test cases of the two policies mentioned to see how these files should be configured. Note that unlike the `tfplan` and `tfstate` imports, the `tfconfig` import does not have a `terraform_version` key; however, you should still generate 0.11 and 0.12 test cases and mocks since the mocks generated from Terraform 0.12 plans will differ from those generated from 0.11 plans.
 
 ## Terraform Support
-These policies have been fully tested with Terraform 0.11.14. Only limited testing has been done with Terraform 0.12.
+Most of these policies have been tested with Terraform 0.11.13 or 0.11.14 and 0.12.3.

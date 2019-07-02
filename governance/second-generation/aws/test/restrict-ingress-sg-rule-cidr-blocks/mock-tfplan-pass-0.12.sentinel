@@ -1,0 +1,496 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_security_group_rule": {
+				"allow_all": {
+					0: {
+						"applied": {
+							"cidr_blocks": [
+								"10.100.0.0/16",
+							],
+							"description":       null,
+							"from_port":         0,
+							"ipv6_cidr_blocks":  null,
+							"prefix_list_ids":   null,
+							"protocol":          "tcp",
+							"security_group_id": "sg-0ecaf664fe45ff737",
+							"self":              false,
+							"to_port":           65535,
+							"type":              "ingress",
+						},
+						"diff": {
+							"cidr_blocks.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"cidr_blocks.0": {
+								"computed": false,
+								"new":      "10.100.0.0/16",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"from_port": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_blocks": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"prefix_list_ids": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"security_group_id": {
+								"computed": false,
+								"new":      "sg-0ecaf664fe45ff737",
+								"old":      "",
+							},
+							"self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"source_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"to_port": {
+								"computed": false,
+								"new":      "65535",
+								"old":      "",
+							},
+							"type": {
+								"computed": false,
+								"new":      "ingress",
+								"old":      "",
+							},
+						},
+					},
+					1: {
+						"applied": {
+							"cidr_blocks": [
+								"10.100.0.0/16",
+							],
+							"description":       null,
+							"from_port":         0,
+							"ipv6_cidr_blocks":  null,
+							"prefix_list_ids":   null,
+							"protocol":          "tcp",
+							"security_group_id": "sg-0ecaf664fe45ff737",
+							"self":              false,
+							"to_port":           65535,
+							"type":              "ingress",
+						},
+						"diff": {
+							"cidr_blocks.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"cidr_blocks.0": {
+								"computed": false,
+								"new":      "10.100.0.0/16",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"from_port": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_blocks": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"prefix_list_ids": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"security_group_id": {
+								"computed": false,
+								"new":      "sg-0ecaf664fe45ff737",
+								"old":      "",
+							},
+							"self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"source_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"to_port": {
+								"computed": false,
+								"new":      "65535",
+								"old":      "",
+							},
+							"type": {
+								"computed": false,
+								"new":      "ingress",
+								"old":      "",
+							},
+						},
+					},
+				},
+				"allow_ssh": {
+					0: {
+						"applied": {
+							"cidr_blocks": [
+								"10.100.0.0/16",
+							],
+							"description":       null,
+							"from_port":         22,
+							"ipv6_cidr_blocks":  null,
+							"prefix_list_ids":   null,
+							"protocol":          "tcp",
+							"security_group_id": "sg-0ecaf664fe45ff737",
+							"self":              false,
+							"to_port":           22,
+							"type":              "ingress",
+						},
+						"diff": {
+							"cidr_blocks.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"cidr_blocks.0": {
+								"computed": false,
+								"new":      "10.100.0.0/16",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"from_port": {
+								"computed": false,
+								"new":      "22",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_blocks": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"prefix_list_ids": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"security_group_id": {
+								"computed": false,
+								"new":      "sg-0ecaf664fe45ff737",
+								"old":      "",
+							},
+							"self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"source_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"to_port": {
+								"computed": false,
+								"new":      "22",
+								"old":      "",
+							},
+							"type": {
+								"computed": false,
+								"new":      "ingress",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+
+	"module.more-sgrs": {
+		"data": {},
+		"path": [
+			"more-sgrs",
+		],
+		"resources": {
+			"aws_security_group_rule": {
+				"https": {
+					0: {
+						"applied": {
+							"cidr_blocks": [
+								"10.100.0.0/16",
+							],
+							"description":       null,
+							"from_port":         443,
+							"ipv6_cidr_blocks":  null,
+							"prefix_list_ids":   null,
+							"protocol":          "tcp",
+							"security_group_id": "sg-0ecaf664fe45ff737",
+							"self":              false,
+							"to_port":           443,
+							"type":              "ingress",
+						},
+						"diff": {
+							"cidr_blocks.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"cidr_blocks.0": {
+								"computed": false,
+								"new":      "10.100.0.0/16",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"from_port": {
+								"computed": false,
+								"new":      "443",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_blocks": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"prefix_list_ids": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"security_group_id": {
+								"computed": false,
+								"new":      "sg-0ecaf664fe45ff737",
+								"old":      "",
+							},
+							"self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"source_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"to_port": {
+								"computed": false,
+								"new":      "443",
+								"old":      "",
+							},
+							"type": {
+								"computed": false,
+								"new":      "ingress",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+
+	"module.more-sgrs.module.even-more-sgrs": {
+		"data": {},
+		"path": [
+			"more-sgrs",
+			"even-more-sgrs",
+		],
+		"resources": {
+			"aws_security_group_rule": {
+				"http": {
+					0: {
+						"applied": {
+							"cidr_blocks": [
+								"10.100.0.0/16",
+							],
+							"description":       null,
+							"from_port":         80,
+							"ipv6_cidr_blocks":  null,
+							"prefix_list_ids":   null,
+							"protocol":          "tcp",
+							"security_group_id": "sg-0ecaf664fe45ff737",
+							"self":              false,
+							"to_port":           80,
+							"type":              "ingress",
+						},
+						"diff": {
+							"cidr_blocks.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"cidr_blocks.0": {
+								"computed": false,
+								"new":      "10.100.0.0/16",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"from_port": {
+								"computed": false,
+								"new":      "80",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_blocks": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"prefix_list_ids": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"security_group_id": {
+								"computed": false,
+								"new":      "sg-0ecaf664fe45ff737",
+								"old":      "",
+							},
+							"self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"source_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"to_port": {
+								"computed": false,
+								"new":      "80",
+								"old":      "",
+							},
+							"type": {
+								"computed": false,
+								"new":      "ingress",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"more-sgrs",
+	],
+	[
+		"more-sgrs",
+		"even-more-sgrs",
+	],
+]
+
+terraform_version = "0.12.3"
+
+variables = {}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources
