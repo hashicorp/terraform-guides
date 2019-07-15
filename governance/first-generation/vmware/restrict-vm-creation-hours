@@ -1,0 +1,26 @@
+import "tfplan"
+import "time"
+
+get_vms = func() {
+  vms = []
+  for tfplan.module_paths as path {
+    vms += values(tfplan.module(path).resources.vsphere_virtual_machine) else []
+  }
+  return vms
+}
+
+vms = get_vms()
+
+# UTC Hours when VMs can be created
+# to be after 10pm or before 4am
+restrict_hours = rule {
+  all vms as _, instances {
+    all instances as index, r {
+      time.now.hour >= 22 or time.now.hour <= 4
+    }
+  }
+}
+
+main = rule {
+  (restrict_hours) else true
+}

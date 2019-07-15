@@ -14,7 +14,7 @@ variable "voter" {
 
 variable "candidate" {
   description = "name of candidate voter is voting for"
-  default = "Beto O'Rourke"
+  default = "Dan McCready"
 }
 
 data "template_file" "actual_vote" {
@@ -26,8 +26,7 @@ data "template_file" "actual_vote" {
   }
 }
 
-# This will work with Template Provider 2.0
-# But this does not work yet
+# This works with Template Provider 2.0
 data "template_file" "rigged_vote" {
   template = file("rigged_vote.txt")
 
@@ -60,13 +59,12 @@ output "just_mary" {
 EOT
 }
 
-# This will give the rendered actual_vote.txt
+# This gives the rendered actual_vote.txt
 output "actual_vote" {
   value = data.template_file.actual_vote.rendered
 }
 
-# This will give the rendered rigged_vote.txt
-# when the Template Provider 2.0 is released
-/*output "rigged_vote" {
+# This gives the rendered rigged_vote.txt
+output "rigged_vote" {
   value = data.template_file.rigged_vote.rendered
-}*/
+}

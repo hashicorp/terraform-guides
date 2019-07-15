@@ -1,0 +1,102 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {
+			"vsphere_datacenter": {
+				"dc": {
+					"config": {
+						"name": "PacketDatacenter",
+					},
+					"provisioners": null,
+				},
+			},
+			"vsphere_datastore": {
+				"datastore": {
+					"config": {
+						"datacenter_id": "${data.vsphere_datacenter.dc.id}",
+						"name":          "datastore1",
+					},
+					"provisioners": null,
+				},
+			},
+			"vsphere_network": {
+				"network": {
+					"config": {
+						"datacenter_id": "${data.vsphere_datacenter.dc.id}",
+						"name":          "VM Network",
+					},
+					"provisioners": null,
+				},
+			},
+			"vsphere_resource_pool": {
+				"pool": {
+					"config": {
+						"datacenter_id": "${data.vsphere_datacenter.dc.id}",
+						"name":          "MainCluster/Resources",
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"modules": {},
+		"outputs": {},
+		"providers": {
+			"vsphere": {
+				"alias": {},
+				"config": {
+					"allow_unverified_ssl": true,
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"vsphere_virtual_machine": {
+				"vm": {
+					"config": {
+						"datastore_id": "${data.vsphere_datastore.datastore.id}",
+						"disk": [
+							{
+								"label": "disk0",
+								"size":  20,
+							},
+						],
+						"guest_id": "other3xLinux64Guest",
+						"memory":   1024,
+						"name":     "terraform-roger",
+						"network_interface": [
+							{
+								"network_id": "${data.vsphere_network.network.id}",
+							},
+						],
+						"num_cpus":                    2,
+						"resource_pool_id":            "${data.vsphere_resource_pool.pool.id}",
+						"wait_for_guest_net_routable": false,
+						"wait_for_guest_net_timeout":  0,
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

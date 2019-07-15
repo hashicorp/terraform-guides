@@ -11,19 +11,19 @@ output "k8s_endpoint" {
 }
 
 output "k8s_master_auth_client_certificate" {
-  value = "${data.null_data_source.get_certs.outputs["client_certificate"]}"
+  value = "${azurerm_kubernetes_cluster.k8sexample.kube_config.0.client_certificate}"
 }
 
 output "k8s_master_auth_client_key" {
-  value = "${data.null_data_source.get_certs.outputs["client_key"]}"
+  value = "${azurerm_kubernetes_cluster.k8sexample.kube_config.0.client_key}"
 }
 
 output "k8s_master_auth_cluster_ca_certificate" {
-  value = "${data.null_data_source.get_certs.outputs["ca_certificate"]}"
+  value = "${azurerm_kubernetes_cluster.k8sexample.kube_config.0.cluster_ca_certificate}"
 }
 
-output "vault_k8s_auth_backend" {
-  value = "${vault_auth_backend.k8s.path}"
+output "environment" {
+  value = "${var.environment}"
 }
 
 output "vault_user" {

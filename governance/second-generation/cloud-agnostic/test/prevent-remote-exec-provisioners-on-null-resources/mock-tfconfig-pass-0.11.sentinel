@@ -1,0 +1,112 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data":    {},
+		"modules": {},
+		"outputs": {
+			"public_dns": {
+				"depends_on":  [],
+				"description": "",
+				"sensitive":   false,
+				"value":       "${aws_instance.ubuntu.public_dns}",
+			},
+		},
+		"providers": {
+			"aws": {
+				"alias": {},
+				"config": {
+					"region": "${var.aws_region}",
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"aws_instance": {
+				"ubuntu": {
+					"config": {
+						"ami": "${var.ami_id}",
+						"associate_public_ip_address": "true",
+						"availability_zone":           "${var.aws_region}b",
+						"instance_type":               "${var.instance_type}",
+						"tags": [
+							{
+								"Name":  "${var.name}",
+								"owner": "roger@hashicorp.com",
+								"ttl":   "48",
+							},
+						],
+					},
+					"provisioners": null,
+				},
+			},
+			"null_resource": {
+				"post_install": {
+					"config": {},
+					"provisioners": [
+						{
+							"config": {
+								"command": [
+									"${var.command}",
+								],
+							},
+							"type": "local-exec",
+						},
+					],
+				},
+			},
+		},
+		"variables": {
+			"ami_id": {
+				"default":     "ami-2e1ef954",
+				"description": "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image",
+			},
+			"aws_region": {
+				"default":     "us-east-1",
+				"description": "AWS region",
+			},
+			"command": {
+				"default":     "ls",
+				"description": "",
+			},
+			"instance_type": {
+				"default":     "t2.micro",
+				"description": "type of EC2 instance to provision.",
+			},
+			"name": {
+				"default":     "Provisioned by Terraform",
+				"description": "name to pass to Name tag",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

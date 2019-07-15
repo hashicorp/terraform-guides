@@ -1,0 +1,117 @@
+# This policy uses the Sentinel tfplan import to require that all Azure VMs
+# have all mandatory tags.
+
+# Note that the comparison is case-sensitive even though Azure tags are not.
+# If you want to allow case variations, include them in your mandatory_tags list
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+import "types"
+
+##### Functions #####
+
+# Find all resources of a specific type from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resources = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Iterate over the named resources of desired type in the module
+    for tfplan.module(path).resources[type] else {} as name, instances {
+      # Iterate over resource instances
+      for instances as index, r {
+
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
+        }
+
+        # Add the instance to resources map, setting the key to the address
+        resources[address] = r
+      }
+    }
+  }
+
+  return resources
+}
+
+# Validate that all instances of specified type have a specified top-level
+# attribute that contains all members of a given list
+validate_attribute_contains_list = func(type, attribute, required_values) {
+
+  validated = true
+
+  # Get all resource instances of the specified type
+  resource_instances = find_resources_from_plan(type)
+
+  # Loop through the resource instances
+  for resource_instances as address, r {
+
+    # Skip resource instances that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
+
+    # Determine if the attribute is computed
+    # We check "attribute.%" and "attribute.#" because an
+    # attribute of type map or list won't show up in the diff
+    if (r.diff[attribute + ".%"].computed else false) or
+       (r.diff[attribute + ".#"].computed else false) {
+      print("Resource", address, "has attribute", attribute,
+            "that is computed.")
+      # If you want computed values to cause the policy to fail,
+      # uncomment the next line.
+      # validated = false
+    } else {
+      # Validate that the attribute is a list or a map
+      if length(r.applied[attribute]) else 0 > 0 and
+         (types.type_of(r.applied[attribute]) is "list" or
+          types.type_of(r.applied[attribute]) is "map") {
+
+        # Evaluate each member of required_values list
+        for required_values as rv {
+          if r.applied[attribute] not contains rv {
+            print("Resource", address, "has attribute", attribute,
+                  "that is missing required value", rv, "from the list:",
+                  required_values)
+            validated = false
+          } // end rv
+        } // end required_values
+
+      } else {
+        print("Resource", address, "is missing attribute", attribute,
+              "or it is not a list or a map")
+        validated = false
+      } // end check that attribute is list or map
+
+    } // end computed check
+  } // end resource instances
+
+  return validated
+}
+
+### List of mandatory tags ###
+mandatory_tags = [
+  "environment",
+]
+
+### Rules ###
+
+# Call the validation function
+tags_validated = validate_attribute_contains_list("azurerm_virtual_machine",
+                 "tags", mandatory_tags)
+
+#Main rule that evaluates results
+main = rule {
+  tags_validated
+}

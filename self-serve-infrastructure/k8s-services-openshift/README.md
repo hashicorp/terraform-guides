@@ -1,6 +1,8 @@
 # OpenShift Pods and Services
 This guide gives an example of deploying OpenShift pods and services to an existing OpenShift cluster with Terraform Enterprise (TFE). It deploys two pods exposed as services:  The first runs a python application called "cats-and-dogs-frontend" that lets users vote for their favorite type of pet. It stores data in the second, "cats-and-dogs-backend", which runs a redis database. Before provisioning the pods, it provisions an OpenShift project (namespace) called "cats-and-dogs" and a Kubernetes service account called "cats-and-dogs" which the pods use. The two pods retrieve a shared database password from Vault.
 
+The source code and docker files for the applications is in the [cats-and-dogs](../cats-and-dogs) directory of this repository.
+
 ## Reference Material
 * [OpenShift Origin](https://www.openshift.org/): the open source version of OpenShift, Red Hat's commercial implementation of Kubernetes.
 * [Kubernetes](https://kubernetes.io/): the open source system for automating deployment and management of containerized applications.
@@ -43,9 +45,9 @@ If you want to use open source Terraform instead of TFE, you can create a copy o
 1. Create a new TFE workspace called k8s-services-openshift.
 1. Configure your workspace to connect to the fork of this repository in your own GitHub account.
 1. Set the Terraform Working Directory to "self-serve-infrastructure/k8s-services-openshift"
-1. Set the tfe-organization Terraform variable in your workspace to the name of the TFE organization containing your OpenShift cluster workspace.
-1. Set the k8s-cluster-workspace Terraform variable in your workspace to the name of the workspace you used to deploy your OpenShift cluster.
-1. Set the private_key_data Terraform variable in your workspace to include the contents of the private key file you used when provisioning the cluster.  This is needed since the Terraform code uses a remote-exec provisioner to create the project and service account with the `oc` and `kubectl` CLIs respectively. (The service_account resource of the Kubernetes provider cannot be used in this case because OpenShift creates service accounts with two secrets while the resource expects each service account to only have one secret.)
+1. Set the **tfe-organization** Terraform variable in your workspace to the name of the TFE organization containing your OpenShift cluster workspace.
+1. Set the **k8s-cluster-workspace** Terraform variable in your workspace to the name of the workspace you used to deploy your OpenShift cluster.
+1. Set the **private_key_data** Terraform variable in your workspace to include the contents of the private key file you used when provisioning the cluster.  This is needed since the Terraform code uses a remote-exec provisioner to create the project and service account with the `oc` and `kubectl` CLIs respectively. (The service_account resource of the Kubernetes provider cannot be used in this case because OpenShift creates service accounts with two secrets while the resource expects each service account to only have one secret.)
 
 ### Step 2: Change the Redis Password
 1. Login to the Vault UI using your username and password (or token if the userpass authentication method is not enabled).

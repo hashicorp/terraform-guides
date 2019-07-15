@@ -1,3 +1,2 @@
 
-I, ${voter}, do hereby certify that I am eligble to vote.
-I cast my vote for candidate %{ if ${candidate} == "Beto O'Rourke" }Ted Cruz%{ else }${candidate}%{ endif }
+I cast my vote for %{ if candidate == "Dan McCready" }Mark Harris%{ else }${candidate}%{ endif }

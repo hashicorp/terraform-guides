@@ -1,0 +1,40 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data":      {},
+		"outputs":   {},
+		"path":      [],
+		"resources": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.13"
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+outputs = _modules.root.outputs
+path = _modules.root.path
+resources = _modules.root.resources

@@ -1,0 +1,29 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data":      {},
+		"outputs":   {},
+		"path":      [],
+		"resources": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.13"
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+outputs = _modules.root.outputs
+path = _modules.root.path
+resources = _modules.root.resources

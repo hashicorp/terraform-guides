@@ -1,0 +1,114 @@
+# This policy uses the Sentinel tfplan import to require that
+# all S3 buckets have ACL "private" and be encrypted by a KMS key
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all resources of a specific type from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resources = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Iterate over the named resources of desired type in the module
+    for tfplan.module(path).resources[type] else {} as name, instances {
+      # Iterate over resource instances
+      for instances as index, r {
+
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
+        }
+
+        # Add the instance to resources map, setting the key to the address
+        resources[address] = r
+      }
+    }
+  }
+
+  return resources
+}
+
+
+# Function to validate that ACL is private and KMS encryption used
+validate_private_acl_and_kms_encryption = func() {
+
+  # Initialize booleans to true
+  # They will be set to false if any instances violate rules
+  result = {
+    "private":          true,
+    "encrypted_by_kms": true,
+  }
+
+  # Get all resources of specified type
+  resource_instances = find_resources_from_plan("aws_s3_bucket")
+
+  # Loop through the resource instances
+  for resource_instances as address, r {
+
+    # Skip resources that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
+
+    # Determine if the acl attribute is computed
+    if r.diff["acl"].computed else false is true {
+      print("S3 bucket", address, "has attribute, acl, that is computed.")
+      # If you want computed values to cause the policy to fail
+      # uncomment the next line.
+      # result["private"] = false
+    } else {
+      # Check whether ACL is private
+      if r.applied.acl is not "private" {
+        print("S3 bucket", address, "has ACL", r.applied.acl,
+              "that is not private.")
+        result["private"] = false
+      }
+    } // end acl computed check
+
+    # Determine if the kms encryption attribute is computed.
+    if r.diff["server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm"].computed else false is true {
+      print("S3 bucket", address, "has attribute sse_algorithm that is computed.")
+      # If you want computed values to cause the policy to fail,
+      # uncomment the next line.
+      # result["encrypted_by_kms"] = false
+    } else {
+      # Check whether server-side encryption enabled
+      # by default with KMS encryption
+      if length(r.applied.server_side_encryption_configuration) else 0 == 0 or
+         r.applied.server_side_encryption_configuration[0].rule[0].apply_server_side_encryption_by_default[0].sse_algorithm is not "aws:kms" {
+        print("S3 bucket", address,
+              "is not encrypted by default with a KMS key.")
+        result["encrypted_by_kms"] = false
+      }
+    } // end encryption computed check
+
+  } // end resource instances
+
+  # Return result with booleans which will be false if there were any violations
+  return result
+}
+
+##### Rules #####
+
+# Call the validation function and assign results
+validations = validate_private_acl_and_kms_encryption()
+all_buckets_private = validations["private"]
+all_buckets_encrypted_by_kms = validations["encrypted_by_kms"]
+
+# Main rule
+main = rule {
+  all_buckets_private and all_buckets_encrypted_by_kms
+}

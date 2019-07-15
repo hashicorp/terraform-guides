@@ -1,0 +1,40 @@
+# Validate that all instances of a specified resource type being modified have
+# a specified top-level attribute in a given list
+validate_attribute_in_list = func(type, attribute, allowed_values) {
+
+  validated = true
+
+  # Get all resource instances of the specified type
+  resource_instances = find_resources_from_plan(type)
+
+  # Loop through the resource instances
+  for resource_instances as address, r {
+
+    # Skip resource instances that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
+
+    # Determine if the attribute is computed
+    if r.diff[attribute].computed else false is true {
+      print("Resource", address, "has attribute", attribute,
+            "that is computed.")
+      # If you want computed values to cause the policy to fail,
+      # uncomment the next line.
+      # validated = false
+    } else {
+      # Validate that each instance has allowed value
+      if (r.applied[attribute] else "") not in allowed_values {
+        print("Resource", address, "has attribute", attribute, "with value",
+              r.applied[attribute] else "",
+              "that is not in the allowed list:", allowed_values)
+        validated = false
+      }
+    }
+
+  }
+
+  return validated
+}

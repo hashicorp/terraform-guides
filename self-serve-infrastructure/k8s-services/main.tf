@@ -1,11 +1,18 @@
 terraform {
-  required_version = ">= 0.11.0"
+  required_version = ">= 0.11.11"
 }
 
 data "terraform_remote_state" "k8s_cluster" {
   backend = "atlas"
   config {
     name = "${var.tfe_organization}/${var.k8s_cluster_workspace}"
+  }
+}
+
+data "terraform_remote_state" "k8s_vault_config" {
+  backend = "atlas"
+  config {
+    name = "${var.tfe_organization}/${var.k8s_vault_config_workspace}"
   }
 }
 
@@ -16,15 +23,23 @@ provider "kubernetes" {
   cluster_ca_certificate = "${base64decode(data.terraform_remote_state.k8s_cluster.k8s_master_auth_cluster_ca_certificate)}"
 }
 
+resource "kubernetes_namespace" "cats-and-dogs" {
+  metadata {
+    name = "cats-and-dogs"
+  }
+}
+
 resource "kubernetes_service_account" "cats-and-dogs" {
   metadata {
     name = "cats-and-dogs"
+    namespace = "${kubernetes_namespace.cats-and-dogs.metadata.0.name}"
   }
 }
 
 resource "kubernetes_pod" "cats-and-dogs-backend" {
   metadata {
     name = "cats-and-dogs-backend"
+    namespace = "${kubernetes_namespace.cats-and-dogs.metadata.0.name}"
     labels {
       App = "cats-and-dogs-backend"
     }
@@ -42,7 +57,7 @@ resource "kubernetes_pod" "cats-and-dogs-backend" {
       }
       env = {
         name = "VAULT_K8S_BACKEND"
-        value = "${data.terraform_remote_state.k8s_cluster.vault_k8s_auth_backend}"
+        value = "${data.terraform_remote_state.k8s_vault_config.vault_k8s_auth_backend}"
       }
       env = {
         name = "VAULT_USER"
@@ -67,6 +82,7 @@ resource "kubernetes_pod" "cats-and-dogs-backend" {
 resource "kubernetes_service" "cats-and-dogs-backend" {
   metadata {
     name = "cats-and-dogs-backend"
+    namespace = "${kubernetes_namespace.cats-and-dogs.metadata.0.name}"
   }
   spec {
     selector {
@@ -82,6 +98,7 @@ resource "kubernetes_service" "cats-and-dogs-backend" {
 resource "kubernetes_pod" "cats-and-dogs-frontend" {
   metadata {
     name = "cats-and-dogs-frontend"
+    namespace = "${kubernetes_namespace.cats-and-dogs.metadata.0.name}"
     labels {
       App = "cats-and-dogs-frontend"
     }
@@ -102,7 +119,7 @@ resource "kubernetes_pod" "cats-and-dogs-frontend" {
       }
       env = {
         name = "VAULT_K8S_BACKEND"
-        value = "${data.terraform_remote_state.k8s_cluster.vault_k8s_auth_backend}"
+        value = "${data.terraform_remote_state.k8s_vault_config.vault_k8s_auth_backend}"
       }
       env = {
         name = "VAULT_USER"
@@ -128,7 +145,8 @@ resource "kubernetes_pod" "cats-and-dogs-frontend" {
 
 resource "kubernetes_service" "cats-and-dogs-frontend" {
   metadata {
-    name = "cats-and-dogs-frontend-4"
+    name = "cats-and-dogs-frontend"
+    namespace = "${kubernetes_namespace.cats-and-dogs.metadata.0.name}"
   }
   spec {
     selector {

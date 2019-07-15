@@ -1,0 +1,8 @@
+{
+  "mock": {
+    "tfplan": "mock-tfplan-fail-acl-and-kms-0.11.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}

@@ -1,0 +1,41 @@
+# This policy allows you to define a maximum number of resources that can be destroyed on a given run
+
+import "tfplan"
+
+get_all_resources = func() {
+    resources = []
+    for tfplan.module_paths as path {
+        all_resources = tfplan.module(path).resources else {}
+        for all_resources as _, named_and_counted_resources {
+            for named_and_counted_resources as _, instances {
+                for instances as _, body {
+                    append(resources, body)
+                }
+            }
+        }
+    }
+    return resources
+}
+
+allowed_to_destroy = func() {
+    num_destroyed = 0
+    for resources as i {
+        if length(i.diff) is 0 {             // True for resources that are being completely destroyed.
+            num_destroyed = num_destroyed + 1
+        } else if i.diff.id.new is "" {      // True if the same resource is being destroyed and recreated and has an `id` attribute
+            num_destroyed = num_destroyed + 1
+        }
+    }
+    if num_destroyed > destroy_limit {
+        print("ERROR: Trying to destroy", num_destroyed, "resources. Allowed to destroy", destroy_limit)
+        return false
+    } else {
+        print("INFO: Trying to destroy", num_destroyed, "resources. Allowed to destroy", destroy_limit)
+        return true
+    }
+}
+
+destroy_limit = 2
+resources = get_all_resources()
+
+main = rule { allowed_to_destroy() }

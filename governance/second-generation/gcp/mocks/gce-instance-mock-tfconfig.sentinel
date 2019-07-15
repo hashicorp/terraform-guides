@@ -1,0 +1,184 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data":    {},
+		"modules": {},
+		"outputs": {
+			"external_ip_1": {
+				"depends_on":  [],
+				"description": "",
+				"sensitive":   false,
+				"value":       "${google_compute_instance.demo_1.network_interface.0.access_config.0.nat_ip}",
+			},
+			"external_ip_2": {
+				"depends_on":  [],
+				"description": "",
+				"sensitive":   false,
+				"value":       "${google_compute_instance.demo_2.network_interface.0.access_config.0.nat_ip}",
+			},
+		},
+		"providers": {
+			"google": {
+				"alias": {},
+				"config": {
+					"project": "${var.gcp_project}",
+					"region":  "${var.gcp_region}",
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"google_compute_instance": {
+				"demo_1": {
+					"config": {
+						"allow_stopping_for_update": true,
+						"boot_disk": [
+							{
+								"initialize_params": [
+									{
+										"image": "${var.image}",
+									},
+								],
+							},
+						],
+						"labels": [
+							{
+								"name":  "roger-demo",
+								"owner": "roger",
+								"ttl":   "24",
+							},
+						],
+						"machine_type": "${var.machine_type_1}",
+						"name":         "${var.instance_name_1}",
+						"network_interface": [
+							{
+								"access_config": [
+									{},
+								],
+								"network": "default",
+							},
+						],
+						"service_account": [
+							{
+								"scopes": [
+									"compute-ro",
+									"monitoring",
+									"service-control",
+								],
+							},
+						],
+						"zone": "${var.gcp_zone}",
+					},
+					"provisioners": null,
+				},
+				"demo_2": {
+					"config": {
+						"allow_stopping_for_update": true,
+						"boot_disk": [
+							{
+								"initialize_params": [
+									{
+										"image": "${var.image}",
+									},
+								],
+							},
+						],
+						"labels": [
+							{
+								"name":  "roger-demo",
+								"owner": "roger",
+								"ttl":   "24",
+							},
+						],
+						"machine_type": "${var.machine_type_2}",
+						"name":         "${var.instance_name_2}",
+						"network_interface": [
+							{
+								"access_config": [
+									{},
+								],
+								"network": "default",
+							},
+						],
+						"service_account": [
+							{
+								"scopes": [
+									"compute-ro",
+									"monitoring",
+									"service-control",
+								],
+							},
+						],
+						"zone": "${var.gcp_zone}",
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {
+			"gcp_project": {
+				"default":     null,
+				"description": "GCP project name",
+			},
+			"gcp_region": {
+				"default":     "us-east1",
+				"description": "GCP region, e.g. us-east1",
+			},
+			"gcp_zone": {
+				"default":     "us-east1-b",
+				"description": "GCP zone, e.g. us-east1-a",
+			},
+			"image": {
+				"default":     "debian-cloud/debian-9",
+				"description": "image to build instance from",
+			},
+			"instance_name_1": {
+				"default":     "demo-1",
+				"description": "GCP instance name",
+			},
+			"instance_name_2": {
+				"default":     "demo-2",
+				"description": "GCP instance name",
+			},
+			"machine_type_1": {
+				"default":     "n1-standard-1",
+				"description": "GCP machine type",
+			},
+			"machine_type_2": {
+				"default":     "n1-standard-2",
+				"description": "GCP machine type",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

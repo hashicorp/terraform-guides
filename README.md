@@ -11,7 +11,7 @@ This directory contains sample Terraform configurations to enable self-service i
 This directory contains some sample Sentinel policies for several clouds which ensure that all infrastructure provisioned with Terraform Enterprise complies with an organization's provisioning rules.
 
 ## operations
-This directory provides artifacts that can be used by operations teams using Terraform Enterprise. In particular, it includes a script that shows how the Terraform Enterprise REST API can be used to automate interactions with Terraform Enterprise.
+This directory provides artifacts that can be used by operations teams using Terraform Enterprise. In particular, it includes scripts that show how the Terraform Enterprise REST API can be used to automate interactions with Terraform Enterprise, set and delete variables in workspaces, and export, import, and delete Sentinel policies.
 
 ## cloud-management-platform
 This directory provides samples of how Terraform can be used to support cloud management platforms.

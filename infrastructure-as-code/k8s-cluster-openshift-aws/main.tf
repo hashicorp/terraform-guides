@@ -35,6 +35,7 @@ provider "aws" {
   access_key = "${data.vault_aws_access_credentials.aws_creds.access_key}"
   secret_key = "${data.vault_aws_access_credentials.aws_creds.secret_key}"
   region  = "${data.external.region.result["region"]}"
+  version = "~> 2.0"
 }
 
 #  Create the OpenShift cluster using our module.

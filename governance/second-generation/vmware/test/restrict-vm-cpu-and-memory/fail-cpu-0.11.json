@@ -1,0 +1,8 @@
+{
+  "mock": {
+    "tfplan": "mock-tfplan-fail-cpu-0.11.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}

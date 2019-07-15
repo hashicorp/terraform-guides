@@ -1,0 +1,278 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"outputs": {
+			"public_dns": {
+				"sensitive": false,
+				"type":      "list",
+				"value": [
+					"ec2-3-88-146-182.compute-1.amazonaws.com",
+				],
+			},
+		},
+		"path": [],
+		"resources": {
+			"aws_instance": {
+				"ubuntu": {
+					0: {
+						"attr": {
+							"ami": "ami-2e1ef954",
+							"arn": "arn:aws:ec2:us-east-1:753646501470:instance/i-08b3b7c09915673c5",
+							"associate_public_ip_address": true,
+							"availability_zone":           "us-east-1a",
+							"cpu_core_count":              "1",
+							"cpu_threads_per_core":        "1",
+							"credit_specification": [
+								{
+									"cpu_credits": "standard",
+								},
+							],
+							"disable_api_termination": false,
+							"ebs_block_device":        [],
+							"ebs_optimized":           false,
+							"ephemeral_block_device":  [],
+							"get_password_data":       false,
+							"iam_instance_profile":    "",
+							"id":                           "i-08b3b7c09915673c5",
+							"instance_state":               "running",
+							"instance_type":                "t2.small",
+							"ipv6_address_count":           "0",
+							"ipv6_addresses":               [],
+							"key_name":                     "roger-vault",
+							"monitoring":                   false,
+							"network_interface":            [],
+							"password_data":                "",
+							"placement_group":              "",
+							"primary_network_interface_id": "eni-0789906d93500d666",
+							"private_dns":                  "ip-172-31-46-68.ec2.internal",
+							"private_ip":                   "172.31.46.68",
+							"public_dns":                   "ec2-3-88-146-182.compute-1.amazonaws.com",
+							"public_ip":                    "3.88.146.182",
+							"root_block_device": [
+								{
+									"delete_on_termination": true,
+									"iops":                  "0",
+									"volume_id":             "vol-08536670e90b58e93",
+									"volume_size":           "10",
+									"volume_type":           "standard",
+								},
+							],
+							"security_groups": [
+								"default",
+							],
+							"source_dest_check": true,
+							"subnet_id":         "subnet-0be41057",
+							"tags": {
+								"Name":  "roger-ec2-demo",
+								"owner": "Roger",
+								"ttl":   "24",
+							},
+							"tenancy":     "default",
+							"volume_tags": {},
+							"vpc_security_group_ids": [
+								"sg-5eb84716",
+							],
+						},
+						"depends_on": [],
+						"id":         "i-08b3b7c09915673c5",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+	},
+
+	"module.nested": {
+		"data":    {},
+		"outputs": {},
+		"path": [
+			"nested",
+		],
+		"resources": {
+			"aws_instance": {
+				"ubuntu-too": {
+					0: {
+						"attr": {
+							"ami": "ami-2e1ef954",
+							"arn": "arn:aws:ec2:us-east-1:753646501470:instance/i-07da785c6ea519a46",
+							"associate_public_ip_address": true,
+							"availability_zone":           "us-east-1a",
+							"cpu_core_count":              "1",
+							"cpu_threads_per_core":        "1",
+							"credit_specification": [
+								{
+									"cpu_credits": "standard",
+								},
+							],
+							"disable_api_termination": false,
+							"ebs_block_device":        [],
+							"ebs_optimized":           false,
+							"ephemeral_block_device":  [],
+							"get_password_data":       false,
+							"iam_instance_profile":    "",
+							"id":                           "i-07da785c6ea519a46",
+							"instance_state":               "running",
+							"instance_type":                "t2.small",
+							"ipv6_address_count":           "0",
+							"ipv6_addresses":               [],
+							"key_name":                     "roger-vault",
+							"monitoring":                   false,
+							"network_interface":            [],
+							"password_data":                "",
+							"placement_group":              "",
+							"primary_network_interface_id": "eni-0aa74d78903aeca18",
+							"private_dns":                  "ip-172-31-46-160.ec2.internal",
+							"private_ip":                   "172.31.46.160",
+							"public_dns":                   "ec2-54-225-3-16.compute-1.amazonaws.com",
+							"public_ip":                    "54.225.3.16",
+							"root_block_device": [
+								{
+									"delete_on_termination": true,
+									"iops":                  "0",
+									"volume_id":             "vol-077df187108f7174c",
+									"volume_size":           "10",
+									"volume_type":           "standard",
+								},
+							],
+							"security_groups": [
+								"default",
+							],
+							"source_dest_check": true,
+							"subnet_id":         "subnet-0be41057",
+							"tags": {
+								"Name":  "roger-ec2-demo",
+								"owner": "Roger",
+								"ttl":   "24",
+							},
+							"tenancy":     "default",
+							"volume_tags": {},
+							"vpc_security_group_ids": [
+								"sg-5eb84716",
+							],
+						},
+						"depends_on": [],
+						"id":         "i-07da785c6ea519a46",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+	},
+
+	"module.nested.module.nested-again": {
+		"data":    {},
+		"outputs": {},
+		"path": [
+			"nested",
+			"nested-again",
+		],
+		"resources": {
+			"aws_instance": {
+				"ubuntu-three": {
+					0: {
+						"attr": {
+							"ami": "ami-2e1ef954",
+							"arn": "arn:aws:ec2:us-east-1:753646501470:instance/i-02e5304c92bf69c4f",
+							"associate_public_ip_address": true,
+							"availability_zone":           "us-east-1a",
+							"cpu_core_count":              "1",
+							"cpu_threads_per_core":        "1",
+							"credit_specification": [
+								{
+									"cpu_credits": "standard",
+								},
+							],
+							"disable_api_termination": false,
+							"ebs_block_device":        [],
+							"ebs_optimized":           false,
+							"ephemeral_block_device":  [],
+							"get_password_data":       false,
+							"iam_instance_profile":    "",
+							"id":                           "i-02e5304c92bf69c4f",
+							"instance_state":               "running",
+							"instance_type":                "t2.small",
+							"ipv6_address_count":           "0",
+							"ipv6_addresses":               [],
+							"key_name":                     "roger-vault",
+							"monitoring":                   false,
+							"network_interface":            [],
+							"password_data":                "",
+							"placement_group":              "",
+							"primary_network_interface_id": "eni-09bb723fc156918f3",
+							"private_dns":                  "ip-172-31-40-196.ec2.internal",
+							"private_ip":                   "172.31.40.196",
+							"public_dns":                   "ec2-54-90-190-245.compute-1.amazonaws.com",
+							"public_ip":                    "54.90.190.245",
+							"root_block_device": [
+								{
+									"delete_on_termination": true,
+									"iops":                  "0",
+									"volume_id":             "vol-04ad345e1f254d0c4",
+									"volume_size":           "10",
+									"volume_type":           "standard",
+								},
+							],
+							"security_groups": [
+								"default",
+							],
+							"source_dest_check": true,
+							"subnet_id":         "subnet-0be41057",
+							"tags": {
+								"Name":  "roger-ec2-demo",
+								"owner": "Roger",
+								"ttl":   "24",
+							},
+							"tenancy":     "default",
+							"volume_tags": {},
+							"vpc_security_group_ids": [
+								"sg-5eb84716",
+							],
+						},
+						"depends_on": [],
+						"id":         "i-02e5304c92bf69c4f",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"nested",
+	],
+	[
+		"nested",
+		"nested-again",
+	],
+]
+
+terraform_version = "0.11.14"
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+outputs = _modules.root.outputs
+path = _modules.root.path
+resources = _modules.root.resources

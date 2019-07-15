@@ -1,0 +1,366 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {},
+		"modules": {
+			"web_app_container": {
+				"config": {
+					"container_type": "docker",
+					"port":           "80",
+				},
+				"references": {
+					"container_image": [
+						"var.image",
+					],
+					"container_type": [],
+					"name": [
+						"var.prefix",
+					],
+					"port": [],
+					"resource_group_name": [
+						"azurerm_resource_group.arcade",
+					],
+				},
+				"source":  "innovationnorway/web-app-container/azurerm",
+				"version": "",
+			},
+		},
+		"outputs": {
+			"container_app_url": {
+				"depends_on":  [],
+				"description": "",
+				"references": [
+					"module.web_app_container.hostname",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+		},
+		"providers": {},
+		"resources": {
+			"azurerm_resource_group": {
+				"arcade": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"location": [
+							"var.location",
+						],
+						"name": [
+							"var.prefix",
+						],
+					},
+				},
+			},
+		},
+		"variables": {
+			"image": {
+				"default":     "tcarol/pacman",
+				"description": "",
+			},
+			"location": {
+				"default":     "centralus",
+				"description": "",
+			},
+			"prefix": {
+				"default":     "pizzaplanet",
+				"description": "",
+			},
+		},
+	},
+
+	"module.web_app_container": {
+		"data": {
+			"azurerm_resource_group": {
+				"main": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"name": [
+							"var.resource_group_name",
+						],
+					},
+				},
+			},
+		},
+		"modules": {},
+		"outputs": {
+			"hostname": {
+				"depends_on":  [],
+				"description": "The default hostname for the App Service.",
+				"references": [
+					"azurerm_app_service.main",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"id": {
+				"depends_on":  [],
+				"description": "The ID of the App Service.",
+				"references": [
+					"azurerm_app_service.main",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"outbound_ips": {
+				"depends_on":  [],
+				"description": "A list of outbound IP addresses for the App Service.",
+				"references": [
+					"azurerm_app_service.main",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"possible_outbound_ips": {
+				"depends_on":  [],
+				"description": "A list of possible outbound IP addresses for the App Service. Superset of outbound_ips.",
+				"references": [
+					"azurerm_app_service.main",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+			"principal_id": {
+				"depends_on":  [],
+				"description": "The principal ID for the system-assigned identity associated with the App Service.",
+				"references": [
+					"azurerm_app_service.main",
+				],
+				"sensitive": false,
+				"value":     undefined,
+			},
+		},
+		"providers": {},
+		"resources": {
+			"azurerm_app_service": {
+				"main": {
+					"config": {
+						"identity": [
+							{
+								"type": "SystemAssigned",
+							},
+						],
+						"site_config": [
+							{},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"app_service_plan_id": [
+							"local.app_service_plan_id",
+						],
+						"app_settings": [
+							"var.app_settings",
+							"local.app_settings",
+						],
+						"https_only": [
+							"var.https_only",
+						],
+						"identity": [
+							{
+								"type": [],
+							},
+						],
+						"location": [
+							"data.azurerm_resource_group.main",
+						],
+						"name": [
+							"var.name",
+						],
+						"resource_group_name": [
+							"data.azurerm_resource_group.main",
+						],
+						"site_config": [
+							{
+								"always_on": [
+									"var.always_on",
+								],
+								"app_command_line": [
+									"var.command",
+								],
+								"ftps_state": [
+									"var.ftps_state",
+								],
+								"ip_restriction": [
+									"local.ip_restrictions",
+								],
+								"linux_fx_version": [
+									"local.linux_fx_version",
+								],
+							},
+						],
+						"tags": [
+							"var.tags",
+						],
+					},
+				},
+			},
+			"azurerm_app_service_custom_hostname_binding": {
+				"main": {
+					"config":       {},
+					"provisioners": null,
+					"references": {
+						"app_service_name": [
+							"azurerm_app_service.main",
+						],
+						"hostname": [
+							"var.custom_hostnames",
+							"count.index",
+						],
+						"resource_group_name": [
+							"data.azurerm_resource_group.main",
+						],
+					},
+				},
+			},
+			"azurerm_app_service_plan": {
+				"main": {
+					"config": {
+						"kind":     "linux",
+						"reserved": true,
+						"sku": [
+							{},
+						],
+					},
+					"provisioners": null,
+					"references": {
+						"kind": [],
+						"location": [
+							"data.azurerm_resource_group.main",
+						],
+						"name": [
+							"var.name",
+						],
+						"reserved": [],
+						"resource_group_name": [
+							"data.azurerm_resource_group.main",
+						],
+						"sku": [
+							{
+								"size": [
+									"var.sku",
+								],
+								"tier": [
+									"var.sku",
+								],
+							},
+						],
+						"tags": [
+							"var.tags",
+						],
+					},
+				},
+			},
+		},
+		"variables": {
+			"always_on": {
+				"default":     true,
+				"description": "Either `true` to ensure the web app gets loaded all the time, or `false` to to unload after being idle.",
+			},
+			"app_service_plan_id": {
+				"default":     "",
+				"description": "The ID of an existing app service plan to use for the web app.",
+			},
+			"app_settings": {
+				"default":     {},
+				"description": "Set web app settings. These are avilable as environment variables at runtime.",
+			},
+			"command": {
+				"default":     "",
+				"description": "A command to be run on the container.",
+			},
+			"container_config": {
+				"default":     "",
+				"description": "Configuration for the container. This should be YAML.",
+			},
+			"container_image": {
+				"default":     "",
+				"description": "Container image name. Example: `innovationnorway/python-hello-world:latest`.",
+			},
+			"container_type": {
+				"default":     "docker",
+				"description": "Type of container. The options are: `docker`, `compose` or `kube`.",
+			},
+			"custom_hostnames": {
+				"default":     [],
+				"description": "List of custom hostnames to use for the web app.",
+			},
+			"docker_registry_password": {
+				"default":     "",
+				"description": "The container registry password.",
+			},
+			"docker_registry_url": {
+				"default":     "https://index.docker.io",
+				"description": "The container registry url.",
+			},
+			"docker_registry_username": {
+				"default":     "",
+				"description": "The container registry username.",
+			},
+			"enable_storage": {
+				"default":     "false",
+				"description": "Mount an SMB share to the `/home/` directory.",
+			},
+			"ftps_state": {
+				"default":     "Disabled",
+				"description": "Set the FTPS state value the web app. The options are: `AllAllowed`, `Disabled` and `FtpsOnly`.",
+			},
+			"https_only": {
+				"default":     true,
+				"description": "Redirect all traffic made to the web app using HTTP to HTTPS.",
+			},
+			"ip_restrictions": {
+				"default":     [],
+				"description": "A list of IP addresses in CIDR format specifying Access Restrictions.",
+			},
+			"name": {
+				"default":     null,
+				"description": "The name of the web app.",
+			},
+			"port": {
+				"default":     "",
+				"description": "The value of the expected container port number.",
+			},
+			"resource_group_name": {
+				"default":     null,
+				"description": "The name of an existing resource group to use for the web app.",
+			},
+			"sku": {
+				"default":     "Basic_B1",
+				"description": "The SKU of an app service plan to create for the web app.",
+			},
+			"start_time_limit": {
+				"default":     230,
+				"description": "Configure the amount of time (in seconds) the app service will wait before it restarts the container.",
+			},
+			"tags": {
+				"default":     {},
+				"description": "A mapping of tags to assign to the web app.",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"web_app_container",
+	],
+]
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

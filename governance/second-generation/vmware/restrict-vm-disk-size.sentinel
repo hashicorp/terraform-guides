@@ -1,0 +1,99 @@
+# This policy uses the Sentinel tfplan import to require that
+# all VMware VMs obey a disk limit
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all resources of a specific type from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resources = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Iterate over the named resources of desired type in the module
+    for tfplan.module(path).resources[type] else {} as name, instances {
+      # Iterate over resource instances
+      for instances as index, r {
+
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
+        }
+
+        # Add the instance to resources map, setting the key to the address
+        resources[address] = r
+      }
+    }
+  }
+
+  return resources
+}
+
+# Validate that all VMware VMs have disk sizes beneath specified limit
+validate_disk_size = func(disk_limit) {
+
+  validated = true
+
+  # Get all resources of specified type
+  resource_instances = find_resources_from_plan("vsphere_virtual_machine")
+
+  # Loop through the resource instances
+  for resource_instances as address, r {
+
+    # Skip resources that are being destroyed
+    # to avoid unnecessary policy violations
+    if length(r.diff) == 0 {
+      print("Skipping resource", address, "that is being destroyed.")
+      continue
+    }
+
+    # Initialize disk_count
+    disk_count = -1
+
+    # Get all disks for the VM
+    for r.applied.disk as disk {
+
+      # Increment disk_count for use in computed test
+      disk_count += 1
+
+      # Determine if the attribute is computed
+      if r.diff["disk." + string(disk_count) + ".size"].computed else false is true {
+        print("Virtual machine", address, "has disk", disk.label,
+              "with attribute, disk.size, that is computed.")
+        # If you want computed values to cause the policy to fail,
+        # uncomment the next line.
+        # validated = false
+      } else {
+        # Validate that each disk has valid disk size
+        if int(disk.size) > disk_limit {
+          print("Virtual machine", address, "has disk", disk.label, "with size",
+                disk.size, "that is greater than the limit", disk_limit)
+          validated = false
+        }
+      } // end computed check
+
+    } // end disks
+  } // end resource instances
+
+  return validated
+}
+
+##### Rules #####
+
+# Call the validation function and assign results
+vm_disks_validated = validate_disk_size(100)
+
+# Main rule
+main = rule {
+  vm_disks_validated is true
+}

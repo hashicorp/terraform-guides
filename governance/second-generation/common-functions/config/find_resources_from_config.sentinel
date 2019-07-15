@@ -1,0 +1,27 @@
+# Find all resources of specific type from all modules using the tfconfig import
+find_resources_from_config = func(type) {
+
+  resources = {}
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Iterate over the named resources of desired type in the module
+    for tfconfig.module(path).resources[type] else {} as name, r {
+
+      # Get the address of the instance
+      if length(path) == 0 {
+        # root module
+        address = type + "." + name
+      } else {
+        # non-root module
+        address = "module." + strings.join(path, ".module.") + "." +
+                  type + "." + name
+      }
+
+      # Add the resource to resources map, setting the key to the address
+      resources[address] = r
+    }
+  }
+
+  return resources
+}

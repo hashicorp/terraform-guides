@@ -1,0 +1,220 @@
+import "strings"
+
+outputs = {
+	"container_app_url": {
+		"sensitive": false,
+		"type":      "string",
+		"value":     "https://palace-arcade.azurewebsites.net",
+	},
+}
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"azurerm_resource_group": {
+				"arcade": {
+					0: {
+						"attr": {
+							"id":       "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo",
+							"location": "centralus",
+							"name":     "palace-arcade-containerapp-demo",
+							"tags":     {},
+						},
+						"depends_on": [],
+						"id":         "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+	},
+
+	"module.web_app_container": {
+		"data": {
+			"azurerm_resource_group": {
+				"main": {
+					0: {
+						"attr": {
+							"id":       "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo",
+							"location": "centralus",
+							"name":     "palace-arcade-containerapp-demo",
+							"tags":     {},
+						},
+						"depends_on": [],
+						"id":         "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+		"path": [
+			"web_app_container",
+		],
+		"resources": {
+			"azurerm_app_service": {
+				"main": {
+					0: {
+						"attr": {
+							"app_service_plan_id": "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+							"app_settings": {
+								"DOCKER_REGISTRY_SERVER_PASSWORD":     "",
+								"DOCKER_REGISTRY_SERVER_URL":          "https://index.docker.io",
+								"DOCKER_REGISTRY_SERVER_USERNAME":     "",
+								"WEBSITES_CONTAINER_START_TIME_LIMIT": "230",
+								"WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+								"WEBSITES_PORT":                       "80",
+							},
+							"auth_settings": [
+								{
+									"active_directory":               [],
+									"additional_login_params":        {},
+									"allowed_external_redirect_urls": [],
+									"default_provider":               "",
+									"enabled":                        false,
+									"facebook":                       [],
+									"google":                         [],
+									"issuer":                         "",
+									"microsoft":                      [],
+									"runtime_version":                "",
+									"token_refresh_extension_hours":  0,
+									"token_store_enabled":            false,
+									"twitter":                        [],
+									"unauthenticated_client_action":  "",
+								},
+							],
+							"client_affinity_enabled": true,
+							"client_cert_enabled":     false,
+							"connection_string":       [],
+							"default_site_hostname":   "palace-arcade.azurewebsites.net",
+							"enabled":                 true,
+							"https_only":              true,
+							"id":                      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/sites/palace-arcade",
+							"identity": [
+								{
+									"principal_id": "34f79dca-b0d9-78a2-9f1d-b12ee36e113c",
+									"tenant_id":    "1e4e2c66-7cae-47cb-a4db-e4b22a7c32ad",
+									"type":         "SystemAssigned",
+								},
+							],
+							"location":                       "centralus",
+							"name":                           "palace-arcade",
+							"outbound_ip_addresses":          "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31",
+							"possible_outbound_ip_addresses": "40.122.36.65,104.43.242.206,40.113.219.125,40.113.227.212,40.113.225.31,40.113.229.114,40.113.220.255,40.113.225.253,40.113.231.60,104.43.253.242",
+							"resource_group_name":            "palace-arcade-containerapp-demo",
+							"site_config": [
+								{
+									"always_on":        true,
+									"app_command_line": "",
+									"cors": [
+										{
+											"allowed_origins":     [],
+											"support_credentials": false,
+										},
+									],
+									"default_documents":         null,
+									"dotnet_framework_version":  "v4.0",
+									"ftps_state":                "Disabled",
+									"http2_enabled":             false,
+									"ip_restriction":            [],
+									"java_container":            "",
+									"java_container_version":    "",
+									"java_version":              "",
+									"linux_fx_version":          "DOCKER|tcarol/pacman",
+									"local_mysql_enabled":       false,
+									"managed_pipeline_mode":     "Integrated",
+									"min_tls_version":           "1.2",
+									"php_version":               "",
+									"python_version":            "",
+									"remote_debugging_enabled":  false,
+									"remote_debugging_version":  "VS2017",
+									"scm_type":                  "None",
+									"use_32_bit_worker_process": false,
+									"virtual_network_name":      "",
+									"websockets_enabled":        false,
+								},
+							],
+							"site_credential": [
+								{
+									"password": "sdfsdf9y8ydsfdsfklw3432sdflkj232",
+									"username": "$palace-arcade",
+								},
+							],
+							"source_control": [
+								{
+									"branch":   "master",
+									"repo_url": "",
+								},
+							],
+							"tags": {},
+						},
+						"depends_on": [
+							"data.azurerm_resource_group.main",
+						],
+						"id":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/sites/palace-arcade",
+						"tainted": false,
+					},
+				},
+			},
+			"azurerm_app_service_plan": {
+				"main": {
+					0: {
+						"attr": {
+							"app_service_environment_id": null,
+							"id":                        "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+							"kind":                      "linux",
+							"location":                  "centralus",
+							"maximum_number_of_workers": 3,
+							"name":             "palace-arcade-plan",
+							"per_site_scaling": false,
+							"properties": [
+								{
+									"app_service_environment_id": "",
+									"per_site_scaling":           false,
+									"reserved":                   true,
+								},
+							],
+							"reserved":            true,
+							"resource_group_name": "palace-arcade-containerapp-demo",
+							"sku": [
+								{
+									"capacity": 1,
+									"size":     "B1",
+									"tier":     "Basic",
+								},
+							],
+							"tags": {},
+						},
+						"depends_on": [
+							"data.azurerm_resource_group.main",
+						],
+						"id":      "/subscriptions/14692f20-9428-451b-8298-108ef3e20c2b/resourceGroups/palace-arcade-containerapp-demo/providers/Microsoft.Web/serverfarms/palace-arcade-plan",
+						"tainted": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"web_app_container",
+	],
+]
+
+terraform_version = "0.11.14"
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

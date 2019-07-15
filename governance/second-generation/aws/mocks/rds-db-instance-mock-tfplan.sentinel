@@ -1,0 +1,280 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_db_instance": {
+				"default": {
+					0: {
+						"applied": {
+							"address":           "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"allocated_storage": "20",
+							"apply_immediately": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"arn":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"auto_minor_version_upgrade": true,
+							"availability_zone":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"backup_retention_period":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"backup_window":              "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"ca_cert_identifier":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"character_set_name":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"copy_tags_to_snapshot":      false,
+							"db_subnet_group_name":       "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"endpoint":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"engine":                     "sqlserver-web",
+							"engine_version":             "5.7",
+							"hosted_zone_id":             "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"id":                         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"identifier":                 "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"identifier_prefix":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"instance_class":             "db.t2.micro",
+							"kms_key_id":                 "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"license_model":              "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"maintenance_window":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"monitoring_interval":        "0",
+							"monitoring_role_arn":        "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"multi_az":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"name":                       "mydb",
+							"option_group_name":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"parameter_group_name":       "default.mysql5.7",
+							"password":                   "foobarbaz",
+							"port":                       "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"publicly_accessible":        false,
+							"replicas":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"resource_id":                "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"skip_final_snapshot":        false,
+							"status":                     "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"storage_type":               "gp2",
+							"timezone":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"username":                   "foo",
+							"vpc_security_group_ids":     "74D93920-ED26-11E3-AC10-0800200C9A66",
+						},
+						"diff": {
+							"address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"allocated_storage": {
+								"computed": false,
+								"new":      "20",
+								"old":      "",
+							},
+							"apply_immediately": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"auto_minor_version_upgrade": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"availability_zone": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"backup_retention_period": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"backup_window": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ca_cert_identifier": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"character_set_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"copy_tags_to_snapshot": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"db_subnet_group_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"endpoint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"engine": {
+								"computed": false,
+								"new":      "sqlserver-web",
+								"old":      "",
+							},
+							"engine_version": {
+								"computed": false,
+								"new":      "5.7",
+								"old":      "",
+							},
+							"hosted_zone_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"identifier": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"identifier_prefix": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_class": {
+								"computed": false,
+								"new":      "db.t2.micro",
+								"old":      "",
+							},
+							"kms_key_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"license_model": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"maintenance_window": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"monitoring_interval": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"monitoring_role_arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"multi_az": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "mydb",
+								"old":      "",
+							},
+							"option_group_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"parameter_group_name": {
+								"computed": false,
+								"new":      "default.mysql5.7",
+								"old":      "",
+							},
+							"password": {
+								"computed": false,
+								"new":      "foobarbaz",
+								"old":      "",
+							},
+							"port": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"publicly_accessible": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"replicas.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"skip_final_snapshot": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"status": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_type": {
+								"computed": false,
+								"new":      "gp2",
+								"old":      "",
+							},
+							"timezone": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"username": {
+								"computed": false,
+								"new":      "foo",
+								"old":      "",
+							},
+							"vpc_security_group_ids.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.14"
+
+variables = {}
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

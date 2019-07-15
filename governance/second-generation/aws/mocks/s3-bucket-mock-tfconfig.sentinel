@@ -1,0 +1,108 @@
+import "strings"
+
+_modules = {
+	"root": {
+		"data":    {},
+		"modules": {},
+		"outputs": {
+			"sse": {
+				"depends_on":  [],
+				"description": "",
+				"sensitive":   false,
+				"value":       "${aws_s3_bucket.bucket.server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm}",
+			},
+		},
+		"providers": {
+			"aws": {
+				"alias": {},
+				"config": {
+					"region": "${var.aws_region}",
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"aws_s3_bucket": {
+				"bucket": {
+					"config": {
+						"acl":    "${var.bucket_acl}",
+						"bucket": "${var.bucket_name}",
+						"logging": [
+							{
+								"target_bucket": "roger-bucket",
+							},
+						],
+						"server_side_encryption_configuration": [
+							{
+								"rule": [
+									{
+										"apply_server_side_encryption_by_default": [
+											{
+												"kms_master_key_id": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+												"sse_algorithm":     "aws:kms",
+											},
+										],
+									},
+								],
+							},
+						],
+						"tags": [
+							{
+								"Owner":            "roger@hashicorp.com",
+								"application_id":   "456",
+								"created_by":       "roger",
+								"data_class":       "protected",
+								"description":      "roger",
+								"environment":      "dev",
+								"name":             "Roger Test Bucket",
+								"stack_name":       "roger",
+								"termination_date": "12/25/2019",
+								"website":          "true",
+							},
+						],
+						"versioning": [
+							{
+								"enabled":    true,
+								"mfa_delete": true,
+							},
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {
+			"aws_region": {
+				"default":     "us-east-1",
+				"description": "AWS region",
+			},
+			"bucket_acl": {
+				"default":     "private",
+				"description": "ACL for S3 bucket: private, public-read, public-read-write, etc",
+			},
+			"bucket_name": {
+				"default":     null,
+				"description": "Name of the bucket to create",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	return _modules[strings.join(["module", path], ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs
