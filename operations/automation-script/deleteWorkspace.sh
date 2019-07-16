@@ -1,7 +1,7 @@
 #!/bin/bash
 # Script to delete the workspace created by the loadAndRunWorkspace.sh script
 
-# Make sure ATLAS_TOKEN environment variable is set
+# Make sure TFE_TOKEN environment variable is set
 # to owners team token for organization
 
 # Set address if using private Terraform Enterprise server.
@@ -21,7 +21,7 @@ fi
 
 # Try to delete the workspace.
 echo "Attempting to delete the workspace"
-delete_workspace_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --request DELETE "https://${address}/api/v2/organizations/${organization}/workspaces/${workspace}")
+delete_workspace_result=$(curl --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --request DELETE "https://${address}/api/v2/organizations/${organization}/workspaces/${workspace}")
 
 # Get the response from the TFE server
 # Note that successful deletion will give a null response.

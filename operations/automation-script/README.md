@@ -75,7 +75,7 @@ Follow these instructions to run the script with with the included main.tf and v
 1. If you are using a private Terraform Enterprise server, edit the script and set the address variable to the address of your server. Otherwise, you would leave the address set to "app.terraform.io" which is the address of the SaaS Terraform Enterprise server.
 1. Edit the script and set the organization variable to the name of your Terraform Enterprise organization.
 1. Generate a [team token](https://www.terraform.io/docs/enterprise/users-teams-organizations/service-accounts.html#team-service-accounts) for the owners team in your organization in the Terraform Enterprise UI by selecting your organization settings, then Teams, then owners, and then clicking the Generate button and saving the token that is displayed.
-1. `export ATLAS_TOKEN=<owners_token>` where \<owners_token\> is the token generated in the previous step.
+1. `export TFE_TOKEN=<owners_token>` where \<owners_token\> is the token generated in the previous step.
 1. If you want, you can also change the name of the workspace that will be created by editing the workspace variable. Note that you can also pass the workspace as the second argument to the script.
 1. If you want, you can change the sleep_duration variable which controls how often the script checks the status of the triggered run (in seconds). Setting a longer value would make sense if using Terraform code that takes longer to apply.
 1. If you are providing a URL to clone a git repository, you can add Terraform and environment variables needed by your Terraform code to [variables.csv](./variables.csv) and remove the "name" variable. You can also add the edited variables.csv file to your repository.
