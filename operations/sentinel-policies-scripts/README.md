@@ -1,6 +1,8 @@
 # Scripts to Export, Import, and Delete Sentinel Policies
 These are scripts that can be used to export and import Sentinel policies between TFE organizations and to delete all policies using the [Terraform Enterprise REST API](https://www.terraform.io/docs/enterprise/api/index.html).
 
+Before using these scripts, you need to export a valid TFE API token with the command `export TFE_TOKEN=<owners_token>` where \<owners_token\> is a team token for the owners team in your organization.
+
 ## Exporting Policies
 The export_policies.sh script exports all the policies from a TFE organization to the directory in which you run the script. It currently is limited to exporting 150 policies since it does not handle multiple pages from the List Policies API that retrieves them.
 

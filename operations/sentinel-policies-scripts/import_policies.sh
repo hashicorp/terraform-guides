@@ -2,7 +2,7 @@
 # This script imports all policies in the current directory into a
 # specific policy set within a specific organization on a TFE server.
 
-# Make sure ATLAS_TOKEN environment variable is set
+# Make sure TFE_TOKEN environment variable is set
 # to owners team token for organization
 # or to user token for member of the owners team
 
@@ -31,14 +31,14 @@ for f in *.sentinel; do
   sed "s/file-name/$f/;s/policy-name/$policy_name/;s/policy-set-id/$policy_set_id/" < create-policy.template.json > create-policy.json
  
   # Create the policy
-  policy_create_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @create-policy.json "https://${address}/api/v2/organizations/${organization}/policies")
+  policy_create_result=$(curl --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @create-policy.json "https://${address}/api/v2/organizations/${organization}/policies")
 
   # Extract policy ID
   policy_id=$(echo $policy_create_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['id'])")
   echo "Policy ID: " $policy_id
 
   # Upload policy
-  policy_upload_result=$(curl --header "Authorization: Bearer $ATLAS_TOKEN" --header "Content-Type: application/octet-stream" --request PUT --data-binary @$f "https://${address}/api/v2/policies/$policy_id/upload" )
+  policy_upload_result=$(curl --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/octet-stream" --request PUT --data-binary @$f "https://${address}/api/v2/policies/$policy_id/upload" )
   echo "Policy Upload Response: " $policy_upload_result
 
 done
