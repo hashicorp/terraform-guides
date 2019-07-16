@@ -2,7 +2,8 @@
   "data":
   {
     "attributes": {
-      "name":"placeholder"
+      "name":"placeholder",
+      "terraform-version": "0.11.14"
     },
     "type":"workspaces"
   }
