@@ -2,15 +2,15 @@
 # This script imports all policies in the current directory into a
 # specific policy set within a specific organization on a TFE server.
 
-# Make sure TFE_TOKEN environment variable is set
-# to owners team token for organization
-# or to user token for member of the owners team
+# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# to owners team token and organization name for the respective
+# TFE environment.
 
 # Set address if using private Terraform Enterprise server.
 # You should edit these before running.
 address="app.terraform.io"
 # Set organization to use
-organization="<organization>"
+organization="$TFE_ORG"
 # Set ID of policy set that all policies should be added to
 policy_set_id="<policy_set_id>"
 

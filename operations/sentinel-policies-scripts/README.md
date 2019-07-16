@@ -3,6 +3,8 @@ These are scripts that can be used to export and import Sentinel policies betwee
 
 Before using these scripts, you need to export a valid TFE API token with the command `export TFE_TOKEN=<owners_token>` where \<owners_token\> is a team token for the owners team in your organization.
 
+Before running these scripts, you must export or set the TFE ORG environment variable with the command `export TFE_ORG=<your_organization>` where \<your_organization\> is the target name of the organization containing the Sentinel policies you want to manage.
+
 ## Exporting Policies
 The export_policies.sh script exports all the policies from a TFE organization to the directory in which you run the script. It currently is limited to exporting 150 policies since it does not handle multiple pages from the List Policies API that retrieves them.
 

@@ -8,14 +8,16 @@
 # If an apply is done, the script waits for it to finish and then
 # downloads the apply log and the before and after state files.
 
-# Make sure TFE_TOKEN environment variable is set
-# to owners team token for organization
+# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# to owners team token and organization name for the respective
+# TFE environment.
 
 # Set address if using private Terraform Enterprise server.
 # Set organization and workspace to create.
 # You should edit these before running.
+
 address="app.terraform.io"
-organization="<your_organization>"
+organization="$TFE_ORG"
 # workspace name should not have spaces
 workspace="workspace-from-api"
 

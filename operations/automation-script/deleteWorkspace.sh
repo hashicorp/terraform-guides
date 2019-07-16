@@ -1,14 +1,15 @@
 #!/bin/bash
 # Script to delete the workspace created by the loadAndRunWorkspace.sh script
 
-# Make sure TFE_TOKEN environment variable is set
-# to owners team token for organization
+# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# to owners team token and organization name for the respective
+# TFE environment.
 
 # Set address if using private Terraform Enterprise server.
 # Set organization and workspace to create.
 # You should edit these before running.
 address="app.terraform.io"
-organization="<your_organization>"
+organization="$TFE_ORG"
 workspace="workspace-from-api"
 
 # Set workspace if provided as the second argument
