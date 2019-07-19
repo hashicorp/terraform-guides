@@ -6,11 +6,11 @@ Before using these scripts, you need to export a valid TFE API token with the co
 Before running these scripts, you must export or set the TFE ORG environment variable with the command `export TFE_ORG=<your_organization>` where \<your_organization\> is the target name of the organization containing the Sentinel policies you want to manage.
 
 ## Exporting Policies
-The export_policies.sh script exports all the policies from a TFE organization to the directory in which you run the script. It currently is limited to exporting 150 policies since it does not handle multiple pages from the List Policies API that retrieves them.
+The export_policies.sh script exports all the policies from a TFE organization to the directory in which you run the script. It currently is limited to exporting 100 policies since it does not handle multiple pages from the List Policies API that retrieves them.
 
 The script uses curl to interact with Terraform Enterprise via the TFE API.  It performs the following steps:
 
-1. It uses curl to invoke the [List Policies API](https://www.terraform.io/docs/enterprise/api/policies.html#list-policies) against the organization specified in the organization variable. It sets the page[size] parameter to the maximum value of 150 policies.
+1. It uses curl to invoke the [List Policies API](https://www.terraform.io/docs/enterprise/api/policies.html#list-policies) against the organization specified in the organization variable. It sets the page[size] parameter to the maximum value of 100 policies.
 1. It extracts the policy IDs, names, enforcement modes, and code download links from the JSON returned by that API into arrays.
 1. It iterates across all the arrays simultaneously, doing the following:
     1. It retrieves the policy code from the code download link.
@@ -36,4 +36,4 @@ The script uses curl to interact with Terraform Enterprise via the TFE API. It p
 ## Deleting Policies
 The delete_policies.sh script deletes all policies from a TFE organization. It uses curl to invoke the [List Policies API](https://www.terraform.io/docs/enterprise/api/policies.html#list-policies) to retrieve all Sentinel policies. It then iterates through these and invokes the [Delete a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#delete-a-policy) to delete them one at a time.  It also prints out the ID of each deleted policy and finally gives a count of how many were deleted.
 
-Currently, it will only delete 150 policies at a time since that is the largest value that we can set the page[size] parameter to. But if you need to delete more policies, just run the delete_policies.sh script again until you have deleted all of them.
+Currently, it will only delete 100 policies at a time since that is the largest value that we can set the page[size] parameter to. But if you need to delete more policies, just run the delete_policies.sh script again until you have deleted all of them.

@@ -15,9 +15,9 @@ organization="$TFE_ORG"
 echo "Using address: $address"
 echo "Using organization: $organization"
 
-# Retrieve list of all policies in the organization (up to 150)
-policy_list_result=$(curl --header "Authorization: Bearer $TFE_TOKEN" "https://${address}/api/v2/organizations/${organization}/policies?page%5Bsize%5D=150")
-#echo $policy_list_result | jq 
+# Retrieve list of all policies in the organization (up to 100)
+policy_list_result=$(curl --header "Authorization: Bearer $TFE_TOKEN" "https://${address}/api/v2/organizations/${organization}/policies?page%5Bsize%5D=100")
+# echo $policy_list_result | jq 
 
 # Extract policy IDs
 policy_ids_list=($(echo $policy_list_result | jq -r '.data[].id'))
