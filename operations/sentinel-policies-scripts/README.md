@@ -1,11 +1,14 @@
 # Scripts to Export, Import, and Delete Sentinel Policies
+
 These are scripts that can be used to export and import Sentinel policies between TFE organizations and to delete all policies using the [Terraform Enterprise REST API](https://www.terraform.io/docs/enterprise/api/index.html).
 
-Before using these scripts, you need to export a valid TFE API token with the command `export TFE_TOKEN=<owners_token>` where \<owners_token\> is a team token for the owners team in your organization.
-
-Before running these scripts, you must export or set the TFE ORG environment variable with the command `export TFE_ORG=<your_organization>` where \<your_organization\> is the target name of the organization containing the Sentinel policies you want to manage.
+1. Generate a [team token](https://www.terraform.io/docs/enterprise/users-teams-organizations/service-accounts.html#team-service-accounts) for the owners team in your organization in the Terraform Enterprise UI by selecting your organization settings, then Teams, then owners, and then clicking the Generate button and saving the token that is displayed.
+1. `export TFE_TOKEN=<owners_token>` where \<owners_token\> is the token generated in the previous step.
+1. `export TFE_ORG=<your_organization>` where \<your_organization\> is the name of your target TFE organization.
+1. `export TFE_ADDR=<your_custom_address>` where \<your_custom_address\> is the address of your target TFE server in the format server.domain.tld. If you do not set this environment variable it will default to the Terraform Enterprise Cloud/SaaS address of app.terraform.io.
 
 ## Exporting Policies
+
 The export_policies.sh script exports all the policies from a TFE organization to the directory in which you run the script. It currently is limited to exporting 100 policies since it does not handle multiple pages from the List Policies API that retrieves them.
 
 The script uses curl to interact with Terraform Enterprise via the TFE API.  It performs the following steps:
@@ -21,6 +24,7 @@ The script uses curl to interact with Terraform Enterprise via the TFE API.  It 
 1. Finally, it prints out the number of policies it exported.
 
 ## Importing Policies
+
 The import_policies.sh script imports all policies in a directory into a specified organization on a specified server. It also adds all of them to a specified policy set, using a policy set ID (which can be determined by looking at the policy set's URL). Note that you must use the policy set's ID (e.g., polset-rCLeCwoSBUHXDC7L), not the name of the policy set.
 
 Note that you will get errors if any of the policies you are importing already exist. Please delete any policies you plan to import first if they already exist in your organization.
@@ -34,6 +38,6 @@ The script uses curl to interact with Terraform Enterprise via the TFE API. It p
 1. Finally, it prints out the number of policies found and imported.
 
 ## Deleting Policies
-The delete_policies.sh script deletes all policies from a TFE organization. It uses curl to invoke the [List Policies API](https://www.terraform.io/docs/enterprise/api/policies.html#list-policies) to retrieve all Sentinel policies. It then iterates through these and invokes the [Delete a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#delete-a-policy) to delete them one at a time.  It also prints out the ID of each deleted policy and finally gives a count of how many were deleted.
+The delete_policies.sh script **deletes all policies** from a TFE organization. It uses curl to invoke the [List Policies API](https://www.terraform.io/docs/enterprise/api/policies.html#list-policies) to retrieve all Sentinel policies. It then iterates through these and invokes the [Delete a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#delete-a-policy) to delete them one at a time.  It also prints out the ID of each deleted policy and finally gives a count of how many were deleted.
 
 Currently, it will only delete 100 policies at a time since that is the largest value that we can set the page[size] parameter to. But if you need to delete more policies, just run the delete_policies.sh script again until you have deleted all of them.

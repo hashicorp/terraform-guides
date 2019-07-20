@@ -24,3 +24,5 @@
 
 # Ignored vscode files
 .vscode/
+*.sentinel
+operations/sentinel-policies-scripts/create-policy.json

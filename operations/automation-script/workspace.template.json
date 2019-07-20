@@ -3,6 +3,7 @@
   {
     "attributes": {
       "name":"placeholder",
+      "auto-apply": true,
       "terraform-version": "0.11.14"
     },
     "type":"workspaces"

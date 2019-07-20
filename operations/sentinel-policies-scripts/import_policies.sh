@@ -4,19 +4,65 @@
 
 # Make sure TFE_TOKEN and TFE_ORG environment variables are set
 # to owners team token and organization name for the respective
-# TFE environment.
+# TFE environment. TFE_TOKEN environment variable is set
+# to a user or team token that has the write or admin permission
+# for the workspace.
 
-# Set address if using private Terraform Enterprise server.
-# You should edit these before running.
-address="app.terraform.io"
-# Set organization to use
-organization="$TFE_ORG"
+
+if [ ! -z "$TFE_TOKEN" ]; then
+  token=$TFE_TOKEN
+  echo "TFE_TOKEN environment variable was found."
+else
+  echo "TFE_TOKEN environment variable was not set."
+  echo "You must export/set the TFE_TOKEN environment variable."
+  echo "It should be a user or team token that has write or admin"
+  echo "permission on the workspace."
+  echo "Exiting."
+  exit
+fi
+
+# Evaluate $TFE_ORG environment variable
+# If not set, give error and exit
+if [ ! -z "$TFE_ORG" ]; then
+  organization=$TFE_ORG
+  echo "TFE_ORG environment variable was set to ${TFE_ORG}."
+  echo "Using organization, ${organization}."
+else
+  echo "You must export/set the TFE_ORG environment variable."
+  echo "Exiting."
+  exit
+fi
+
+# Evaluate $TFE_ADDR environment variable if it exists
+# Otherwise, use "app.terraform.io"
+# You should edit these before running the script.
+if [ ! -z "$TFE_ADDR" ]; then
+  address=$TFE_ADDR
+  echo "TFE_ADDR environment variable was set to ${TFE_ADDR}."
+  echo "Using address, ${address}"
+else
+  address="app.terraform.io"
+  echo "TFE_ADDR environment variable was not set."
+  echo "Using Terraform Cloud (TFE SaaS) address, app.terraform.io."
+  echo "If you want to use a private TFE server, export/set TFE_ADDR."
+fi
+
+# Set workspace from first argument
+if [ ! -z "$1" ]; then
+  policy_set_id=$1
+  echo "Using Policy Set ID: " $policy_set_id
+else
+  echo "Please provide an alphanumeric name with no spaces for the Policy Set ID."
+  echo "Exiting."
+  exit
+fi
+
 # Set ID of policy set that all policies should be added to
-policy_set_id="<policy_set_id>"
+# policy_set_id="sample"
 
-echo "Using address: $address"
-echo "Using organization: $organization"
-echo "Using policy set ID: $policy_set_id"
+# echo "Using address: $address"
+# echo "Using organization: $organization"
+# echo "Using policy set ID: $policy_set_id"
 
 # Count the policies
 declare -i count=0
@@ -44,4 +90,3 @@ for f in *.sentinel; do
 done
 
 echo "Found $count Sentinel policies"
-
