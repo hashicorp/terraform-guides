@@ -8,7 +8,6 @@
 # to a user or team token that has the write or admin permission
 # for the workspace.
 
-
 if [ ! -z "$TFE_TOKEN" ]; then
   token=$TFE_TOKEN
   echo "TFE_TOKEN environment variable was found."
@@ -47,22 +46,15 @@ else
   echo "If you want to use a private TFE server, export/set TFE_ADDR."
 fi
 
-# Set workspace from first argument
+# Set policy set from first argument
 if [ ! -z "$1" ]; then
   policy_set_id=$1
-  echo "Using Policy Set ID: " $policy_set_id
+  echo "Using policy set ID: " $policy_set_id
 else
-  echo "Please provide an alphanumeric name with no spaces for the Policy Set ID."
+  echo "Please provide the policy set ID from an existing policy set."
   echo "Exiting."
   exit
 fi
-
-# Set ID of policy set that all policies should be added to
-# policy_set_id="sample"
-
-# echo "Using address: $address"
-# echo "Using organization: $organization"
-# echo "Using policy set ID: $policy_set_id"
 
 # Count the policies
 declare -i count=0
