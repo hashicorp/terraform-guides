@@ -34,8 +34,8 @@ It also adds all of them to a specified policy set, using a **policy set ID** (w
 The script uses curl to interact with Terraform Enterprise via the TFE API. It performs the following steps:
 
 1. It iterates across all files in the current directory with the `*.sentinel` extension.
-1. For each file, it generates a file create-policy.json from the template create-policy.template.json, substituting the name of the policy and the file name and setting a description based on the name.
-1. It uses curl to invoke the [Create a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#create-a-policy), passing the generated create-policy.json file in the --data argument of the curl command.
+1. For each file, it generates a file _create-policy.json_ from the template _create-policy.template.json_ (which is embedded in the script), substituting the name of the policy and the file name and setting a description based on the name.
+1. It uses curl to invoke the [Create a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#create-a-policy), passing the generated _create-policy.json_ file in the --data argument of the curl command.
 1. It uses curl to invoke the [Upload a Policy API](https://www.terraform.io/docs/enterprise/api/policies.html#upload-a-policy).
 1. Finally, it prints out the number of policies found and imported.
 
@@ -61,7 +61,7 @@ You will need to grab the Policy Set ID from the TFE GUI to use as a CLI argumen
 1. The programmatic _Policy Set ID_ required for this script is contained within the URL immediately after `/policy-sets/` for example: https://app.terraform.io/app/jray-hashi/settings/policy-sets/**polset-6YVMugX6VX3FG1Zu**/edit
 1. Copy this data to your clipboard, working file, or directly terminal where you will run the `import_policies.sh` script
 1. Create the desired Sentinel policies files and copy them into the directory where the script will be executed. Be sure they have a `*.sentinel` extension
-1. Open `create-policy.template.json` and modify the value of `"mode":` to `advisory`, `soft-mandatory`, or `hard-mandatory` for the desired [enforcement type](https://www.terraform.io/docs/enterprise/api/policies.html#request-body)
+1. Edit the embedded _create-policy.template.json_ file inside _import_policies.sh_ and modify the value of `"mode":` to `advisory`, `soft-mandatory`, or `hard-mandatory` for the desired [enforcement type](https://www.terraform.io/docs/enterprise/api/policies.html#request-body)
 1. Execute the script as follows:
 
 `./import_policies.sh <polset-somenumber>` where \<polset-somenumber\> is your unique policy set ID

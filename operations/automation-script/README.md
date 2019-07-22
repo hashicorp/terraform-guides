@@ -15,7 +15,7 @@ Three arguments can be provided on the command line when calling the script:
 
 If you only want to set override to "yes" without passing values for the first two arguments, please use `./loadAndRunWorkspace.sh "" "" yes` to run the script.
 
-The script uses several json templates which must be placed in the same directory as the script itself.
+The script uses several json templates which are written out to the file system and then deleted.
 
 The script does the following steps:
 1. Clones a git repository containing Terraform configuration code or uses the code in the config directory if no git URL was provided.
@@ -38,21 +38,20 @@ The script does the following steps:
 1. If any apply was done, the script goes into a second loop to wait for it to finish.
 1. When the apply is finished, the script downloads the apply log and the state files from before and after the apply.
 
-*Note* that some json template files are included from which other json files are generated so that they can be passed to the curl commands.
-
 In addition to the loadAndRunWorkspace.sh script, this example includes the following files:
 
-1. [config/main.tf](./config/main.tf): the file with some Terraform code that says "Hello" to the person whose name is given and generates a random number. This is used if no git URL is provided to the script.
-1. [workspace.template.json](./workspace.template.json) which is used to generate workspace.json which is used when creating the workspace. If you wish to add or modify the API commands that are included in _@workspace.json_ payload, add them to _workspace.template.json_ and be sure to check the Terraform Enterprise API [syntax](https://www.terraform.io/docs/enterprise/api/workspaces.html#update-a-workspace). Update or modify `"terraform-version": "0.11.14"` within _workspace.template.json_  to set a specific workspace version of Terraform OSS binary.
-1. [configversion.json](./configversion.json) which is used to generate a new configuration version.
-1. [variable.template.json](./variable.template.json) which is used to generate variable.json which is used when creating a variable called "name" in the workspace.
-1. [run.template.json](./run.template.json) which is used to generate run.json which is used when triggering a run against the workspace.
-1. [apply.json](./apply.json) which is used when doing the apply against the workspace.
-1. variables.csv which contains the variables that are uploaded to the workspace if no file with the same name is found in the root directory of the cloned repository. The columns are key, value, category, hcl, and sensitive with the last two corresponding to the hcl and sensitive checkboxes of TFE variables.
+1. [config/main.tf](./config/main.tf) which is a file with some Terraform code that says "Hello" to the person whose name is given and generates a random number. This is used if no git URL is provided to the script.
+1. [variables.csv](./variables.csv) which contains the variables that are uploaded to the workspace if no file with the same name is found in the root directory of the cloned repository. The columns are key, value, category, hcl, and sensitive with the last two corresponding to the hcl and sensitive checkboxes of TFE variables. This should be in the same directory as the script unless you include a file with the same name in your git repository.
 1. [deleteWorkspace.sh](./deleteWorkspace.sh): a script that can be used to delete the workspace.
 1. [restrict-name-variable.sentinel](./restrict-name-variable.sentinel): a Sentinel policy you can add to your TFE organization in order to see how the script can check Sentinel policies and even override soft-mandatory failures.
 
-*Note* that the json templates file need to be in the same directory as the script itself. The variables.csv file should also be in the same directory as the script unless you include a file with the same name in your git repository.
+The following files are embedded inside the script:
+
+1. **workspace.template.json** which is used to generate _workspace.json_ which is used when creating the workspace. If you wish to add or modify the settings that are included in the _@workspace.json_ payload, add them to _workspace.template.json_ inside the script and be sure to check the Terraform Enterprise API [syntax](https://www.terraform.io/docs/enterprise/api/workspaces.html#update-a-workspace). Update or modify `"terraform-version": "0.11.14"` within _workspace.template.json_  to set a specific workspace version of the Terraform OSS binary.
+1. **configversion.json** which is used to generate a new configuration version.
+1. **variable.template.json** which is used to generate _variable.json_ which is used when creating a variable called "name" in the workspace.
+1. **run.template.json** which is used to generate _run.json_ which is used when triggering a run against the workspace.
+1. **apply.json** which is used when doing the apply against the workspace.
 
 ## Preparation
 Do the following before using this script:
