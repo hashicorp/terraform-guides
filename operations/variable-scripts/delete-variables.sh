@@ -1,6 +1,12 @@
 #!/bin/bash
 # Script that deletes all Terraform and environment variables in a Terraform Enterprise (TFE) workspace
 
+# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# to owners team token and organization name for the respective
+# TFE environment. TFE_TOKEN environment variable is set
+# to a user or team token that has the write or admin permission
+# for the workspace.
+
 # Exit if any errors encountered
 set -e
 

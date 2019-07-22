@@ -8,15 +8,52 @@
 # If an apply is done, the script waits for it to finish and then
 # downloads the apply log and the before and after state files.
 
-# Make sure TFE_TOKEN environment variable is set
-# to owners team token for organization
+# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# to owners team token and organization name for the respective
+# TFE environment. TFE_ADDR should be set to the FQDN/URL of the private
+# TFE server or if unset it will default to TF Cloud/SaaS address.
 
-# Set address if using private Terraform Enterprise server.
-# Set organization and workspace to create.
-# You should edit these before running.
-address="app.terraform.io"
-organization="<your_organization>"
-# workspace name should not have spaces
+if [ ! -z "$TFE_TOKEN" ]; then
+  token=$TFE_TOKEN
+  echo "TFE_TOKEN environment variable was found."
+else
+  echo "TFE_TOKEN environment variable was not set."
+  echo "You must export/set the TFE_TOKEN environment variable."
+  echo "It should be a user or team token that has write or admin"
+  echo "permission on the workspace."
+  echo "Exiting."
+  exit
+fi
+
+# Evaluate $TFE_ORG environment variable
+# If not set, give error and exit
+if [ ! -z "$TFE_ORG" ]; then
+  organization=$TFE_ORG
+  echo "TFE_ORG environment variable was set to ${TFE_ORG}."
+  echo "Using organization, ${organization}."
+else
+  echo "You must export/set the TFE_ORG environment variable."
+  echo "Exiting."
+  exit
+fi
+
+# Evaluate $TFE_ADDR environment variable if it exists
+# Otherwise, use "app.terraform.io"
+# You should edit these before running the script.
+if [ ! -z "$TFE_ADDR" ]; then
+  address=$TFE_ADDR
+  echo "TFE_ADDR environment variable was set to ${TFE_ADDR}."
+  echo "Using address, ${address}"
+else
+  address="app.terraform.io"
+  echo "TFE_ADDR environment variable was not set."
+  echo "Using Terraform Cloud (TFE SaaS) address, app.terraform.io."
+  echo "If you want to use a private TFE server, export/set TFE_ADDR."
+fi
+
+# workspace name should not have spaces and should be set as second
+# argument from CLI
+
 workspace="workspace-from-api"
 
 # You can change sleep duration if desired
@@ -71,6 +108,81 @@ fi
 # build compressed tar file from configuration directory
 echo "Tarring configuration directory."
 tar -czf ${config_dir}.tar.gz -C ${config_dir} --exclude .git .
+
+# Write out workspace.template.json
+cat > workspace.template.json <<EOF
+{
+  "data":
+  {
+    "attributes": {
+      "name":"placeholder",
+      "terraform-version": "0.11.14"
+    },
+    "type":"workspaces"
+  }
+}
+EOF
+
+# Write out configversion.json
+cat > configversion.json <<EOF
+{
+  "data": {
+    "type": "configuration-versions",
+    "attributes": {
+      "auto-queue-runs": false
+    }
+  }
+}
+EOF
+
+# Write out variable.template.json
+cat > variable.template.json <<EOF
+{
+  "data": {
+    "type":"vars",
+    "attributes": {
+      "key":"my-key",
+      "value":"my-value",
+      "category":"my-category",
+      "hcl":my-hcl,
+      "sensitive":my-sensitive
+    }
+  },
+  "filter": {
+    "organization": {
+      "username":"my-organization"
+    },
+    "workspace": {
+      "name":"my-workspace"
+    }
+  }
+}
+EOF
+
+# Write out run.template.json
+cat > run.template.json <<EOF
+{
+  "data": {
+    "attributes": {
+      "is-destroy":false
+    },
+    "type":"runs",
+    "relationships": {
+      "workspace": {
+        "data": {
+          "type": "workspaces",
+          "id": "workspace_id"
+        }
+      }
+    }
+  }
+}
+EOF
+
+# Write out apply.json
+cat > apply.json <<EOF
+{"comment": "apply via API"}
+EOF
 
 #Set name of workspace in workspace.json
 sed "s/placeholder/${workspace}/" < workspace.template.json > workspace.json
@@ -320,5 +432,15 @@ if [[ "$applied" == "true" ]]; then
   curl -s $state_file_after_url | tee ${apply_id}-after.tfstate
 
 fi
+
+# Remove json files
+rm apply.json
+rm configversion.json
+rm run.template.json
+rm run.json
+rm variable.template.json
+rm variable.json
+rm workspace.template.json
+rm workspace.json 
 
 echo "Finished"
