@@ -24,4 +24,9 @@
 
 # Ignored vscode files
 .vscode/
+
+# Ignore Any Generated JSON Files
+operations/automation-script/run.json
+operations/automation-script/variables.json
+operations/automation-script/workspace.json
 operations/sentinel-policies-scripts/create-policy.json
