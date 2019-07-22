@@ -109,6 +109,81 @@ fi
 echo "Tarring configuration directory."
 tar -czf ${config_dir}.tar.gz -C ${config_dir} --exclude .git .
 
+# Write out workspace.template.json
+cat > workspace.template.json <<EOF
+{
+  "data":
+  {
+    "attributes": {
+      "name":"placeholder",
+      "terraform-version": "0.11.14"
+    },
+    "type":"workspaces"
+  }
+}
+EOF
+
+# Write out configversion.json
+cat > configversion.json <<EOF
+{
+  "data": {
+    "type": "configuration-versions",
+    "attributes": {
+      "auto-queue-runs": false
+    }
+  }
+}
+EOF
+
+# Write out variable.template.json
+cat > variable.template.json <<EOF
+{
+  "data": {
+    "type":"vars",
+    "attributes": {
+      "key":"my-key",
+      "value":"my-value",
+      "category":"my-category",
+      "hcl":my-hcl,
+      "sensitive":my-sensitive
+    }
+  },
+  "filter": {
+    "organization": {
+      "username":"my-organization"
+    },
+    "workspace": {
+      "name":"my-workspace"
+    }
+  }
+}
+EOF
+
+# Write out run.template.json
+cat > run.template.json <<EOF
+{
+  "data": {
+    "attributes": {
+      "is-destroy":false
+    },
+    "type":"runs",
+    "relationships": {
+      "workspace": {
+        "data": {
+          "type": "workspaces",
+          "id": "workspace_id"
+        }
+      }
+    }
+  }
+}
+EOF
+
+# Write out apply.json
+cat > apply.json <<EOF
+{"comment": "apply via API"}
+EOF
+
 #Set name of workspace in workspace.json
 sed "s/placeholder/${workspace}/" < workspace.template.json > workspace.json
 
@@ -357,5 +432,15 @@ if [[ "$applied" == "true" ]]; then
   curl -s $state_file_after_url | tee ${apply_id}-after.tfstate
 
 fi
+
+# Remove json files
+rm apply.json
+rm configversion.json
+rm run.template.json
+rm run.json
+rm variable.template.json
+rm variable.json
+rm workspace.template.json
+rm workspace.json 
 
 echo "Finished"

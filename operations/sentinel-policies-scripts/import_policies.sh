@@ -59,6 +59,32 @@ fi
 # Count the policies
 declare -i count=0
 
+# Write out create-policy.template.json
+cat > create-policy.template.json <<EOF
+{
+  "data": {
+    "attributes": {
+      "enforce": [
+        {
+          "path": "file-name",
+          "mode": "advisory"
+        }
+      ],
+      "name": "policy-name",
+      "description": "A Sentinel policy: policy-name"
+    },
+    "relationships": {
+      "policy-sets": {
+        "data": [
+          { "id": "policy-set-id", "type": "policy-sets" }
+        ]
+      }
+    },
+    "type": "policies"
+  }
+}
+EOF
+
 # for loop to process all files with *.sentinel extension
 for f in *.sentinel; do
   echo "file is: $f"
@@ -80,5 +106,9 @@ for f in *.sentinel; do
   echo "Policy Upload Response: " $policy_upload_result
 
 done
+
+# Remove create-policy.template.json and create-policy.json
+rm create-policy.template.json
+rm create-policy.json
 
 echo "Found $count Sentinel policies"
