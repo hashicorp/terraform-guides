@@ -8,6 +8,9 @@ output "master_public_dns" {
 output "master_public_ip" {
   value = "${module.openshift.master_public_ip}"
 }
+output "master_private_ip" {
+  value = "${module.openshift.master_private_ip}"
+}
 output "bastion_public_dns" {
   value = "${module.openshift.bastion_public_dns}"
 }

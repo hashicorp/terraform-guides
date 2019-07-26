@@ -86,7 +86,7 @@ If you want to use open source Terraform instead of TFE, you can create a copy o
 
 You will see outputs providing the IPs and DNS addresses needed to access your OpenShift cluster in the AWS Console, TLS certs/keys for your cluster, the Vault Kubernetes auth method path, the Vault server address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your OpenShift cluster. You can also validate that the cluster was created in the AWS Console.
 
-You will be able to login to the OpenShift Console with username "admin" and password "123" at the URL contained in the k8s_endpoint output of the apply.log.
+You will be able to login to the OpenShift Console with username "admin" and password "123" at the URL contained in the k8s_endpoint output of the apply.log. To use the OpenShift `oc` CLI utility, you may SSH into the bastion host using `bastion_public_ip` output, then to the OpenShift master server using `master_private_ip` output from the apply log.
 
 ## Next Steps
 You can now use the guide in the [k8s-services-openshift](../../self-serve-infrastructure/k8s-services-openshift) directory of this repository to provision some pods and services against your OpenShift cluster. The workspace you configure in that guide will automatically use the outputs generated in the state of the k8s-cluster-openshift workspace through Terraform's workspace state sharing.
