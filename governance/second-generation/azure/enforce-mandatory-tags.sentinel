@@ -108,7 +108,7 @@ mandatory_tags = [
 ### Rules ###
 
 # Call the validation function
-tags_validated = validate_attribute_contains_list("azurerm_virtual_machine",
+tags_validated = validate_attribute_contains_list("azurerm_resource_group",
                  "tags", mandatory_tags)
 
 #Main rule that evaluates results
