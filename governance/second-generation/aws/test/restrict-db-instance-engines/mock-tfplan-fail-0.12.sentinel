@@ -42,6 +42,7 @@ _modules = {
 							"timeouts":                            null,
 							"username":                            "foo",
 						},
+						"destroy": false,
 						"diff": {
 							"address": {
 								"computed": true,

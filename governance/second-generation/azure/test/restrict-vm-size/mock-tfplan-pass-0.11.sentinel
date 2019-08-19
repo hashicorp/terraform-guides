@@ -38,6 +38,7 @@ _modules = {
 							"tags":                 {},
 							"virtual_machine_id":   "74D93920-ED26-11E3-AC10-0800200C9A66",
 						},
+						"destroy": false,
 						"diff": {
 							"applied_dns_servers.#": {
 								"computed": true,
@@ -177,6 +178,7 @@ _modules = {
 							"name":     "azurevmdemo-resources",
 							"tags":     {},
 						},
+						"destroy": false,
 						"diff": {
 							"id": {
 								"computed": true,
@@ -213,6 +215,7 @@ _modules = {
 							"resource_group_name":  "azurevmdemo-resources",
 							"virtual_network_name": "azurevmdemo-network",
 						},
+						"destroy": false,
 						"diff": {
 							"address_prefix": {
 								"computed": false,
@@ -301,6 +304,7 @@ _modules = {
 							},
 							"vm_size": "Standard_D1_v2",
 						},
+						"destroy": false,
 						"diff": {
 							"availability_set_id": {
 								"computed": true,
@@ -532,6 +536,7 @@ _modules = {
 							},
 							"vm_size": "Standard_D1_v2",
 						},
+						"destroy": false,
 						"diff": {
 							"availability_set_id": {
 								"computed": true,
@@ -726,6 +731,7 @@ _modules = {
 							"subnet":              "74D93920-ED26-11E3-AC10-0800200C9A66",
 							"tags":                {},
 						},
+						"destroy": false,
 						"diff": {
 							"address_space.#": {
 								"computed": false,

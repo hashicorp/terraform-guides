@@ -66,6 +66,7 @@ _modules = {
 							"tags_fingerprint": "74D93920-ED26-11E3-AC10-0800200C9A66",
 							"zone":             "us-east1-b",
 						},
+						"destroy": false,
 						"diff": {
 							"allow_stopping_for_update": {
 								"computed": false,
@@ -330,6 +331,7 @@ _modules = {
 							"tags_fingerprint": "74D93920-ED26-11E3-AC10-0800200C9A66",
 							"zone":             "us-east1-b",
 						},
+						"destroy": false,
 						"diff": {
 							"allow_stopping_for_update": {
 								"computed": false,
