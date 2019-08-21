@@ -20,6 +20,7 @@ _modules = {
 							"name":                        "web_config",
 							"root_block_device":           "74D93920-ED26-11E3-AC10-0800200C9A66",
 						},
+						"destroy": false,
 						"diff": {
 							"associate_public_ip_address": {
 								"computed": false,

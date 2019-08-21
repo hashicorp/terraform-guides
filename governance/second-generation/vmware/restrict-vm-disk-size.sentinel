@@ -51,8 +51,9 @@ validate_disk_size = func(disk_limit) {
   for resource_instances as address, r {
 
     # Skip resources that are being destroyed
-    # to avoid unnecessary policy violations
-    if length(r.diff) == 0 {
+    # to avoid unnecessary policy violations.
+    # Used to be: if length(r.diff) == 0
+    if r.destroy {
       print("Skipping resource", address, "that is being destroyed.")
       continue
     }

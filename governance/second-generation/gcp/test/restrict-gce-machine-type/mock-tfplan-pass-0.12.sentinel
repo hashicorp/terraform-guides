@@ -67,6 +67,7 @@ _modules = {
 							"timeouts": null,
 							"zone":     "us-east1-b",
 						},
+						"destroy": false,
 						"diff": {
 							"allow_stopping_for_update": {
 								"computed": false,
@@ -319,6 +320,7 @@ _modules = {
 							"timeouts": null,
 							"zone":     "us-east1-b",
 						},
+						"destroy": false,
 						"diff": {
 							"allow_stopping_for_update": {
 								"computed": false,

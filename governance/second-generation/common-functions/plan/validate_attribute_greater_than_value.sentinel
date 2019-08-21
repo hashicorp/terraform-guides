@@ -11,8 +11,9 @@ validate_attribute_greater_than_value = func(type, attribute, min_value) {
   for resource_instances as address, r {
 
     # Skip resource instances that are being destroyed
-    # to avoid unnecessary policy violations
-    if length(r.diff) == 0 {
+    # to avoid unnecessary policy violations.
+    # Used to be: if length(r.diff) == 0
+    if r.destroy {
       print("Skipping resource", address, "that is being destroyed.")
       continue
     }

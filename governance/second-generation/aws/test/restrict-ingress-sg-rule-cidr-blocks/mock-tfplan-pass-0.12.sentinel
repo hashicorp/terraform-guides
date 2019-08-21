@@ -23,6 +23,7 @@ _modules = {
 							"to_port":           65535,
 							"type":              "ingress",
 						},
+						"destroy": false,
 						"diff": {
 							"cidr_blocks.#": {
 								"computed": false,
@@ -106,6 +107,7 @@ _modules = {
 							"to_port":           65535,
 							"type":              "ingress",
 						},
+						"destroy": false,
 						"diff": {
 							"cidr_blocks.#": {
 								"computed": false,
@@ -191,6 +193,7 @@ _modules = {
 							"to_port":           22,
 							"type":              "ingress",
 						},
+						"destroy": false,
 						"diff": {
 							"cidr_blocks.#": {
 								"computed": false,
@@ -287,6 +290,7 @@ _modules = {
 							"to_port":           443,
 							"type":              "ingress",
 						},
+						"destroy": false,
 						"diff": {
 							"cidr_blocks.#": {
 								"computed": false,
@@ -384,6 +388,7 @@ _modules = {
 							"to_port":           80,
 							"type":              "ingress",
 						},
+						"destroy": false,
 						"diff": {
 							"cidr_blocks.#": {
 								"computed": false,
