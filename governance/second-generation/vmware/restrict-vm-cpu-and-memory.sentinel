@@ -54,9 +54,24 @@ validate_attribute_less_than_value = func(type, attribute, max_value) {
     # Skip resource instances that are being destroyed
     # to avoid unnecessary policy violations.
     # Used to be: if length(r.diff) == 0
-    if r.destroy {
-      print("Skipping resource", address, "that is being destroyed.")
-      continue
+    #if r.destroy {
+    #  print("Skipping resource", address, "that is being destroyed.")
+    #  continue
+    #}
+
+    # Skip resource instances that are being destroyed
+    # to avoid unnecessary policy violations.
+    # We are using the following until r.destroy is added to PTFE
+    if tfplan.terraform_version matches "^0\\.11\\.\\d+$" {
+      if length(r.diff) == 0 {
+      	print("Skipping resource", address, "that is being destroyed.")
+      	continue
+    	}
+    } else if tfplan.terraform_version matches "^0\\.12\\.\\d+$" {
+      if length(r.diff.memory.new) == 0 {
+      	print("Skipping resource", address, "that is being destroyed.")
+      	continue
+    	}
     }
 
     # Determine if the attribute is computed
@@ -68,7 +83,7 @@ validate_attribute_less_than_value = func(type, attribute, max_value) {
       # validated = false
     } else {
       # Validate that the attribute exists
-      if length(r.applied[attribute]) else 0 > 0 {
+      if length(string(r.applied[attribute])) else 0 > 0 {
         # Validate that each instance has desired value
         if float(r.applied[attribute]) > max_value {
           print("Resource", address, "has attribute", attribute, "with value",

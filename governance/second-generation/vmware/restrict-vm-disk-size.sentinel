@@ -53,9 +53,24 @@ validate_disk_size = func(disk_limit) {
     # Skip resources that are being destroyed
     # to avoid unnecessary policy violations.
     # Used to be: if length(r.diff) == 0
-    if r.destroy {
-      print("Skipping resource", address, "that is being destroyed.")
-      continue
+    #if r.destroy {
+    #  print("Skipping resource", address, "that is being destroyed.")
+    #  continue
+    #}
+
+    # Skip resources that are being destroyed
+    # to avoid unnecessary policy violations.
+    # We are using the following until r.destroy is added to PTFE
+    if tfplan.terraform_version matches "^0\\.11\\.\\d+$" {
+      if length(r.diff) == 0 {
+      	print("Skipping resource", address, "that is being destroyed.")
+      	continue
+    	}
+    } else if tfplan.terraform_version matches "^0\\.12\\.\\d+$" {
+      if r.diff["disk.#"].new == "" {
+      	print("Skipping resource", address, "that is being destroyed.")
+      	continue
+    	}
     }
 
     # Initialize disk_count

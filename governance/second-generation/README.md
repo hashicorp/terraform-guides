@@ -2,6 +2,24 @@
 
 This directory and its sub-directories contain second-generation Sentinel policies which were created in 2019 for several clouds including AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware. It also contains some common, re-usable functions and mocks that can be used to test the new policies with the [Sentinel Simulator](https://docs.hashicorp.com/sentinel/commands).
 
+These policies are intended for use with Terraform 0.11.x and 0.12.x.
+
+## Note about Using with Private Terraform Enterprise (PTFE)
+The portion of these policies that test whether resources are being destroyed use a new [destroy](https://www.terraform.io/docs/cloud/sentinel/import/tfplan.html#value-destroy) value that is present in Terraform Cloud (https://app.terraform.io) since 8/15/2019 but is not yet available in Private Terraform Enterprise (PTFE).
+
+If you use these policies with PTFE and are using Terraform 0.11.x in your workspaces, please simply comment out portions of the policies that look like this:
+```
+if r.destroy {
+  print("Skipping resource", address, "that is being destroyed.")
+  continue
+}
+```
+
+However, if you are using Terraform 0.12.x in your PTFE workspaces, you actually do need to check whether each resource is being destroyed since the `applied` value will be missing for those.  Until the destroy value is added to PTFE (currently expected in October, 2019), what you can do is test something like `length(r.diff.<attribute>.new) == 0` where `<attribute>` would be a specific top-level attribute of the resource that would generally have some value unless the resource is being destroyed.
+
+You could also use the latter approach with Terraform 0.11 if you do want to prevent Sentinel policies from being applied to destroyed resources on your PTFE servers.
+
+
 ## Improvements
 These new second-generation policies have several improvements over the older first-generation policies:
 1. They use some common parameterized functions including [find_resources_from_plan(type)](./common-functions/plan/find_resources_from_plan.md) and [validate_attribute_in_list(type, attribute, allowed_values)](./common-functions/plan/validate_attribute_in_list.md), which can be used unchanged in all policies that use the associated import. Using these reduces the amount of changes needed when writing new policies.
