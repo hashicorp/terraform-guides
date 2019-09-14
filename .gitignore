@@ -24,3 +24,17 @@
 
 # Ignored vscode files
 .vscode/
+
+# Ignore Any Generated JSON Files
+operations/automation-script/apply.json
+operations/automation-script/configversion.json
+operations/automation-script/run.template.json
+operations/automation-script/run.json
+operations/automation-script/variable.template.json
+operations/automation-script/variable.json
+operations/automation-script/workspace.template.json
+operations/automation-script/workspace.json
+operations/sentinel-policies-scripts/create-policy.template.json
+operations/sentinel-policies-scripts/create-policy.json
+operations/variable-scripts/variable.template.json
+operations/variable-scripts/variable.json

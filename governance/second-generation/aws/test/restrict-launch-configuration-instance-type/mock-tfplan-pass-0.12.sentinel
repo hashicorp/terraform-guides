@@ -26,6 +26,7 @@ _modules = {
 							"vpc_classic_link_id":              null,
 							"vpc_classic_link_security_groups": null,
 						},
+						"destroy": false,
 						"diff": {
 							"associate_public_ip_address": {
 								"computed": false,

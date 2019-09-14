@@ -2,6 +2,11 @@
 
 This directory and its sub-directories contain second-generation Sentinel policies which were created in 2019 for several clouds including AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware. It also contains some common, re-usable functions and mocks that can be used to test the new policies with the [Sentinel Simulator](https://docs.hashicorp.com/sentinel/commands).
 
+These policies are intended for use with Terraform 0.11.x and 0.12.x.
+
+## Note about Using These Policies with Terraform Enterprise
+These policies test whether resources are being destroyed using the [destroy](https://www.terraform.io/docs/cloud/sentinel/import/tfplan.html#value-destroy) value that was added to Terraform Cloud (https://app.terraform.io) on 8/15/2019 and to Terraform Enterprise (formerly known as PTFE) in the v201909-1 release on 9/13/2019. Please upgrade to that release or higher before using these policies on your Terraform Enterprise server. (If you are not currently able to upgrade your TFE server, see an older version of this document for a workaround that allows you to use these policies on older versions of TFE.)
+
 ## Improvements
 These new second-generation policies have several improvements over the older first-generation policies:
 1. They use some common parameterized functions including [find_resources_from_plan(type)](./common-functions/plan/find_resources_from_plan.md) and [validate_attribute_in_list(type, attribute, allowed_values)](./common-functions/plan/validate_attribute_in_list.md), which can be used unchanged in all policies that use the associated import. Using these reduces the amount of changes needed when writing new policies.

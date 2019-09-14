@@ -2,24 +2,88 @@
 # This script imports all policies in the current directory into a
 # specific policy set within a specific organization on a TFE server.
 
-# Make sure TFE_TOKEN environment variable is set
-# to owners team token for organization
-# or to user token for member of the owners team
+# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# to owners team token and organization name for the respective
+# TFE environment. TFE_TOKEN environment variable is set
+# to a user or team token that has the write or admin permission
+# for the workspace.
 
-# Set address if using private Terraform Enterprise server.
-# You should edit these before running.
-address="app.terraform.io"
-# Set organization to use
-organization="<organization>"
-# Set ID of policy set that all policies should be added to
-policy_set_id="<policy_set_id>"
+if [ ! -z "$TFE_TOKEN" ]; then
+  token=$TFE_TOKEN
+  echo "TFE_TOKEN environment variable was found."
+else
+  echo "TFE_TOKEN environment variable was not set."
+  echo "You must export/set the TFE_TOKEN environment variable."
+  echo "It should be a user or team token that has write or admin"
+  echo "permission on the workspace."
+  echo "Exiting."
+  exit
+fi
 
-echo "Using address: $address"
-echo "Using organization: $organization"
-echo "Using policy set ID: $policy_set_id"
+# Evaluate $TFE_ORG environment variable
+# If not set, give error and exit
+if [ ! -z "$TFE_ORG" ]; then
+  organization=$TFE_ORG
+  echo "TFE_ORG environment variable was set to ${TFE_ORG}."
+  echo "Using organization, ${organization}."
+else
+  echo "You must export/set the TFE_ORG environment variable."
+  echo "Exiting."
+  exit
+fi
+
+# Evaluate $TFE_ADDR environment variable if it exists
+# Otherwise, use "app.terraform.io"
+# You should edit these before running the script.
+if [ ! -z "$TFE_ADDR" ]; then
+  address=$TFE_ADDR
+  echo "TFE_ADDR environment variable was set to ${TFE_ADDR}."
+  echo "Using address, ${address}"
+else
+  address="app.terraform.io"
+  echo "TFE_ADDR environment variable was not set."
+  echo "Using Terraform Cloud (TFE SaaS) address, app.terraform.io."
+  echo "If you want to use a private TFE server, export/set TFE_ADDR."
+fi
+
+# Set policy set from first argument
+if [ ! -z "$1" ]; then
+  policy_set_id=$1
+  echo "Using policy set ID: " $policy_set_id
+else
+  echo "Please provide the policy set ID from an existing policy set."
+  echo "Exiting."
+  exit
+fi
 
 # Count the policies
 declare -i count=0
+
+# Write out create-policy.template.json
+cat > create-policy.template.json <<EOF
+{
+  "data": {
+    "attributes": {
+      "enforce": [
+        {
+          "path": "file-name",
+          "mode": "advisory"
+        }
+      ],
+      "name": "policy-name",
+      "description": "A Sentinel policy: policy-name"
+    },
+    "relationships": {
+      "policy-sets": {
+        "data": [
+          { "id": "policy-set-id", "type": "policy-sets" }
+        ]
+      }
+    },
+    "type": "policies"
+  }
+}
+EOF
 
 # for loop to process all files with *.sentinel extension
 for f in *.sentinel; do
@@ -43,5 +107,8 @@ for f in *.sentinel; do
 
 done
 
-echo "Found $count Sentinel policies"
+# Remove create-policy.template.json and create-policy.json
+rm create-policy.template.json
+rm create-policy.json
 
+echo "Found $count Sentinel policies"

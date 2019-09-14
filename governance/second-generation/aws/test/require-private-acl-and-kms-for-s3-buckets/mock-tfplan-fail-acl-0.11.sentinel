@@ -61,6 +61,7 @@ _modules = {
 							"website_domain":   "74D93920-ED26-11E3-AC10-0800200C9A66",
 							"website_endpoint": "74D93920-ED26-11E3-AC10-0800200C9A66",
 						},
+						"destroy": false,
 						"diff": {
 							"acceleration_status": {
 								"computed": true,

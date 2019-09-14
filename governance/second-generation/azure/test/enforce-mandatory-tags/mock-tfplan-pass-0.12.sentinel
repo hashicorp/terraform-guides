@@ -26,6 +26,7 @@ _modules = {
 							"network_security_group_id": null,
 							"resource_group_name":       "roger-azurevmdemo-resources",
 						},
+						"destroy": false,
 						"diff": {
 							"applied_dns_servers.#": {
 								"computed": true,
@@ -128,6 +129,7 @@ _modules = {
 							"location": "eastus",
 							"name":     "roger-azurevmdemo-resources",
 						},
+						"destroy": false,
 						"diff": {
 							"id": {
 								"computed": true,
@@ -166,6 +168,7 @@ _modules = {
 							"service_endpoints":         null,
 							"virtual_network_name":      "roger-azurevmdemo-network",
 						},
+						"destroy": false,
 						"diff": {
 							"address_prefix": {
 								"computed": false,
@@ -274,6 +277,7 @@ _modules = {
 							"vm_size": "Basic_A0",
 							"zones":   null,
 						},
+						"destroy": false,
 						"diff": {
 							"availability_set_id": {
 								"computed": true,
@@ -505,6 +509,7 @@ _modules = {
 							"vm_size": "Basic_A0",
 							"zones":   null,
 						},
+						"destroy": false,
 						"diff": {
 							"availability_set_id": {
 								"computed": true,
@@ -698,6 +703,7 @@ _modules = {
 							"name":                 "roger-azurevmdemo-network",
 							"resource_group_name":  "roger-azurevmdemo-resources",
 						},
+						"destroy": false,
 						"diff": {
 							"address_space.#": {
 								"computed": false,

@@ -21,6 +21,7 @@ _modules = {
 							"to_port":                  "65535",
 							"type":                     "ingress",
 						},
+						"destroy": false,
 						"diff": {
 							"cidr_blocks.#": {
 								"computed": false,

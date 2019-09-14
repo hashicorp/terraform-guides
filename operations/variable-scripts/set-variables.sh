@@ -7,9 +7,13 @@
 # Exit if any errors encountered
 set -e
 
-# Make sure the $TFE_TOKEN environment variable is set
+# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# to owners team token and organization name for the respective
+# TFE environment. TFE_TOKEN environment variable is set
 # to a user or team token that has the write or admin permission
 # for the workspace.
+
+
 if [ ! -z "$TFE_TOKEN" ]; then
   token=$TFE_TOKEN
   echo "TFE_TOKEN environment variable was found."

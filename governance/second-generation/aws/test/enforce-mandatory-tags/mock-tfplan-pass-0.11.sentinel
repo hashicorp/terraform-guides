@@ -54,6 +54,7 @@ _modules = {
 							"volume_tags":            {},
 							"vpc_security_group_ids": "74D93920-ED26-11E3-AC10-0800200C9A66",
 						},
+						"destroy": false,
 						"diff": {
 							"ami": {
 								"computed": false,
@@ -304,6 +305,7 @@ _modules = {
 							"volume_tags":            {},
 							"vpc_security_group_ids": "74D93920-ED26-11E3-AC10-0800200C9A66",
 						},
+						"destroy": false,
 						"diff": {
 							"ami": {
 								"computed": false,
@@ -556,6 +558,7 @@ _modules = {
 							"volume_tags":            {},
 							"vpc_security_group_ids": "74D93920-ED26-11E3-AC10-0800200C9A66",
 						},
+						"destroy": false,
 						"diff": {
 							"ami": {
 								"computed": false,
@@ -806,6 +809,7 @@ _modules = {
 							"volume_tags":            {},
 							"vpc_security_group_ids": "74D93920-ED26-11E3-AC10-0800200C9A66",
 						},
+						"destroy": false,
 						"diff": {
 							"ami": {
 								"computed": false,

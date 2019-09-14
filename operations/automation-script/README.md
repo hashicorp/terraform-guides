@@ -15,7 +15,7 @@ Three arguments can be provided on the command line when calling the script:
 
 If you only want to set override to "yes" without passing values for the first two arguments, please use `./loadAndRunWorkspace.sh "" "" yes` to run the script.
 
-The script uses several json templates which must be placed in the same directory as the script itself.
+The script uses several json templates which are written out to the file system and then deleted.
 
 The script does the following steps:
 1. Clones a git repository containing Terraform configuration code or uses the code in the config directory if no git URL was provided.
@@ -38,21 +38,20 @@ The script does the following steps:
 1. If any apply was done, the script goes into a second loop to wait for it to finish.
 1. When the apply is finished, the script downloads the apply log and the state files from before and after the apply.
 
-*Note* that some json template files are included from which other json files are generated so that they can be passed to the curl commands.
-
 In addition to the loadAndRunWorkspace.sh script, this example includes the following files:
 
-1. [config/main.tf](./config/main.tf): the file with some Terraform code that says "Hello" to the person whose name is given and generates a random number. This is used if no git URL is provided to the script.
-1. [workspace.template.json](./workspace.template.json) which is used to generate workspace.json which is used when creating the workspace. If you wish to add or modify the API commands that are included in _@workspace.json_ payload, add them to _workspace.template.json_ and be sure to check the Terraform Enterprise API [syntax](https://www.terraform.io/docs/enterprise/api/workspaces.html#update-a-workspace). Update or modify `"terraform-version": "0.11.14"` within _workspace.template.json_  to set a specific workspace version of Terraform OSS binary.
-1. [configversion.json](./configversion.json) which is used to generate a new configuration version.
-1. [variable.template.json](./variable.template.json) which is used to generate variable.json which is used when creating a variable called "name" in the workspace.
-1. [run.template.json](./run.template.json) which is used to generate run.json which is used when triggering a run against the workspace.
-1. [apply.json](./apply.json) which is used when doing the apply against the workspace.
-1. variables.csv which contains the variables that are uploaded to the workspace if no file with the same name is found in the root directory of the cloned repository. The columns are key, value, category, hcl, and sensitive with the last two corresponding to the hcl and sensitive checkboxes of TFE variables.
+1. [config/main.tf](./config/main.tf) which is a file with some Terraform code that says "Hello" to the person whose name is given and generates a random number. This is used if no git URL is provided to the script.
+1. [variables.csv](./variables.csv) which contains the variables that are uploaded to the workspace if no file with the same name is found in the root directory of the cloned repository. The columns are key, value, category, hcl, and sensitive with the last two corresponding to the hcl and sensitive checkboxes of TFE variables. This should be in the same directory as the script unless you include a file with the same name in your git repository.
 1. [deleteWorkspace.sh](./deleteWorkspace.sh): a script that can be used to delete the workspace.
 1. [restrict-name-variable.sentinel](./restrict-name-variable.sentinel): a Sentinel policy you can add to your TFE organization in order to see how the script can check Sentinel policies and even override soft-mandatory failures.
 
-*Note* that the json templates file need to be in the same directory as the script itself. The variables.csv file should also be in the same directory as the script unless you include a file with the same name in your git repository.
+The following files are embedded inside the script:
+
+1. **workspace.template.json** which is used to generate _workspace.json_ which is used when creating the workspace. If you wish to add or modify the settings that are included in the _@workspace.json_ payload, add them to _workspace.template.json_ inside the script and be sure to check the Terraform Enterprise API [syntax](https://www.terraform.io/docs/enterprise/api/workspaces.html#update-a-workspace). Update or modify `"terraform-version": "0.11.14"` within _workspace.template.json_  to set a specific workspace version of the Terraform OSS binary.
+1. **configversion.json** which is used to generate a new configuration version.
+1. **variable.template.json** which is used to generate _variable.json_ which is used when creating a variable called "name" in the workspace.
+1. **run.template.json** which is used to generate _run.json_ which is used when triggering a run against the workspace.
+1. **apply.json** which is used when doing the apply against the workspace.
 
 ## Preparation
 Do the following before using this script:
@@ -72,11 +71,11 @@ If you use this script with a Private Terraform Enterprise (PTFE) server that us
 ## Instructions
 Follow these instructions to run the script with with the included main.tf and variables.csv files or with your own git repository:
 
-1. If you are using a private Terraform Enterprise server, edit the script and set the address variable to the address of your server. Otherwise, you would leave the address set to "app.terraform.io" which is the address of the SaaS Terraform Enterprise server.
-1. Edit the script and set the organization variable to the name of your Terraform Enterprise organization.
 1. Generate a [team token](https://www.terraform.io/docs/enterprise/users-teams-organizations/service-accounts.html#team-service-accounts) for the owners team in your organization in the Terraform Enterprise UI by selecting your organization settings, then Teams, then owners, and then clicking the Generate button and saving the token that is displayed.
 1. `export TFE_TOKEN=<owners_token>` where \<owners_token\> is the token generated in the previous step.
-1. If you want, you can also change the name of the workspace that will be created by editing the workspace variable. Note that you can also pass the workspace as the second argument to the script.
+1. `export TFE_ORG=<your_organization>` where \<your_organization\> is the name of your target TFE organization.
+1. `export TFE_ADDR=<your_address>` where \<your_address\> is the custom address of your target TFE server in the format server.domain.tld. If you do not set this environment variable it will default to the Terraform Enterprise Cloud/SaaS address of app.terraform.io.
+1. If you want, edit _loadAndRunWorkspace.sh_ to change the name of the workspace that will be created by editing the workspace variable. *Note* that you can also pass the workspace as the second argument to the script.
 1. If you want, you can change the sleep_duration variable which controls how often the script checks the status of the triggered run (in seconds). Setting a longer value would make sense if using Terraform code that takes longer to apply.
 1. If you are providing a URL to clone a git repository, you can add Terraform and environment variables needed by your Terraform code to [variables.csv](./variables.csv) and remove the "name" variable. You can also add the edited variables.csv file to your repository.
 1. If you want to use the sample main.tf or other code you place in the config directory, run  `./loadAndRunWorkspace.sh` or `./loadAndRunWorkspace.sh "" "" <override>` where \<override\> is "yes" or "no". (The empty quotes are needed in the second case so that override is the third variable.) If you do not specify a value for \<override\>, the script will set it to "no".
