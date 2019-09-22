@@ -8,7 +8,7 @@ It uses the Azure provider's azurerm_kubernetes_cluster resource to create an en
 
 This Terraform configuration gets the Azure credentials from a [Vault](https://www.vaultproject.io/) server.
 
-This configuration is intended to be used with two other configurations, [k8s-vault-config](../k8s-vault-config) and [k8s-services](../../self-serve-infrastructure/k8s-services). The first provisions an instance of the Vault Kubernetes authentication method against the cluster while the second provisions some pods, services, and other Kubernetes contstructs.
+This configuration is intended to be used with three other configurations, [k8s-vault-config](../k8s-vault-config) and [k8s-services](../../self-serve-infrastructure/k8s-services). The first provisions an instance of the Vault Kubernetes authentication method against the cluster while the second provisions some pods, services, and other Kubernetes contstructs.
 
 ## Deployment Prerequisites
 
