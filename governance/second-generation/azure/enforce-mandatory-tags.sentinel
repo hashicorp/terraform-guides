@@ -72,29 +72,37 @@ validate_attribute_contains_list = func(type, attribute, required_values) {
             "that is computed.")
       # If you want computed values to cause the policy to fail,
       # uncomment the next line.
-      # validated = false
-    } else {
-      # Validate that the attribute is a list or a map
-      if (types.type_of(r.applied[attribute]) is "list" or
-          types.type_of(r.applied[attribute]) is "map") {
-
-        # Evaluate each member of required_values list
-        for required_values as rv {
-          if r.applied[attribute] not contains rv {
-            print("Resource", address, "has attribute", attribute,
-                  "that is missing required value", rv, "from the list:",
-                  required_values)
-            validated = false
-          } // end rv
-        } // end required_values
-
-      } else {
-        print("Resource", address, "is missing attribute", attribute,
-              "or it is not a list or a map")
-        validated = false
-      } // end check that attribute is list or map
-
+      #validated = false
     } // end computed check
+
+    # If tags is missing in the code, the Azure provider says that
+    # it will be "known after apply".
+    # Sentinel will show tags = {} for Terraform 0.11 but
+    # It will not have tags at all for Terraform 0.12
+    # So, we do the following check even when tags.% is computed
+    
+    # Validate that the attribute is a list or a map
+    # but first check if r.applied[attribute] exists
+    if r.applied[attribute] else "" is not "" and
+       (types.type_of(r.applied[attribute]) is "list" or
+        types.type_of(r.applied[attribute]) is "map") {
+
+      # Evaluate each member of required_values list
+      for required_values as rv {
+        if r.applied[attribute] not contains rv {
+          print("Resource", address, "has attribute", attribute,
+                "that is missing required value", rv, "from the list:",
+                required_values)
+          validated = false
+        } // end rv
+      } // end required_values
+
+    } else {
+      print("Resource", address, "is missing attribute", attribute,
+            "or it is not a list or a map")
+      validated = false
+    } // end check that attribute is list or map
+
   } // end resource instances
 
   return validated
