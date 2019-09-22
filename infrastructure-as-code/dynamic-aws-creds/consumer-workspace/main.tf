@@ -11,14 +11,14 @@ terraform {
 data "terraform_remote_state" "producer" {
   backend = "local"
 
-  config {
+  config = {
     path = "${var.path}"
   }
 }
 
 data "vault_aws_access_credentials" "creds" {
-  backend = "${data.terraform_remote_state.producer.backend}"
-  role    = "${data.terraform_remote_state.producer.role}"
+  backend = "${data.terraform_remote_state.producer.outputs.backend}"
+  role    = "${data.terraform_remote_state.producer.outputs.role}"
 }
 
 provider "aws" {
@@ -47,7 +47,7 @@ resource "aws_instance" "main" {
   ami           = "${data.aws_ami.ubuntu.id}"
   instance_type = "t2.nano"
 
-  tags {
+  tags = {
     Name  = "${var.name}"
     TTL   = "${var.ttl}"
     owner = "${var.name}-guide"
