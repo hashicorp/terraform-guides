@@ -45,8 +45,8 @@ The "Producer" will be responsible for configuring Vault's [AWS Secrets Engine](
 
 ## Prerequisites
 
-1. [Download HashiCorp's Terraform](https://www.terraform.io/downloads.html)
-1. [Download HashiCorp's Vault](https://www.vaultproject.io/downloads.html)
+1. [Download HashiCorp's Terraform](https://www.terraform.io/downloads.html) (Version 0.12 or higher)
+1. [Download HashiCorp's Vault](https://www.vaultproject.io/downloads.html) (Version 1.2.0 or higher)
 
 ## TL;DR
 
