@@ -1,0 +1,250 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_instance": {
+				"ubuntu": {
+					0: {
+						"applied": {
+							"ami": "ami-2e1ef954",
+							"arn": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"associate_public_ip_address":  true,
+							"availability_zone":            "us-east-1b",
+							"cpu_core_count":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"cpu_threads_per_core":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"ebs_block_device":             "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"ephemeral_block_device":       "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"get_password_data":            false,
+							"host_id":                      "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"id":                           "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"instance_state":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"instance_type":                "t2.small",
+							"ipv6_address_count":           "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"ipv6_addresses":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"key_name":                     "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"network_interface":            "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"network_interface_id":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"password_data":                "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"placement_group":              "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"primary_network_interface_id": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"private_dns":                  "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"private_ip":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"public_dns":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"public_ip":                    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"root_block_device":            "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"security_groups":              "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"source_dest_check":            true,
+							"subnet_id":                    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"tenancy":                      "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"volume_tags":                  {},
+							"vpc_security_group_ids":       "74D93920-ED26-11E3-AC10-0800200C9A66",
+						},
+						"destroy": false,
+						"diff": {
+							"ami": {
+								"computed": false,
+								"new":      "ami-2e1ef954",
+								"old":      "",
+							},
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"associate_public_ip_address": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"availability_zone": {
+								"computed": false,
+								"new":      "us-east-1b",
+								"old":      "",
+							},
+							"cpu_core_count": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"cpu_threads_per_core": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ebs_block_device.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ephemeral_block_device.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"get_password_data": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"host_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_state": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_type": {
+								"computed": false,
+								"new":      "t2.small",
+								"old":      "",
+							},
+							"ipv6_address_count": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_addresses.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"key_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"password_data": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"placement_group": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"primary_network_interface_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"private_dns": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"private_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"public_dns": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"public_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"root_block_device.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"security_groups.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"source_dest_check": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"subnet_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tenancy": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"volume_tags.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"vpc_security_group_ids.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.13"
+
+variables = {
+	"ami_id":        "ami-2e1ef954",
+	"aws_region":    "us-east-1",
+	"instance_type": "t2.small",
+	"name":          "roger-demo-dev",
+}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

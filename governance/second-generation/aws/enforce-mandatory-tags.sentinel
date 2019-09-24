@@ -74,7 +74,8 @@ validate_attribute_contains_list = func(type, attribute, required_values) {
       # validated = false
     } else {
       # Validate that the attribute is a list or a map
-      if length(r.applied[attribute]) else 0 > 0 and
+      # but first check if r.applied[attribute] exists
+      if r.applied[attribute] else "" is not "" and
          (types.type_of(r.applied[attribute]) is "list" or
           types.type_of(r.applied[attribute]) is "map") {
 
