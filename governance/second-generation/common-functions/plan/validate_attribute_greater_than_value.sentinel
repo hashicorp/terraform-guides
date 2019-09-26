@@ -27,7 +27,7 @@ validate_attribute_greater_than_value = func(type, attribute, min_value) {
       # validated = false
     } else {
       # Validate that the attribute exists
-      if length(r.applied[attribute]) else 0 > 0 {
+      if r.applied[attribute] else null is not null {
         # Validate that each instance has desired value
         if float(r.applied[attribute]) > min_value {
           print("Resource", address, "has attribute", attribute, "with value",
