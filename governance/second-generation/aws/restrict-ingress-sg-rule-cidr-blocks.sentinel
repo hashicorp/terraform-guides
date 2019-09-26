@@ -74,7 +74,7 @@ validate_sgr_cidr_blocks = func() {
       # We check that it is present and really a list
       # before checking whether it contains "0.0.0.0/0"
       if r.applied.type is "ingress" and
-         length(r.applied.cidr_blocks) else 0 > 0 and
+         r.applied.cidr_blocks else null is not null and
          types.type_of(r.applied.cidr_blocks) is "list" and
          r.applied.cidr_blocks contains "0.0.0.0/0" {
         print("Security group rule", address, "of type ingress",
