@@ -1,0 +1,80 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"null_resource": {
+				"no-provisioner": {
+					"config": {
+						"triggers": null,
+					},
+					"provisioners": null,
+					"references": {
+						"triggers": [],
+					},
+				},
+				"test": {
+					"config": {},
+					"provisioners": [
+						{
+							"config": {
+								"source": "myfile.txt",
+								"destination": "myfile.txt",
+							},
+							"references": {
+								"command": [],
+							},
+							"type": "file",
+						},
+						{
+							"config": {
+								"source": "myfile.txt",
+								"destination": "myfile.txt",
+							},
+							"references": {
+								"command": [],
+							},
+							"type": "file",
+						},
+					],
+					"references": {},
+				},
+			},
+		},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs
