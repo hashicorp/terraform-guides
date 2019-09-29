@@ -1,5 +1,11 @@
+# This policy uses the tfconfig import to prevent blacklisted provisioners
+# from being used
+
+##### Imports #####
 import "tfconfig"
 import "strings"
+
+##### Functions #####
 
 # Find all provisioners using the tfconfig import
 find_all_provisioners = func() {
@@ -63,11 +69,15 @@ validate_provisioners = func(black_list) {
   return validated
 }
 
-# List of bad provisioners
-bad_provisioners = ["local-exec", "remote-exec"]
+##### Lists #####
+
+# List of blacklisted provisioners
+blacklisted_provisioners = ["local-exec", "remote-exec"]
+
+##### Rules #####
 
 # Main rule
-provisioners_validated = validate_provisioners(bad_provisioners)
+provisioners_validated = validate_provisioners(blacklisted_provisioners)
 main = rule {
   provisioners_validated
 }
