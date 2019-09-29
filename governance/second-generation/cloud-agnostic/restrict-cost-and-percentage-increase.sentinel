@@ -1,0 +1,60 @@
+# This policy uses the Sentinel tfrun import to restrict the
+# both the total monthly cost and the percentage increase in
+# the monthly cost that would be incurred if the current plan
+# were applied
+
+##### Imports #####
+
+import "tfrun"
+import "decimal"
+
+##### Functions #####
+
+# Validate that the proposed cost is less than the given limit and
+# that the percentage increase in the monthly cost
+# is less than a given percentage
+restrict_cost_and_percentage_increase = func(limit, max_percent) {
+
+  validated = true
+
+  # Determine cost data
+  prior_cost = decimal.new(tfrun.cost_estimate.prior_monthly_cost)
+  proposed_cost = decimal.new(tfrun.cost_estimate.proposed_monthly_cost)
+  increase_in_cost = decimal.new(tfrun.cost_estimate.delta_monthly_cost)
+
+  # Compare proposed monthly cost to the limit
+  if proposed_cost.gt(limit) {
+    print("Proposed monthly cost", proposed_cost.string,
+          "is over the limit:", limit.string)
+    validated = false
+  }
+
+  # If prior_cost is not 0.0, compare percentage increase in monthly cost
+  # to max_percent
+  if prior_cost.is_not(0.0) {
+    #print("We had a prior cost.")
+    percentage_change = increase_in_cost.divide(prior_cost).multiply(100)
+    #print("Percentage Change:", percentage_change.float)
+    if decimal.new(percentage_change).gt(max_percent) {
+      print("Proposed percentage increase", percentage_change.float,
+            "is over the max percentage change:", max_percent.float)
+      validated = false
+    } else {
+      print("Proposed percentage increase", percentage_change.float,
+            "is under the max percentage change:", max_percent.float)
+    }
+  }
+
+  return validated
+
+}
+
+##### Parameters #####
+limit = decimal.new(1000)
+max_percent = decimal.new(10.0)
+
+##### Rules #####
+cost_validated = restrict_cost_and_percentage_increase(limit, max_percent)
+main = rule {
+  cost_validated
+}
