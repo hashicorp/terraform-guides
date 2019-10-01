@@ -1,0 +1,59 @@
+# This policy uses the Sentinel tfrun import to restrict the
+# proposed monthly cost that would be incurred if the current
+# plan were applied, using different limits for different
+# workspaces based on their names.
+
+##### Imports #####
+
+import "tfrun"
+import "decimal"
+
+##### Functions #####
+
+# Validate that the proposed monthly cost is less than the limit
+limit_cost_by_workspace_type = func(limits) {
+
+  # Get workspace name
+  workspace_name = tfrun.workspace.name
+
+  # Determine limit for current workspace
+  if workspace_name matches "(.*)-dev$" {
+    limit = limits["dev"]
+  } else if workspace_name matches "(.*)-qa$" {
+    limit = limits["qa"]
+  } else if workspace_name matches "(.*)-prod$" {
+    limit = limits["prod"]
+  } else {
+    limit = limits["other"]
+  }
+
+  # Determine proposed monthly cost
+  proposed_cost = decimal.new(tfrun.cost_estimate.proposed_monthly_cost)
+
+  # Compare proposed monthly cost to the limit
+  if proposed_cost.lte(limit) {
+    print("Proposed monthly cost", proposed_cost.string,
+          "of workspace", workspace_name,
+          "is under the limit:", limit.string)
+    return true
+  } else {
+    print("Proposed monthly cost", proposed_cost.string,
+          "of workspace", workspace_name,
+          "is over the limit:", limit.string)
+    return false
+  }
+}
+
+##### Monthly Limits #####
+limits = {
+  "dev": decimal.new(200),
+  "qa": decimal.new(500),
+  "prod": decimal.new(1000),
+  "other": decimal.new(50),
+}
+
+##### Rules #####
+cost_validated = limit_cost_by_workspace_type(limits)
+main = rule {
+  cost_validated
+}
