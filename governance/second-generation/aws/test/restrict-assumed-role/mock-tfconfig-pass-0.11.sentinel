@@ -1,0 +1,232 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"modules": {
+			"first": {
+				"config": {
+					"role": "${var.role}",
+				},
+				"source":  "./module",
+				"version": "",
+			},
+		},
+		"outputs": {},
+		"providers": {
+			"aws": {
+				"alias": {
+					"": {
+						"config": {
+							"assume_role": [
+								{
+									"external_id":  "EXTERNAL_ID",
+									"role_arn":     "${var.role}",
+									"session_name": "SESSION_NAME",
+								},
+							],
+							"region": "us-east-2",
+						},
+						"version": "",
+					},
+					"hard-coded-role": {
+						"config": {
+							"assume_role": [
+								{
+									"external_id":  "EXTERNAL_ID",
+									"role_arn":     "arn:aws:iam::753646501470:role/roger-terraform-assumed-role",
+									"session_name": "SESSION_NAME",
+								},
+							],
+							"region": "us-east-1",
+						},
+						"version": "",
+					},
+					"tf-11-var": {
+						"config": {
+							"assume_role": [
+								{
+									"external_id":  "EXTERNAL_ID",
+									"role_arn":     "${var.role}",
+									"session_name": "SESSION_NAME",
+								},
+							],
+							"region": "us-east-1",
+						},
+						"version": "",
+					},
+					"west": {
+						"config": {
+							"region": "us-west-1",
+						},
+						"version": "",
+					},
+				},
+				"config": {
+					"assume_role": [
+						{
+							"external_id":  "EXTERNAL_ID",
+							"role_arn":     "${var.role}",
+							"session_name": "${var.session}",
+						},
+					],
+					"region": "us-east-2",
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"aws_instance": {
+				"web": {
+					"config": {
+						"ami":           "ami-2e1ef954",
+						"instance_type": "t2.micro",
+						"tags": [
+							{
+								"Name": "assumed_role_instance",
+							},
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {
+			"role": {
+				"default":     null,
+				"description": "IAM Role to assume",
+			},
+			"session": {
+				"default":     "SESSION_NAME",
+				"description": "",
+			},
+		},
+	},
+
+	"module.first": {
+		"data":    {},
+		"modules": {},
+		"outputs": {},
+		"providers": {
+			"aws": {
+				"alias": {
+					"": {
+						"config": {
+							"assume_role": [
+								{
+									"external_id":  "EXTERNAL_ID",
+									"role_arn":     "${var.role}",
+									"session_name": "SESSION_NAME",
+								},
+							],
+							"region": "us-east-2",
+						},
+						"version": "",
+					},
+					"hard-coded-role": {
+						"config": {
+							"assume_role": [
+								{
+									"external_id":  "EXTERNAL_ID",
+									"role_arn":     "arn:aws:iam::753646501470:role/roger-terraform-assumed-role",
+									"session_name": "SESSION_NAME",
+								},
+							],
+							"region": "us-east-1",
+						},
+						"version": "",
+					},
+					"tf-11-var": {
+						"config": {
+							"assume_role": [
+								{
+									"external_id":  "EXTERNAL_ID",
+									"role_arn":     "${var.role}",
+									"session_name": "SESSION_NAME",
+								},
+							],
+							"region": "us-east-1",
+						},
+						"version": "",
+					},
+					"west": {
+						"config": {
+							"region": "us-west-1",
+						},
+						"version": "",
+					},
+				},
+				"config": {
+					"assume_role": [
+						{
+							"external_id":  "EXTERNAL_ID",
+							"role_arn":     "${var.role}",
+							"session_name": "${var.session}",
+						},
+					],
+					"region": "us-east-2",
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"aws_instance": {
+				"web": {
+					"config": {
+						"ami":           "ami-2e1ef954",
+						"instance_type": "t2.micro",
+						"tags": [
+							{
+								"Name": "assumed_role_instance",
+							},
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {
+			"role": {
+				"default":     null,
+				"description": "IAM Role to assume",
+			},
+			"session": {
+				"default":     "SESSION_NAME",
+				"description": "",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"first",
+	],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs
