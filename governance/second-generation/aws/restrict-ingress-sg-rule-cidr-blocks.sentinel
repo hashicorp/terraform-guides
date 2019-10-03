@@ -116,6 +116,10 @@ validate_cidr_blocks = func() {
         for r.applied.ingress as i {
 
           # Determine if ingress.<n>.cidr_blocks.# attribute is computed
+          # Note that this approach works for Terraform 0.12, but not
+          # for Terraform 0.11 which has diff expressions like
+          # "ingress.3167104115.cidr_blocks.#" rather than using 0, 1, 2
+          # after "ingress".
           ingress_cidr_blocks = "ingress." + string(ingress_count) + ".cidr_blocks.#"
           if (r.diff[ingress_cidr_blocks].computed else false) is true {
             print("Ingress block #", ingress_count, "of security group",
