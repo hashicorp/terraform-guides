@@ -5,6 +5,205 @@ _modules = {
 		"data": {},
 		"path": [],
 		"resources": {
+			"aws_security_group": {
+				"allow_tls": {
+					0: {
+						"applied": {
+							"arn":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"description": "Allow TLS inbound traffic",
+							"egress":      "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"id":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"ingress": [
+								{
+									"cidr_blocks":      [],
+									"description":      "",
+									"from_port":        "443",
+									"ipv6_cidr_blocks": [],
+									"prefix_list_ids":  [],
+									"protocol":         "tcp",
+									"security_groups":  [],
+									"self":             true,
+									"to_port":          "443",
+								},
+								{
+									"cidr_blocks": [
+										"0.0.0.0/0",
+									],
+									"description":      "",
+									"from_port":        "444",
+									"ipv6_cidr_blocks": [],
+									"prefix_list_ids":  [],
+									"protocol":         "tcp",
+									"security_groups":  [],
+									"self":             false,
+									"to_port":          "444",
+								},
+							],
+							"name":                   "allow_tls",
+							"owner_id":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"revoke_rules_on_delete": false,
+							"tags": {
+								"Name": "allow_all",
+							},
+							"vpc_id": "74D93920-ED26-11E3-AC10-0800200C9A66",
+						},
+						"destroy": false,
+						"diff": {
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "Allow TLS inbound traffic",
+								"old":      "",
+							},
+							"egress.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ingress.#": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
+							"ingress.3167104115.cidr_blocks.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.3167104115.description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"ingress.3167104115.from_port": {
+								"computed": false,
+								"new":      "443",
+								"old":      "",
+							},
+							"ingress.3167104115.ipv6_cidr_blocks.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.3167104115.prefix_list_ids.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.3167104115.protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"ingress.3167104115.security_groups.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.3167104115.self": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"ingress.3167104115.to_port": {
+								"computed": false,
+								"new":      "443",
+								"old":      "",
+							},
+							"ingress.4122917492.cidr_blocks.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"ingress.4122917492.cidr_blocks.0": {
+								"computed": false,
+								"new":      "0.0.0.0/0",
+								"old":      "",
+							},
+							"ingress.4122917492.description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"ingress.4122917492.from_port": {
+								"computed": false,
+								"new":      "444",
+								"old":      "",
+							},
+							"ingress.4122917492.ipv6_cidr_blocks.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.4122917492.prefix_list_ids.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.4122917492.protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"ingress.4122917492.security_groups.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.4122917492.self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"ingress.4122917492.to_port": {
+								"computed": false,
+								"new":      "444",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "allow_tls",
+								"old":      "",
+							},
+							"owner_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"revoke_rules_on_delete": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"tags.Name": {
+								"computed": false,
+								"new":      "allow_all",
+								"old":      "",
+							},
+							"vpc_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
 			"aws_security_group_rule": {
 				"allow_all": {
 					0: {
