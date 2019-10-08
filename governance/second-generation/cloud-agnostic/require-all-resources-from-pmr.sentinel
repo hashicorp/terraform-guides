@@ -1,0 +1,56 @@
+# This policy validates that all modules loaded directly by the
+# root module are in the Private Module Registry (PMR) of a TFC
+# server and that no resources are created in the root module
+
+#####Imports#####
+import "tfconfig"
+import "strings"
+
+#####Functions#####
+
+#Prevent resources in root module
+prevent_resources_in_root_module = func() {
+
+  validated = true
+
+  if length(tfconfig.resources) != 0 {
+    print("Resources are not allowed in the root module.")
+    print("Your root module has", length(tfconfig.resources), "type(s) of resources.")
+    validated = false
+  }
+
+  return validated
+}
+
+# Require all modules directly under root module to come from PMR
+require_modules_from_pmr = func(address, organization) {
+
+  validated = true
+
+  for tfconfig.modules as name, m {
+    if not strings.has_prefix(m.source, address + "/" + organization) {
+      print("All non-root modules must come from the private module registry",
+      address + "/" + organization)
+      print("You included module,", name, ", with source,", m.source)
+      validated = false
+    }
+  }
+
+  return validated
+}
+
+##### Global Variables #####
+# Define the address of the TFE server
+address = "app.terraform.io"
+
+# Define organization variable
+organization = "Cloud-Operations"
+
+##### Rules #####
+
+# Main rule that requires other rules to be true
+no_resources_in_root_module = prevent_resources_in_root_module()
+all_non_root_modules_from_pmr = require_modules_from_pmr(address, organization)
+main = rule {
+  no_resources_in_root_module and all_non_root_modules_from_pmr
+}
