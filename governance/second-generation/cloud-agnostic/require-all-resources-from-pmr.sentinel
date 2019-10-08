@@ -6,6 +6,39 @@
 import "tfconfig"
 import "strings"
 
+#####Functions#####
+
+#Prevent resources in root module
+prevent_resources_in_root_module = func() {
+
+  validated = true
+
+  if length(tfconfig.resources) != 0 {
+    print("Resources are not allowed in the root module.")
+    print("Your root module has", length(tfconfig.resources), "type(s) of resources.")
+    validated = false
+  }
+
+  return validated
+}
+
+# Require all modules directly under root module to come from PMR
+require_modules_from_pmr = func(address, organization) {
+
+  validated = true
+
+  for tfconfig.modules as name, m {
+    if not strings.has_prefix(m.source, address + "/" + organization) {
+      print("All non-root modules must come from the private module registry",
+      address + "/" + organization)
+      print("You included module,", name, ", with source,", m.source)
+      validated = false
+    }
+  }
+
+  return validated
+}
+
 ##### Global Variables #####
 # Define the address of the TFE server
 address = "app.terraform.io"
@@ -14,27 +47,10 @@ address = "app.terraform.io"
 organization = "Cloud-Operations"
 
 ##### Rules #####
-# Don't allow resources in root module
-no_resources_in_root_module = rule {
-   length(tfconfig.resources) is 0 or not
-   (print("Resources not allowed in root module") and
-    print("Your root module has", length(tfconfig.resources), "resources."))
-
-}
-
-# Require all modules directly under root module to come from PMR
-require_modules_from_pmr = rule {
-  all tfconfig.modules as name, m {
-    strings.has_prefix(m.source, address + "/" + organization) or not
-    (print("All modules must from the private module registry",
-    address + "/" + organization) and
-   print("You included module", name, "with source", m.source))
-  }
-}
 
 # Main rule that requires other rules to be true
+no_resources_in_root_module = prevent_resources_in_root_module()
+all_non_root_modules_from_pmr = require_modules_from_pmr(address, organization)
 main = rule {
-  print("modules", tfconfig.modules) and
-  no_resources_in_root_module and
-  require_modules_from_pmr
+  no_resources_in_root_module and all_non_root_modules_from_pmr
 }
