@@ -1,5 +1,5 @@
 # First Class Expressions Example
-The [First Class Expressions](./first-class-expressions) example creates an AWS VPC, a subnet, a network interface, and an EC2 instance. It illustrates the following new features:
+This example creates an AWS VPC, a subnet, a network interface, and an EC2 instance. It illustrates the following new features:
 1. Referencing of Terraform variables and resource arguments without interpolation using [First Class Expressions](https://www.hashicorp.com/blog/terraform-0-12-preview-first-class-expressions). (Note that this blog post refers to "attributes" instead of to "arguments".)
 1. The need to include `=` when setting the value for arguments of type map or list.
 

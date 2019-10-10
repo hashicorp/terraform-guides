@@ -1,5 +1,5 @@
-# Resources that Use for_each Example
-The [For_each for Resources](./for-each-for-resources) example illustrates how the [for_each meta-argument](https://www.terraform.io/docs/configuration/resources.html#for_each-multiple-resource-instances-defined-by-a-map-or-set-of-strings) can be used instead of the `count` meta-argument to create multiple instances of a resource with different properties based on the contents of a map or set of strings.
+# For_each for Resources Example
+This example illustrates how the [for_each meta-argument](https://www.terraform.io/docs/configuration/resources.html#for_each-multiple-resource-instances-defined-by-a-map-or-set-of-strings) can be used instead of the `count` meta-argument to create multiple instances of a resource with different properties based on the contents of a map or set of strings.
 
 Note that the `for_each` meta-argument for resources was added in Terraform 0.12.6.
 
