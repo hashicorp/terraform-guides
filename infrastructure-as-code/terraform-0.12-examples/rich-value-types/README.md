@@ -1,5 +1,5 @@
-# Rich Value Types
-The [Rich Value Types](./rich-value-types) example illustrates how the new [Rich Value Types](https://www.hashicorp.com/blog/terraform-0-12-rich-value-types) can be passed into and out of a module. It also shows that entire resources can be returned as outputs of a module. In fact, you can even return an entire module as an output of the root module.
+# Rich Value Types Example
+This example illustrates how the new [Rich Value Types](https://www.hashicorp.com/blog/terraform-0-12-rich-value-types) can be passed into and out of a module. It also shows that entire resources can be returned as outputs of a module. In fact, you can even return an entire module as an output of the root module.
 
 The top-level main.tf file passes a single map with 4 strings into a module after defining the map as a local value:
 ```

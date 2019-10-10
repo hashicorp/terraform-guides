@@ -1,5 +1,5 @@
-# Reliable JSON Syntax
-The [Reliable JSON Syntax](./reliable-json-syntax) example illustrates how the new [Reliable JSON Syntax](https://www.hashicorp.com/blog/terraform-0-12-reliable-json-syntax) makes life easier for customers using Terraform JSON files instead of HCL files.
+# Reliable JSON Syntax Example
+This example illustrates how the new [Reliable JSON Syntax](https://www.hashicorp.com/blog/terraform-0-12-reliable-json-syntax) makes life easier for customers using Terraform JSON files instead of HCL files.
 
 As you work through this example, you will need to change the extensions of the files so that only one has the `tf.json` extension at any time. Be sure to change the extension to "tf.json" rather than to "tf".
 

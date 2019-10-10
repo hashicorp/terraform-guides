@@ -1,5 +1,5 @@
-# Advanced Dynamic Blocks
-The Advanced Dynamic Blocks example shows how [dynamic blocks](https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks) can be used to dynamically create multiple instances of a block within a resource from a complex value such as a list of maps.
+# Advanced Dynamic Blocks Example
+This example shows how [dynamic blocks](https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks) can be used to dynamically create multiple instances of a block within a resource from a complex value such as a list of maps.
 
 In this example, we create an [Elastic Beanstalk Environment](https://www.terraform.io/docs/providers/aws/r/elastic_beanstalk_environment.html) resource with two option settings dynamically generated from a variable `settings` defined as a list of maps, each of which has three entries: `namespace`, `name`, and `value`.  
 
@@ -88,4 +88,3 @@ You should see output from running `terraform apply` that looks like this:
         }
     }
 ```
-
