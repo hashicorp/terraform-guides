@@ -59,7 +59,9 @@ validate_destroyed_resources = func(blacklist) {
 
 # List of blacklisted resources
 blacklist = [
+  "aws_vpc",
   "azurerm_virtual_network",
+  "google_compute_network",
 ]
 
 ##### Rules #####
