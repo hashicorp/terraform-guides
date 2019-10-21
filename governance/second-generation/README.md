@@ -1,6 +1,8 @@
 # Second-Generation Sentinel Policies
 
-This directory and its sub-directories contain second-generation Sentinel policies which were created in 2019 for several clouds including AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware. It also contains some cloud-agnostic policies and some common, re-usable functions and mocks that can be used to test the new policies with the [Sentinel Simulator](https://docs.hashicorp.com/sentinel/commands).
+This directory and its sub-directories contain second-generation Sentinel policies and associated [Sentinel Simulator](https://docs.hashicorp.com/sentinel/intro/getting-started/install) test cases and mocks which were created in 2019 for AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware. It also contains some cloud-agnostic policies and some common, re-usable functions.
+
+Additionally, it contains [Policy Set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#the-sentinel-hcl-configuration-file) configuration files so that the cloud-specific and cloud-agnostic policies can easily be added to Terraform Cloud organizations using [VCS Integrations](https://www.terraform.io/docs/cloud/vcs/index.html) after forking this repository.
 
 These policies are generally intended for use with Terraform 0.11 and 0.12. But some policies such as those that check cost estimates can only be used with Terraform 0.12.
 
@@ -37,7 +39,16 @@ To test the policies of any of the clouds, please do the following:
 
 Using the -verbose flag will show you the output that you would see if running the policies in TFE itself. You can drop it if you don't care about that output.
 
+## Policy Set Configuration Files
+As mentioned in the introduction of this file, this repository contains [Policy Set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#the-sentinel-hcl-configuration-file) configuration files so that the cloud-specific and cloud-agnostic policies can easily be added to Terraform Cloud organizations using [VCS Integrations](https://www.terraform.io/docs/cloud/vcs/index.html) after forking this repository.
+
+Each of these files is called "sentinel.hcl" and should list all policies in its directory with an [Enforcement Level](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#enforcement-levels) of "advisory". This means that registering these policy sets in a Terraform Cloud or Terraform Enterprise organization will not actually have any impact on provisioning of resources from those organizations even if some of the policies checks do report violations.
+
+Users who wish to actually enforce any of these policies should change the enforcement levels of them to "soft-mandatory" or "hard-mandatory" in their forks of this repository or in other VCS repositories that contain copies of the policies.
+
 ## Adding Policies
+If you add a new second-generation policy to one of the cloud directories or the cloud-agnostic directory, please add a new stanza to that directory's sentinel.hcl file listing the name of your new policy.
+
 The Sentinel Simulator expects test cases to be in a test/\<policy\> directory under the directory containing the policy being tested where \<policy\> is the name of the policy not including the ".sentinel" extension. When you add new policies for any of the clouds, please be sure to create a new directory with the same name of the policy under that cloud's directory and then add test cases and mock files to that directory.
 
 Ideally, you should add test cases and mocks for both Terraform 0.11 and 0.12. So, you would emulate the structure of the files in this [directory](./aws/test/restrict-ec2-instance-type), adding pass-0.11.json, pass-0.12.json, fail-0.11.json, fail-0.12.json, mock-tfplan-pass-0.11.sentinel, mock-tfplan-pass-0.12.sentinel, mock-tfplan-fail-0.11.sentinel and mock-tfplan-fail0.12.sentinel files to your new directory. Of course, you would first have to generate mocks from plans done with Terraform 0.11 and 0.12 separately. (See this [document](https://www.terraform.io/docs/enterprise/sentinel/sentinel-tf-012.html#generating-mock-data-for-both-terraform-versions) for guidance.)
@@ -63,9 +74,9 @@ New policies that use the `tfstate` import should ideally include pass-0.11.json
 You can look at the test cases of the [restrict-publishers-of-current-vms](./azure/restrict-publishers-of-current-vms.sentinel) policy to see how these files should be configured.
 
 ### Policies that Use the tfrun Import
-The cloud-agnostic policies, [limit-proposed-monthly-cost](./cloud-agnostic/limit-proposed-monthly-cost.sentinel) and [restrict-cost-and-percentage-increase](./cloud-agnostic/restrict-cost-and-percentage-increase.sentinel) both use the `tfrun` import to check cost estimates. They also include test cases and mocks that use the `tfrun` import.
+The cloud-agnostic policies, [limit-proposed-monthly-cost](./cloud-agnostic/limit-proposed-monthly-cost.sentinel), [restrict-cost-and-percentage-increase](./cloud-agnostic/restrict-cost-and-percentage-increase.sentinel), and [./cloud-agnostic/limit-cost-by-workspace-type](./cloud-agnostic/limit-cost-by-workspace-type.sentinel) use the `tfrun` import to check cost estimates. They also include test cases and mocks that use the `tfrun` import.
 
 New policies that use the `tfrun` import should ideally include pass-0.12.json, fail-0.12.json, mock-tfrun-pass-0.12.sentinel, and mock-tfrun-fail-0.12.sentinel files that mock the workspace metadata and/or cost estimates of Terraform 0.12 runs. Since cost estimates are not available for Terraform 0.11 runs, you will not be able to generate `tfrun` mocks for Terraform 0.11 and will therefore not include test cases for Terraform 0.11.
 
 ## Terraform Support
-Most of these policies have been tested with Terraform 0.11 and 0.12.
+Most of these policies have been tested with Terraform 0.11 and 0.12. The main exceptions are those policies such as the cost estimate policies that cannot be used with Terraform 0.11.
