@@ -18,6 +18,10 @@ policy "prevent-destruction-of-blacklisted-resources" {
     enforcement_level = "advisory"
 }
 
+policy "prevent-non-root-providers" {
+    enforcement_level = "advisory"
+}
+
 policy "prevent-remote-exec-provisioners-on-null-resources" {
     enforcement_level = "advisory"
 }
