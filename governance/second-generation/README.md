@@ -42,7 +42,7 @@ Using the -verbose flag will show you the output that you would see if running t
 ## Policy Set Configuration Files
 As mentioned in the introduction of this file, this repository contains [Policy Set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#the-sentinel-hcl-configuration-file) configuration files so that the cloud-specific and cloud-agnostic policies can easily be added to Terraform Cloud organizations using [VCS Integrations](https://www.terraform.io/docs/cloud/vcs/index.html) after forking this repository.
 
-Each of these files is called "sentinel.hcl" and should list all policies in its directory with an [Enforcement Level](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#enforcement-levels) of "advisory". This means that registering these policy sets in a Terraform Cloud or Terraform Enterprise organization will not actually have any impact on provisioning of resources from those organizations even if some of the policies checks do report violations.
+Each of these files is called "sentinel.hcl" and should list all policies in its directory with an [Enforcement Level](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#enforcement-levels) of "advisory". This means that registering these policy sets in a Terraform Cloud or Terraform Enterprise organization will not actually have any impact on provisioning of resources from those organizations even if some of the policy checks do report violations.
 
 Users who wish to actually enforce any of these policies should change the enforcement levels of them to "soft-mandatory" or "hard-mandatory" in their forks of this repository or in other VCS repositories that contain copies of the policies.
 
