@@ -1,0 +1,39 @@
+# This policy uses the tfconfig import to prevent providers from being declared
+# in non-root modules, aligning with the best practices given in:
+# https://www.terraform.io/docs/configuration/modules.html
+
+##### Imports #####
+import "tfconfig"
+import "strings"
+
+##### Functions #####
+
+# Prevent providers in non-root modules
+prevent_non_root_providers = func() {
+
+  validated = true
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Check non-root modules
+    if length(path) > 0 {
+      # Iterate over providers of given type in module
+      providers = tfconfig.module(path).providers
+      if length(providers) > 0 {
+        print("Module module." + strings.join(path, ".module.") +
+              " has providers.")
+        validated = false
+      }
+    }
+  }
+
+  return validated
+}
+
+##### Rules #####
+
+# Main rule
+providers_validated = prevent_non_root_providers()
+main = rule {
+  providers_validated
+}
