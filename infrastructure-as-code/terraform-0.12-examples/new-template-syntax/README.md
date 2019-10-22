@@ -15,7 +15,7 @@ EOT
 }
 ```
 
-Note that use of `%{ for name in var.names ~}` to iterated through the names in the names variable, the injection of each name with `${name}`, and the end of the for loop with `%{ endfor ~}`.
+Note the use of `%{ for name in var.names ~}` to iterate through the names in the names variable, the injection of each name with `${name}`, and the end of the for loop with `%{ endfor ~}`.
 
 The strip markers (`~`) in this example prevent excessive newlines and other whitespaces from being output. We include a blank line before the new template to make sure the first name appears on a new line.
 
