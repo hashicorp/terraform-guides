@@ -17,6 +17,15 @@ restrict_cost_and_percentage_increase = func(limit, max_percent) {
 
   validated = true
 
+  # Check whether cost estimate is available
+  # It should be for Terraform 0.12.x
+  # It should not be for Terraform 0.11.x
+  if tfrun.cost_estimate else null is null {
+    print("No cost estimates available")
+    # Allow the policy to pass
+    return true
+  }
+
   # Determine cost data
   prior_cost = decimal.new(tfrun.cost_estimate.prior_monthly_cost)
   proposed_cost = decimal.new(tfrun.cost_estimate.proposed_monthly_cost)
