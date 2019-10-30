@@ -1,0 +1,15 @@
+import "strings"
+import "types"
+
+workspace = {
+	"auto_apply":  false,
+	"description": null,
+	"name":        "gcp-compute-instance",
+	"vcs_repo": {
+		"branch":             "master",
+		"display_identifier": "rberlind/gcp_compute_instance",
+		"identifier":         "rberlind/gcp_compute_instance",
+		"ingress_submodules": false,
+	},
+	"working_directory": "",
+}
