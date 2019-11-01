@@ -10,30 +10,23 @@ _modules = {
 				"bucket": {
 					0: {
 						"applied": {
-							"acceleration_status": "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"acl":                         "private",
-							"arn":                         "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"bucket":                      "roger-012-test",
-							"bucket_domain_name":          "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"bucket_regional_domain_name": "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"force_destroy":               false,
-							"hosted_zone_id":              "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"id":                          "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"logging": [
-								{
-									"target_bucket": "roger-bucket",
-									"target_prefix": "",
-								},
-							],
-							"region":        "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"request_payer": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"acl":                       "public-read",
+							"bucket":                    "roger-012-test",
+							"bucket_prefix":             null,
+							"cors_rule":                 [],
+							"force_destroy":             false,
+							"lifecycle_rule":            [],
+							"logging":                   [],
+							"object_lock_configuration": [],
+							"policy":                    null,
+							"replication_configuration": [],
 							"server_side_encryption_configuration": [
 								{
 									"rule": [
 										{
 											"apply_server_side_encryption_by_default": [
 												{
-													"kms_master_key_id": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+													"kms_master_key_id": null,
 													"sse_algorithm":     "AES256",
 												},
 											],
@@ -42,25 +35,10 @@ _modules = {
 								},
 							],
 							"tags": {
-								"Owner":            "roger@hashicorp.com",
-								"application_id":   "456",
-								"created_by":       "roger",
-								"data_class":       "protected",
-								"description":      "roger",
-								"environment":      "dev",
-								"name":             "Roger Test Bucket",
-								"stack_name":       "roger",
-								"termination_date": "12/25/2019",
-								"website":          true,
+								"Owner": "roger@hashicorp.com",
+								"name":  "Roger Test Bucket",
 							},
-							"versioning": [
-								{
-									"enabled":    true,
-									"mfa_delete": true,
-								},
-							],
-							"website_domain":   "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"website_endpoint": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"website": [],
 						},
 						"destroy": false,
 						"diff": {
@@ -71,7 +49,7 @@ _modules = {
 							},
 							"acl": {
 								"computed": false,
-								"new":      "private",
+								"new":      "public-read",
 								"old":      "",
 							},
 							"arn": {
@@ -89,9 +67,19 @@ _modules = {
 								"new":      "",
 								"old":      "",
 							},
+							"bucket_prefix": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
 							"bucket_regional_domain_name": {
 								"computed": true,
 								"new":      "",
+								"old":      "",
+							},
+							"cors_rule.#": {
+								"computed": false,
+								"new":      "0",
 								"old":      "",
 							},
 							"force_destroy": {
@@ -109,17 +97,22 @@ _modules = {
 								"new":      "",
 								"old":      "",
 							},
+							"lifecycle_rule.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
 							"logging.#": {
 								"computed": false,
-								"new":      "1",
+								"new":      "0",
 								"old":      "",
 							},
-							"logging.2040212525.target_bucket": {
+							"object_lock_configuration.#": {
 								"computed": false,
-								"new":      "roger-bucket",
+								"new":      "0",
 								"old":      "",
 							},
-							"logging.2040212525.target_prefix": {
+							"policy": {
 								"computed": false,
 								"new":      "",
 								"old":      "",
@@ -127,6 +120,11 @@ _modules = {
 							"region": {
 								"computed": true,
 								"new":      "",
+								"old":      "",
+							},
+							"replication_configuration.#": {
+								"computed": false,
+								"new":      "0",
 								"old":      "",
 							},
 							"request_payer": {
@@ -139,7 +137,17 @@ _modules = {
 								"new":      "1",
 								"old":      "",
 							},
+							"server_side_encryption_configuration.0.%": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
 							"server_side_encryption_configuration.0.rule.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"server_side_encryption_configuration.0.rule.0.%": {
 								"computed": false,
 								"new":      "1",
 								"old":      "",
@@ -149,9 +157,14 @@ _modules = {
 								"new":      "1",
 								"old":      "",
 							},
+							"server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
 							"server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.kms_master_key_id": {
 								"computed": false,
-								"new":      "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+								"new":      "",
 								"old":      "",
 							},
 							"server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm": {
@@ -161,7 +174,7 @@ _modules = {
 							},
 							"tags.%": {
 								"computed": false,
-								"new":      "10",
+								"new":      "2",
 								"old":      "",
 							},
 							"tags.Owner": {
@@ -169,64 +182,19 @@ _modules = {
 								"new":      "roger@hashicorp.com",
 								"old":      "",
 							},
-							"tags.application_id": {
-								"computed": false,
-								"new":      "456",
-								"old":      "",
-							},
-							"tags.created_by": {
-								"computed": false,
-								"new":      "roger",
-								"old":      "",
-							},
-							"tags.data_class": {
-								"computed": false,
-								"new":      "protected",
-								"old":      "",
-							},
-							"tags.description": {
-								"computed": false,
-								"new":      "roger",
-								"old":      "",
-							},
-							"tags.environment": {
-								"computed": false,
-								"new":      "dev",
-								"old":      "",
-							},
 							"tags.name": {
 								"computed": false,
 								"new":      "Roger Test Bucket",
 								"old":      "",
 							},
-							"tags.stack_name": {
-								"computed": false,
-								"new":      "roger",
-								"old":      "",
-							},
-							"tags.termination_date": {
-								"computed": false,
-								"new":      "12/25/2019",
-								"old":      "",
-							},
-							"tags.website": {
-								"computed": false,
-								"new":      "true",
-								"old":      "",
-							},
 							"versioning.#": {
-								"computed": false,
-								"new":      "1",
+								"computed": true,
+								"new":      "",
 								"old":      "",
 							},
-							"versioning.0.enabled": {
+							"website.#": {
 								"computed": false,
-								"new":      "true",
-								"old":      "",
-							},
-							"versioning.0.mfa_delete": {
-								"computed": false,
-								"new":      "true",
+								"new":      "0",
 								"old":      "",
 							},
 							"website_domain": {
@@ -240,6 +208,7 @@ _modules = {
 								"old":      "",
 							},
 						},
+						"requires_new": false,
 					},
 				},
 			},
@@ -251,11 +220,11 @@ module_paths = [
 	[],
 ]
 
-terraform_version = "0.11.14"
+terraform_version = "0.12.13"
 
 variables = {
 	"aws_region":  "us-east-1",
-	"bucket_acl":  "public-read",
+	"bucket_acl":  "private",
 	"bucket_name": "roger-012-test",
 }
 

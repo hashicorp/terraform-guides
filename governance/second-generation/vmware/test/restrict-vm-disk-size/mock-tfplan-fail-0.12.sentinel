@@ -10,92 +10,123 @@ _modules = {
 				"vm": {
 					0: {
 						"applied": {
-							"boot_retry_delay":   "10000",
-							"change_version":     "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"cpu_limit":          "-1",
-							"cpu_share_count":    "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"cpu_share_level":    "normal",
-							"datastore_id":       "datastore-10",
-							"default_ip_address": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"alternate_guest_name":             null,
+							"annotation":                       null,
+							"boot_delay":                       null,
+							"boot_retry_delay":                 10000,
+							"boot_retry_enabled":               null,
+							"cdrom":                            [],
+							"clone":                            [],
+							"cpu_hot_add_enabled":              null,
+							"cpu_hot_remove_enabled":           null,
+							"cpu_limit":                        -1,
+							"cpu_performance_counters_enabled": null,
+							"cpu_reservation":                  null,
+							"cpu_share_level":                  "normal",
+							"custom_attributes":                null,
+							"datastore_cluster_id":             null,
+							"datastore_id":                     "datastore-10",
 							"disk": [
 								{
 									"attach":           false,
 									"datastore_id":     "<computed>",
-									"device_address":   "74D93920-ED26-11E3-AC10-0800200C9A66",
 									"disk_mode":        "persistent",
 									"disk_sharing":     "sharingNone",
 									"eagerly_scrub":    false,
-									"io_limit":         "-1",
-									"io_reservation":   "0",
-									"io_share_count":   "0",
+									"io_limit":         -1,
+									"io_reservation":   0,
+									"io_share_count":   0,
 									"io_share_level":   "normal",
 									"keep_on_remove":   false,
-									"key":              "0",
+									"key":              0,
 									"label":            "disk0",
-									"path":             "74D93920-ED26-11E3-AC10-0800200C9A66",
-									"size":             "200",
+									"name":             null,
+									"size":             200,
 									"thin_provisioned": true,
-									"unit_number":      "0",
-									"uuid":             "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"unit_number":      0,
 									"write_through":    false,
 								},
 							],
-							"ept_rvi_mode":         "automatic",
-							"firmware":             "bios",
-							"force_power_off":      true,
-							"guest_id":             "other3xLinux64Guest",
-							"guest_ip_addresses":   "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"host_system_id":       "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"hv_mode":              "hvAuto",
-							"id":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"imported":             "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"latency_sensitivity":  "normal",
-							"memory":               "16384",
-							"memory_limit":         "-1",
-							"memory_share_count":   "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"memory_share_level":   "normal",
-							"migrate_wait_timeout": "30",
-							"moid":                 "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"name":                 "terraform-roger",
+							"efi_secure_boot_enabled": null,
+							"enable_disk_uuid":        null,
+							"enable_logging":          null,
+							"ept_rvi_mode":            "automatic",
+							"extra_config":            null,
+							"firmware":                "bios",
+							"folder":                  null,
+							"force_power_off":         true,
+							"guest_id":                "other3xLinux64Guest",
+							"hv_mode":                 "hvAuto",
+							"ignored_guest_ips":       null,
+							"latency_sensitivity":     "normal",
+							"memory":                  1024,
+							"memory_hot_add_enabled":  null,
+							"memory_limit":            -1,
+							"memory_reservation":      null,
+							"memory_share_level":      "normal",
+							"migrate_wait_timeout":    30,
+							"name":                    "terraform-roger",
+							"nested_hv_enabled":       null,
 							"network_interface": [
 								{
 									"adapter_type":          "vmxnet3",
-									"bandwidth_limit":       "-1",
-									"bandwidth_reservation": "0",
-									"bandwidth_share_count": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"bandwidth_limit":       -1,
+									"bandwidth_reservation": 0,
 									"bandwidth_share_level": "normal",
-									"device_address":        "74D93920-ED26-11E3-AC10-0800200C9A66",
-									"key":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
-									"mac_address":           "74D93920-ED26-11E3-AC10-0800200C9A66",
 									"network_id":            "network-11",
+									"use_static_mac":        null,
 								},
 							],
-							"num_cores_per_socket":                    "1",
-							"num_cpus":                                "8",
-							"reboot_required":                         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"num_cores_per_socket":                    1,
+							"num_cpus":                                2,
 							"resource_pool_id":                        "resgroup-17",
 							"run_tools_scripts_after_power_on":        true,
 							"run_tools_scripts_after_resume":          true,
+							"run_tools_scripts_before_guest_reboot":   null,
 							"run_tools_scripts_before_guest_shutdown": true,
 							"run_tools_scripts_before_guest_standby":  true,
 							"scsi_bus_sharing":                        "noSharing",
-							"scsi_controller_count":                   "1",
+							"scsi_controller_count":                   1,
 							"scsi_type":                               "pvscsi",
-							"shutdown_wait_timeout":                   "3",
+							"shutdown_wait_timeout":                   3,
 							"swap_placement_policy":                   "inherit",
-							"uuid":                                    "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"vapp_transport":                          "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"vmware_tools_status":                     "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"vmx_path":                                "74D93920-ED26-11E3-AC10-0800200C9A66",
-							"wait_for_guest_ip_timeout":               "0",
-							"wait_for_guest_net_routable":             false,
-							"wait_for_guest_net_timeout":              "0",
+							"sync_time_with_host":                     null,
+							"tags":                                    null,
+							"vapp":                                    [],
+							"wait_for_guest_ip_timeout":   0,
+							"wait_for_guest_net_routable": false,
+							"wait_for_guest_net_timeout":  0,
 						},
 						"destroy": false,
 						"diff": {
+							"alternate_guest_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"annotation": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_delay": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
 							"boot_retry_delay": {
 								"computed": false,
 								"new":      "10000",
+								"old":      "",
+							},
+							"boot_retry_enabled": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"cdrom.#": {
+								"computed": false,
+								"new":      "0",
 								"old":      "",
 							},
 							"change_version": {
@@ -103,9 +134,34 @@ _modules = {
 								"new":      "",
 								"old":      "",
 							},
+							"clone.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"cpu_hot_add_enabled": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"cpu_hot_remove_enabled": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
 							"cpu_limit": {
 								"computed": false,
 								"new":      "-1",
+								"old":      "",
+							},
+							"cpu_performance_counters_enabled": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"cpu_reservation": {
+								"computed": false,
+								"new":      "",
 								"old":      "",
 							},
 							"cpu_share_count": {
@@ -116,6 +172,16 @@ _modules = {
 							"cpu_share_level": {
 								"computed": false,
 								"new":      "normal",
+								"old":      "",
+							},
+							"custom_attributes": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"datastore_cluster_id": {
+								"computed": false,
+								"new":      "",
 								"old":      "",
 							},
 							"datastore_id": {
@@ -131,101 +197,26 @@ _modules = {
 							"disk.#": {
 								"computed": false,
 								"new":      "1",
-								"old":      "0",
-							},
-							"disk.0.attach": {
-								"computed": false,
-								"new":      "false",
 								"old":      "",
 							},
-							"disk.0.datastore_id": {
-								"computed": false,
-								"new":      "<computed>",
-								"old":      "",
-							},
-							"disk.0.device_address": {
+							"disk.0.%": {
 								"computed": true,
 								"new":      "",
 								"old":      "",
 							},
-							"disk.0.disk_mode": {
+							"efi_secure_boot_enabled": {
 								"computed": false,
-								"new":      "persistent",
-								"old":      "",
-							},
-							"disk.0.disk_sharing": {
-								"computed": false,
-								"new":      "sharingNone",
-								"old":      "",
-							},
-							"disk.0.eagerly_scrub": {
-								"computed": false,
-								"new":      "false",
-								"old":      "",
-							},
-							"disk.0.io_limit": {
-								"computed": false,
-								"new":      "-1",
-								"old":      "",
-							},
-							"disk.0.io_reservation": {
-								"computed": false,
-								"new":      "0",
-								"old":      "",
-							},
-							"disk.0.io_share_count": {
-								"computed": false,
-								"new":      "0",
-								"old":      "",
-							},
-							"disk.0.io_share_level": {
-								"computed": false,
-								"new":      "normal",
-								"old":      "",
-							},
-							"disk.0.keep_on_remove": {
-								"computed": false,
-								"new":      "false",
-								"old":      "",
-							},
-							"disk.0.key": {
-								"computed": false,
-								"new":      "0",
-								"old":      "",
-							},
-							"disk.0.label": {
-								"computed": false,
-								"new":      "disk0",
-								"old":      "",
-							},
-							"disk.0.path": {
-								"computed": true,
 								"new":      "",
 								"old":      "",
 							},
-							"disk.0.size": {
+							"enable_disk_uuid": {
 								"computed": false,
-								"new":      "200",
-								"old":      "",
-							},
-							"disk.0.thin_provisioned": {
-								"computed": false,
-								"new":      "true",
-								"old":      "",
-							},
-							"disk.0.unit_number": {
-								"computed": false,
-								"new":      "0",
-								"old":      "",
-							},
-							"disk.0.uuid": {
-								"computed": true,
 								"new":      "",
 								"old":      "",
 							},
-							"disk.0.write_through": {
+							"enable_logging": {
 								"computed": false,
-								"new":      "false",
+								"new":      "",
 								"old":      "",
 							},
 							"ept_rvi_mode": {
@@ -233,9 +224,19 @@ _modules = {
 								"new":      "automatic",
 								"old":      "",
 							},
+							"extra_config": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
 							"firmware": {
 								"computed": false,
 								"new":      "bios",
+								"old":      "",
+							},
+							"folder": {
+								"computed": false,
+								"new":      "",
 								"old":      "",
 							},
 							"force_power_off": {
@@ -268,6 +269,11 @@ _modules = {
 								"new":      "",
 								"old":      "",
 							},
+							"ignored_guest_ips": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
 							"imported": {
 								"computed": true,
 								"new":      "",
@@ -280,12 +286,22 @@ _modules = {
 							},
 							"memory": {
 								"computed": false,
-								"new":      "16384",
+								"new":      "1024",
+								"old":      "",
+							},
+							"memory_hot_add_enabled": {
+								"computed": false,
+								"new":      "",
 								"old":      "",
 							},
 							"memory_limit": {
 								"computed": false,
 								"new":      "-1",
+								"old":      "",
+							},
+							"memory_reservation": {
+								"computed": false,
+								"new":      "",
 								"old":      "",
 							},
 							"memory_share_count": {
@@ -313,54 +329,19 @@ _modules = {
 								"new":      "terraform-roger",
 								"old":      "",
 							},
+							"nested_hv_enabled": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
 							"network_interface.#": {
 								"computed": false,
 								"new":      "1",
-								"old":      "0",
-							},
-							"network_interface.0.adapter_type": {
-								"computed": false,
-								"new":      "vmxnet3",
 								"old":      "",
 							},
-							"network_interface.0.bandwidth_limit": {
-								"computed": false,
-								"new":      "-1",
-								"old":      "",
-							},
-							"network_interface.0.bandwidth_reservation": {
-								"computed": false,
-								"new":      "0",
-								"old":      "",
-							},
-							"network_interface.0.bandwidth_share_count": {
+							"network_interface.0.%": {
 								"computed": true,
 								"new":      "",
-								"old":      "",
-							},
-							"network_interface.0.bandwidth_share_level": {
-								"computed": false,
-								"new":      "normal",
-								"old":      "",
-							},
-							"network_interface.0.device_address": {
-								"computed": true,
-								"new":      "",
-								"old":      "",
-							},
-							"network_interface.0.key": {
-								"computed": true,
-								"new":      "",
-								"old":      "",
-							},
-							"network_interface.0.mac_address": {
-								"computed": true,
-								"new":      "",
-								"old":      "",
-							},
-							"network_interface.0.network_id": {
-								"computed": false,
-								"new":      "network-11",
 								"old":      "",
 							},
 							"num_cores_per_socket": {
@@ -370,7 +351,7 @@ _modules = {
 							},
 							"num_cpus": {
 								"computed": false,
-								"new":      "8",
+								"new":      "2",
 								"old":      "",
 							},
 							"reboot_required": {
@@ -391,6 +372,11 @@ _modules = {
 							"run_tools_scripts_after_resume": {
 								"computed": false,
 								"new":      "true",
+								"old":      "",
+							},
+							"run_tools_scripts_before_guest_reboot": {
+								"computed": false,
+								"new":      "",
 								"old":      "",
 							},
 							"run_tools_scripts_before_guest_shutdown": {
@@ -428,9 +414,24 @@ _modules = {
 								"new":      "inherit",
 								"old":      "",
 							},
+							"sync_time_with_host": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"tags": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
 							"uuid": {
 								"computed": true,
 								"new":      "",
+								"old":      "",
+							},
+							"vapp.#": {
+								"computed": false,
+								"new":      "0",
 								"old":      "",
 							},
 							"vapp_transport.#": {
@@ -464,6 +465,7 @@ _modules = {
 								"old":      "",
 							},
 						},
+						"requires_new": false,
 					},
 				},
 			},
@@ -475,7 +477,7 @@ module_paths = [
 	[],
 ]
 
-tterraform_version = "0.12.3"
+terraform_version = "0.12.13"
 
 variables = {}
 
