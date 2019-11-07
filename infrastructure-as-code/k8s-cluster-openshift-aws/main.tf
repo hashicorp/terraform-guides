@@ -203,6 +203,6 @@ resource "vault_kubernetes_auth_backend_role" "role" {
   role_name = "demo"
   bound_service_account_names = ["cats-and-dogs"]
   bound_service_account_namespaces = ["default", "cats-and-dogs"]
-  policies = ["${var.vault_user}"]
-  ttl = 7200
+  token_policies = ["${var.vault_user}"]
+  token_ttl = 7200
 }
