@@ -1,0 +1,8 @@
+{
+  "mock": {
+    "tfrun": "mock-tfrun-pass-no-estimates-0.12.sentinel"
+  },
+  "test": {
+    "main": true
+  }
+}

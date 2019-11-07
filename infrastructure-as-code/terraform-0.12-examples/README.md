@@ -6,6 +6,7 @@ These examples have been tested with terraform 0.12.3.
 The examples are:
 1. [First Class Expressions](./first-class-expressions)
 1. [For Expressions](./for-expressions)
+1. [For_each for Resources](./for-each-for-resources)
 1. [Dynamic Blocks and Splat Expresions](./dynamic-blocks-and-splat-expressions)
 1. [Advanced Dynamic Blocks](./advanced-dynamic-blocks)
 1. [Rich Value Types](./rich-value-types)
@@ -44,6 +45,9 @@ See the example's [README.md](./first-class-expressions/README.md).
 
 ## For Expressions Example
 See the example's [README.md](./for-expressions/README.md).
+
+## For_each for Resources Example
+See the example's [README.md](./for-each-for-resources/README.md).
 
 ## Dynamic Blocks and Splat Expressions Example
 See the example's [README.md](./dynamic-blocks-and-splat-expressions/README.md).

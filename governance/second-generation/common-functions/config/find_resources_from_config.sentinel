@@ -8,7 +8,7 @@ find_resources_from_config = func(type) {
     # Iterate over the named resources of desired type in the module
     for tfconfig.module(path).resources[type] else {} as name, r {
 
-      # Get the address of the instance
+      # Get the address of the resource
       if length(path) == 0 {
         # root module
         address = type + "." + name

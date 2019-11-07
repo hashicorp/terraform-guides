@@ -1,0 +1,452 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_subnet": {
+				"sentinel_demo_subnet": {
+					0: {
+						"applied": {
+							"assign_ipv6_address_on_creation": false,
+							"availability_zone":               "eu-west-2a",
+							"cidr_block":                      "10.1.1.0/24",
+							"map_public_ip_on_launch":         true,
+							"tags": {
+								"Name":  "sentinel-demo",
+								"owner": "Hashicorp",
+							},
+							"timeouts": null,
+						},
+						"destroy": false,
+						"diff": {
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"assign_ipv6_address_on_creation": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"availability_zone": {
+								"computed": false,
+								"new":      "eu-west-2a",
+								"old":      "",
+							},
+							"availability_zone_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"cidr_block": {
+								"computed": false,
+								"new":      "10.1.1.0/24",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_block": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_block_association_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"map_public_ip_on_launch": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"owner_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
+							"tags.Name": {
+								"computed": false,
+								"new":      "sentinel-demo",
+								"old":      "",
+							},
+							"tags.owner": {
+								"computed": false,
+								"new":      "Hashicorp",
+								"old":      "",
+							},
+							"timeouts": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"vpc_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+					1: {
+						"applied": {
+							"assign_ipv6_address_on_creation": false,
+							"availability_zone":               "eu-west-2b",
+							"cidr_block":                      "10.1.2.0/24",
+							"map_public_ip_on_launch":         true,
+							"tags": {
+								"Name":  "sentinel-demo",
+								"owner": "Hashicorp",
+							},
+							"timeouts": null,
+						},
+						"destroy": false,
+						"diff": {
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"assign_ipv6_address_on_creation": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"availability_zone": {
+								"computed": false,
+								"new":      "eu-west-2b",
+								"old":      "",
+							},
+							"availability_zone_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"cidr_block": {
+								"computed": false,
+								"new":      "10.1.2.0/24",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_block": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_block_association_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"map_public_ip_on_launch": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"owner_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
+							"tags.Name": {
+								"computed": false,
+								"new":      "sentinel-demo",
+								"old":      "",
+							},
+							"tags.owner": {
+								"computed": false,
+								"new":      "Hashicorp",
+								"old":      "",
+							},
+							"timeouts": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"vpc_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+					2: {
+						"applied": {
+							"assign_ipv6_address_on_creation": false,
+							"availability_zone":               "eu-west-2c",
+							"cidr_block":                      "10.1.3.0/24",
+							"map_public_ip_on_launch":         true,
+							"tags": {
+								"Name":  "sentinel-demo",
+								"owner": "Hashicorp",
+							},
+							"timeouts": null,
+						},
+						"destroy": false,
+						"diff": {
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"assign_ipv6_address_on_creation": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"availability_zone": {
+								"computed": false,
+								"new":      "eu-west-2c",
+								"old":      "",
+							},
+							"availability_zone_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"cidr_block": {
+								"computed": false,
+								"new":      "10.1.3.0/24",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_block": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_block_association_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"map_public_ip_on_launch": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"owner_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
+							"tags.Name": {
+								"computed": false,
+								"new":      "sentinel-demo",
+								"old":      "",
+							},
+							"tags.owner": {
+								"computed": false,
+								"new":      "Hashicorp",
+								"old":      "",
+							},
+							"timeouts": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"vpc_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"aws_vpc": {
+				"sentinel_demo_vpc": {
+					0: {
+						"applied": {
+							"assign_generated_ipv6_cidr_block": false,
+							"cidr_block":                       "10.1.0.0/16",
+							"enable_dns_hostnames":             true,
+							"enable_dns_support":               true,
+							"instance_tenancy":                 "default",
+							"tags": {
+								"Name":  "sentinel-demo",
+								"owner": "Hashicorp",
+							},
+						},
+						"destroy": false,
+						"diff": {
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"assign_generated_ipv6_cidr_block": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"cidr_block": {
+								"computed": false,
+								"new":      "10.1.0.0/16",
+								"old":      "",
+							},
+							"default_network_acl_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"default_route_table_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"default_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"dhcp_options_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"enable_classiclink": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"enable_classiclink_dns_support": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"enable_dns_hostnames": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"enable_dns_support": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_tenancy": {
+								"computed": false,
+								"new":      "default",
+								"old":      "",
+							},
+							"ipv6_association_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_block": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"main_route_table_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"owner_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
+							"tags.Name": {
+								"computed": false,
+								"new":      "sentinel-demo",
+								"old":      "",
+							},
+							"tags.owner": {
+								"computed": false,
+								"new":      "Hashicorp",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.12.9"
+
+variables = {
+	"cidr_blocks": [
+		"10.1.1.0/24",
+		"10.1.2.0/24",
+		"10.1.3.0/24",
+	],
+	"namespace":      "sentinel-demo",
+	"owner":          "Hashicorp",
+	"region":         "eu-west-2",
+	"vpc_cidr_block": "10.1.0.0/16",
+}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

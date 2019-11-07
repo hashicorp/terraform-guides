@@ -13,7 +13,7 @@ validate_attribute_has_value = func(type, attribute, value) {
     # Skip resource instances that are being destroyed
     # to avoid unnecessary policy violations.
     # Used to be: if length(r.diff) == 0
-    if r.destroy {
+    if r.destroy and not r.requires_new {
       print("Skipping resource", address, "that is being destroyed.")
       continue
     }

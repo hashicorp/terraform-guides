@@ -1,0 +1,654 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"azurerm_network_interface": {
+				"main": {
+					0: {
+						"destroy": true,
+						"diff": {
+							"applied_dns_servers.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"dns_servers.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"enable_accelerated_networking": {
+								"computed": false,
+								"new":      "",
+								"old":      "false",
+							},
+							"enable_ip_forwarding": {
+								"computed": false,
+								"new":      "",
+								"old":      "false",
+							},
+							"id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Network/networkInterfaces/sehangout-azurevmdemo-nic",
+							},
+							"internal_dns_name_label": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"internal_fqdn": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"ip_configuration.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"ip_configuration.0.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "11",
+							},
+							"ip_configuration.0.application_gateway_backend_address_pools_ids.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"ip_configuration.0.application_security_group_ids.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"ip_configuration.0.load_balancer_backend_address_pools_ids.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"ip_configuration.0.load_balancer_inbound_nat_rules_ids.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"ip_configuration.0.name": {
+								"computed": false,
+								"new":      "",
+								"old":      "testconfiguration1",
+							},
+							"ip_configuration.0.primary": {
+								"computed": false,
+								"new":      "",
+								"old":      "true",
+							},
+							"ip_configuration.0.private_ip_address": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"ip_configuration.0.private_ip_address_allocation": {
+								"computed": false,
+								"new":      "",
+								"old":      "dynamic",
+							},
+							"ip_configuration.0.private_ip_address_version": {
+								"computed": false,
+								"new":      "",
+								"old":      "IPv4",
+							},
+							"ip_configuration.0.public_ip_address_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"ip_configuration.0.subnet_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Network/virtualNetworks/sehangout-azurevmdemo-network/subnets/internal",
+							},
+							"location": {
+								"computed": false,
+								"new":      "",
+								"old":      "eastus",
+							},
+							"mac_address": {
+								"computed": false,
+								"new":      "",
+								"old":      "00-0D-3A-16-7C-69",
+							},
+							"name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-nic",
+							},
+							"network_security_group_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"private_ip_address": {
+								"computed": false,
+								"new":      "",
+								"old":      "10.0.2.4",
+							},
+							"private_ip_addresses.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"private_ip_addresses.0": {
+								"computed": false,
+								"new":      "",
+								"old":      "10.0.2.4",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-resources",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"virtual_machine_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Compute/virtualMachines/sehangout-azurevmdemo-vm",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_resource_group": {
+				"main": {
+					0: {
+						"destroy": true,
+						"diff": {
+							"id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources",
+							},
+							"location": {
+								"computed": false,
+								"new":      "",
+								"old":      "eastus",
+							},
+							"name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-resources",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_subnet": {
+				"internal": {
+					0: {
+						"destroy": true,
+						"diff": {
+							"address_prefix": {
+								"computed": false,
+								"new":      "",
+								"old":      "10.0.2.0/24",
+							},
+							"delegation.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Network/virtualNetworks/sehangout-azurevmdemo-network/subnets/internal",
+							},
+							"ip_configurations.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"ip_configurations.0": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Network/networkInterfaces/sehangout-azurevmdemo-nic/ipConfigurations/testconfiguration1",
+							},
+							"name": {
+								"computed": false,
+								"new":      "",
+								"old":      "internal",
+							},
+							"network_security_group_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-resources",
+							},
+							"route_table_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"service_endpoints.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"virtual_network_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-network",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_virtual_machine": {
+				"demo": {
+					0: {
+						"destroy": true,
+						"diff": {
+							"additional_capabilities.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"availability_set_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_diagnostics.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"delete_data_disks_on_termination": {
+								"computed": false,
+								"new":      "",
+								"old":      "true",
+							},
+							"delete_os_disk_on_termination": {
+								"computed": false,
+								"new":      "",
+								"old":      "true",
+							},
+							"id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Compute/virtualMachines/sehangout-azurevmdemo-vm",
+							},
+							"identity.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"license_type": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"location": {
+								"computed": false,
+								"new":      "",
+								"old":      "eastus",
+							},
+							"name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-vm",
+							},
+							"network_interface_ids.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"network_interface_ids.0": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Network/networkInterfaces/sehangout-azurevmdemo-nic",
+							},
+							"os_profile.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"os_profile.0.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "4",
+							},
+							"os_profile.0.admin_password": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"os_profile.0.admin_username": {
+								"computed": false,
+								"new":      "",
+								"old":      "testadmin",
+							},
+							"os_profile.0.computer_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "hostname",
+							},
+							"os_profile.0.custom_data": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"os_profile_linux_config.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"os_profile_linux_config.0.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "2",
+							},
+							"os_profile_linux_config.0.disable_password_authentication": {
+								"computed": false,
+								"new":      "",
+								"old":      "false",
+							},
+							"os_profile_linux_config.0.ssh_keys.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"os_profile_secrets.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"os_profile_windows_config.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"plan.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"primary_network_interface_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"proximity_placement_group_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-resources",
+							},
+							"storage_data_disk.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"storage_image_reference.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"storage_image_reference.0.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "5",
+							},
+							"storage_image_reference.0.id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_image_reference.0.offer": {
+								"computed": false,
+								"new":      "",
+								"old":      "UbuntuServer",
+							},
+							"storage_image_reference.0.publisher": {
+								"computed": false,
+								"new":      "",
+								"old":      "Canonical",
+							},
+							"storage_image_reference.0.sku": {
+								"computed": false,
+								"new":      "",
+								"old":      "16.04-LTS",
+							},
+							"storage_image_reference.0.version": {
+								"computed": false,
+								"new":      "",
+								"old":      "latest",
+							},
+							"storage_os_disk.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"storage_os_disk.0.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "10",
+							},
+							"storage_os_disk.0.caching": {
+								"computed": false,
+								"new":      "",
+								"old":      "ReadWrite",
+							},
+							"storage_os_disk.0.create_option": {
+								"computed": false,
+								"new":      "",
+								"old":      "FromImage",
+							},
+							"storage_os_disk.0.disk_size_gb": {
+								"computed": false,
+								"new":      "",
+								"old":      "30",
+							},
+							"storage_os_disk.0.image_uri": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_os_disk.0.managed_disk_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Compute/disks/myosdisk1",
+							},
+							"storage_os_disk.0.managed_disk_type": {
+								"computed": false,
+								"new":      "",
+								"old":      "Standard_LRS",
+							},
+							"storage_os_disk.0.name": {
+								"computed": false,
+								"new":      "",
+								"old":      "myosdisk1",
+							},
+							"storage_os_disk.0.os_type": {
+								"computed": false,
+								"new":      "",
+								"old":      "Linux",
+							},
+							"storage_os_disk.0.vhd_uri": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_os_disk.0.write_accelerator_enabled": {
+								"computed": false,
+								"new":      "",
+								"old":      "false",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"tags.environment": {
+								"computed": false,
+								"new":      "",
+								"old":      "staging",
+							},
+							"vm_size": {
+								"computed": false,
+								"new":      "",
+								"old":      "Basic_A0",
+							},
+							"zones.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_virtual_network": {
+				"main": {
+					0: {
+						"destroy": true,
+						"diff": {
+							"address_space.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"address_space.0": {
+								"computed": false,
+								"new":      "",
+								"old":      "10.0.0.0/16",
+							},
+							"ddos_protection_plan.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"dns_servers.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+							"id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Network/virtualNetworks/sehangout-azurevmdemo-network",
+							},
+							"location": {
+								"computed": false,
+								"new":      "",
+								"old":      "eastus",
+							},
+							"name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-network",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "",
+								"old":      "sehangout-azurevmdemo-resources",
+							},
+							"subnet.#": {
+								"computed": false,
+								"new":      "",
+								"old":      "1",
+							},
+							"subnet.0.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "4",
+							},
+							"subnet.0.address_prefix": {
+								"computed": false,
+								"new":      "",
+								"old":      "10.0.2.0/24",
+							},
+							"subnet.0.id": {
+								"computed": false,
+								"new":      "",
+								"old":      "/subscriptions/14692f20-9428-451b-8298-102ed4e39c2a/resourceGroups/sehangout-azurevmdemo-resources/providers/Microsoft.Network/virtualNetworks/sehangout-azurevmdemo-network/subnets/internal",
+							},
+							"subnet.0.name": {
+								"computed": false,
+								"new":      "",
+								"old":      "internal",
+							},
+							"subnet.0.security_group": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "",
+								"old":      "0",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.12.10"
+
+variables = {
+	"prefix":  "sehangout-azurevmdemo",
+	"vm_size": "Basic_A0",
+}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

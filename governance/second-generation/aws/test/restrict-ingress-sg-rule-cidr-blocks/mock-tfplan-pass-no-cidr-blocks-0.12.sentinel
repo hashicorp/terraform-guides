@@ -1,0 +1,271 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"aws_security_group": {
+				"allow_tls": {
+					0: {
+						"applied": {
+							"description": "Allow TLS inbound traffic",
+							"ingress": [
+								{
+									"cidr_blocks":      [],
+									"description":      "",
+									"from_port":        443,
+									"ipv6_cidr_blocks": [],
+									"prefix_list_ids":  [],
+									"protocol":         "tcp",
+									"security_groups":  [],
+									"self":             true,
+									"to_port":          443,
+								},
+							],
+							"name":                   "allow_tls",
+							"name_prefix":            null,
+							"revoke_rules_on_delete": false,
+							"tags": {
+								"Name": "allow_all",
+							},
+							"timeouts": null,
+						},
+						"destroy": false,
+						"diff": {
+							"arn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "Allow TLS inbound traffic",
+								"old":      "",
+							},
+							"egress.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ingress.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"ingress.0.%": {
+								"computed": false,
+								"new":      "9",
+								"old":      "",
+							},
+							"ingress.0.cidr_blocks.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.0.description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"ingress.0.from_port": {
+								"computed": false,
+								"new":      "443",
+								"old":      "",
+							},
+							"ingress.0.ipv6_cidr_blocks.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.0.prefix_list_ids.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.0.protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"ingress.0.security_groups.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"ingress.0.self": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"ingress.0.to_port": {
+								"computed": false,
+								"new":      "443",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "allow_tls",
+								"old":      "",
+							},
+							"name_prefix": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"owner_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"revoke_rules_on_delete": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"tags.Name": {
+								"computed": false,
+								"new":      "allow_all",
+								"old":      "",
+							},
+							"timeouts": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"vpc_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"aws_security_group_rule": {
+				"allow_all": {
+					0: {
+						"applied": {
+							"cidr_blocks":       null,
+							"description":       null,
+							"from_port":         0,
+							"ipv6_cidr_blocks":  null,
+							"prefix_list_ids":   null,
+							"protocol":          "tcp",
+							"security_group_id": "sg-008b502d0a24d0136",
+							"self":              true,
+							"to_port":           65535,
+							"type":              "ingress",
+						},
+						"destroy": false,
+						"diff": {
+							"cidr_blocks": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"description": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"from_port": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ipv6_cidr_blocks": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"prefix_list_ids": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"protocol": {
+								"computed": false,
+								"new":      "tcp",
+								"old":      "",
+							},
+							"security_group_id": {
+								"computed": false,
+								"new":      "sg-008b502d0a24d0136",
+								"old":      "",
+							},
+							"self": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"source_security_group_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"to_port": {
+								"computed": false,
+								"new":      "65535",
+								"old":      "",
+							},
+							"type": {
+								"computed": false,
+								"new":      "ingress",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.12.9"
+
+variables = {}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

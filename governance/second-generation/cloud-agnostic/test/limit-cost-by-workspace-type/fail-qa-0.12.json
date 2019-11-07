@@ -1,6 +1,6 @@
 {
   "mock": {
-    "tfplan": "mock-tfplan-fail-0.11.sentinel"
+    "tfrun": "mock-tfrun-fail-qa-0.12.sentinel"
   },
   "test": {
     "main": false

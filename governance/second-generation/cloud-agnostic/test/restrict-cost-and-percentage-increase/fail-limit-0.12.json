@@ -1,0 +1,8 @@
+{
+  "mock": {
+    "tfrun": "mock-tfrun-fail-limit-0.12.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}

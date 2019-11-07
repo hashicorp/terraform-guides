@@ -1,5 +1,5 @@
-# New Template Syntax
-The [New Template Syntax](./new-template-syntax) example illustrates how the new [Template Syntax](https://www.hashicorp.com/blog/terraform-0-12-template-syntax) can be used to support **if** conditionals and **for** expressions inside `%{}` template strings which are also referred to as directives.
+# New Template Syntax Example
+This example illustrates how the new [Template Syntax](https://www.hashicorp.com/blog/terraform-0-12-template-syntax) can be used to support **if** conditionals and **for** expressions inside `%{}` template strings which are also referred to as directives.
 
 The new template syntax can be used inside Terraform code just like the older `${}` interpolations. It can also be used inside template files loaded with the template_file data source provided that you use version 2.0 or higher of the Template Provider.
 
@@ -15,7 +15,7 @@ EOT
 }
 ```
 
-Note that use of `%{ for name in var.names ~}` to iterated through the names in the names variable, the injection of each name with `${name}`, and the end of the for loop with `%{ endfor ~}`.
+Note the use of `%{ for name in var.names ~}` to iterate through the names in the names variable, the injection of each name with `${name}`, and the end of the for loop with `%{ endfor ~}`.
 
 The strip markers (`~`) in this example prevent excessive newlines and other whitespaces from being output. We include a blank line before the new template to make sure the first name appears on a new line.
 

@@ -1,0 +1,27 @@
+# Find all variables using the tfconfig import
+# This returns a flat map of variables across all modules
+find_variables_in_config = func() {
+  variables = {}
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Iterate over the variables in the module
+    for tfconfig.module(path).variables else {} as name, v {
+
+      # Get the address of the variable
+      if length(path) == 0 {
+        # root module
+        address = name
+      } else {
+        # non-root module
+        address = "module." + strings.join(path, ".module.") + "." + name
+      }
+
+      # Add the variable to the variables map, setting the key to the address
+      variables[address] = v
+    }
+  }
+
+  return variables
+
+}

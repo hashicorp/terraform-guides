@@ -1,0 +1,174 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"modules": {
+			"first": {
+				"config":     {},
+				"references": {},
+				"source":     "./module",
+				"version":    "",
+			},
+		},
+		"outputs": {},
+		"providers": {
+			"aws": {
+				"alias": {
+					"": {
+						"config": {
+							"region": "us-east-2",
+						},
+						"references": {
+							"region": [],
+						},
+						"version": "",
+					},
+					"root-east": {
+						"config": {
+							"region": "us-east-1",
+						},
+						"references": {
+							"region": [],
+						},
+						"version": "",
+					},
+					"root-west": {
+						"config": {
+							"region": "us-west-1",
+						},
+						"references": {
+							"region": [],
+						},
+						"version": "",
+					},
+				},
+				"config": {
+					"region": "us-east-2",
+				},
+				"references": {
+					"region": [],
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"aws_instance": {
+				"web": {
+					"config": {
+						"ami":           "ami-2e1ef954",
+						"instance_type": "t2.micro",
+						"tags": {
+							"Name": "root module instance",
+						},
+					},
+					"provisioners": null,
+					"references": {
+						"ami":           [],
+						"instance_type": [],
+						"tags":          [],
+					},
+				},
+			},
+		},
+		"variables": {},
+	},
+
+	"module.first": {
+		"data": {},
+		"modules": {
+			"second": {
+				"config":     {},
+				"references": {},
+				"source":     "./module",
+				"version":    "",
+			},
+		},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"aws_instance": {
+				"web": {
+					"config": {
+						"ami":           "ami-2e1ef954",
+						"instance_type": "t2.micro",
+						"tags": {
+							"Name": "first module instance",
+						},
+					},
+					"provisioners": null,
+					"references": {
+						"ami":           [],
+						"instance_type": [],
+						"tags":          [],
+					},
+				},
+			},
+		},
+		"variables": {},
+	},
+
+	"module.first.module.second": {
+		"data":      {},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"aws_instance": {
+				"web": {
+					"config": {
+						"ami":           "ami-2e1ef954",
+						"instance_type": "t2.micro",
+						"tags": {
+							"Name": "second module instance",
+						},
+					},
+					"provisioners": null,
+					"references": {
+						"ami":           [],
+						"instance_type": [],
+						"tags":          [],
+					},
+				},
+			},
+		},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"first",
+	],
+	[
+		"first",
+		"second",
+	],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

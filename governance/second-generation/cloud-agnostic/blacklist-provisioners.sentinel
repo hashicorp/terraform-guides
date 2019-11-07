@@ -1,0 +1,83 @@
+# This policy uses the tfconfig import to prevent blacklisted provisioners
+# from being used
+
+##### Imports #####
+import "tfconfig"
+import "strings"
+
+##### Functions #####
+
+# Find all provisioners using the tfconfig import
+find_all_provisioners = func() {
+
+  provisioners = {}
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Iterate over the named resources in the module
+    for tfconfig.module(path).resources else {} as type, resources {
+      for resources as name, r {
+
+        # Check if the resource has provisioners
+        if r.provisioners else null is not null and length(r.provisioners) > 0 {
+
+          # Get the address of the resource
+          if length(path) == 0 {
+            # root module
+            address =  type + "." + name
+          } else {
+            # non-root module
+            address = "module." + strings.join(path, ".module.") + "." +
+                      type + "." + name
+          }
+
+          # Add the provisioners to the provisioners map, setting
+          # the key to the address with "-provisioner-<n>" appended
+          n = 0
+          for r.provisioners as p {
+            provisioners[address + "-provisioner-" + string(n)] = p
+            n += 1
+          }  // end provisioners loop
+
+        } // end null and length(r.provisioners)
+
+      } // end resource for loop
+    } // end type for loop
+  } // end modules for loop
+
+  return provisioners
+}
+
+# Validate that blacklisted provisioners are not present
+validate_provisioners = func(black_list) {
+
+  validated = true
+
+  # Get all provisioners from all resources
+  provisioners = find_all_provisioners()
+
+  # Loop through the provisioners
+  for provisioners as address, p {
+      if p["type"] in black_list {
+        resource_address = strings.split(address, "-")[0]
+        print(resource_address, "has provisioner of type", p["type"],
+              "that is in the black list:", black_list)
+        validated = false
+      }
+  }
+
+  return validated
+}
+
+##### Lists #####
+
+# List of blacklisted provisioners
+blacklisted_provisioners = ["local-exec", "remote-exec"]
+
+##### Rules #####
+
+# Main rule
+provisioners_validated = validate_provisioners(blacklisted_provisioners)
+main = rule {
+  provisioners_validated
+}

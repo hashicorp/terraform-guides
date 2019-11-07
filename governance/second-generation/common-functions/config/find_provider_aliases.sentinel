@@ -1,0 +1,34 @@
+# Find all providers aliases of given type using the tfconfig import
+find_provider_aliases = func(type) {
+
+  # We will find all provider aliases og given type from tfconfig,
+  # meaning providers.TYPE.alias.ALIAS
+  providers = {}
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Iterate over providers of given type in module
+    aliases = tfconfig.module(path).providers[type]["alias"] else {}
+    for aliases as alias, data {
+        # Change default alias ("") to "default"
+        if alias is "" {
+          alias = "default"
+        }
+
+        # Get the address of the provider alias
+        if length(path) == 0 {
+          # root module
+          address =  type + "." + alias
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + alias
+        }
+
+        providers[address] = data
+
+    } // end aliases loop
+  } // end module_paths loop
+
+  return providers
+}

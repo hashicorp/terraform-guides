@@ -1,0 +1,145 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"modules": {
+			"remote": {
+				"config": {},
+				"references": {
+					"private_key": [
+						"var.private_key",
+					],
+				},
+				"source":  "./module",
+				"version": "",
+			},
+		},
+		"outputs": {},
+		"providers": {
+			"aws": {
+				"alias": {},
+				"config": {
+					"region": "us-east-1",
+				},
+				"references": {
+					"region": [],
+				},
+				"version": "",
+			},
+		},
+		"resources": {
+			"null_resource": {
+				"no-provisioner": {
+					"config": {
+						"triggers": null,
+					},
+					"provisioners": null,
+					"references": {
+						"triggers": [],
+					},
+				},
+				"test-root": {
+					"config": {},
+					"provisioners": [
+						{
+							"config": {
+								"command": "pwd",
+							},
+							"references": {
+								"command": [],
+							},
+							"type": "local-exec",
+						},
+					],
+					"references": {},
+				},
+			},
+		},
+		"variables": {
+			"private_key": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+
+	"module.remote": {
+		"data": {
+			"aws_instance": {
+				"test": {
+					"config": {
+						"instance_id": "i-00039df5ae7c9e80b",
+					},
+					"provisioners": null,
+					"references": {
+						"instance_id": [],
+					},
+				},
+			},
+		},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {
+			"null_resource": {
+				"test-non-root": {
+					"config": {},
+					"provisioners": [
+						{
+							"config": {
+								"inline": [
+									"pwd",
+								],
+							},
+							"references": {
+								"inline": [],
+							},
+							"type": "remote-exec",
+						},
+					],
+					"references": {},
+				},
+			},
+		},
+		"variables": {
+			"private_key": {
+				"default":     null,
+				"description": "",
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"remote",
+	],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

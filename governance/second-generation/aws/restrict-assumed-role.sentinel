@@ -1,0 +1,161 @@
+# This policy restricts accounts that can be assumed by the AWS provider
+# It assumes that the role_arn is either a hard-coded value or a reference
+# to a Terraform variable
+
+#### Imports #####
+import "tfconfig"
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all providers aliases of given type using the tfconfig import
+find_provider_aliases = func(type) {
+
+  # We will find all provider aliases og given type from tfconfig,
+  # meaning providers.TYPE.alias.ALIAS
+  providers = {}
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Iterate over providers of given type in module
+    aliases = tfconfig.module(path).providers[type]["alias"] else {}
+    for aliases as alias, data {
+        #print("alias:", alias)
+        # Change default alias ("") to "default"
+        if alias is "" {
+          #print("found default alias")
+          alias = "default"
+        }
+
+        # Get the address of the provider alias
+        if length(path) == 0 {
+          # root module
+          address =  type + "." + alias
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + alias
+        }
+        #print("address:", address)
+
+        providers[address] = data
+
+    } // end aliases loop
+  } // end module_paths loop
+
+  return providers
+}
+
+
+# Determine role_arn of a provider from its data
+determine_role_arn = func(data) {
+
+  role_arn_value = ""
+
+  # Check for role_arn in config
+  if (length(data["config"]) else 0) > 0 and
+     (length(data["config"]["assume_role"]) else 0) > 0 {
+    config_assume_role = data["config"]["assume_role"]
+    #print ( "config_assume_role is: ", config_assume_role )
+    if config_assume_role[0]["role_arn"] else null is not null {
+      role_arn = config_assume_role[0]["role_arn"]
+      # This would only happen for Terraform 0.11 since a reference
+      # to a variable in Terraform 0.12 would end up in
+      # the references value
+      #print("role_arn in config:", role_arn)
+      if role_arn matches "\\$\\{var\\.(.*)\\}" {
+        # role_arn of AWS provider was a Terraform 0.11 style variable
+        #print ( "role_arn is a Terraform 0.11 style variable" )
+        role_arn_variable = strings.trim_suffix(strings.trim_prefix(role_arn, "${var."), "}")
+        #print ( "role_arn variable is: ", role_arn_variable )
+        #print ( "Value of role_arn is: ", tfplan.variables[role_arn_variable] )
+        role_arn_value = tfplan.variables[role_arn_variable]
+      } else {
+        # role_arn of AWS provider was hard-coded role_arn
+        #print ( "role_arn is a hard-coded value" )
+        #print ( "Value of role_arn is: ", role_arn )
+        role_arn_value = role_arn
+      } // end determination of role_arn type
+    } // end role_arn in config test
+  } // end config test
+
+  # Check for role_arn in references
+  if (length(data["references"]) else 0) > 0 and
+     (length(data["references"]["assume_role"]) else 0) > 0 {
+    references_assume_role = data["references"]["assume_role"]
+    #print ( "references_assume_role is: ", references_assume_role )
+    if references_assume_role[0]["role_arn"] else null is not null and
+       length(references_assume_role[0]["role_arn"]) > 0 {
+      role_arn = references_assume_role[0]["role_arn"][0]
+      #print("role_arn in references:", role_arn)
+      if role_arn matches "\\$\\{var\\.(.*)\\}" {
+        # role_arn of AWS provider was a Terraform 0.11 style variable
+        #print ( "role_arn is a Terraform 0.11 style variable" )
+        role_arn_variable = strings.trim_suffix(strings.trim_prefix(role_arn, "${var."), "}")
+        #print ( "role_arn variable is: ", role_arn_variable )
+        #print ( "Value of role_arn is: ", tfplan.variables[role_arn_variable] )
+        role_arn_value = tfplan.variables[role_arn_variable]
+      } else if role_arn matches "var\\.(.*)" {
+        # role_arn of AWS provider was a Terraform 0.12 style variable
+        #print ( "role_arn is a Terraform 0.12 style variable" )
+        role_arn_variable = strings.trim_prefix(role_arn, "var.")
+        #print ( "role_arn variable is: ", role_arn_variable )
+        #print ( "Value of role_arn is: ", tfplan.variables[role_arn_variable] )
+        role_arn_value = tfplan.variables[role_arn_variable]
+      } // end determination of role_arn type
+    } // end role_arn in references test
+  } // end references test
+
+  return role_arn_value
+}
+
+# Get assumed roles from all AWS providers
+get_assumed_roles = func() {
+
+  # Initialize empty map of roles indexed by aliases
+  assumed_roles = {}
+
+  # Get all AWS provider aliases
+  aws_providers = find_provider_aliases("aws")
+  #print("aws providers:", aws_providers)
+
+  # Iterate through all AWS provider aliases
+  for aws_providers as alias, data {
+        #print("alias:", alias)
+        assumed_roles[alias] = determine_role_arn(data)
+  } // end aws_providers
+
+  return assumed_roles
+
+}
+
+# Validate that all assumed roles are allowed
+validate_assumed_roles = func(allowed_roles) {
+
+  validated = true
+
+  assumed_roles = get_assumed_roles()
+  #print("assumed roles:", assumed_roles)
+
+  for assumed_roles as alias, role {
+    if role is not "" and role not in allowed_roles {
+      print("AWS provider with alias", alias, "has assumed role",
+            role, "that is not allowed.")
+      validated = false
+    }
+  }
+
+  return validated
+}
+
+###### Allowed Roles #####
+allowed_roles = [
+  "arn:aws:iam::753646501470:role/roger-terraform-assumed-role",
+]
+
+##### Rules #####
+roles_validated = validate_assumed_roles(allowed_roles)
+main = rule {
+  roles_validated
+}

@@ -1,0 +1,620 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"google_compute_instance": {
+				"demo_1": {
+					0: {
+						"applied": {
+							"allow_stopping_for_update": true,
+							"boot_disk": [
+								{
+									"auto_delete":                true,
+									"device_name":                "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"disk_encryption_key_sha256": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"initialize_params": [
+										{
+											"image":  "debian-cloud/debian-9",
+											"labels": {},
+											"size":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+											"type":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+										},
+									],
+									"kms_key_self_link": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"mode":              "READ_WRITE",
+								},
+							],
+							"can_ip_forward":       false,
+							"cpu_platform":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"deletion_protection":  false,
+							"guest_accelerator":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"id":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"instance_id":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"label_fingerprint":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"machine_type":         "n1-standard-1",
+							"metadata_fingerprint": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"name":                 "demo-1",
+							"network_interface": [
+								{
+									"access_config": [
+										{
+											"assigned_nat_ip": "74D93920-ED26-11E3-AC10-0800200C9A66",
+											"nat_ip":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+											"network_tier":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+										},
+									],
+									"address":            "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"name":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"network":            "default",
+									"network_ip":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"subnetwork_project": "74D93920-ED26-11E3-AC10-0800200C9A66",
+								},
+							],
+							"project":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"scheduling": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"self_link":  "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"service_account": [
+								{
+									"email": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"scopes": [
+										"https://www.googleapis.com/auth/monitoring",
+										"https://www.googleapis.com/auth/compute.readonly",
+										"https://www.googleapis.com/auth/servicecontrol",
+									],
+								},
+							],
+							"tags_fingerprint": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"zone":             "us-east1-b",
+						},
+						"destroy": false,
+						"diff": {
+							"allow_stopping_for_update": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"boot_disk.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"boot_disk.0.auto_delete": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"boot_disk.0.device_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.disk_encryption_key_sha256": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.image": {
+								"computed": false,
+								"new":      "debian-cloud/debian-9",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.labels.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.size": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.type": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.kms_key_self_link": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.mode": {
+								"computed": false,
+								"new":      "READ_WRITE",
+								"old":      "",
+							},
+							"can_ip_forward": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"cpu_platform": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"deletion_protection": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"guest_accelerator.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"label_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"machine_type": {
+								"computed": false,
+								"new":      "n1-standard-1",
+								"old":      "",
+							},
+							"metadata_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "demo-1",
+								"old":      "",
+							},
+							"network_interface.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"network_interface.0.access_config.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"network_interface.0.access_config.0.assigned_nat_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.access_config.0.nat_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.access_config.0.network_tier": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.network": {
+								"computed": false,
+								"new":      "default",
+								"old":      "",
+							},
+							"network_interface.0.network_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.subnetwork_project": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"project": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"scheduling.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"self_link": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"service_account.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"service_account.0.email": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"service_account.0.scopes.#": {
+								"computed": false,
+								"new":      "3",
+								"old":      "",
+							},
+							"service_account.0.scopes.1277378754": {
+								"computed": false,
+								"new":      "https://www.googleapis.com/auth/monitoring",
+								"old":      "",
+							},
+							"service_account.0.scopes.2862113455": {
+								"computed": false,
+								"new":      "https://www.googleapis.com/auth/compute.readonly",
+								"old":      "",
+							},
+							"service_account.0.scopes.3663490875": {
+								"computed": false,
+								"new":      "https://www.googleapis.com/auth/servicecontrol",
+								"old":      "",
+							},
+							"tags_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"zone": {
+								"computed": false,
+								"new":      "us-east1-b",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+				"demo_2": {
+					0: {
+						"applied": {
+							"allow_stopping_for_update": true,
+							"boot_disk": [
+								{
+									"auto_delete":                true,
+									"device_name":                "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"disk_encryption_key_sha256": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"initialize_params": [
+										{
+											"image":  "debian-cloud/debian-9",
+											"labels": {},
+											"size":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+											"type":   "74D93920-ED26-11E3-AC10-0800200C9A66",
+										},
+									],
+									"kms_key_self_link": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"mode":              "READ_WRITE",
+								},
+							],
+							"can_ip_forward":       false,
+							"cpu_platform":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"deletion_protection":  false,
+							"guest_accelerator":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"id":                   "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"instance_id":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"label_fingerprint":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"machine_type":         "n1-standard-2",
+							"metadata_fingerprint": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"name":                 "demo-2",
+							"network_interface": [
+								{
+									"access_config": [
+										{
+											"assigned_nat_ip": "74D93920-ED26-11E3-AC10-0800200C9A66",
+											"nat_ip":          "74D93920-ED26-11E3-AC10-0800200C9A66",
+											"network_tier":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+										},
+									],
+									"address":            "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"name":               "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"network":            "default",
+									"network_ip":         "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"subnetwork_project": "74D93920-ED26-11E3-AC10-0800200C9A66",
+								},
+							],
+							"project":    "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"scheduling": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"self_link":  "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"service_account": [
+								{
+									"email": "74D93920-ED26-11E3-AC10-0800200C9A66",
+									"scopes": [
+										"https://www.googleapis.com/auth/monitoring",
+										"https://www.googleapis.com/auth/compute.readonly",
+										"https://www.googleapis.com/auth/servicecontrol",
+									],
+								},
+							],
+							"tags_fingerprint": "74D93920-ED26-11E3-AC10-0800200C9A66",
+							"zone":             "us-east1-b",
+						},
+						"destroy": false,
+						"diff": {
+							"allow_stopping_for_update": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"boot_disk.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"boot_disk.0.auto_delete": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"boot_disk.0.device_name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.disk_encryption_key_sha256": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.image": {
+								"computed": false,
+								"new":      "debian-cloud/debian-9",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.labels.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.size": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.initialize_params.0.type": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.kms_key_self_link": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_disk.0.mode": {
+								"computed": false,
+								"new":      "READ_WRITE",
+								"old":      "",
+							},
+							"can_ip_forward": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"cpu_platform": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"deletion_protection": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"guest_accelerator.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"instance_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"label_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"machine_type": {
+								"computed": false,
+								"new":      "n1-standard-2",
+								"old":      "",
+							},
+							"metadata_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "demo-2",
+								"old":      "",
+							},
+							"network_interface.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"network_interface.0.access_config.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"network_interface.0.access_config.0.assigned_nat_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.access_config.0.nat_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.access_config.0.network_tier": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.name": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.network": {
+								"computed": false,
+								"new":      "default",
+								"old":      "",
+							},
+							"network_interface.0.network_ip": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"network_interface.0.subnetwork_project": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"project": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"scheduling.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"self_link": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"service_account.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"service_account.0.email": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"service_account.0.scopes.#": {
+								"computed": false,
+								"new":      "3",
+								"old":      "",
+							},
+							"service_account.0.scopes.1277378754": {
+								"computed": false,
+								"new":      "https://www.googleapis.com/auth/monitoring",
+								"old":      "",
+							},
+							"service_account.0.scopes.2862113455": {
+								"computed": false,
+								"new":      "https://www.googleapis.com/auth/compute.readonly",
+								"old":      "",
+							},
+							"service_account.0.scopes.3663490875": {
+								"computed": false,
+								"new":      "https://www.googleapis.com/auth/servicecontrol",
+								"old":      "",
+							},
+							"tags_fingerprint": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"zone": {
+								"computed": false,
+								"new":      "us-east1-b",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.11.14"
+
+variables = {
+	"gcp_project":     "roger-berlind-demos",
+	"gcp_region":      "us-east1",
+	"gcp_zone":        "us-east1-b",
+	"image":           "debian-cloud/debian-9",
+	"instance_name_1": "demo-1",
+	"instance_name_2": "demo-2",
+	"machine_type_1":  "n1-standard-1",
+	"machine_type_2":  "n1-standard-2",
+}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

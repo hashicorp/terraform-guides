@@ -13,7 +13,7 @@ validate_attribute_less_than_value = func(type, attribute, max_value) {
     # Skip resource instances that are being destroyed
     # to avoid unnecessary policy violations.
     # Used to be: if length(r.diff) == 0
-    if r.destroy {
+    if r.destroy and not r.requires_new {
       print("Skipping resource", address, "that is being destroyed.")
       continue
     }
@@ -27,7 +27,7 @@ validate_attribute_less_than_value = func(type, attribute, max_value) {
       # validated = false
     } else {
       # Validate that the attribute exists
-      if length(r.applied[attribute]) else 0 > 0 {
+      if r.applied[attribute] else null is not null {
         # Validate that each instance has desired value
         if float(r.applied[attribute]) > max_value {
           print("Resource", address, "has attribute", attribute, "with value",

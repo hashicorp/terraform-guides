@@ -12,7 +12,7 @@ validate_attribute_contains_list = func(type, attribute, required_values) {
     # Skip resource instances that are being destroyed
     # to avoid unnecessary policy violations.
     # Used to be: if length(r.diff) == 0
-    if r.destroy {
+    if r.destroy and not r.requires_new {
       print("Skipping resource", address, "that is being destroyed.")
       continue
     }
@@ -29,7 +29,7 @@ validate_attribute_contains_list = func(type, attribute, required_values) {
       # validated = false
     } else {
       # Validate that the attribute is a list or a map
-      if length(r.applied[attribute]) else 0 > 0 and
+      if r.applied[attribute] else null is not null and
          (types.type_of(r.applied[attribute]) is "list" or
           types.type_of(r.applied[attribute]) is "map") {
 

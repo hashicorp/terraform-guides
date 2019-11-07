@@ -1,0 +1,574 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"path": [],
+		"resources": {
+			"azurerm_network_interface": {
+				"main": {
+					0: {
+						"applied": {
+							"enable_accelerated_networking": false,
+							"enable_ip_forwarding":          false,
+							"ip_configuration": [
+								{
+									"name":                          "testconfiguration1",
+									"private_ip_address":            null,
+									"private_ip_address_allocation": "dynamic",
+									"private_ip_address_version":    "IPv4",
+									"public_ip_address_id":          null,
+								},
+							],
+							"location": "eastus",
+							"name":     "se-hangout-azurevmdemo-1-nic",
+							"network_security_group_id": null,
+							"resource_group_name":       "se-hangout-azurevmdemo-1-resources",
+						},
+						"destroy": false,
+						"diff": {
+							"applied_dns_servers.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"dns_servers.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"enable_accelerated_networking": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"enable_ip_forwarding": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"internal_dns_name_label": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"internal_fqdn": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ip_configuration.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"ip_configuration.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"location": {
+								"computed": false,
+								"new":      "eastus",
+								"old":      "",
+							},
+							"mac_address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-nic",
+								"old":      "",
+							},
+							"network_security_group_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"private_ip_address": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"private_ip_addresses.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-resources",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"virtual_machine_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_resource_group": {
+				"main": {
+					0: {
+						"applied": {
+							"location": "eastus",
+							"name":     "se-hangout-azurevmdemo-1-resources",
+						},
+						"destroy": false,
+						"diff": {
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"location": {
+								"computed": false,
+								"new":      "eastus",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-resources",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_subnet": {
+				"internal": {
+					0: {
+						"applied": {
+							"address_prefix": "10.0.2.0/24",
+							"delegation":     [],
+							"name":           "internal",
+							"network_security_group_id": null,
+							"resource_group_name":       "se-hangout-azurevmdemo-1-resources",
+							"route_table_id":            null,
+							"service_endpoints":         null,
+							"virtual_network_name":      "se-hangout-azurevmdemo-1-network",
+						},
+						"destroy": false,
+						"diff": {
+							"address_prefix": {
+								"computed": false,
+								"new":      "10.0.2.0/24",
+								"old":      "",
+							},
+							"delegation.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"ip_configurations.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "internal",
+								"old":      "",
+							},
+							"network_security_group_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-resources",
+								"old":      "",
+							},
+							"route_table_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"service_endpoints": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"virtual_network_name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-network",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_virtual_machine": {
+				"demo": {
+					0: {
+						"applied": {
+							"additional_capabilities":          [],
+							"boot_diagnostics":                 [],
+							"delete_data_disks_on_termination": true,
+							"delete_os_disk_on_termination":    true,
+							"location":                         "eastus",
+							"name":                             "se-hangout-azurevmdemo-1-vm",
+							"os_profile": [
+								{
+									"admin_password": "Password1234!",
+									"admin_username": "testadmin",
+									"computer_name":  "hostname",
+								},
+							],
+							"os_profile_linux_config": [
+								{
+									"disable_password_authentication": false,
+									"ssh_keys":                        [],
+								},
+							],
+							"os_profile_secrets":        [],
+							"os_profile_windows_config": [],
+							"plan": [],
+							"primary_network_interface_id": null,
+							"proximity_placement_group_id": null,
+							"resource_group_name":          "se-hangout-azurevmdemo-1-resources",
+							"storage_image_reference": [
+								{
+									"id":        "",
+									"offer":     "UbuntuServer",
+									"publisher": "Canonical",
+									"sku":       "16.04-LTS",
+									"version":   "latest",
+								},
+							],
+							"storage_os_disk": [
+								{
+									"caching":                   "ReadWrite",
+									"create_option":             "FromImage",
+									"image_uri":                 null,
+									"managed_disk_type":         "Standard_LRS",
+									"name":                      "myosdisk1",
+									"vhd_uri":                   null,
+									"write_accelerator_enabled": false,
+								},
+							],
+							"vm_size": "Standard_A1",
+							"zones":   null,
+						},
+						"destroy": false,
+						"diff": {
+							"additional_capabilities.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"availability_set_id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"boot_diagnostics.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"delete_data_disks_on_termination": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"delete_os_disk_on_termination": {
+								"computed": false,
+								"new":      "true",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"identity.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"license_type": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"location": {
+								"computed": false,
+								"new":      "eastus",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-vm",
+								"old":      "",
+							},
+							"network_interface_ids.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"os_profile.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"os_profile.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"os_profile_linux_config.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"os_profile_linux_config.0.%": {
+								"computed": false,
+								"new":      "2",
+								"old":      "",
+							},
+							"os_profile_linux_config.0.disable_password_authentication": {
+								"computed": false,
+								"new":      "false",
+								"old":      "",
+							},
+							"os_profile_linux_config.0.ssh_keys.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"os_profile_secrets.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"os_profile_windows_config.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"plan.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"primary_network_interface_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"proximity_placement_group_id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-resources",
+								"old":      "",
+							},
+							"storage_data_disk.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_image_reference.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"storage_image_reference.0.%": {
+								"computed": false,
+								"new":      "5",
+								"old":      "",
+							},
+							"storage_image_reference.0.id": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"storage_image_reference.0.offer": {
+								"computed": false,
+								"new":      "UbuntuServer",
+								"old":      "",
+							},
+							"storage_image_reference.0.publisher": {
+								"computed": false,
+								"new":      "Canonical",
+								"old":      "",
+							},
+							"storage_image_reference.0.sku": {
+								"computed": false,
+								"new":      "16.04-LTS",
+								"old":      "",
+							},
+							"storage_image_reference.0.version": {
+								"computed": false,
+								"new":      "latest",
+								"old":      "",
+							},
+							"storage_os_disk.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"storage_os_disk.0.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"vm_size": {
+								"computed": false,
+								"new":      "Standard_A1",
+								"old":      "",
+							},
+							"zones": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+			"azurerm_virtual_network": {
+				"main": {
+					0: {
+						"applied": {
+							"address_space": [
+								"10.0.0.0/16",
+							],
+							"ddos_protection_plan": [],
+							"dns_servers":          null,
+							"location":             "eastus",
+							"name":                 "se-hangout-azurevmdemo-1-network",
+							"resource_group_name":  "se-hangout-azurevmdemo-1-resources",
+						},
+						"destroy": false,
+						"diff": {
+							"address_space.#": {
+								"computed": false,
+								"new":      "1",
+								"old":      "",
+							},
+							"address_space.0": {
+								"computed": false,
+								"new":      "10.0.0.0/16",
+								"old":      "",
+							},
+							"ddos_protection_plan.#": {
+								"computed": false,
+								"new":      "0",
+								"old":      "",
+							},
+							"dns_servers": {
+								"computed": false,
+								"new":      "",
+								"old":      "",
+							},
+							"id": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"location": {
+								"computed": false,
+								"new":      "eastus",
+								"old":      "",
+							},
+							"name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-network",
+								"old":      "",
+							},
+							"resource_group_name": {
+								"computed": false,
+								"new":      "se-hangout-azurevmdemo-1-resources",
+								"old":      "",
+							},
+							"subnet.#": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+							"tags.%": {
+								"computed": true,
+								"new":      "",
+								"old":      "",
+							},
+						},
+						"requires_new": false,
+					},
+				},
+			},
+		},
+	},
+}
+
+module_paths = [
+	[],
+]
+
+terraform_version = "0.12.9"
+
+variables = {
+	"prefix":  "se-hangout-azurevmdemo-1",
+	"vm_size": "Standard_A1",
+}
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+path = _modules.root.path
+resources = _modules.root.resources

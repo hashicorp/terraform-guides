@@ -1,0 +1,69 @@
+# This policy prevents any changes (creation, destruction or updates)
+# to blacklisted resources.
+
+##### Imports #####
+
+import "tfplan"
+import "strings"
+
+##### Functions #####
+
+# Find all resources of a specific type from all modules using the tfplan import
+find_resources_from_plan = func(type) {
+
+  resources = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Iterate over the named resources of desired type in the module
+    for tfplan.module(path).resources[type] else {} as name, instances {
+      # Iterate over resource instances
+      for instances as index, r {
+
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
+        }
+
+        # Add the instance to resources map, setting the key to the address
+        resources[address] = r
+      }
+    }
+  }
+
+  return resources
+}
+
+# Validate that blacklisted resources are not present
+validate_resources = func(blacklist) {
+  valid = true
+
+  for blacklist as type {
+    found_resources = find_resources_from_plan(type)
+
+    for found_resources as address, r {
+      print("Blacklisted resource", address, "was found")
+      valid = false
+    }
+  }
+  return valid
+}
+
+##### Lists #####
+
+# List of blacklisted resources
+blacklist = [
+  "aws_vpc",
+]
+
+##### Rules #####
+
+# Main rule
+main = rule {
+  validate_resources(blacklist)
+}

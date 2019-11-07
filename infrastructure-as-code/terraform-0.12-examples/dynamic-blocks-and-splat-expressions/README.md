@@ -1,5 +1,5 @@
 # Dynamic Blocks and Splat Expressions Example
-The [Dynamic Blocks and Splat Expresions](./dynamic-blocks-and-splat-expressions) example shows how the [dynamic blocks](https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks) can be used to dynamically create multiple instances of a block within a resource and how [splat expressions](https://www.terraform.io/docs/configuration/expressions.html#splat-expressions) (`[*]`) can now be used to iterate across those blocks. Recall that the old splat expression (`.*`) could only iterate across top-level attributes of a resource.
+This example shows how [dynamic blocks](https://www.terraform.io/docs/configuration/expressions.html#dynamic-blocks) can be used to dynamically create multiple instances of a block within a resource and how [splat expressions](https://www.terraform.io/docs/configuration/expressions.html#splat-expressions) (`[*]`) can now be used to iterate across those blocks. Recall that the old splat expression (`.*`) could only iterate across top-level attributes of a resource.
 
 In this example, we create an AWS security group with 2 dynamically generated ingress blocks and then create an output that iterates across the ingress blocks to give us both ports.
 
