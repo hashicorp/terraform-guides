@@ -49,6 +49,6 @@ data "aws_ami" "amazonlinux" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-hvm-*"]
+    values = ["amzn-ami-hvm-2018.03.0.20190611-x86_64-gp2"]
   }
 }
