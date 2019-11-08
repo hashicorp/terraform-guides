@@ -177,6 +177,36 @@ resource "null_resource" "get_vault_reviewer_token" {
   depends_on = ["null_resource.configure_k8s"]
 }
 
+# Get certs again in case Ansible script takes too long to run
+# and Vault token is no longer valid.
+# We need the certs in Terraform worker container in second run
+# This resource can be tainted before doing new run if first fails
+resource "null_resource" "get_config_2" {
+
+  provisioner "local-exec" {
+    command = "echo \"${var.private_key_data}\" > private-key.pem"
+  }
+
+  provisioner "local-exec" {
+    command = "chmod 400 private-key.pem"
+  }
+
+  provisioner "local-exec" {
+    command = "scp -o StrictHostKeyChecking=no -i private-key.pem  ec2-user@${module.openshift.bastion_public_dns}:~/config config"
+  }
+  provisioner "local-exec" {
+    command = "sed -n 4,4p config | cut -d ':' -f 2 | sed 's/ //' > ca_certificate"
+  }
+  provisioner "local-exec" {
+    command = "sed -n 28,28p config | cut -d ':' -f 2 | sed 's/ //' > client_certificate"
+  }
+  provisioner "local-exec" {
+    command = "sed -n 29,29p config | cut -d ':' -f 2 | sed 's/ //' > client_key"
+  }
+
+  depends_on = ["null_resource.get_vault_reviewer_token"]
+}
+
 data "null_data_source" "get_certs" {
   inputs = {
     client_certificate = "${file("client_certificate")}"
@@ -184,7 +214,7 @@ data "null_data_source" "get_certs" {
     ca_certificate = "${file("ca_certificate")}"
     vault_reviewer_token = "${file("vault-reviewer-token")}"
   }
-  depends_on = ["null_resource.get_vault_reviewer_token"]
+  depends_on = ["null_resource.get_config_2"]
 }
 
 # Use the vault_kubernetes_auth_backend_config resource
