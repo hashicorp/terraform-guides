@@ -40,10 +40,10 @@ chkconfig awslogs on
 
 # Install packages required to setup OpenShift.
 yum install -y wget git net-tools bind-utils iptables-services bridge-utils bash-completion httpd-tools
-yum update -y
+#yum update -y
 # Noticed that RHEL was being upgraded to 7.5
 # Following could be used to stop that.
-# yum -exclude=kernel* update -y
+yum -exclude=kernel* update -y
 
 # Note: The step below is not in the official docs, I needed it to install
 # Docker. If anyone finds out why, I'd love to know.
