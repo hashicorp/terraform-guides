@@ -4,11 +4,6 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "bastion_ami_filter" {
-  description = "The filter for the bastion AMI data source"
-  default = "amzn-ami-hvm-*"
-}
-
 variable "key_name" {
   description = "The name of the key to user for ssh access"
 }
