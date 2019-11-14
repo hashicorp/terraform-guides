@@ -6,7 +6,7 @@ terraform {
 # Set VAULT_TOKEN environment variable
 provider "vault" {
   address = "${var.vault_addr}"
-  max_lease_ttl_seconds = 3600
+  max_lease_ttl_seconds = 7200
 }
 
 # AWS credentials from Vault

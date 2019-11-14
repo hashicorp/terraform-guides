@@ -10,7 +10,7 @@ While the original repository required the user to manually run ansible-playbook
 * [ansible-playbook](https://docs.ansible.com/ansible/2.4/ansible-playbook.html): the actual ansible tool used to deploy the OpenShift cluster. This is used in the install-from-bastion.sh script.
 
 ## Estimated Time to Complete
-60 minutes
+120 minutes
 
 ## Personas
 Our target persona is a developer or operations engineer who wants to provision an OpenShift cluster into AWS.
@@ -47,7 +47,7 @@ vault write aws-tf/config/root \
   access_key=<your_aws_access_key> \
   secret_key=<your_aws_secret_key> \
   region=us-east-1
-  
+
 vault write aws-tf/roles/deploy policy_document=-<<EOF
 {
   "Version": "2012-10-17",
@@ -84,7 +84,9 @@ If you want to use open source Terraform instead of TFE, you can create a copy o
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the AWS infrastructure will be created and that various remote-exec and local-exec provisioners will run when you apply your plan.
 1. Click the "Confirm and Apply" button to actually provision your OpenShift cluster.
 
-You will see outputs providing the IPs and DNS addresses needed to access your OpenShift cluster in the AWS Console, TLS certs/keys for your cluster, the Vault Kubernetes auth method path, the Vault server address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your OpenShift cluster. You can also validate that the cluster was created in the AWS Console.
+Unfortunately, the Ansible playbook that provisions the OpenShift cluster takes 80-90 minutes to do it.  To accomodate this, we have set the `max_lease_ttl_seconds` attribute on the Vault provider to 7200 seconds (2 hours).
+
+When the Ansible playbook finally deploys the OpenShift cluster and a few other null resources are run by Terraform, you will see outputs providing the IPs and DNS addresses needed to access your OpenShift cluster in the AWS Console, TLS certs/keys for your cluster, the Vault Kubernetes auth method path, the Vault server address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your OpenShift cluster. You can also validate that the cluster was created in the AWS Console.
 
 You will be able to login to the OpenShift Console with username "admin" and password "123" at the URL contained in the k8s_endpoint output of the apply.log. To use the OpenShift `oc` CLI utility, you may SSH into the bastion host using `bastion_public_ip` output, then to the OpenShift master server using `master_private_ip` output from the apply log.
 
