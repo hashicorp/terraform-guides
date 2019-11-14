@@ -59,7 +59,7 @@ validate_private_acl_and_kms_encryption = func() {
     # Skip resources that are being destroyed
     # to avoid unnecessary policy violations.
     # Used to be: if length(r.diff) == 0
-    if r.destroy and not r.requires_new {
+    if r.destroy else false and not r.requires_new else false {
       print("Skipping resource", address, "that is being destroyed.")
       continue
     }
