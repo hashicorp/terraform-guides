@@ -1,0 +1,95 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {
+			"external": {
+				"example": {
+					"config": {
+						"program": [
+							"./datasource-example.sh",
+						],
+					},
+					"provisioners": null,
+				},
+			},
+			"http": {
+				"example": {
+					"config": {
+						"url": "https://checkpoint-api.hashicorp.com/v1/check/terraform",
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"modules":   {},
+		"outputs":   {},
+		"providers": {},
+		"resources": {},
+		"variables": {},
+	},
+
+	"module.first": {
+		"data": {
+			"external": {
+				"example": {
+					"config": {
+						"program": [
+							"./datasource-example.sh",
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"modules": {},
+		"outputs": {},
+		"providers": {
+			"external": {
+				"alias": {
+					"": {
+						"config": {},
+						"version": "",
+					},
+				},
+				"config": {},
+				"version": "",
+			},
+		},
+		"resources": {},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"first",
+	],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

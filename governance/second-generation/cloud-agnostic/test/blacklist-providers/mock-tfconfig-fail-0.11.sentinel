@@ -1,0 +1,185 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {
+			"http": {
+				"example": {
+					"config": {
+						"url": "https://checkpoint-api.hashicorp.com/v1/check/terraform",
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"modules": {
+			"first": {
+				"config":  {},
+				"source":  "./module",
+				"version": "",
+			},
+		},
+		"outputs": {},
+		"providers": {
+			"http": {
+				"alias": {
+					"": {
+						"config": {},
+						"version": "",
+					},
+				},
+				"config": {},
+				"version": "",
+			},
+		},
+		"resources": {},
+		"variables": {},
+	},
+
+	"module.first": {
+		"data": {
+			"external": {
+				"example": {
+					"config": {
+						"program": [
+							"./example-data-source.sh",
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"modules": {
+			"second": {
+				"config":  {},
+				"source":  "./module",
+				"version": "",
+			},
+		},
+		"outputs": {},
+		"providers": {
+			"external": {
+				"alias": {
+					"": {
+						"config": {},
+						"version": "",
+					},
+				},
+				"config": {},
+				"version": "",
+			},
+		},
+		"resources": {},
+		"variables": {},
+	},
+
+	"module.first.module.second": {
+		"data": {
+			"external": {
+				"example": {
+					"config": {
+						"program": [
+							"python",
+							"example-data-source.py",
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"modules": {},
+		"outputs": {},
+		"providers": {
+			"aws": {
+				"alias": {
+					"": {
+						"config": {
+							"region": "us-east-2",
+						},
+						"version": "",
+					},
+					"second-east": {
+						"config": {
+							"region": "us-east-1",
+						},
+						"version": "",
+					},
+					"second-west": {
+						"config": {
+							"region": "us-west-1",
+						},
+						"version": "",
+					},
+				},
+				"config": {
+					"region": "us-east-2",
+				},
+				"version": "",
+			},
+			"external": {
+				"alias": {
+					"": {
+						"config": {},
+						"version": "",
+					},
+				},
+				"config": {},
+				"version": "",
+			},
+		},
+		"resources": {
+			"aws_instance": {
+				"web": {
+					"config": {
+						"ami":           "ami-2e1ef954",
+						"instance_type": "t2.micro",
+						"tags": [
+							{
+								"Name": "second module instance",
+							},
+						],
+					},
+					"provisioners": null,
+				},
+			},
+		},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"first",
+	],
+	[
+		"first",
+		"second",
+	],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

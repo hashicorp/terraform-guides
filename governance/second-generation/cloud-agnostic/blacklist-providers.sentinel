@@ -1,0 +1,51 @@
+# This policy uses the tfconfig import to blacklist specified providers
+# across all modules
+
+##### Imports #####
+import "tfconfig"
+import "strings"
+
+##### Functions #####
+
+# Prevent providers in non-root modules
+validate_providers = func(blacklist) {
+
+  validated = true
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    providers = tfconfig.module(path).providers
+    # Iterate over providers of the module
+    for providers as provider {
+      if provider in blacklist {
+        if length(path) is 0 {
+          print("The root module has provider", provider,
+                "from the blacklist:", blacklist )
+        } else {
+          print("The module module." + strings.join(path, ".module."),
+                "has provider", provider, "from the blacklist:", blacklist )
+        }
+
+        validated = false
+      } // end provider check
+    } // end providers loop
+  } // end module loop
+
+  return validated
+}
+
+##### Lists #####
+
+# List of blacklisted providers
+blacklist = [
+  "external",
+  "http",
+]
+
+##### Rules #####
+
+# Main rule
+providers_validated = validate_providers(blacklist)
+main = rule {
+  providers_validated
+}
