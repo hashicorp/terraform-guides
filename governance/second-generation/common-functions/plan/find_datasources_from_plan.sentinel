@@ -1,0 +1,30 @@
+# Find all data sources of a specific type from all modules using the tfplan import
+find_datasources_from_plan = func(type) {
+
+  datasources = {}
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Iterate over the named datasources of desired type in the module
+    for tfplan.module(path).data[type] else {} as name, instances {
+      # Iterate over datasource instances
+      for instances as index, d {
+
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
+        }
+
+        # Add the instance to datasources map, setting the key to the address
+        datasources[address] = d
+      }
+    }
+  }
+
+  return datasources
+}

@@ -1,0 +1,28 @@
+# Find all datasources of specific type from all modules
+# using the tfconfig import
+find_datasources_from_config = func(type) {
+
+  datasources = {}
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Iterate over the named datasources of desired type in the module
+    for tfconfig.module(path).data[type] else {} as name, d {
+
+      # Get the address of the datasource
+      if length(path) == 0 {
+        # root module
+        address = type + "." + name
+      } else {
+        # non-root module
+        address = "module." + strings.join(path, ".module.") + "." +
+                  type + "." + name
+      }
+
+      # Add the datasource to datasources map, setting the key to the address
+      datasources[address] = d
+    }
+  }
+
+  return datasources
+}

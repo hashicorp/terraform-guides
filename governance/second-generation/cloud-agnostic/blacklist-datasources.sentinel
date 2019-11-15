@@ -1,0 +1,69 @@
+# This policy prevents the use of blacklisted datasources
+# using the tfconfig import
+
+##### Imports #####
+import "tfconfig"
+import "strings"
+
+##### Functions #####
+
+# Find all datasources of specific type from all modules
+# using the tfconfig import
+find_datasources_from_config = func(type) {
+
+  datasources = {}
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    # Iterate over the named datasources of desired type in the module
+    for tfconfig.module(path).data[type] else {} as name, d {
+
+      # Get the address of the datasource
+      if length(path) == 0 {
+        # root module
+        address = type + "." + name
+      } else {
+        # non-root module
+        address = "module." + strings.join(path, ".module.") + "." +
+                  type + "." + name
+      }
+
+      # Add the datasource to datasources map, setting the key to the address
+      datasources[address] = d
+    }
+  }
+
+  return datasources
+}
+
+
+# Validate that blacklisted datasources are not present
+validate_datasources = func(blacklist) {
+  valid = true
+
+  for blacklist as type {
+    found_datasources = find_datasources_from_config(type)
+
+    for found_datasources as address, d {
+      print("Blacklisted datasource", address, "was found")
+      valid = false
+    }
+  }
+  return valid
+}
+
+##### Lists #####
+
+# List of blacklisted datasources
+blacklist = [
+  "external",
+  "http",
+]
+
+##### Rules #####
+
+# Main rule
+datasources_validated = validate_datasources(blacklist)
+main = rule {
+  datasources_validated
+}
