@@ -1,0 +1,10 @@
+{
+  "mock": {
+    "tfconfig": "mock-tfconfig-pass-qa-0.12.sentinel",
+    "tfplan": "mock-tfplan-pass-qa-0.12.sentinel",
+    "tfrun": "mock-tfrun-qa.sentinel"
+  },
+  "test": {
+    "main": true
+  }
+}

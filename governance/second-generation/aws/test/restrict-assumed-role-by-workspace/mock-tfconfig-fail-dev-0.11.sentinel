@@ -4,108 +4,6 @@ import "types"
 _modules = {
 	"root": {
 		"data": {},
-		"modules": {
-			"first": {
-				"config": {
-					"role": "${var.role}",
-				},
-				"source":  "./module",
-				"version": "",
-			},
-		},
-		"outputs": {},
-		"providers": {
-			"aws": {
-				"alias": {
-					"": {
-						"config": {
-							"assume_role": [
-								{
-									"external_id":  "EXTERNAL_ID",
-									"role_arn":     "${var.role}",
-									"session_name": "SESSION_NAME",
-								},
-							],
-							"region": "us-east-2",
-						},
-						"version": "",
-					},
-					"hard-coded-role": {
-						"config": {
-							"assume_role": [
-								{
-									"external_id":  "EXTERNAL_ID",
-									"role_arn":     "arn:aws:iam::123412341234:role/terraform-assumed-role",
-									"session_name": "SESSION_NAME",
-								},
-							],
-							"region": "us-east-1",
-						},
-						"version": "",
-					},
-					"tf-11-var": {
-						"config": {
-							"assume_role": [
-								{
-									"external_id":  "EXTERNAL_ID",
-									"role_arn":     "${var.role}",
-									"session_name": "SESSION_NAME",
-								},
-							],
-							"region": "us-east-1",
-						},
-						"version": "",
-					},
-					"west": {
-						"config": {
-							"region": "us-west-1",
-						},
-						"version": "",
-					},
-				},
-				"config": {
-					"assume_role": [
-						{
-							"external_id":  "EXTERNAL_ID",
-							"role_arn":     "${var.role}",
-							"session_name": "${var.session}",
-						},
-					],
-					"region": "us-east-2",
-				},
-				"version": "",
-			},
-		},
-		"resources": {
-			"aws_instance": {
-				"web": {
-					"config": {
-						"ami":           "ami-2e1ef954",
-						"instance_type": "t2.micro",
-						"tags": [
-							{
-								"Name": "assumed_role_instance",
-							},
-						],
-					},
-					"provisioners": null,
-				},
-			},
-		},
-		"variables": {
-			"role": {
-				"default":     null,
-				"description": "IAM Role to assume",
-			},
-			"session": {
-				"default":     "SESSION_NAME",
-				"description": "",
-			},
-		},
-	},
-
-	"module.first": {
-		"data":    {},
 		"modules": {},
 		"outputs": {},
 		"providers": {
@@ -129,7 +27,7 @@ _modules = {
 							"assume_role": [
 								{
 									"external_id":  "EXTERNAL_ID",
-									"role_arn":     "arn:aws:iam::123412341234:role/terraform-assumed-role",
+									"role_arn":     "arn:aws:iam::909012349090:role/role-prod",
 									"session_name": "SESSION_NAME",
 								},
 							],
@@ -201,9 +99,6 @@ _modules = {
 
 module_paths = [
 	[],
-	[
-		"first",
-	],
 ]
 
 module = func(path) {

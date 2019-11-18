@@ -1,0 +1,10 @@
+import "strings"
+import "types"
+
+workspace = {
+	"auto_apply":        false,
+	"description":       null,
+	"name":              "test-dev",
+	"vcs_repo":          null,
+	"working_directory": "",
+}

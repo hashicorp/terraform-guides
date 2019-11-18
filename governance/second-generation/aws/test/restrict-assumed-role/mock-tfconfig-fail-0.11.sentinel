@@ -35,7 +35,7 @@ _modules = {
 							"assume_role": [
 								{
 									"external_id":  "EXTERNAL_ID",
-									"role_arn":     "arn:aws:iam::753646501470:role/roger-ptfe-role",
+									"role_arn":     "arn:aws:iam::567856785678:role/ptfe-role",
 									"session_name": "SESSION_NAME",
 								},
 							],
@@ -129,7 +129,7 @@ _modules = {
 							"assume_role": [
 								{
 									"external_id":  "EXTERNAL_ID",
-									"role_arn":     "arn:aws:iam::753646501470:role/roger-ptfe-role",
+									"role_arn":     "arn:aws:iam::567856785678:role/ptfe-role",
 									"session_name": "SESSION_NAME",
 								},
 							],

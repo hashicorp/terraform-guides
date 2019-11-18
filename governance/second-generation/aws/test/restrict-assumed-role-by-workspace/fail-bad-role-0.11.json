@@ -1,0 +1,10 @@
+{
+  "mock": {
+    "tfconfig": "mock-tfconfig-fail-bad-role-0.11.sentinel",
+    "tfplan": "mock-tfplan-fail-bad-role-0.11.sentinel",
+    "tfrun": "mock-tfrun-dev.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}
