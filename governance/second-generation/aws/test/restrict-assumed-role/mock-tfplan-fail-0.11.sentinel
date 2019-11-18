@@ -463,7 +463,7 @@ module_paths = [
 terraform_version = "0.11.14"
 
 variables = {
-	"role":    "arn:aws:iam::753646501470:role/roger-ptfe-role",
+	"role":    "arn:aws:iam::567856785678:role/ptfe-role",
 	"session": "SESSION_NAME",
 }
 

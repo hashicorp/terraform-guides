@@ -1,0 +1,10 @@
+{
+  "mock": {
+    "tfconfig": "mock-tfconfig-fail-prod-0.12.sentinel",
+    "tfplan": "mock-tfplan-fail-prod-0.12.sentinel",
+    "tfrun": "mock-tfrun-prod.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}

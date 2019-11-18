@@ -1,10 +1,13 @@
 # This policy restricts accounts that can be assumed by the AWS provider
+# It includes a map that maps roles to lists of regex expressions
+# that match one or more workspace names
 # It assumes that the role_arn is either a hard-coded value or a reference
 # to a Terraform variable
 
 #### Imports #####
 import "tfconfig"
 import "tfplan"
+import "tfrun"
 import "strings"
 
 ##### Functions #####
@@ -112,30 +115,61 @@ get_assumed_roles = func() {
 }
 
 # Validate that all assumed roles are allowed
-validate_assumed_roles = func(allowed_roles) {
+validate_assumed_roles = func(allowed_roles_map) {
 
   validated = true
 
   assumed_roles = get_assumed_roles()
 
+  # Iterate over all assumed roles used by providers
   for assumed_roles as alias, role {
-    if role is not "" and role not in allowed_roles {
-      print("AWS provider with alias", alias, "has assumed role",
-            role, "that is not allowed.")
-      validated = false
-    }
-  }
+    # Validate that each assumed role is in map
+    if role is not "" {
+      if role not in keys(allowed_roles_map) {
+        print("AWS provider with alias", alias, "has assumed role",
+              role, "that is not allowed.")
+        validated = false
+      } else {
 
+        # Get workspace name
+        workspace_name = tfrun.workspace.name
+
+        # Validate that role is allowed for current workspace
+        matched = false
+        for allowed_roles_map[role] as workspace_regex {
+          if workspace_name matches workspace_regex {
+            matched = true
+          }
+        } // end for workspace_regex
+        if not matched {
+          print("Workspace", workspace_name, "is not allowed to use role", role)
+          print("It used that role in the AWS provider with alias", alias)
+          validated = false
+        } // end matched check
+      } // end else role in allowed_roles_map
+    } // end if role is not ""
+  } // end assumed_roles loop
   return validated
 }
 
 ###### Allowed Roles #####
-allowed_roles = [
-  "arn:aws:iam::123412341234:role/terraform-assumed-role",
-]
+allowed_roles_map = {
+  "arn:aws:iam::123412341234:role/role-dev": [
+    "(.*)-dev$",
+    "^dev-(.*)",
+  ],
+  "arn:aws:iam::567856785678:role/role-qa": [
+    "(.*)-qa$",
+    "^qa-(.*)",
+  ],
+  "arn:aws:iam::909012349090:role/role-prod": [
+    "(.*)-prod$",
+    "^prod-(.*)",
+  ],
+}
 
 ##### Rules #####
-roles_validated = validate_assumed_roles(allowed_roles)
+roles_validated = validate_assumed_roles(allowed_roles_map)
 main = rule {
   roles_validated
 }
