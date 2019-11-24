@@ -1,3 +1,11 @@
+policy "blacklist-datasources" {
+    enforcement_level = "advisory"
+}
+
+policy "blacklist-providers" {
+    enforcement_level = "advisory"
+}
+
 policy "blacklist-provisioners" {
     enforcement_level = "advisory"
 }
