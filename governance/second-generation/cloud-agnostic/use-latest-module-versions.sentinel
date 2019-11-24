@@ -1,0 +1,94 @@
+# This policy uses the HTTP import to call the TFC API to get a list of all
+# modules in a specified private module registry (PMR) and determine their
+# latest versions. It then uses the tfconfig import to inspect all non-root
+# modules and validate that those sourced from the PMR use the latest versions.
+
+# Note that this requires the Sentinel runtime 0.13.0 or higher.
+
+
+##### Imports #####
+import "tfconfig"
+import "http"
+import "strings"
+import "json"
+import "types"
+
+##### Parameters #####
+param address default "app.terraform.io"
+param organization
+param token
+
+
+##### Functions #####
+
+# List modules in the PMR
+# This returns a list of modules
+retrieve_latest_module_versions = func(address, organization, token) {
+
+  # Call the TFC Modules API and extract the response
+  req = http.request("https://" + address + "/api/registry/v1/modules/" +
+                     organization)
+  req = req.with_header("Authorization", "Bearer " + token)
+  res = json.unmarshal(http.get(req).body)
+
+  modules = {}
+
+  # Iterate over the modules and extract names, providers, and latest versions
+  for res.modules as m {
+    index = m.name + "/" + m.provider
+    modules[index] = m.version
+  }
+
+  # modules is indexed by <name>/<provider> and contains most recent version
+  return modules
+}
+
+# Validate sources of modules in the PMR
+validate_modules = func(address, organization, token) {
+
+  validated = true
+
+  # Get latest module versions from PMR
+  pmr_modules = retrieve_latest_module_versions(address, organization, token)
+
+  # Iterate over all modules in the tfconfig import
+  for tfconfig.module_paths as path {
+    the_modules = tfconfig.module(path).modules
+    # Iterate over modules of the current module
+    for the_modules as name, m {
+      # Check if module is in the PMR
+      if strings.has_prefix(m.source, address + "/" + organization) {
+        # Check version of module against latest version
+        name_provider = strings.trim_prefix(m.source, address + "/" +
+                        organization + "/")
+        if m.version is not pmr_modules[name_provider] {
+          if length(path) == 0 {
+            # root module
+            print("PMR module", m.source, "used in root module has version",
+                  m.version, "that is not the most recent version",
+                  pmr_modules[name_provider])
+            validated = false
+          } else {
+            # non-root module
+            module_address = "module." + strings.join(path, ".module.")
+            print("PMR module", m.source, "used in module", module_address,
+                  "has version", m.version, "that is not the most recent",
+                  "version", pmr_modules[name_provider])
+            validated = false
+          }
+
+        } // end version check
+      } // end if module in PMR
+    } // end for modules
+  } // end module paths
+
+  return validated
+}
+
+##### Rules #####
+
+# Main rule
+modules_validated = validate_modules(address, organization, token)
+main = rule {
+  modules_validated
+}

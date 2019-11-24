@@ -1,0 +1,12 @@
+{
+  "param": {
+    "organization": "Cloud-Operations",
+    "token": ""
+  },
+  "mock": {
+    "tfconfig": "mock-tfconfig-pass-no-pmr-modules-0.12.sentinel"
+  },
+  "test": {
+    "main": true
+  }
+}
