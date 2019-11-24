@@ -4,6 +4,8 @@
 # modules and validate that those sourced from the PMR use the latest versions.
 
 # Note that this requires the Sentinel runtime 0.13.0 or higher.
+# Additionally, this policy uses Sentinel parameters
+# Be sure to read the associated use-latest-module-versions.md file.
 
 
 ##### Imports #####
