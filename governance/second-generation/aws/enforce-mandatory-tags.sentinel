@@ -114,7 +114,7 @@ mandatory_tags = [
 tags_validated = validate_attribute_contains_list("aws_instance",
                  "tags", mandatory_tags)
 
-#Main rule that evaluates results
+#Main rule
 main = rule {
   tags_validated
 }

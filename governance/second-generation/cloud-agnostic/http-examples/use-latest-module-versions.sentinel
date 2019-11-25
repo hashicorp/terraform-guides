@@ -124,8 +124,10 @@ validate_modules = func(public_registry, address, organization, token) {
 
 ##### Rules #####
 
-# Main rule
+# Call the validation function
 modules_validated = validate_modules(public_registry, address, organization, token)
+
+# Main rule
 main = rule {
   modules_validated
 }

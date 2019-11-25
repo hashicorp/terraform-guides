@@ -48,9 +48,11 @@ organization = "Cloud-Operations"
 
 ##### Rules #####
 
-# Main rule that requires other rules to be true
+# Call the validation functions
 no_resources_in_root_module = prevent_resources_in_root_module()
 all_non_root_modules_from_pmr = require_modules_from_pmr(address, organization)
+
+# Main rule
 main = rule {
   no_resources_in_root_module and all_non_root_modules_from_pmr
 }

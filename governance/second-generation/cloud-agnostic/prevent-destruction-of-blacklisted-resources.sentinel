@@ -68,8 +68,10 @@ blacklist = [
 
 ##### Rules #####
 
-# Main rule
+# Call the validation function
 destroy_validated = validate_destroyed_resources(blacklist)
+
+# Main rule
 main = rule {
   destroy_validated
 }

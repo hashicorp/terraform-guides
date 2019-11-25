@@ -64,7 +64,7 @@ validate_provisioners = func() {
 # Call the validation function
 no_remote_exec_on_null_resources = validate_provisioners()
 
-# Main rule that evaluates result
+# Main rule
 main = rule {
   no_remote_exec_on_null_resources
 }

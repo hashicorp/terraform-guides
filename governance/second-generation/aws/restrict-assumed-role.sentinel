@@ -135,7 +135,11 @@ allowed_roles = [
 ]
 
 ##### Rules #####
+
+# Call the validation function
 roles_validated = validate_assumed_roles(allowed_roles)
+
+# Main rule
 main = rule {
   roles_validated
 }

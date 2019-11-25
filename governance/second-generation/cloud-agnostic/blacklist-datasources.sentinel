@@ -62,8 +62,10 @@ blacklist = [
 
 ##### Rules #####
 
-# Main rule
+# Call the validation function
 datasources_validated = validate_datasources(blacklist)
+
+# Main rule
 main = rule {
   datasources_validated
 }

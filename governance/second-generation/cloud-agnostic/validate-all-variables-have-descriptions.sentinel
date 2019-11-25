@@ -55,7 +55,11 @@ validate_variables_have_descriptions = func() {
 }
 
 ###### Rules ######
+
+# Call the validation function
 variables_validated = validate_variables_have_descriptions()
+
+# Main rule
 main = rule {
   variables_validated
 }

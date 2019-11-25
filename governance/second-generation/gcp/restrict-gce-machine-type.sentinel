@@ -68,7 +68,7 @@ validate_attribute_in_list = func(type, attribute, allowed_values) {
       # validated = false
     } else {
       # Validate that each instance has allowed value
-      if (r.applied[attribute] else "") not in allowed_values {
+      if r.applied[attribute] else "" not in allowed_values {
         print("Resource", address, "has attribute", attribute, "with value",
               r.applied[attribute] else "",
               "that is not in the allowed list:", allowed_values)
@@ -91,8 +91,10 @@ allowed_types = [
 
 ##### Rules #####
 
-# Main rule that calls the validation function and evaluates results
+# Call the validation function
+machines_validated = validate_attribute_in_list("google_compute_instance",
+                     "machine_type", allowed_types)
+# Main rule
 main = rule {
-  validate_attribute_in_list("google_compute_instance", "machine_type",
-                             allowed_types)
+  machines_validated
 }

@@ -62,7 +62,11 @@ limits = {
 }
 
 ##### Rules #####
+
+# Call the validation function
 cost_validated = limit_cost_by_workspace_type(limits)
+
+# Main rule
 main = rule {
   cost_validated
 }

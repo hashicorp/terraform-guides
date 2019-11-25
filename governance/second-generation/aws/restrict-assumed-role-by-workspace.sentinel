@@ -169,7 +169,11 @@ allowed_roles_map = {
 }
 
 ##### Rules #####
+
+# Call the validation function
 roles_validated = validate_assumed_roles(allowed_roles_map)
+
+# Main rule
 main = rule {
   roles_validated
 }

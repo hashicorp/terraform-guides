@@ -84,7 +84,11 @@ validate_attribute_has_value = func(type, attribute, value) {
 
 ##### Rules #####
 
-# Main rule that calls the validation function and evaluates results
+# Call the validation function
+app_services_validated = validate_attribute_has_value("azurerm_app_service",
+                         "https_only", true)
+
+# Main rule
 main = rule {
-  validate_attribute_has_value("azurerm_app_service", "https_only", true)
+  app_services_validated
 }

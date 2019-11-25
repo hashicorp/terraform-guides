@@ -32,8 +32,10 @@ prevent_non_root_providers = func() {
 
 ##### Rules #####
 
-# Main rule
+# Call the validation function
 providers_validated = prevent_non_root_providers()
+
+# Main rule
 main = rule {
   providers_validated
 }

@@ -91,7 +91,7 @@ validate_attribute_less_than_value = func(type, attribute, max_value) {
 
 ##### Rules #####
 
-# Call the validation function and assign results for both num_cpus and memory
+# Call the validation functions
 valid_cpu = validate_attribute_less_than_value("vsphere_virtual_machine", "num_cpus", 4)
 valid_memory = validate_attribute_less_than_value("vsphere_virtual_machine", "memory", 8192)
 
