@@ -115,7 +115,7 @@ mandatory_labels = [
 labels_validated = validate_attribute_contains_list("google_compute_instance",
                    "labels", mandatory_labels)
 
-#Main rule that evaluates results
+#Main rule
 main = rule {
   labels_validated
 }

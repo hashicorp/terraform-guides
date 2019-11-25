@@ -44,8 +44,10 @@ blacklist = [
 
 ##### Rules #####
 
-# Main rule
+# Call the validation function
 providers_validated = validate_providers(blacklist)
+
+# Main rule
 main = rule {
   providers_validated
 }

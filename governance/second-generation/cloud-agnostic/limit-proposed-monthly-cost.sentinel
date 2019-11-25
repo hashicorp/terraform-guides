@@ -40,7 +40,11 @@ limit_proposed_monthly_cost = func(limit) {
 limit = decimal.new(1000)
 
 ##### Rules #####
+
+# Call the validation function
 cost_validated = limit_proposed_monthly_cost(limit)
+
+# Main rule
 main = rule {
   cost_validated
 }

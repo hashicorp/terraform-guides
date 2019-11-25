@@ -81,7 +81,10 @@ allowed_publishers = [
 
 ##### Rules #####
 
-# Main rule that calls the validation function and evaluates results
+# Call the validation function
+publishers_validated = validate_publishers(allowed_publishers)
+
+# Main rule
 main = rule {
-  validate_publishers(allowed_publishers)
+  publishers_validated
 }

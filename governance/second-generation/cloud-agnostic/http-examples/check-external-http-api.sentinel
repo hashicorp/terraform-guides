@@ -41,7 +41,11 @@ check_external_approval_system = func() {
 }
 
 ##### Rules #####
+
+# Call the validation function
 approved = check_external_approval_system()
+
+# Main rule
 main = rule {
   approved
 }

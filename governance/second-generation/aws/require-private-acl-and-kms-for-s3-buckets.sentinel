@@ -104,7 +104,7 @@ validate_private_acl_and_kms_encryption = func() {
 
 ##### Rules #####
 
-# Call the validation function and assign results
+# Call the validation function
 validations = validate_private_acl_and_kms_encryption()
 all_buckets_private = validations["private"]
 all_buckets_encrypted_by_kms = validations["encrypted_by_kms"]

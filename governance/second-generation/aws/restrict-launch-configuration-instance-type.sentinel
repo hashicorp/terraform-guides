@@ -75,7 +75,7 @@ validate_instance_types = func(allowed_types) {
       # validated = false
     } else {
       # Validate that each instance has allowed value
-      if (r.applied.instance_type else "") not in allowed_types {
+      if r.applied.instance_type else "" not in allowed_types {
         print("Launch configuration", address,
               "has attribute instance type with value", r.applied.instance_type,
               "that is not in the allowed list:", allowed_types)
@@ -100,7 +100,10 @@ allowed_types = [
 
 ##### Rules #####
 
-# Main rule that calls the validation function and evaluates results
+# Call the validation function
+lcs_validated = validate_instance_types(allowed_types)
+
+# Main rule
 main = rule {
-  validate_instance_types(allowed_types)
+  lcs_validated
 }

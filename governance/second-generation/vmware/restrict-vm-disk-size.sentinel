@@ -91,7 +91,7 @@ validate_disk_size = func(disk_limit) {
 
 ##### Rules #####
 
-# Call the validation function and assign results
+# Call the validation function
 vm_disks_validated = validate_disk_size(100)
 
 # Main rule

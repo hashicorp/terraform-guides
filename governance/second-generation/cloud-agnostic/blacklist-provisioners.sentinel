@@ -76,8 +76,10 @@ blacklisted_provisioners = ["local-exec", "remote-exec"]
 
 ##### Rules #####
 
-# Main rule
+# Call the validation function
 provisioners_validated = validate_provisioners(blacklisted_provisioners)
+
+# Main rule
 main = rule {
   provisioners_validated
 }

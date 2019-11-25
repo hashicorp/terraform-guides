@@ -156,7 +156,7 @@ validate_cidr_blocks = func() {
 
 ##### Rules #####
 
-# Call the validation function and assign results
+# Call the validation function
 sgrs_validated = validate_cidr_blocks()
 
 # Main rule

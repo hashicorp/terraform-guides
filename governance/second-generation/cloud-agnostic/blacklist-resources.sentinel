@@ -63,7 +63,10 @@ blacklist = [
 
 ##### Rules #####
 
+# Call the validation function
+resources_validated = validate_resources(blacklist)
+
 # Main rule
 main = rule {
-  validate_resources(blacklist)
+  resources_validated
 }

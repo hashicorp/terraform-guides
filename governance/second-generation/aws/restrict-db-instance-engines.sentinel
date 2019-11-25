@@ -68,7 +68,7 @@ validate_attribute_in_list = func(type, attribute, allowed_values) {
       # validated = false
     } else {
       # Validate that each instance has allowed value
-      if (r.applied[attribute] else "") not in allowed_values {
+      if r.applied[attribute] else "" not in allowed_values {
         print("Resource", address, "has attribute", attribute, "with value",
               r.applied[attribute] else "",
               "that is not in the allowed list:", allowed_values)
@@ -91,7 +91,11 @@ allowed_engines = [
 
 ##### Rules #####
 
-# Main rule that calls the validation function and evaluates results
+# Call the validation function
+engines_validated = validate_attribute_in_list("aws_db_instance",
+                    "engine", allowed_engines)
+
+# Main rule
 main = rule {
-  validate_attribute_in_list("aws_db_instance", "engine", allowed_engines)
+  engines_validated
 }
