@@ -1,0 +1,81 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {},
+		"modules": {
+			"first": {
+				"config":     {},
+				"references": {},
+				"source":     "Azure/network/azurerm",
+				"version":    "1.1.1",
+			},
+		},
+		"outputs": {},
+		"providers": {},
+		"resources": {},
+		"variables": {},
+	},
+
+	"module.first": {
+		"data": {},
+		"modules": {
+			"second": {
+				"config":     {},
+				"references": {},
+				"source":     "Azure/compute/azurerm",
+				"version":    "1.1.7",
+			},
+		},
+		"outputs": {},
+		"providers": {},
+		"resources": {},
+		"variables": {},
+	},
+
+	"module.first.module.second": {
+		"data":    {},
+		"modules": {},
+		"outputs": {},
+		"providers": {},
+		"resources": {},
+		"variables": {},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"first",
+	],
+	[
+		"first",
+		"second",
+	],
+]
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+modules = _modules.root.modules
+providers = _modules.root.providers
+resources = _modules.root.resources
+variables = _modules.root.variables
+outputs = _modules.root.outputs

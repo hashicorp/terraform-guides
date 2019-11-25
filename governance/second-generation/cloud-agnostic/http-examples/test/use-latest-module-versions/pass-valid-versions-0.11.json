@@ -1,0 +1,12 @@
+{
+  "param": {
+    "organization": "Cloud-Operations",
+    "token": ""
+  },
+  "mock": {
+    "tfconfig": "mock-tfconfig-pass-valid-versions-0.11.sentinel"
+  },
+  "test": {
+    "main": true
+  }
+}
