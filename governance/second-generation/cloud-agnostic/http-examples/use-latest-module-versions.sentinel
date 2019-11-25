@@ -12,7 +12,6 @@ import "tfconfig"
 import "http"
 import "strings"
 import "json"
-import "types"
 
 ##### Parameters #####
 

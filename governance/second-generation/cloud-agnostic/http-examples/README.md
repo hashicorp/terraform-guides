@@ -1,6 +1,8 @@
 # Sentinel HTTP Import and Parameters Examples
 This directory contains examples of using the [HTTP import](https://docs.hashicorp.com/sentinel/imports/http) and [policy parameters](https://docs.hashicorp.com/sentinel/language/parameters) that were added in the Sentinel 0.13.0 runtime. Policy parameters allow you to specify API credentials without storing them in your policies which would be undesirable since policies are stored in VCS repositories.
 
+Be sure to use Sentinel 0.13.1 or higher with these policies since Sentinel 0.13.0 had a bug that prevented the second policy from working.
+
 ## Policies
 There are currently two example policies in this directory:
 * [check-external-http-api.sentinel](./check-external-http-api.sentinel)
