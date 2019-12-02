@@ -2,9 +2,9 @@ terraform {
   required_version = ">= 0.11.1"
 }
 
-variable "gcp_credentials" {
-  description = "GCP credentials needed by google provider"
-}
+//variable "gcp_credentials" {
+//  description = "GCP credentials needed by google provider"
+//}
 
 variable "gcp_project" {
   description = "GCP project name"
@@ -36,7 +36,7 @@ variable "image" {
 }
 
 provider "google" {
-  credentials = "${var.gcp_credentials}"
+//  credentials = "${var.gcp_credentials}"
   project     = "${var.gcp_project}"
   region      = "${var.gcp_region}"
 }
