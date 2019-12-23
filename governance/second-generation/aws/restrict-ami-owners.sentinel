@@ -1,0 +1,89 @@
+# This policy uses the Sentinel tfstate import to restrict the owners set on
+# all instances of the aws_ami data source in all modules
+
+##### Imports #####
+import "tfstate"
+import "types"
+import "strings"
+
+##### Functions #####
+
+# Find all data sources of a specific type from all modules using the
+# tfstate import
+find_datasources_from_state = func(type) {
+
+  datasources = {}
+
+  # Iterate over all modules in the tfstate import
+  for tfstate.module_paths else [] as path {
+    # Iterate over the named datasources of desired type in the module
+    for tfstate.module(path).data[type] else {} as name, instances {
+      # Iterate over datasource instances
+      for instances as index, d {
+
+        # Get the address of the instance
+        if length(path) == 0 {
+          # root module
+          address = type + "." + name + "[" + string(index) + "]"
+        } else {
+          # non-root module
+          address = "module." + strings.join(path, ".module.") + "." +
+                    type + "." + name + "[" + string(index) + "]"
+        }
+
+        # Add the instance to datasources map, setting the key to the address
+        datasources[address] = d
+      }
+    }
+  }
+
+  return datasources
+}
+
+# Validate that owners of AMIs are in allowed list
+validate_ami_owners = func(allowed_list) {
+
+	validated = true
+
+	# Initialize empty map of owners of AMIs
+	owners = {}
+
+	# Get all AWS AMI data sources from tfconfig
+	aws_amis = find_datasources_from_state("aws_ami")
+
+	# Iterate through all AMIs
+	for aws_amis as address, d {
+		# Process config
+    if types.type_of(d.attr.owners else null) is "list" {
+			# Iterate over items in the owners list
+			for d.attr.owners as owner {
+        if owner not in allowed_list {
+          print("AMI", address, "has owner", owner,
+                "that is not in the allowed list:", allowed_list)
+          validated = false
+        } // end owner check
+			} // end for owners
+		} // end check that d.attr.owners is list
+
+	} // end for AMIs
+
+	return validated
+}
+
+
+##### Allowed Owners $$$$$
+allowed_owners = [
+  "self",
+  "099720109477",
+  "099720109478",
+]
+
+##### Rules #####
+
+# Call the validation function
+ami_owners_validated = validate_ami_owners(allowed_owners)
+
+# Main Rule
+main = rule {
+	ami_owners_validated
+}
