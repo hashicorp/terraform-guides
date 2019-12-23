@@ -4,7 +4,7 @@ find_resources_from_state = func(type) {
   resources = {}
 
   # Iterate over all modules in the tfstate import
-  for tfstate.module_paths as path {
+  for tfstate.module_paths else [] as path {
     # Iterate over the named resources of desired type in the module
     for tfstate.module(path).resources[type] else {} as name, instances {
       # Iterate over resource instances

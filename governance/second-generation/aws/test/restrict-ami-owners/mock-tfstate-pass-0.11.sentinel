@@ -1,0 +1,399 @@
+import "strings"
+import "types"
+
+_modules = {
+	"root": {
+		"data": {
+			"aws_ami": {
+				"ubuntu": {
+					0: {
+						"attr": {
+							"architecture": "x86_64",
+							"block_device_mappings": [
+								{
+									"device_name":  "/dev/sdb",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral0",
+								},
+								{
+									"device_name": "/dev/sda1",
+									"ebs": {
+										"delete_on_termination": true,
+										"encrypted":             false,
+										"iops":                  "0",
+										"snapshot_id":           "snap-0d0c75281cdaf5fe5",
+										"volume_size":           "8",
+										"volume_type":           "gp2",
+									},
+									"no_device":    "",
+									"virtual_name": "",
+								},
+								{
+									"device_name":  "/dev/sdc",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral1",
+								},
+							],
+							"creation_date": "2019-11-11T13:12:33.000Z",
+							"description":   "Canonical, Ubuntu, 14.04 LTS, amd64 trusty image build on 2019-11-07",
+							"filter": [
+								{
+									"name": "virtualization-type",
+									"values": [
+										"hvm",
+									],
+								},
+								{
+									"name": "name",
+									"values": [
+										"ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*",
+									],
+								},
+							],
+							"hypervisor":     "xen",
+							"id":             "ami-000b3a073fc20e415",
+							"image_id":       "ami-000b3a073fc20e415",
+							"image_location": "099720109477/ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"image_type":     "machine",
+							"most_recent":    true,
+							"name":           "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"owner_id":       "099720109477",
+							"owners": [
+								"099720109477",
+							],
+							"product_codes":     [],
+							"public":            true,
+							"root_device_name":  "/dev/sda1",
+							"root_device_type":  "ebs",
+							"root_snapshot_id":  "snap-0d0c75281cdaf5fe5",
+							"sriov_net_support": "simple",
+							"state":             "available",
+							"state_reason": {
+								"code":    "UNSET",
+								"message": "UNSET",
+							},
+							"tags":                {},
+							"virtualization_type": "hvm",
+						},
+						"depends_on": [],
+						"id":         "ami-000b3a073fc20e415",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+		"outputs":   {},
+		"path":      [],
+		"resources": {},
+	},
+
+	"module.more-amis-1": {
+		"data": {
+			"aws_ami": {
+				"ubuntu": {
+					0: {
+						"attr": {
+							"architecture": "x86_64",
+							"block_device_mappings": [
+								{
+									"device_name":  "/dev/sdb",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral0",
+								},
+								{
+									"device_name": "/dev/sda1",
+									"ebs": {
+										"delete_on_termination": true,
+										"encrypted":             false,
+										"iops":                  "0",
+										"snapshot_id":           "snap-0d0c75281cdaf5fe5",
+										"volume_size":           "8",
+										"volume_type":           "gp2",
+									},
+									"no_device":    "",
+									"virtual_name": "",
+								},
+								{
+									"device_name":  "/dev/sdc",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral1",
+								},
+							],
+							"creation_date": "2019-11-11T13:12:33.000Z",
+							"description":   "Canonical, Ubuntu, 14.04 LTS, amd64 trusty image build on 2019-11-07",
+							"filter": [
+								{
+									"name": "virtualization-type",
+									"values": [
+										"hvm",
+									],
+								},
+								{
+									"name": "name",
+									"values": [
+										"ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*",
+									],
+								},
+							],
+							"hypervisor":     "xen",
+							"id":             "ami-000b3a073fc20e415",
+							"image_id":       "ami-000b3a073fc20e415",
+							"image_location": "099720109477/ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"image_type":     "machine",
+							"most_recent":    true,
+							"name":           "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"owner_id":       "099720109477",
+							"owners": [
+								"099720109477",
+								"099720109478",
+							],
+							"product_codes":     [],
+							"public":            true,
+							"root_device_name":  "/dev/sda1",
+							"root_device_type":  "ebs",
+							"root_snapshot_id":  "snap-0d0c75281cdaf5fe5",
+							"sriov_net_support": "simple",
+							"state":             "available",
+							"state_reason": {
+								"code":    "UNSET",
+								"message": "UNSET",
+							},
+							"tags":                {},
+							"virtualization_type": "hvm",
+						},
+						"depends_on": [],
+						"id":         "ami-000b3a073fc20e415",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+		"outputs": {},
+		"path": [
+			"more-amis-1",
+		],
+		"resources": {},
+	},
+
+	"module.more-amis-2": {
+		"data": {
+			"aws_ami": {
+				"ubuntu": {
+					0: {
+						"attr": {
+							"architecture": "x86_64",
+							"block_device_mappings": [
+								{
+									"device_name":  "/dev/sdb",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral0",
+								},
+								{
+									"device_name": "/dev/sda1",
+									"ebs": {
+										"delete_on_termination": true,
+										"encrypted":             false,
+										"iops":                  "0",
+										"snapshot_id":           "snap-0d0c75281cdaf5fe5",
+										"volume_size":           "8",
+										"volume_type":           "gp2",
+									},
+									"no_device":    "",
+									"virtual_name": "",
+								},
+								{
+									"device_name":  "/dev/sdc",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral1",
+								},
+							],
+							"creation_date": "2019-11-11T13:12:33.000Z",
+							"description":   "Canonical, Ubuntu, 14.04 LTS, amd64 trusty image build on 2019-11-07",
+							"filter": [
+								{
+									"name": "virtualization-type",
+									"values": [
+										"hvm",
+									],
+								},
+								{
+									"name": "name",
+									"values": [
+										"ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*",
+									],
+								},
+							],
+							"hypervisor":     "xen",
+							"id":             "ami-000b3a073fc20e415",
+							"image_id":       "ami-000b3a073fc20e415",
+							"image_location": "099720109477/ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"image_type":     "machine",
+							"most_recent":    true,
+							"name":           "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"owner_id":       "099720109477",
+							"owners": [
+								"099720109477",
+								"self",
+							],
+							"product_codes":     [],
+							"public":            true,
+							"root_device_name":  "/dev/sda1",
+							"root_device_type":  "ebs",
+							"root_snapshot_id":  "snap-0d0c75281cdaf5fe5",
+							"sriov_net_support": "simple",
+							"state":             "available",
+							"state_reason": {
+								"code":    "UNSET",
+								"message": "UNSET",
+							},
+							"tags":                {},
+							"virtualization_type": "hvm",
+						},
+						"depends_on": [],
+						"id":         "ami-000b3a073fc20e415",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+		"outputs": {},
+		"path": [
+			"more-amis-2",
+		],
+		"resources": {},
+	},
+
+	"module.more-amis-3": {
+		"data": {
+			"aws_ami": {
+				"ubuntu": {
+					0: {
+						"attr": {
+							"architecture": "x86_64",
+							"block_device_mappings": [
+								{
+									"device_name":  "/dev/sdb",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral0",
+								},
+								{
+									"device_name": "/dev/sda1",
+									"ebs": {
+										"delete_on_termination": true,
+										"encrypted":             false,
+										"iops":                  "0",
+										"snapshot_id":           "snap-0d0c75281cdaf5fe5",
+										"volume_size":           "8",
+										"volume_type":           "gp2",
+									},
+									"no_device":    "",
+									"virtual_name": "",
+								},
+								{
+									"device_name":  "/dev/sdc",
+									"ebs":          {},
+									"no_device":    "",
+									"virtual_name": "ephemeral1",
+								},
+							],
+							"creation_date": "2019-11-11T13:12:33.000Z",
+							"description":   "Canonical, Ubuntu, 14.04 LTS, amd64 trusty image build on 2019-11-07",
+							"filter": [
+								{
+									"name": "virtualization-type",
+									"values": [
+										"hvm",
+									],
+								},
+								{
+									"name": "name",
+									"values": [
+										"ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-*",
+									],
+								},
+							],
+							"hypervisor":     "xen",
+							"id":             "ami-000b3a073fc20e415",
+							"image_id":       "ami-000b3a073fc20e415",
+							"image_location": "099720109477/ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"image_type":     "machine",
+							"most_recent":    true,
+							"name":           "ubuntu/images/hvm-ssd/ubuntu-trusty-14.04-amd64-server-20191107",
+							"owner_id":       "099720109477",
+							"owners": [
+								"self",
+								"099720109478",
+							],
+							"product_codes":     [],
+							"public":            true,
+							"root_device_name":  "/dev/sda1",
+							"root_device_type":  "ebs",
+							"root_snapshot_id":  "snap-0d0c75281cdaf5fe5",
+							"sriov_net_support": "simple",
+							"state":             "available",
+							"state_reason": {
+								"code":    "UNSET",
+								"message": "UNSET",
+							},
+							"tags":                {},
+							"virtualization_type": "hvm",
+						},
+						"depends_on": [],
+						"id":         "ami-000b3a073fc20e415",
+						"tainted":    false,
+					},
+				},
+			},
+		},
+		"outputs": {},
+		"path": [
+			"more-amis-3",
+		],
+		"resources": {},
+	},
+}
+
+module_paths = [
+	[],
+	[
+		"more-amis-1",
+	],
+	[
+		"more-amis-2",
+	],
+	[
+		"more-amis-3",
+	],
+]
+
+terraform_version = "0.11.14"
+
+module = func(path) {
+	if types.type_of(path) is not "list" {
+		error("expected list, got", types.type_of(path))
+	}
+
+	if length(path) < 1 {
+		return _modules.root
+	}
+
+	addr = []
+	for path as p {
+		append(addr, "module")
+		append(addr, p)
+	}
+
+	return _modules[strings.join(addr, ".")]
+}
+
+data = _modules.root.data
+outputs = _modules.root.outputs
+path = _modules.root.path
+resources = _modules.root.resources

@@ -1,0 +1,8 @@
+{
+  "mock": {
+    "tfstate": "mock-tfstate-pass-0.11.sentinel"
+  },
+  "test": {
+    "main": true
+  }
+}
