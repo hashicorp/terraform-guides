@@ -27,11 +27,11 @@ limit_proposed_monthly_cost = func(limit) {
   # Compare proposed monthly cost to the limit
   if proposed_cost.lte(limit) {
     print("Proposed monthly cost", proposed_cost.string,
-          "is under the limit:", limit.string)
+          "is under the limit: $", limit.string)
     return true
   } else {
     print("Proposed monthly cost", proposed_cost.string,
-          "is over the limit:", limit.string)
+          "is over the limit: $", limit.string)
     return false
   }
 }
