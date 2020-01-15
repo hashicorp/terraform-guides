@@ -234,10 +234,20 @@ else
   variables_file=variables.csv
 fi
 
+# Function to process special characters in sed
+escape_string()
+{
+  printf '%s' "$1" | sed -e 's/\([&\]\)/\\\1/g'
+}
+
+sedDelim=$(printf '\001')
+
 # Add variables to workspace
 while IFS=',' read -r key value category hcl sensitive
 do
-  sed -e "s/my-organization/$organization/" -e "s/my-workspace/${workspace}/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
+  fixedkey=$(escape_string "$key")
+  fixedvalue=$(escape_string "$value")
+  sed -e "s/my-organization/$organization/" -e "s/my-workspace/${workspace}/" -e "s${sedDelim}my-key${sedDelim}$fixedkey${sedDelim}" -e "s${sedDelim}my-value${sedDelim}$fixedvalue${sedDelim}" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json | sed -e 's|\\|\\\\|g' > variable.json
   echo "Adding variable $key with value $value in category $category with hcl $hcl and sensitive $sensitive"
   upload_variable_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 done < ${variables_file}
