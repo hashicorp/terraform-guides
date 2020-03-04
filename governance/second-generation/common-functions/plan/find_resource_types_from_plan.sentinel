@@ -1,0 +1,17 @@
+# Find all resource types from all modules using the tfplan import
+find_resource_types_from_plan = func() {
+
+  types = []
+
+  # Iterate over all modules in the tfplan import
+  for tfplan.module_paths as path {
+    # Find all types of resources used in the module
+    for tfplan.module(path).resources else {} as type {
+        #print("type is:", type)
+        # Add the type to the types list
+        append(types, type)
+    }
+  }
+
+  return types
+}
