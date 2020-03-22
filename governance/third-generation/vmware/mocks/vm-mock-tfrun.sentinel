@@ -1,0 +1,35 @@
+import "strings"
+import "types"
+
+created_at = "2020-03-22T21:36:19.425Z"
+message = "Queued manually using Terraform"
+speculative = false
+is_destroy = false
+
+variables = {
+	"VSPHERE_PASSWORD": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"VSPHERE_SERVER": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"VSPHERE_USER": {
+		"category":  "env",
+		"sensitive": false,
+	},
+}
+
+organization = {
+	"name": "Roger-Demos",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2020-03-22T21:15:55.019Z",
+	"description":       null,
+	"name":              "vsphere-test",
+	"vcs_repo":          null,
+	"working_directory": "",
+}

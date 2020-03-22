@@ -1,0 +1,1094 @@
+terraform_version = "0.12.24"
+
+planned_values = {
+	"outputs": {
+		"vm_id": {
+			"name":      "vm_id",
+			"sensitive": false,
+			"value":     undefined,
+		},
+	},
+	"resources": {
+		"azurerm_network_interface.main": {
+			"address":        "azurerm_network_interface.main",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_network_interface",
+			"values": {
+				"enable_accelerated_networking": false,
+				"enable_ip_forwarding":          false,
+				"ip_configuration": [
+					{
+						"name": "testconfiguration1",
+						"private_ip_address_allocation": "dynamic",
+						"private_ip_address_version":    "IPv4",
+						"public_ip_address_id":          null,
+					},
+				],
+				"location":            "eastus",
+				"name":                "sehangout-azurevmdemo-nic",
+				"resource_group_name": "sehangout-azurevmdemo-resources",
+				"tags":                null,
+				"timeouts":            null,
+			},
+		},
+		"azurerm_resource_group.main": {
+			"address":        "azurerm_resource_group.main",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_resource_group",
+			"values": {
+				"location": "eastus",
+				"name":     "sehangout-azurevmdemo-resources",
+				"tags":     null,
+				"timeouts": null,
+			},
+		},
+		"azurerm_subnet.internal": {
+			"address":        "azurerm_subnet.internal",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "internal",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_subnet",
+			"values": {
+				"address_prefix": "10.0.2.0/24",
+				"delegation":     [],
+				"enforce_private_link_endpoint_network_policies": false,
+				"enforce_private_link_service_network_policies":  false,
+				"name":                 "internal",
+				"resource_group_name":  "sehangout-azurevmdemo-resources",
+				"service_endpoints":    null,
+				"timeouts":             null,
+				"virtual_network_name": "sehangout-azurevmdemo-network",
+			},
+		},
+		"azurerm_virtual_machine.demo": {
+			"address":        "azurerm_virtual_machine.demo",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "demo",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_virtual_machine",
+			"values": {
+				"additional_capabilities":          [],
+				"boot_diagnostics":                 [],
+				"delete_data_disks_on_termination": true,
+				"delete_os_disk_on_termination":    true,
+				"location":                         "eastus",
+				"name":                             "sehangout-azurevmdemo-vm",
+				"os_profile": [
+					{
+						"admin_password": "Password1234!",
+						"admin_username": "testadmin",
+						"computer_name":  "hostname",
+					},
+				],
+				"os_profile_linux_config": [
+					{
+						"disable_password_authentication": false,
+						"ssh_keys":                        [],
+					},
+				],
+				"os_profile_secrets":        [],
+				"os_profile_windows_config": [],
+				"plan": [],
+				"primary_network_interface_id": null,
+				"proximity_placement_group_id": null,
+				"resource_group_name":          "sehangout-azurevmdemo-resources",
+				"storage_image_reference": [
+					{
+						"id":        "",
+						"offer":     "UbuntuServer",
+						"publisher": "Canonical",
+						"sku":       "16.04-LTS",
+						"version":   "latest",
+					},
+				],
+				"storage_os_disk": [
+					{
+						"caching":                   "ReadWrite",
+						"create_option":             "FromImage",
+						"image_uri":                 null,
+						"managed_disk_type":         "Standard_LRS",
+						"name":                      "myosdisk1",
+						"vhd_uri":                   null,
+						"write_accelerator_enabled": false,
+					},
+				],
+				"tags": {
+					"environment": "staging",
+				},
+				"timeouts": null,
+				"vm_size":  "Basic_A0",
+				"zones":    null,
+			},
+		},
+		"azurerm_virtual_network.main": {
+			"address":        "azurerm_virtual_network.main",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_virtual_network",
+			"values": {
+				"address_space": [
+					"10.0.0.0/16",
+				],
+				"ddos_protection_plan": [],
+				"dns_servers":          null,
+				"location":             "eastus",
+				"name":                 "sehangout-azurevmdemo-network",
+				"resource_group_name":  "sehangout-azurevmdemo-resources",
+				"tags":                 null,
+				"timeouts":             null,
+			},
+		},
+	},
+}
+
+variables = {
+	"prefix": {
+		"name":  "prefix",
+		"value": "sehangout-azurevmdemo",
+	},
+	"vm_size": {
+		"name":  "vm_size",
+		"value": "Basic_A0",
+	},
+}
+
+resource_changes = {
+	"azurerm_network_interface.main": {
+		"address": "azurerm_network_interface.main",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"enable_accelerated_networking": false,
+				"enable_ip_forwarding":          false,
+				"ip_configuration": [
+					{
+						"name": "testconfiguration1",
+						"private_ip_address_allocation": "dynamic",
+						"private_ip_address_version":    "IPv4",
+						"public_ip_address_id":          null,
+					},
+				],
+				"location":            "eastus",
+				"name":                "sehangout-azurevmdemo-nic",
+				"resource_group_name": "sehangout-azurevmdemo-resources",
+				"tags":                null,
+				"timeouts":            null,
+			},
+			"after_unknown": {
+				"applied_dns_servers": true,
+				"dns_servers":         true,
+				"id":                  true,
+				"internal_dns_name_label": true,
+				"ip_configuration": [
+					{
+						"primary":            true,
+						"private_ip_address": true,
+						"subnet_id":          true,
+					},
+				],
+				"mac_address":          true,
+				"private_ip_address":   true,
+				"private_ip_addresses": true,
+				"virtual_machine_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "main",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_network_interface",
+	},
+	"azurerm_resource_group.main": {
+		"address": "azurerm_resource_group.main",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"location": "eastus",
+				"name":     "sehangout-azurevmdemo-resources",
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "main",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_resource_group",
+	},
+	"azurerm_subnet.internal": {
+		"address": "azurerm_subnet.internal",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"address_prefix": "10.0.2.0/24",
+				"delegation":     [],
+				"enforce_private_link_endpoint_network_policies": false,
+				"enforce_private_link_service_network_policies":  false,
+				"name":                 "internal",
+				"resource_group_name":  "sehangout-azurevmdemo-resources",
+				"service_endpoints":    null,
+				"timeouts":             null,
+				"virtual_network_name": "sehangout-azurevmdemo-network",
+			},
+			"after_unknown": {
+				"delegation": [],
+				"id":         true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "internal",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_subnet",
+	},
+	"azurerm_virtual_machine.demo": {
+		"address": "azurerm_virtual_machine.demo",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"additional_capabilities":          [],
+				"boot_diagnostics":                 [],
+				"delete_data_disks_on_termination": true,
+				"delete_os_disk_on_termination":    true,
+				"location":                         "eastus",
+				"name":                             "sehangout-azurevmdemo-vm",
+				"os_profile": [
+					{
+						"admin_password": "Password1234!",
+						"admin_username": "testadmin",
+						"computer_name":  "hostname",
+					},
+				],
+				"os_profile_linux_config": [
+					{
+						"disable_password_authentication": false,
+						"ssh_keys":                        [],
+					},
+				],
+				"os_profile_secrets":        [],
+				"os_profile_windows_config": [],
+				"plan": [],
+				"primary_network_interface_id": null,
+				"proximity_placement_group_id": null,
+				"resource_group_name":          "sehangout-azurevmdemo-resources",
+				"storage_image_reference": [
+					{
+						"id":        "",
+						"offer":     "UbuntuServer",
+						"publisher": "Canonical",
+						"sku":       "16.04-LTS",
+						"version":   "latest",
+					},
+				],
+				"storage_os_disk": [
+					{
+						"caching":                   "ReadWrite",
+						"create_option":             "FromImage",
+						"image_uri":                 null,
+						"managed_disk_type":         "Standard_LRS",
+						"name":                      "myosdisk1",
+						"vhd_uri":                   null,
+						"write_accelerator_enabled": false,
+					},
+				],
+				"tags": {
+					"environment": "staging",
+				},
+				"timeouts": null,
+				"vm_size":  "Basic_A0",
+				"zones":    null,
+			},
+			"after_unknown": {
+				"additional_capabilities": [],
+				"availability_set_id":     true,
+				"boot_diagnostics":        [],
+				"id":                      true,
+				"identity":                true,
+				"license_type":            true,
+				"network_interface_ids":   true,
+				"os_profile": [
+					{
+						"custom_data": true,
+					},
+				],
+				"os_profile_linux_config": [
+					{
+						"ssh_keys": [],
+					},
+				],
+				"os_profile_secrets":        [],
+				"os_profile_windows_config": [],
+				"plan":              [],
+				"storage_data_disk": true,
+				"storage_image_reference": [
+					{},
+				],
+				"storage_os_disk": [
+					{
+						"disk_size_gb":    true,
+						"managed_disk_id": true,
+						"os_type":         true,
+					},
+				],
+				"tags": {},
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "demo",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_virtual_machine",
+	},
+	"azurerm_virtual_network.main": {
+		"address": "azurerm_virtual_network.main",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"address_space": [
+					"10.0.0.0/16",
+				],
+				"ddos_protection_plan": [],
+				"dns_servers":          null,
+				"location":             "eastus",
+				"name":                 "sehangout-azurevmdemo-network",
+				"resource_group_name":  "sehangout-azurevmdemo-resources",
+				"tags":                 null,
+				"timeouts":             null,
+			},
+			"after_unknown": {
+				"address_space": [
+					false,
+				],
+				"ddos_protection_plan": [],
+				"id":     true,
+				"subnet": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "main",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_virtual_network",
+	},
+}
+
+output_changes = {
+	"vm_id": {
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after":         undefined,
+			"after_unknown": true,
+			"before":        null,
+		},
+		"name": "vm_id",
+	},
+}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"azurerm": {
+				"expressions": {
+					"features": [
+						{},
+					],
+				},
+				"name": "azurerm",
+			},
+		},
+		"root_module": {
+			"outputs": {
+				"vm_id": {
+					"expression": {
+						"references": [
+							"azurerm_virtual_machine.demo",
+						],
+					},
+				},
+			},
+			"resources": [
+				{
+					"address": "azurerm_network_interface.main",
+					"expressions": {
+						"ip_configuration": [
+							{
+								"name": {
+									"constant_value": "testconfiguration1",
+								},
+								"private_ip_address_allocation": {
+									"constant_value": "Dynamic",
+								},
+								"subnet_id": {
+									"references": [
+										"azurerm_subnet.internal",
+									],
+								},
+							},
+						],
+						"location": {
+							"references": [
+								"azurerm_resource_group.main",
+							],
+						},
+						"name": {
+							"references": [
+								"var.prefix",
+							],
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.main",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "main",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_network_interface",
+				},
+				{
+					"address": "azurerm_resource_group.main",
+					"expressions": {
+						"location": {
+							"constant_value": "East US",
+						},
+						"name": {
+							"references": [
+								"var.prefix",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "main",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_resource_group",
+				},
+				{
+					"address": "azurerm_subnet.internal",
+					"expressions": {
+						"address_prefix": {
+							"constant_value": "10.0.2.0/24",
+						},
+						"name": {
+							"constant_value": "internal",
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.main",
+							],
+						},
+						"virtual_network_name": {
+							"references": [
+								"azurerm_virtual_network.main",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "internal",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_subnet",
+				},
+				{
+					"address": "azurerm_virtual_machine.demo",
+					"expressions": {
+						"delete_data_disks_on_termination": {
+							"constant_value": true,
+						},
+						"delete_os_disk_on_termination": {
+							"constant_value": true,
+						},
+						"location": {
+							"references": [
+								"azurerm_resource_group.main",
+							],
+						},
+						"name": {
+							"references": [
+								"var.prefix",
+							],
+						},
+						"network_interface_ids": {
+							"references": [
+								"azurerm_network_interface.main",
+							],
+						},
+						"os_profile": [
+							{
+								"admin_password": {
+									"constant_value": "Password1234!",
+								},
+								"admin_username": {
+									"constant_value": "testadmin",
+								},
+								"computer_name": {
+									"constant_value": "hostname",
+								},
+							},
+						],
+						"os_profile_linux_config": [
+							{
+								"disable_password_authentication": {
+									"constant_value": false,
+								},
+							},
+						],
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.main",
+							],
+						},
+						"storage_image_reference": [
+							{
+								"offer": {
+									"constant_value": "UbuntuServer",
+								},
+								"publisher": {
+									"constant_value": "Canonical",
+								},
+								"sku": {
+									"constant_value": "16.04-LTS",
+								},
+								"version": {
+									"constant_value": "latest",
+								},
+							},
+						],
+						"storage_os_disk": [
+							{
+								"caching": {
+									"constant_value": "ReadWrite",
+								},
+								"create_option": {
+									"constant_value": "FromImage",
+								},
+								"managed_disk_type": {
+									"constant_value": "Standard_LRS",
+								},
+								"name": {
+									"constant_value": "myosdisk1",
+								},
+							},
+						],
+						"tags": {
+							"constant_value": {
+								"environment": "staging",
+							},
+						},
+						"vm_size": {
+							"references": [
+								"var.vm_size",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "demo",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_virtual_machine",
+				},
+				{
+					"address": "azurerm_virtual_network.main",
+					"expressions": {
+						"address_space": {
+							"constant_value": [
+								"10.0.0.0/16",
+							],
+						},
+						"location": {
+							"references": [
+								"azurerm_resource_group.main",
+							],
+						},
+						"name": {
+							"references": [
+								"var.prefix",
+							],
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.main",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "main",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_virtual_network",
+				},
+			],
+			"variables": {
+				"prefix": {
+					"default": "sehangout-azurevmdemo",
+				},
+				"vm_size": {
+					"default": "Basic_A0",
+				},
+			},
+		},
+	},
+	"format_version": "0.1",
+	"output_changes": {
+		"vm_id": {
+			"actions": [
+				"create",
+			],
+			"after_unknown": true,
+			"before":        null,
+		},
+	},
+	"planned_values": {
+		"outputs": {
+			"vm_id": {
+				"sensitive": false,
+			},
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address":        "azurerm_network_interface.main",
+					"mode":           "managed",
+					"name":           "main",
+					"provider_name":  "azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_network_interface",
+					"values": {
+						"enable_accelerated_networking": false,
+						"enable_ip_forwarding":          false,
+						"ip_configuration": [
+							{
+								"name": "testconfiguration1",
+								"private_ip_address_allocation": "dynamic",
+								"private_ip_address_version":    "IPv4",
+								"public_ip_address_id":          null,
+							},
+						],
+						"location":            "eastus",
+						"name":                "sehangout-azurevmdemo-nic",
+						"resource_group_name": "sehangout-azurevmdemo-resources",
+						"tags":                null,
+						"timeouts":            null,
+					},
+				},
+				{
+					"address":        "azurerm_resource_group.main",
+					"mode":           "managed",
+					"name":           "main",
+					"provider_name":  "azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_resource_group",
+					"values": {
+						"location": "eastus",
+						"name":     "sehangout-azurevmdemo-resources",
+						"tags":     null,
+						"timeouts": null,
+					},
+				},
+				{
+					"address":        "azurerm_subnet.internal",
+					"mode":           "managed",
+					"name":           "internal",
+					"provider_name":  "azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_subnet",
+					"values": {
+						"address_prefix": "10.0.2.0/24",
+						"delegation":     [],
+						"enforce_private_link_endpoint_network_policies": false,
+						"enforce_private_link_service_network_policies":  false,
+						"name":                 "internal",
+						"resource_group_name":  "sehangout-azurevmdemo-resources",
+						"service_endpoints":    null,
+						"timeouts":             null,
+						"virtual_network_name": "sehangout-azurevmdemo-network",
+					},
+				},
+				{
+					"address":        "azurerm_virtual_machine.demo",
+					"mode":           "managed",
+					"name":           "demo",
+					"provider_name":  "azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_virtual_machine",
+					"values": {
+						"additional_capabilities":          [],
+						"boot_diagnostics":                 [],
+						"delete_data_disks_on_termination": true,
+						"delete_os_disk_on_termination":    true,
+						"location":                         "eastus",
+						"name":                             "sehangout-azurevmdemo-vm",
+						"os_profile": [
+							{
+								"admin_password": "Password1234!",
+								"admin_username": "testadmin",
+								"computer_name":  "hostname",
+							},
+						],
+						"os_profile_linux_config": [
+							{
+								"disable_password_authentication": false,
+								"ssh_keys":                        [],
+							},
+						],
+						"os_profile_secrets":        [],
+						"os_profile_windows_config": [],
+						"plan": [],
+						"primary_network_interface_id": null,
+						"proximity_placement_group_id": null,
+						"resource_group_name":          "sehangout-azurevmdemo-resources",
+						"storage_image_reference": [
+							{
+								"id":        "",
+								"offer":     "UbuntuServer",
+								"publisher": "Canonical",
+								"sku":       "16.04-LTS",
+								"version":   "latest",
+							},
+						],
+						"storage_os_disk": [
+							{
+								"caching":                   "ReadWrite",
+								"create_option":             "FromImage",
+								"image_uri":                 null,
+								"managed_disk_type":         "Standard_LRS",
+								"name":                      "myosdisk1",
+								"vhd_uri":                   null,
+								"write_accelerator_enabled": false,
+							},
+						],
+						"tags": {
+							"environment": "staging",
+						},
+						"timeouts": null,
+						"vm_size":  "Basic_A0",
+						"zones":    null,
+					},
+				},
+				{
+					"address":        "azurerm_virtual_network.main",
+					"mode":           "managed",
+					"name":           "main",
+					"provider_name":  "azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_virtual_network",
+					"values": {
+						"address_space": [
+							"10.0.0.0/16",
+						],
+						"ddos_protection_plan": [],
+						"dns_servers":          null,
+						"location":             "eastus",
+						"name":                 "sehangout-azurevmdemo-network",
+						"resource_group_name":  "sehangout-azurevmdemo-resources",
+						"tags":                 null,
+						"timeouts":             null,
+					},
+				},
+			],
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "azurerm_network_interface.main",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"enable_accelerated_networking": false,
+					"enable_ip_forwarding":          false,
+					"ip_configuration": [
+						{
+							"name": "testconfiguration1",
+							"private_ip_address_allocation": "dynamic",
+							"private_ip_address_version":    "IPv4",
+							"public_ip_address_id":          null,
+						},
+					],
+					"location":            "eastus",
+					"name":                "sehangout-azurevmdemo-nic",
+					"resource_group_name": "sehangout-azurevmdemo-resources",
+					"tags":                null,
+					"timeouts":            null,
+				},
+				"after_unknown": {
+					"applied_dns_servers": true,
+					"dns_servers":         true,
+					"id":                  true,
+					"internal_dns_name_label": true,
+					"ip_configuration": [
+						{
+							"primary":            true,
+							"private_ip_address": true,
+							"subnet_id":          true,
+						},
+					],
+					"mac_address":          true,
+					"private_ip_address":   true,
+					"private_ip_addresses": true,
+					"virtual_machine_id":   true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "main",
+			"provider_name": "azurerm",
+			"type":          "azurerm_network_interface",
+		},
+		{
+			"address": "azurerm_resource_group.main",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"location": "eastus",
+					"name":     "sehangout-azurevmdemo-resources",
+					"tags":     null,
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"id": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "main",
+			"provider_name": "azurerm",
+			"type":          "azurerm_resource_group",
+		},
+		{
+			"address": "azurerm_subnet.internal",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"address_prefix": "10.0.2.0/24",
+					"delegation":     [],
+					"enforce_private_link_endpoint_network_policies": false,
+					"enforce_private_link_service_network_policies":  false,
+					"name":                 "internal",
+					"resource_group_name":  "sehangout-azurevmdemo-resources",
+					"service_endpoints":    null,
+					"timeouts":             null,
+					"virtual_network_name": "sehangout-azurevmdemo-network",
+				},
+				"after_unknown": {
+					"delegation": [],
+					"id":         true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "internal",
+			"provider_name": "azurerm",
+			"type":          "azurerm_subnet",
+		},
+		{
+			"address": "azurerm_virtual_machine.demo",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"additional_capabilities":          [],
+					"boot_diagnostics":                 [],
+					"delete_data_disks_on_termination": true,
+					"delete_os_disk_on_termination":    true,
+					"location":                         "eastus",
+					"name":                             "sehangout-azurevmdemo-vm",
+					"os_profile": [
+						{
+							"admin_password": "Password1234!",
+							"admin_username": "testadmin",
+							"computer_name":  "hostname",
+						},
+					],
+					"os_profile_linux_config": [
+						{
+							"disable_password_authentication": false,
+							"ssh_keys":                        [],
+						},
+					],
+					"os_profile_secrets":        [],
+					"os_profile_windows_config": [],
+					"plan": [],
+					"primary_network_interface_id": null,
+					"proximity_placement_group_id": null,
+					"resource_group_name":          "sehangout-azurevmdemo-resources",
+					"storage_image_reference": [
+						{
+							"id":        "",
+							"offer":     "UbuntuServer",
+							"publisher": "Canonical",
+							"sku":       "16.04-LTS",
+							"version":   "latest",
+						},
+					],
+					"storage_os_disk": [
+						{
+							"caching":                   "ReadWrite",
+							"create_option":             "FromImage",
+							"image_uri":                 null,
+							"managed_disk_type":         "Standard_LRS",
+							"name":                      "myosdisk1",
+							"vhd_uri":                   null,
+							"write_accelerator_enabled": false,
+						},
+					],
+					"tags": {
+						"environment": "staging",
+					},
+					"timeouts": null,
+					"vm_size":  "Basic_A0",
+					"zones":    null,
+				},
+				"after_unknown": {
+					"additional_capabilities": [],
+					"availability_set_id":     true,
+					"boot_diagnostics":        [],
+					"id":                      true,
+					"identity":                true,
+					"license_type":            true,
+					"network_interface_ids":   true,
+					"os_profile": [
+						{
+							"custom_data": true,
+						},
+					],
+					"os_profile_linux_config": [
+						{
+							"ssh_keys": [],
+						},
+					],
+					"os_profile_secrets":        [],
+					"os_profile_windows_config": [],
+					"plan":              [],
+					"storage_data_disk": true,
+					"storage_image_reference": [
+						{},
+					],
+					"storage_os_disk": [
+						{
+							"disk_size_gb":    true,
+							"managed_disk_id": true,
+							"os_type":         true,
+						},
+					],
+					"tags": {},
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "demo",
+			"provider_name": "azurerm",
+			"type":          "azurerm_virtual_machine",
+		},
+		{
+			"address": "azurerm_virtual_network.main",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"address_space": [
+						"10.0.0.0/16",
+					],
+					"ddos_protection_plan": [],
+					"dns_servers":          null,
+					"location":             "eastus",
+					"name":                 "sehangout-azurevmdemo-network",
+					"resource_group_name":  "sehangout-azurevmdemo-resources",
+					"tags":                 null,
+					"timeouts":             null,
+				},
+				"after_unknown": {
+					"address_space": [
+						false,
+					],
+					"ddos_protection_plan": [],
+					"id":     true,
+					"subnet": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "main",
+			"provider_name": "azurerm",
+			"type":          "azurerm_virtual_network",
+		},
+	],
+	"terraform_version": "0.12.24",
+	"variables": {
+		"prefix": {
+			"value": "sehangout-azurevmdemo",
+		},
+		"vm_size": {
+			"value": "Basic_A0",
+		},
+	},
+}

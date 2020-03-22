@@ -1,0 +1,528 @@
+terraform_version = "0.12.24"
+
+planned_values = {
+	"outputs": {
+		"external_ip": {
+			"name":      "external_ip",
+			"sensitive": false,
+			"value":     undefined,
+		},
+	},
+	"resources": {
+		"google_compute_instance.demo": {
+			"address":        "google_compute_instance.demo",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "demo",
+			"provider_name":  "google",
+			"tainted":        false,
+			"type":           "google_compute_instance",
+			"values": {
+				"allow_stopping_for_update": null,
+				"attached_disk":             [],
+				"boot_disk": [
+					{
+						"auto_delete":             true,
+						"disk_encryption_key_raw": null,
+						"initialize_params": [
+							{
+								"image": "debian-cloud/debian-9",
+							},
+						],
+						"mode": "READ_WRITE",
+					},
+				],
+				"can_ip_forward":          false,
+				"deletion_protection":     false,
+				"description":             null,
+				"desired_status":          null,
+				"enable_display":          null,
+				"hostname":                null,
+				"labels":                  null,
+				"machine_type":            "n1-standard-1",
+				"metadata":                null,
+				"metadata_startup_script": null,
+				"name": "demo",
+				"network_interface": [
+					{
+						"access_config": [
+							{
+								"public_ptr_domain_name": null,
+							},
+						],
+						"alias_ip_range": [],
+						"network":        "default",
+					},
+				],
+				"scratch_disk":             [],
+				"service_account":          [],
+				"shielded_instance_config": [],
+				"tags":     null,
+				"timeouts": null,
+				"zone":     "us-east1-b",
+			},
+		},
+	},
+}
+
+variables = {
+	"gcp_project": {
+		"name":  "gcp_project",
+		"value": "roger-berlind-gke-dev",
+	},
+	"gcp_region": {
+		"name":  "gcp_region",
+		"value": "us-east1",
+	},
+	"gcp_zone": {
+		"name":  "gcp_zone",
+		"value": "us-east1-b",
+	},
+	"image": {
+		"name":  "image",
+		"value": "debian-cloud/debian-9",
+	},
+	"instance_name": {
+		"name":  "instance_name",
+		"value": "demo",
+	},
+	"machine_type": {
+		"name":  "machine_type",
+		"value": "n1-standard-1",
+	},
+}
+
+resource_changes = {
+	"google_compute_instance.demo": {
+		"address": "google_compute_instance.demo",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"allow_stopping_for_update": null,
+				"attached_disk":             [],
+				"boot_disk": [
+					{
+						"auto_delete":             true,
+						"disk_encryption_key_raw": null,
+						"initialize_params": [
+							{
+								"image": "debian-cloud/debian-9",
+							},
+						],
+						"mode": "READ_WRITE",
+					},
+				],
+				"can_ip_forward":          false,
+				"deletion_protection":     false,
+				"description":             null,
+				"desired_status":          null,
+				"enable_display":          null,
+				"hostname":                null,
+				"labels":                  null,
+				"machine_type":            "n1-standard-1",
+				"metadata":                null,
+				"metadata_startup_script": null,
+				"name": "demo",
+				"network_interface": [
+					{
+						"access_config": [
+							{
+								"public_ptr_domain_name": null,
+							},
+						],
+						"alias_ip_range": [],
+						"network":        "default",
+					},
+				],
+				"scratch_disk":             [],
+				"service_account":          [],
+				"shielded_instance_config": [],
+				"tags":     null,
+				"timeouts": null,
+				"zone":     "us-east1-b",
+			},
+			"after_unknown": {
+				"attached_disk": [],
+				"boot_disk": [
+					{
+						"device_name":                true,
+						"disk_encryption_key_sha256": true,
+						"initialize_params": [
+							{
+								"labels": true,
+								"size":   true,
+								"type":   true,
+							},
+						],
+						"kms_key_self_link": true,
+						"source":            true,
+					},
+				],
+				"cpu_platform":         true,
+				"guest_accelerator":    true,
+				"id":                   true,
+				"instance_id":          true,
+				"label_fingerprint":    true,
+				"metadata_fingerprint": true,
+				"min_cpu_platform":     true,
+				"network_interface": [
+					{
+						"access_config": [
+							{
+								"nat_ip":       true,
+								"network_tier": true,
+							},
+						],
+						"alias_ip_range":     [],
+						"name":               true,
+						"network_ip":         true,
+						"subnetwork":         true,
+						"subnetwork_project": true,
+					},
+				],
+				"project":                  true,
+				"scheduling":               true,
+				"scratch_disk":             [],
+				"self_link":                true,
+				"service_account":          [],
+				"shielded_instance_config": [],
+				"tags_fingerprint":         true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "demo",
+		"provider_name":  "google",
+		"type":           "google_compute_instance",
+	},
+}
+
+output_changes = {
+	"external_ip": {
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after":         undefined,
+			"after_unknown": true,
+			"before":        null,
+		},
+		"name": "external_ip",
+	},
+}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"google": {
+				"expressions": {
+					"project": {
+						"references": [
+							"var.gcp_project",
+						],
+					},
+					"region": {
+						"references": [
+							"var.gcp_region",
+						],
+					},
+				},
+				"name": "google",
+			},
+		},
+		"root_module": {
+			"outputs": {
+				"external_ip": {
+					"expression": {
+						"references": [
+							"google_compute_instance.demo",
+						],
+					},
+				},
+			},
+			"resources": [
+				{
+					"address": "google_compute_instance.demo",
+					"expressions": {
+						"boot_disk": [
+							{
+								"initialize_params": [
+									{
+										"image": {
+											"references": [
+												"var.image",
+											],
+										},
+									},
+								],
+							},
+						],
+						"machine_type": {
+							"references": [
+								"var.machine_type",
+							],
+						},
+						"name": {
+							"references": [
+								"var.instance_name",
+							],
+						},
+						"network_interface": [
+							{
+								"access_config": [
+									{},
+								],
+								"network": {
+									"constant_value": "default",
+								},
+							},
+						],
+						"zone": {
+							"references": [
+								"var.gcp_zone",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "demo",
+					"provider_config_key": "google",
+					"schema_version":      6,
+					"type":                "google_compute_instance",
+				},
+			],
+			"variables": {
+				"gcp_project": {
+					"description": "GCP project name",
+				},
+				"gcp_region": {
+					"default":     "us-east1",
+					"description": "GCP region, e.g. us-east1",
+				},
+				"gcp_zone": {
+					"default":     "us-east1-b",
+					"description": "GCP zone, e.g. us-east1-a",
+				},
+				"image": {
+					"default":     "debian-cloud/debian-9",
+					"description": "image to build instance from",
+				},
+				"instance_name": {
+					"default":     "demo",
+					"description": "GCP instance name",
+				},
+				"machine_type": {
+					"default":     "n1-standard-1",
+					"description": "GCP machine type",
+				},
+			},
+		},
+	},
+	"format_version": "0.1",
+	"output_changes": {
+		"external_ip": {
+			"actions": [
+				"create",
+			],
+			"after_unknown": true,
+			"before":        null,
+		},
+	},
+	"planned_values": {
+		"outputs": {
+			"external_ip": {
+				"sensitive": false,
+			},
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address":        "google_compute_instance.demo",
+					"mode":           "managed",
+					"name":           "demo",
+					"provider_name":  "google",
+					"schema_version": 6,
+					"type":           "google_compute_instance",
+					"values": {
+						"allow_stopping_for_update": null,
+						"attached_disk":             [],
+						"boot_disk": [
+							{
+								"auto_delete":             true,
+								"disk_encryption_key_raw": null,
+								"initialize_params": [
+									{
+										"image": "debian-cloud/debian-9",
+									},
+								],
+								"mode": "READ_WRITE",
+							},
+						],
+						"can_ip_forward":          false,
+						"deletion_protection":     false,
+						"description":             null,
+						"desired_status":          null,
+						"enable_display":          null,
+						"hostname":                null,
+						"labels":                  null,
+						"machine_type":            "n1-standard-1",
+						"metadata":                null,
+						"metadata_startup_script": null,
+						"name": "demo",
+						"network_interface": [
+							{
+								"access_config": [
+									{
+										"public_ptr_domain_name": null,
+									},
+								],
+								"alias_ip_range": [],
+								"network":        "default",
+							},
+						],
+						"scratch_disk":             [],
+						"service_account":          [],
+						"shielded_instance_config": [],
+						"tags":     null,
+						"timeouts": null,
+						"zone":     "us-east1-b",
+					},
+				},
+			],
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "google_compute_instance.demo",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"allow_stopping_for_update": null,
+					"attached_disk":             [],
+					"boot_disk": [
+						{
+							"auto_delete":             true,
+							"disk_encryption_key_raw": null,
+							"initialize_params": [
+								{
+									"image": "debian-cloud/debian-9",
+								},
+							],
+							"mode": "READ_WRITE",
+						},
+					],
+					"can_ip_forward":          false,
+					"deletion_protection":     false,
+					"description":             null,
+					"desired_status":          null,
+					"enable_display":          null,
+					"hostname":                null,
+					"labels":                  null,
+					"machine_type":            "n1-standard-1",
+					"metadata":                null,
+					"metadata_startup_script": null,
+					"name": "demo",
+					"network_interface": [
+						{
+							"access_config": [
+								{
+									"public_ptr_domain_name": null,
+								},
+							],
+							"alias_ip_range": [],
+							"network":        "default",
+						},
+					],
+					"scratch_disk":             [],
+					"service_account":          [],
+					"shielded_instance_config": [],
+					"tags":     null,
+					"timeouts": null,
+					"zone":     "us-east1-b",
+				},
+				"after_unknown": {
+					"attached_disk": [],
+					"boot_disk": [
+						{
+							"device_name":                true,
+							"disk_encryption_key_sha256": true,
+							"initialize_params": [
+								{
+									"labels": true,
+									"size":   true,
+									"type":   true,
+								},
+							],
+							"kms_key_self_link": true,
+							"source":            true,
+						},
+					],
+					"cpu_platform":         true,
+					"guest_accelerator":    true,
+					"id":                   true,
+					"instance_id":          true,
+					"label_fingerprint":    true,
+					"metadata_fingerprint": true,
+					"min_cpu_platform":     true,
+					"network_interface": [
+						{
+							"access_config": [
+								{
+									"nat_ip":       true,
+									"network_tier": true,
+								},
+							],
+							"alias_ip_range":     [],
+							"name":               true,
+							"network_ip":         true,
+							"subnetwork":         true,
+							"subnetwork_project": true,
+						},
+					],
+					"project":                  true,
+					"scheduling":               true,
+					"scratch_disk":             [],
+					"self_link":                true,
+					"service_account":          [],
+					"shielded_instance_config": [],
+					"tags_fingerprint":         true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "demo",
+			"provider_name": "google",
+			"type":          "google_compute_instance",
+		},
+	],
+	"terraform_version": "0.12.24",
+	"variables": {
+		"gcp_project": {
+			"value": "roger-berlind-gke-dev",
+		},
+		"gcp_region": {
+			"value": "us-east1",
+		},
+		"gcp_zone": {
+			"value": "us-east1-b",
+		},
+		"image": {
+			"value": "debian-cloud/debian-9",
+		},
+		"instance_name": {
+			"value": "demo",
+		},
+		"machine_type": {
+			"value": "n1-standard-1",
+		},
+	},
+}

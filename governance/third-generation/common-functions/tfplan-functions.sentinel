@@ -1,0 +1,176 @@
+# Common functions that use the tfplan import
+
+##### Imports #####
+import "tfplan/v2" as tfplan
+import "strings"
+import "types"
+
+##### Functions #####
+
+### find_resources ###
+# Find all resources of a specific type from all modules using the tfplan import
+# Only include resources that are being created or updated
+find_resources = func(type) {
+  resources = filter tfplan.resource_changes as address, rc {
+  	rc.type is type and
+  		rc.mode is "managed" and
+  		(rc.change.actions contains "create" or rc.change.actions contains "update")
+  }
+
+  return resources
+}
+
+### filter_attribute_not_in_list ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is not in a given list of allowed values (allowed).
+# resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+# If you want to allow computed values, include null in the list, allowed.
+filter_attribute_not_in_list = func(resources, attr, allowed) {
+  violators = {}
+  for resources as address, rc {
+    # Evaluate the value (v) of the attribute
+    v = evaluate_attribute(rc.change.after, attr) else null
+    # Check if the value is not in the allowed list
+    if v not in allowed {
+      # If not, add it to the violators list and print a warning
+      violators[address] = rc
+      print(address, "has", attr, v, "that is not in the allowed list", allowed)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_is_not_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that does not have a given value.
+# resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_is_not_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.after, attr)
+    print("v:", v)
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      violators[address] = rc
+      print(address, "does not have", attr, "defined")
+    } else if v is not value {
+      violators[address] = rc
+      print(address, "has", attr, v, "that is not equal to", value)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_greater_than_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is greater than a given numeric value.
+# resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_greater_than_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.after, attr) else null
+    if float(v) else null is null {
+      # Comment out next line to exclude undefined and null values
+      violators[address] = rc
+      print(address, "does not have", attr, "defined")
+    } else if float(v) > value {
+      violators[address] = rc
+      print(address, "has", attr, v, "that is greater than", value)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_less_than_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is less than a given numeric value.
+# resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_less_than_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.after, attr) else null
+    if float(v) else null is null {
+      # Comment out next line to exclude undefined and null values
+      violators[address] = rc
+      print(address, "does not have", attr, "defined")
+    } else if float(v) < value {
+      violators[address] = rc
+      print(address, "has", attr, v, "that is less than", value)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_does_not_match_regex ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that does not match a regular expression (expr).
+# resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_does_not_match_regex = func(resources, attr, expr) {
+  violators = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.after, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      violators[address] = rc
+      print(address, "does not have", attr, "defined")
+    } else if v not matches expr {
+      violators[address] = rc
+      print(address, "has", attr, v, "that does not match the regex", expr)
+    }
+  }
+  return violators
+}
+
+### evaluate_attribute ###
+# Evaluates the value of a resource's attribute even if nested
+# The resource should be given in the initial call in the form
+# "rc.change.after" where rc is a resource change derived by
+# applying filters to tfplan.resource_changes
+# Indices of lists should be given as 0, 1, 2, and so on
+evaluate_attribute = func(r, attribute) {
+
+  # Split the attribute into a list, using "." as the separator
+  attributes = strings.split(attribute, ".")
+
+  # Convert numeric strings to integers for indices
+  if attributes[0] matches "^[0-9]+$" {
+    a = int(attributes[0])
+    # Make sure r is of type list
+    if types.type_of(r) is not "list" {
+      return undefined
+    }
+  } else {
+    a = attributes[0]
+  }
+
+  # Append the current attribute to the resource instance
+  new_r = r[a] else null
+
+  # Validate that new_r exists
+  if types.type_of(new_r) in ["map", "list", "string"] and length(new_r) is 0  {
+    return undefined
+  }
+
+  # Process based on length of attributes
+  # being greater than or equal to 1
+  if length(attributes) > 1 {
+
+    # Strip first element from attributes
+    attributes = attributes[1:length(attributes)]
+    attribute = strings.join(attributes, ".")
+
+    # Make recursive call
+    return evaluate_attribute(new_r, attribute)
+  } else {
+
+    # We reached the end of the attribute and can stop the
+    # recursive calls and return the value of the attribute
+    return new_r
+
+  }
+}

@@ -1,0 +1,43 @@
+import "strings"
+import "types"
+
+created_at = "2020-03-21T22:45:01.346Z"
+message = "Queued manually using Terraform"
+speculative = false
+is_destroy = false
+
+variables = {
+	"AWS_ACCESS_KEY_ID": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"AWS_DEFAULT_REGION": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"AWS_SECRET_ACCESS_KEY": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"CONFIRM_DESTROY": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"instance_type": {
+		"category":  "terraform",
+		"sensitive": false,
+	},
+}
+
+organization = {
+	"name": "Cloud-Operations",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2019-07-05T14:34:24.111Z",
+	"description":       null,
+	"name":              "test-ec2-instance",
+	"vcs_repo":          null,
+	"working_directory": "",
+}

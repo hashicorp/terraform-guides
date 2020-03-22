@@ -1,0 +1,31 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all VMware VMs respect CPU and memory limits
+
+# Import the v2 tfplan import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions.sentinel with alias "plan"
+import "plan"
+
+# Get all VMs
+allVMs = plan.find_resources("vsphere_virtual_machine")
+
+# Filter to VMs with high CPU
+# Prints warnings for all violations
+highCPUVMs = plan.filter_attribute_greater_than_value(allVMs, "num_cpus", 4)
+
+# Count violations
+cpuViolations = length(highCPUVMs)
+
+# Filter to VMs with high memory
+# Prints warnings for all violations
+highMemoryVMs = plan.filter_attribute_greater_than_value(allVMs, "memory", 8192)
+
+# Count violations
+memoryViolations = length(highMemoryVMs)
+
+# Main rule
+validated = cpuViolations is 0 and memoryViolations is 0
+main = rule {
+  validated
+}

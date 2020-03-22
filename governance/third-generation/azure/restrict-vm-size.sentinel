@@ -1,0 +1,33 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all Azure VMs have vm sizes from an allowed list
+
+# Import the v2 tfplan import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions.sentinel with alias "plan"
+import "plan"
+
+# Allowed Azure VM Sizes
+# Include null to allow computed values
+allowed_sizes = [
+  "Standard_A1",
+  "Standard_A2",
+  "Standard_D1_v2",
+  "Standard_D2_v2",
+]
+
+# Get all EC2 instances
+allAzureVms = plan.find_resources("azurerm_virtual_machine")
+
+# Filter to EC2 instances with violations
+# Prints warnings for all violations
+violatingAzureVms =
+  plan.filter_attribute_in_list(allAzureVms, "vm_size", allowed_sizes)
+
+# Count violations
+violations = length(violatingAzureVms)
+
+# Main rule
+main = rule {
+  violations is 0
+}

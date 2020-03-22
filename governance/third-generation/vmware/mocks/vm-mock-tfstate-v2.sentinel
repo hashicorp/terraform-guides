@@ -1,0 +1,74 @@
+terraform_version = "0.12.20"
+
+outputs = {}
+
+resources = {
+	"vsphere_datacenter.dc": {
+		"address":        "vsphere_datacenter.dc",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "dc",
+		"provider_name":  "vsphere",
+		"tainted":        false,
+		"type":           "vsphere_datacenter",
+		"values": {
+			"id":   "datacenter-2",
+			"name": "PacketDatacenter",
+		},
+	},
+	"vsphere_datastore.datastore": {
+		"address":        "vsphere_datastore.datastore",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "datastore",
+		"provider_name":  "vsphere",
+		"tainted":        false,
+		"type":           "vsphere_datastore",
+		"values": {
+			"datacenter_id": "datacenter-2",
+			"id":            "datastore-10",
+			"name":          "datastore1",
+		},
+	},
+	"vsphere_network.network": {
+		"address":        "vsphere_network.network",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "network",
+		"provider_name":  "vsphere",
+		"tainted":        false,
+		"type":           "vsphere_network",
+		"values": {
+			"datacenter_id": "datacenter-2",
+			"id":            "network-11",
+			"name":          "VM Network",
+			"type":          "Network",
+		},
+	},
+	"vsphere_resource_pool.pool": {
+		"address":        "vsphere_resource_pool.pool",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "pool",
+		"provider_name":  "vsphere",
+		"tainted":        false,
+		"type":           "vsphere_resource_pool",
+		"values": {
+			"datacenter_id": "datacenter-2",
+			"id":            "resgroup-17",
+			"name":          "MainCluster/Resources",
+		},
+	},
+}
