@@ -23,7 +23,7 @@ find_resources = func(type) {
 ### filter_attribute_not_in_list ###
 # Filter a list of resources to those with a specified
 # attribute (attr) that is not in a given list of allowed values (allowed).
-# resources should be derived by applying filters to tfplan.resource_changes
+# Resources should be derived by applying filters to tfplan.resource_changes
 # Prints warnings for all violations
 # If you want to allow computed values, include null in the list, allowed.
 filter_attribute_not_in_list = func(resources, attr, allowed) {
@@ -41,18 +41,39 @@ filter_attribute_not_in_list = func(resources, attr, allowed) {
   return violators
 }
 
+### filter_attribute_in_list ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is in a given list of allowed values (allowed).
+# Resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+# If you want to disallow computed values, include null in the list, allowed.
+filter_attribute_in_list = func(resources, attr, allowed) {
+  violators = {}
+  for resources as address, rc {
+    # Evaluate the value (v) of the attribute
+    v = evaluate_attribute(rc.change.after, attr) else null
+    # Check if the value is in the allowed list
+    if v in allowed {
+      # If so, add it to the violators list and print a warning
+      violators[address] = rc
+      print(address, "has", attr, v, "that is in the allowed list", allowed)
+    }
+  }
+  return violators
+}
+
 ### filter_attribute_is_not_value ###
 # Filter a list of resources to those with a specified
 # attribute (attr) that does not have a given value.
-# resources should be derived by applying filters to tfplan.resource_changes
+# Resources should be derived by applying filters to tfplan.resource_changes
 # Prints warnings for all violations
 filter_attribute_is_not_value = func(resources, attr, value) {
   violators = {}
   for resources as address, rc {
     v = evaluate_attribute(rc.change.after, attr)
-    print("v:", v)
     if v else null is null {
-      # Comment out next line to exclude undefined and null values
+      # Comment out next line to exclude undefined and null,
+      # from filtered list, thereby allowing computed values
       violators[address] = rc
       print(address, "does not have", attr, "defined")
     } else if v is not value {
@@ -63,10 +84,32 @@ filter_attribute_is_not_value = func(resources, attr, value) {
   return violators
 }
 
+### filter_attribute_is_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that has a given value.
+# Resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_is_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.after, attr)
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = rc
+      print(address, "does not have", attr, "defined")
+    } else if v is value {
+      violators[address] = rc
+      print(address, "has", attr, v, "that is equal to", value)
+    }
+  }
+  return violators
+}
+
 ### filter_attribute_greater_than_value ###
 # Filter a list of resources to those with a specified
 # attribute (attr) that is greater than a given numeric value.
-# resources should be derived by applying filters to tfplan.resource_changes
+# Resources should be derived by applying filters to tfplan.resource_changes
 # Prints warnings for all violations
 filter_attribute_greater_than_value = func(resources, attr, value) {
   violators = {}
@@ -74,6 +117,7 @@ filter_attribute_greater_than_value = func(resources, attr, value) {
     v = evaluate_attribute(rc.change.after, attr) else null
     if float(v) else null is null {
       # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
       violators[address] = rc
       print(address, "does not have", attr, "defined")
     } else if float(v) > value {
@@ -87,7 +131,7 @@ filter_attribute_greater_than_value = func(resources, attr, value) {
 ### filter_attribute_less_than_value ###
 # Filter a list of resources to those with a specified
 # attribute (attr) that is less than a given numeric value.
-# resources should be derived by applying filters to tfplan.resource_changes
+# Resources should be derived by applying filters to tfplan.resource_changes
 # Prints warnings for all violations
 filter_attribute_less_than_value = func(resources, attr, value) {
   violators = {}
@@ -95,6 +139,7 @@ filter_attribute_less_than_value = func(resources, attr, value) {
     v = evaluate_attribute(rc.change.after, attr) else null
     if float(v) else null is null {
       # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
       violators[address] = rc
       print(address, "does not have", attr, "defined")
     } else if float(v) < value {
@@ -108,7 +153,7 @@ filter_attribute_less_than_value = func(resources, attr, value) {
 ### filter_attribute_does_not_match_regex ###
 # Filter a list of resources to those with a specified
 # attribute (attr) that does not match a regular expression (expr).
-# resources should be derived by applying filters to tfplan.resource_changes
+# Resources should be derived by applying filters to tfplan.resource_changes
 # Prints warnings for all violations
 filter_attribute_does_not_match_regex = func(resources, attr, expr) {
   violators = {}
@@ -116,11 +161,34 @@ filter_attribute_does_not_match_regex = func(resources, attr, expr) {
     v = evaluate_attribute(rc.change.after, attr) else null
     if v else null is null {
       # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
       violators[address] = rc
       print(address, "does not have", attr, "defined")
     } else if v not matches expr {
       violators[address] = rc
       print(address, "has", attr, v, "that does not match the regex", expr)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_matches_regex ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that matches a regular expression (expr).
+# Resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_matches_regex = func(resources, attr, expr) {
+  violators = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.after, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = rc
+      print(address, "does not have", attr, "defined")
+    } else if v matches expr {
+      violators[address] = rc
+      print(address, "has", attr, v, "that matches the regex", expr)
     }
   }
   return violators
