@@ -43,20 +43,20 @@ filter_attribute_not_in_list = func(resources, attr, allowed) {
 
 ### filter_attribute_in_list ###
 # Filter a list of resources to those with a specified
-# attribute (attr) that is in a given list of allowed values (allowed).
+# attribute (attr) that is in a given list of allowed values (disallowed).
 # Resources should be derived by applying filters to tfplan.resource_changes
 # Prints warnings for all violations
-# If you want to disallow computed values, include null in the list, allowed.
-filter_attribute_in_list = func(resources, attr, allowed) {
+# If you want to disallow computed values, include null in the list, disallowed.
+filter_attribute_in_list = func(resources, attr, disallowed) {
   violators = {}
   for resources as address, rc {
     # Evaluate the value (v) of the attribute
     v = evaluate_attribute(rc.change.after, attr) else null
     # Check if the value is in the allowed list
-    if v in allowed {
+    if v in disallowed {
       # If so, add it to the violators list and print a warning
       violators[address] = rc
-      print(address, "has", attr, v, "that is in the allowed list", allowed)
+      print(address, "has", attr, v, "that is in the disallowed list", disallowed)
     }
   }
   return violators
