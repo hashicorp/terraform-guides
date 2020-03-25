@@ -20,6 +20,19 @@ find_resources = func(type) {
   return resources
 }
 
+### find_datasources ###
+# Find all data sources of a specific type from all modules using the tfplan import
+# Only include data sources that are being created or updated
+find_datasources = func(type) {
+  resources = filter tfplan.resource_changes as address, rc {
+  	rc.type is type and
+  	rc.mode is "data" and
+  	(rc.change.actions contains "create" or rc.change.actions contains "update")
+  }
+
+  return resources
+}
+
 ### filter_attribute_not_in_list ###
 # Filter a list of resources to those with a specified
 # attribute (attr) that is not in a given list of allowed values (allowed).
