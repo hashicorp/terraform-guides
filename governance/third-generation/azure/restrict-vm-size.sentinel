@@ -20,7 +20,7 @@ allowed_sizes = [
 allAzureVms = plan.find_resources("azurerm_virtual_machine")
 
 # Filter to EC2 instances with violations
-# Prints warnings for all violations
+# The called function prints warnings for all violations
 violatingAzureVms =
   plan.filter_attribute_not_in_list(allAzureVms, "vm_size", allowed_sizes)
 

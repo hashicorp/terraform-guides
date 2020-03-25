@@ -19,7 +19,7 @@ allowed_types = [
 allGCEInstances = plan.find_resources("google_compute_instance")
 
 # Filter to GCE instances with violations
-# Prints warnings for all violations
+# The called function prints warnings for all violations
 violatingGCEInstances =
   plan.filter_attribute_not_in_list(allGCEInstances, "machine_type", allowed_types)
 

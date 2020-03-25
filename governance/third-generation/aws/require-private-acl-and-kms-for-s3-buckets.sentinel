@@ -11,7 +11,7 @@ import "plan"
 allS3Buckets = plan.find_resources("aws_s3_bucket")
 
 # Filter to S3 buckets that do not have private ACL
-# Prints warnings for all violations
+# The called function prints warnings for all violations
 nonPrivateS3Buckets =
   plan.filter_attribute_is_not_value(allS3Buckets, "acl", "private")
 
@@ -19,7 +19,7 @@ nonPrivateS3Buckets =
 aclViolations = length(nonPrivateS3Buckets)
 
 # Filter to S3 buckets that are not encrypted by KMS
-# Prints warnings for all violations
+# The called function prints warnings for all violations
 nonEncryptedS3Buckets =
   plan.filter_attribute_is_not_value(allS3Buckets, "server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm", "aws:kms")
 
