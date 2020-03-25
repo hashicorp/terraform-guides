@@ -220,7 +220,7 @@ evaluate_attribute = func(r, attribute) {
   new_r = r[a] else null
 
   # Validate that new_r exists
-  if types.type_of(new_r) in ["map", "list", "string"] and length(new_r) is 0  {
+  if types.type_of(new_r) in ["map", "list"] and length(new_r) is 0  {
     return undefined
   }
 
