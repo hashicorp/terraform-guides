@@ -1,0 +1,13 @@
+{
+  "modules": {
+    "plan": {
+      "path": "../../../common-functions/tfplan-functions.sentinel"
+    }
+  },
+  "mock": {
+    "tfplan/v2": "mock-tfplan-fail-cpu-and-memory.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}

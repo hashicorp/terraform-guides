@@ -1,0 +1,51 @@
+import "strings"
+import "types"
+
+created_at = "2020-03-21T23:43:26.986Z"
+message = "Queued manually using Terraform"
+speculative = false
+is_destroy = false
+
+variables = {
+	"ARM_CLIENT_ID": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"ARM_CLIENT_SECRET": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"ARM_SUBSCRIPTION_ID": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"ARM_TENANT_ID": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"CONFIRM_DESTROY": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"vm_size": {
+		"category":  "terraform",
+		"sensitive": false,
+	},
+	"windows_dns_prefix": {
+		"category":  "terraform",
+		"sensitive": false,
+	},
+}
+
+organization = {
+	"name": "Cloud-Operations",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2019-05-11T19:13:07.766Z",
+	"description":       null,
+	"name":              "azure-vm",
+	"vcs_repo":          null,
+	"working_directory": "",
+}

@@ -1,0 +1,167 @@
+import "strings"
+
+providers = {
+	"vsphere": {
+		"alias": "",
+		"config": {
+			"allow_unverified_ssl": {
+				"constant_value": true,
+			},
+		},
+		"module_address":      "",
+		"name":                "vsphere",
+		"provider_config_key": "vsphere",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"data.vsphere_datacenter.dc": {
+		"address": "data.vsphere_datacenter.dc",
+		"config": {
+			"name": {
+				"constant_value": "PacketDatacenter",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "dc",
+		"provider_config_key": "vsphere",
+		"provisioners":        [],
+		"type":                "vsphere_datacenter",
+	},
+	"data.vsphere_datastore.datastore": {
+		"address": "data.vsphere_datastore.datastore",
+		"config": {
+			"datacenter_id": {
+				"references": [
+					"data.vsphere_datacenter.dc",
+				],
+			},
+			"name": {
+				"constant_value": "datastore1",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "datastore",
+		"provider_config_key": "vsphere",
+		"provisioners":        [],
+		"type":                "vsphere_datastore",
+	},
+	"data.vsphere_network.network": {
+		"address": "data.vsphere_network.network",
+		"config": {
+			"datacenter_id": {
+				"references": [
+					"data.vsphere_datacenter.dc",
+				],
+			},
+			"name": {
+				"constant_value": "VM Network",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "network",
+		"provider_config_key": "vsphere",
+		"provisioners":        [],
+		"type":                "vsphere_network",
+	},
+	"data.vsphere_resource_pool.pool": {
+		"address": "data.vsphere_resource_pool.pool",
+		"config": {
+			"datacenter_id": {
+				"references": [
+					"data.vsphere_datacenter.dc",
+				],
+			},
+			"name": {
+				"constant_value": "MainCluster/Resources",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "pool",
+		"provider_config_key": "vsphere",
+		"provisioners":        [],
+		"type":                "vsphere_resource_pool",
+	},
+	"vsphere_virtual_machine.vm": {
+		"address": "vsphere_virtual_machine.vm",
+		"config": {
+			"datastore_id": {
+				"references": [
+					"data.vsphere_datastore.datastore",
+				],
+			},
+			"disk": {
+				"constant_value": null,
+			},
+			"guest_id": {
+				"constant_value": "other3xLinux64Guest",
+			},
+			"memory": {
+				"constant_value": 1024,
+			},
+			"name": {
+				"constant_value": "terraform-roger",
+			},
+			"network_interface": {
+				"constant_value": null,
+			},
+			"num_cpus": {
+				"constant_value": 2,
+			},
+			"resource_pool_id": {
+				"references": [
+					"data.vsphere_resource_pool.pool",
+				],
+			},
+			"wait_for_guest_net_routable": {
+				"constant_value": false,
+			},
+			"wait_for_guest_net_timeout": {
+				"constant_value": 0,
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "vm",
+		"provider_config_key": "vsphere",
+		"provisioners":        [],
+		"type":                "vsphere_virtual_machine",
+	},
+}
+
+provisioners = {}
+
+variables = {}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

@@ -1,0 +1,242 @@
+import "strings"
+
+providers = {
+	"azurerm": {
+		"alias": "",
+		"config": {
+			"features": {
+				"constant_value": null,
+			},
+		},
+		"module_address":      "",
+		"name":                "azurerm",
+		"provider_config_key": "azurerm",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"azurerm_network_interface.main": {
+		"address": "azurerm_network_interface.main",
+		"config": {
+			"ip_configuration": {
+				"constant_value": null,
+			},
+			"location": {
+				"references": [
+					"azurerm_resource_group.main",
+				],
+			},
+			"name": {
+				"references": [
+					"var.prefix",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"azurerm_resource_group.main",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "main",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_network_interface",
+	},
+	"azurerm_resource_group.main": {
+		"address": "azurerm_resource_group.main",
+		"config": {
+			"location": {
+				"constant_value": "East US",
+			},
+			"name": {
+				"references": [
+					"var.prefix",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "main",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_resource_group",
+	},
+	"azurerm_subnet.internal": {
+		"address": "azurerm_subnet.internal",
+		"config": {
+			"address_prefix": {
+				"constant_value": "10.0.2.0/24",
+			},
+			"name": {
+				"constant_value": "internal",
+			},
+			"resource_group_name": {
+				"references": [
+					"azurerm_resource_group.main",
+				],
+			},
+			"virtual_network_name": {
+				"references": [
+					"azurerm_virtual_network.main",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "internal",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_subnet",
+	},
+	"azurerm_virtual_machine.demo": {
+		"address": "azurerm_virtual_machine.demo",
+		"config": {
+			"delete_data_disks_on_termination": {
+				"constant_value": true,
+			},
+			"delete_os_disk_on_termination": {
+				"constant_value": true,
+			},
+			"location": {
+				"references": [
+					"azurerm_resource_group.main",
+				],
+			},
+			"name": {
+				"references": [
+					"var.prefix",
+				],
+			},
+			"network_interface_ids": {
+				"references": [
+					"azurerm_network_interface.main",
+				],
+			},
+			"os_profile": {
+				"constant_value": null,
+			},
+			"os_profile_linux_config": {
+				"constant_value": null,
+			},
+			"resource_group_name": {
+				"references": [
+					"azurerm_resource_group.main",
+				],
+			},
+			"storage_image_reference": {
+				"constant_value": null,
+			},
+			"storage_os_disk": {
+				"constant_value": null,
+			},
+			"tags": {
+				"constant_value": {
+					"environment": "staging",
+				},
+			},
+			"vm_size": {
+				"references": [
+					"var.vm_size",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "demo",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_virtual_machine",
+	},
+	"azurerm_virtual_network.main": {
+		"address": "azurerm_virtual_network.main",
+		"config": {
+			"address_space": {
+				"constant_value": [
+					"10.0.0.0/16",
+				],
+			},
+			"location": {
+				"references": [
+					"azurerm_resource_group.main",
+				],
+			},
+			"name": {
+				"references": [
+					"var.prefix",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"azurerm_resource_group.main",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "main",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_virtual_network",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"prefix": {
+		"default":        "sehangout-azurevmdemo",
+		"description":    "",
+		"module_address": "",
+		"name":           "prefix",
+	},
+	"vm_size": {
+		"default":        "Basic_A0",
+		"description":    "",
+		"module_address": "",
+		"name":           "vm_size",
+	},
+}
+
+outputs = {
+	"vm_id": {
+		"depends_on":     [],
+		"description":    "",
+		"module_address": "",
+		"name":           "vm_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"azurerm_virtual_machine.demo",
+			],
+		},
+	},
+}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

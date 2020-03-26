@@ -1,0 +1,9 @@
+// NOTE: AUTO-GENERATED OFF OF NO DATA
+//
+// This blank file was generated for the tfstate import off of your
+// plan, but contains no data as there was no state to generate data
+// off of.
+//
+// Any data fetched using this import will return undefined. To
+// effectively use tfstate, please generate the mock data off of a
+// plan with existing state.

@@ -1,0 +1,341 @@
+# Common functions that use the tfstate import
+
+##### Imports #####
+import "tfstate/v2" as tfstate
+import "strings"
+import "types"
+
+##### Functions #####
+
+### find_resources ###
+# Find all resources of a specific type from all modules using the tfstate import
+find_resources = func(type) {
+  resources = filter tfstate.resources as address, r {
+  	r.type is type and
+  	r.mode is "managed"
+  }
+
+  return resources
+}
+
+### find_datasources ###
+# Find all data sources of a specific type from all modules using the tfstate import
+find_datasources = func(type) {
+  resources = filter tfstate.resources as address, r {
+  	r.type is type and
+  	r.mode is "data"
+  }
+
+  return resources
+}
+
+### evaluate_attribute ###
+# Evaluates the value of a resource's attribute even if nested
+# The resource should be given in the initial call in the form
+# "r.values" where r is a resource derived by
+# applying filters to tfstate.resources
+# Indices of lists should be given as 0, 1, 2, and so on
+evaluate_attribute = func(r, attribute) {
+
+  # Split the attribute into a list, using "." as the separator
+  attributes = strings.split(attribute, ".")
+
+  # Convert numeric strings to integers for indices
+  if attributes[0] matches "^[0-9]+$" {
+    a = int(attributes[0])
+    # Make sure r is of type list
+    if types.type_of(r) is not "list" {
+      return undefined
+    }
+  } else {
+    a = attributes[0]
+  }
+
+  # Append the current attribute to the resource instance
+  new_r = r[a] else null
+
+  # Validate that new_r exists
+  if types.type_of(new_r) in ["map", "list"] and length(new_r) is 0  {
+    return undefined
+  }
+
+  # Process based on length of attributes
+  # being greater than or equal to 1
+  if length(attributes) > 1 {
+
+    # Strip first element from attributes
+    attributes = attributes[1:length(attributes)]
+    attribute = strings.join(attributes, ".")
+
+    # Make recursive call
+    return evaluate_attribute(new_r, attribute)
+  } else {
+
+    # We reached the end of the attribute and can stop the
+    # recursive calls and return the value of the attribute
+    return new_r
+
+  }
+}
+
+### filter_attribute_not_in_list ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is not in a given list of allowed values (allowed).
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+# If you want to allow computed values, include null in the list, allowed.
+filter_attribute_not_in_list = func(resources, attr, allowed) {
+  violators = {}
+  for resources as address, r {
+    # Evaluate the value (v) of the attribute
+    v = evaluate_attribute(r.values, attr) else null
+    # Check if the value is not in the allowed list
+    if v not in allowed {
+      # If not, add it to the violators list and print a warning
+      violators[address] = r
+      print(address, "has", attr, v, "that is not in the allowed list", allowed)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_in_list ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is in a given list of allowed values (disallowed).
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+# If you want to disallow computed values, include null in the list, disallowed.
+filter_attribute_in_list = func(resources, attr, disallowed) {
+  violators = {}
+  for resources as address, r {
+    # Evaluate the value (v) of the attribute
+    v = evaluate_attribute(r.values, attr) else null
+    # Check if the value is in the allowed list
+    if v in disallowed {
+      # If so, add it to the violators list and print a warning
+      violators[address] = r
+      print(address, "has", attr, v, "that is in the disallowed list", disallowed)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_is_not_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that does not have a given value.
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+filter_attribute_is_not_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr)
+    if v else null is null {
+      # Comment out next line to exclude undefined and null,
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if v is not value {
+      violators[address] = r
+      print(address, "has", attr, v, "that is not equal to", value)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_is_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that has a given value.
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+filter_attribute_is_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr)
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if v is value {
+      violators[address] = r
+      print(address, "has", attr, v, "that is equal to", value)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_greater_than_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is greater than a given numeric value.
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+filter_attribute_greater_than_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if float(v) else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if float(v) > value {
+      violators[address] = r
+      print(address, "has", attr, v, "that is greater than", value)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_less_than_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is less than a given numeric value.
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+filter_attribute_less_than_value = func(resources, attr, value) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if float(v) else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if float(v) < value {
+      violators[address] = r
+      print(address, "has", attr, v, "that is less than", value)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_does_not_match_regex ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that does not match a regular expression (expr).
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+filter_attribute_does_not_match_regex = func(resources, attr, expr) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if v not matches expr {
+      violators[address] = r
+      print(address, "has", attr, v, "that does not match the regex", expr)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_matches_regex ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that matches a regular expression (expr).
+# Resources should be derived by applying filters to tfstate.resources
+# Prints warnings for all violations
+filter_attribute_matches_regex = func(resources, attr, expr) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if v matches expr {
+      violators[address] = r
+      print(address, "has", attr, v, "that matches the regex", expr)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_does_not_have_prefix ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that does not have a given prefix.
+# Resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_does_not_have_prefix = func(resources, attr, prefix) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if not strings.has_prefix(v, prefix) {
+      violators[address] = r
+      print(address, "has", attr, v, "that does not have the prefix", prefix)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_has_prefix ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that has a given prefix.
+# Resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_has_prefix = func(resources, attr, prefix) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if strings.has_prefix(v, prefix) {
+      violators[address] = r
+      print(address, "has", attr, v, "that has the prefix", prefix)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_does_not_have_suffix ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that does not have a given suffix.
+# Resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_does_not_have_suffix = func(resources, attr, suffix) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if not strings.has_suffix(v, suffix) {
+      violators[address] = r
+      print(address, "has", attr, v, "that does not have the suffix", suffix)
+    }
+  }
+  return violators
+}
+
+### filter_attribute_has_suffix ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that has a given suffix.
+# Resources should be derived by applying filters to tfplan.resource_changes
+# Prints warnings for all violations
+filter_attribute_has_suffix = func(resources, attr, suffix) {
+  violators = {}
+  for resources as address, r {
+    v = evaluate_attribute(r.values, attr) else null
+    if v else null is null {
+      # Comment out next line to exclude undefined and null values
+      # from filtered list, thereby allowing computed values
+      violators[address] = r
+      print(address, "does not have", attr, "defined")
+    } else if strings.has_suffix(v, suffix) {
+      violators[address] = r
+      print(address, "has", attr, v, "that has the suffix", suffix)
+    }
+  }
+  return violators
+}

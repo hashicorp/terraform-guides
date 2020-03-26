@@ -1,0 +1,44 @@
+import "strings"
+import "types"
+
+created_at = "2020-03-22T20:00:26.575Z"
+message = "test"
+speculative = false
+is_destroy = false
+
+variables = {
+	"CONFIRM_DESTROY": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"GOOGLE_CREDENTIALS": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"gcp_project": {
+		"category":  "terraform",
+		"sensitive": false,
+	},
+	"machine_type": {
+		"category":  "terraform",
+		"sensitive": false,
+	},
+}
+
+organization = {
+	"name": "Cloud-Operations",
+}
+
+workspace = {
+	"auto_apply":  false,
+	"created_at":  "2018-01-06T17:19:50.414Z",
+	"description": null,
+	"name":        "gcp-compute-instance",
+	"vcs_repo": {
+		"branch":             "use-env-var",
+		"display_identifier": "rberlind/gcp_compute_instance",
+		"identifier":         "rberlind/gcp_compute_instance",
+		"ingress_submodules": false,
+	},
+	"working_directory": "",
+}

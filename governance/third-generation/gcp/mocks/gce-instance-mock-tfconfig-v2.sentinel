@@ -1,0 +1,128 @@
+import "strings"
+
+providers = {
+	"google": {
+		"alias": "",
+		"config": {
+			"project": {
+				"references": [
+					"var.gcp_project",
+				],
+			},
+			"region": {
+				"references": [
+					"var.gcp_region",
+				],
+			},
+		},
+		"module_address":      "",
+		"name":                "google",
+		"provider_config_key": "google",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"google_compute_instance.demo": {
+		"address": "google_compute_instance.demo",
+		"config": {
+			"boot_disk": {
+				"constant_value": null,
+			},
+			"machine_type": {
+				"references": [
+					"var.machine_type",
+				],
+			},
+			"name": {
+				"references": [
+					"var.instance_name",
+				],
+			},
+			"network_interface": {
+				"constant_value": null,
+			},
+			"zone": {
+				"references": [
+					"var.gcp_zone",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "demo",
+		"provider_config_key": "google",
+		"provisioners":        [],
+		"type":                "google_compute_instance",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"gcp_project": {
+		"default":        null,
+		"description":    "GCP project name",
+		"module_address": "",
+		"name":           "gcp_project",
+	},
+	"gcp_region": {
+		"default":        "us-east1",
+		"description":    "GCP region, e.g. us-east1",
+		"module_address": "",
+		"name":           "gcp_region",
+	},
+	"gcp_zone": {
+		"default":        "us-east1-b",
+		"description":    "GCP zone, e.g. us-east1-a",
+		"module_address": "",
+		"name":           "gcp_zone",
+	},
+	"image": {
+		"default":        "debian-cloud/debian-9",
+		"description":    "image to build instance from",
+		"module_address": "",
+		"name":           "image",
+	},
+	"instance_name": {
+		"default":        "demo",
+		"description":    "GCP instance name",
+		"module_address": "",
+		"name":           "instance_name",
+	},
+	"machine_type": {
+		"default":        "n1-standard-1",
+		"description":    "GCP machine type",
+		"module_address": "",
+		"name":           "machine_type",
+	},
+}
+
+outputs = {
+	"external_ip": {
+		"depends_on":     [],
+		"description":    "",
+		"module_address": "",
+		"name":           "external_ip",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"google_compute_instance.demo",
+			],
+		},
+	},
+}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
