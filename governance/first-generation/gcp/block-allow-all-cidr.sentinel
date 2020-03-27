@@ -15,11 +15,14 @@ disallowed_cidr_block = "0.0.0.0/0"
 block_allow_all = rule {
   all firewalls as _, instances {
     all instances as _, fw {
-      disallowed_cidr_block not in fw.applied.source_ranges[0]
+      length(fw.applied.source_ranges else []) > 0 and
+      all fw.applied.source_ranges as sr {
+      	print("source range:", sr) and disallowed_cidr_block not in sr
+      }
     }
   }
 }
 
 main = rule {
   (block_allow_all) else true
- }
+}
