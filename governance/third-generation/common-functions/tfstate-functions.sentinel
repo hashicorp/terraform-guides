@@ -35,7 +35,7 @@ find_datasources = func(type) {
 # "r.values" where r is a resource derived by
 # applying filters to tfstate.resources
 # Indices of lists should be given as 0, 1, 2, and so on
-# For example: boot_disk.0.initialize_params
+# For example: boot_disk.0.initialize_params.0.image
 evaluate_attribute = func(r, attribute) {
 
   # Split the attribute into a list, using "." as the separator
