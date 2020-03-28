@@ -1,8 +1,8 @@
 # This policy uses the Sentinel tfplan import to require that all GCP compute
-# instances have all mandatory tags.
+# instances have all mandatory labels.
 
-# Note that the comparison is case-sensitive but also that Google network tags
-# are only allowed to contain lowercase letters, numbers, and dashes.
+# Note that the comparison is case-sensitive but also that GCP labels
+# are only allowed to contain lowercase letters, numbers, hypens, and underscores.
 
 ##### Imports #####
 
