@@ -43,12 +43,12 @@ limit_cost_by_workspace_type = func(limits) {
   if proposed_cost.lte(limit) {
     print("Proposed monthly cost", proposed_cost.string,
           "of workspace", workspace_name,
-          "is under the limit:", limit.string)
+          "is under the limit: $", limit.string)
     return true
   } else {
     print("Proposed monthly cost", proposed_cost.string,
           "of workspace", workspace_name,
-          "is over the limit:", limit.string)
+          "is over the limit: $", limit.string)
     return false
   }
 }

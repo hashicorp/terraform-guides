@@ -34,7 +34,7 @@ restrict_cost_and_percentage_increase = func(limit, max_percent) {
   # Compare proposed monthly cost to the limit
   if proposed_cost.gt(limit) {
     print("Proposed monthly cost", proposed_cost.string,
-          "is over the limit:", limit.string)
+          "is over the limit: $", limit.string)
     validated = false
   }
 
