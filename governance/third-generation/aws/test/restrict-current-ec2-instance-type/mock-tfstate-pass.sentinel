@@ -43,7 +43,7 @@ resources = {
 			"id": "i-03d8d3e27dbf785ba",
 			"instance_initiated_shutdown_behavior": null,
 			"instance_state":                       "running",
-			"instance_type":                        "t2.micro",
+			"instance_type":                        "t2.small",
 			"ipv6_address_count":                   0,
 			"ipv6_addresses":                       [],
 			"key_name":                             "",
@@ -75,6 +75,8 @@ resources = {
 			"subnet_id":         "subnet-8b15efec",
 			"tags": {
 				"Name": "roger-ec2-demo",
+				"Owner": "rberlind",
+				"ttl":	 "24",
 			},
 			"tenancy":          "default",
 			"timeouts":         null,
