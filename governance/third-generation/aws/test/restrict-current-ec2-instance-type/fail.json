@@ -1,6 +1,6 @@
 {
   "modules": {
-    "state": {
+    "tfstate-functions": {
       "path": "../../../common-functions/tfstate-functions.sentinel"
     }
   },

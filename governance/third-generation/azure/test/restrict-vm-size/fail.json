@@ -1,6 +1,6 @@
 {
   "modules": {
-    "plan": {
+    "tfplan-functions": {
       "path": "../../../common-functions/tfplan-functions.sentinel"
     }
   },
