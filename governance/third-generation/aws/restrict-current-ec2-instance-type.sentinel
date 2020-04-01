@@ -5,7 +5,7 @@
 import "tfstate/v2" as tfstate
 
 # Import common-functions/tfstate-functions.sentinel with alias "state"
-import "state"
+import "tfstate-functions" as state
 
 # Allowed EC2 Instance Types
 # Include null to allow computed values

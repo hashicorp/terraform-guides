@@ -5,7 +5,7 @@
 import "tfplan/v2" as tfplan
 
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
-import "plan"
+import "tfplan-functions" as plan
 
 # Get all VMs
 allVMs = plan.find_resources("vsphere_virtual_machine")
