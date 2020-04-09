@@ -6,14 +6,23 @@ Additionally, it contains [Policy Set](https://www.terraform.io/docs/cloud/senti
 
 These policies and the Terraform Sentinel v2 imports they use can only be used with Terraform 0.12.
 
-## Using These Policies with Terraform Cloud and Enterprise
-These policies use the new Terraform Sentinel v2 imports that are currently available as a **technology preview** in Terraform Cloud (TFC). They also use a new feature called [Sentinel Modules](https://docs.hashicorp.com/sentinel/extending/modules) which allows Sentinel functions and rules to be defined in one file and used by Sentinel policies in other files.
-
-However, using Sentinel modules is not yet possible in Terraform Cloud or Terraform Enterprise (TFE). So, while these third-generation policies can be used with the Sentinel CLI, they cannot yet be used with TFC or TFE. We will update this document when Sentinel modules can be used in TFC and TFE. We currently expect this to occur for TFC in April, 2020 and for TFE in April or May, 2020. But that is all subject to change.
+## Using These Policies with Terraform Cloud
+These policies use the new Terraform Sentinel v2 imports. They also use a new feature called [Sentinel Modules](https://docs.hashicorp.com/sentinel/extending/modules) which allows Sentinel functions and rules to be defined in one file and used by Sentinel policies in other files.
 
 To learn more about the new Terraform Sentinel v2 imports, see this [blog post](https://www.hashicorp.com/blog/terraform-sentinel-v2-imports-now-in-technology-preview).
 
 To learn more about Sentinel Modules, see this [blog post](https://discuss.hashicorp.com/t/sentinel-v0-15-0-introducing-modules/6579).
+
+However, while using Sentinel modules is now possible in Terraform Cloud, the modules have to be in files located in or underneath the VCS directory containing the policy set definition file, `sentinel.hcl`.
+
+So, while these third-generation policies and common functions **can** be used as organized in this repository with the Sentinel CLI, they **cannot** yet be used *as organized* in Terraform Cloud. This will be remedied in the near future. We will update this document when that occurs.
+
+For now, if you want to use these policies with Terraform Cloud, you will need to create a repository like this [one](https://github.com/rberlind/sentinel-demo) in which the "common-functions" directory has been placed in the same VCS directory as the `sentinel.hcl` file. The directory does not have to be the top-level directory within the VCS repository.
+
+## Using These Policies with Terraform Enterprise
+Terraform Enterprise (TFE) uses the Terraform Cloud application, but new features are released to the HashiCorp-hosted implementation of Terraform Cloud, https://app.terraform.io, before they are released to TFE, which has monthly releases. Since the Sentinel Modules feature was released to Terraform Cloud in the first week of April, we hope that they will be available in TFE release at the end of April. If not, we expect the feature to be in the end of May release of TFE.
+
+We will update this document when Sentinel modules can be used in Terraform Enterprise.
 
 ## Important Characterizations of the New Policies
 These new third-generation policies have several important characteristics:
