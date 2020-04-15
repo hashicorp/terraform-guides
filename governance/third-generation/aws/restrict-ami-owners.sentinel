@@ -1,0 +1,32 @@
+# This policy uses the Sentinel tfstatev2 import to restrict the owners set on
+# all instances of the aws_ami data source in all modules
+
+# Import the v2 tfplan import, but use the alias "tfstate"
+import "tfstate/v2" as tfstate
+
+# Import common-functions/tfstate-functions.sentinel with alias "state"
+import "tfstate-functions" as state
+
+# Allowed Owners
+# Include null to allow computed values
+allowed_owners = [
+  "self",
+  "099720109477",
+  "099720109478",
+]
+
+# Get all AMIs
+allAMIs = state.find_datasources("aws_ami")
+
+# Filter to AMIs with violations
+# The called function prints warnings for all violations
+violatingAMIs =
+  state.filter_attribute_contains_items_not_in_list(allAMIs, "owners", allowed_owners)
+
+# Count violations
+violations = length(violatingAMIs)
+
+# Main rule
+main = rule {
+  violations is 0
+}

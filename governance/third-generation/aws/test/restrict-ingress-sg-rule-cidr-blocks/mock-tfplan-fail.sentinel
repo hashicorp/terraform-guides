@@ -1,0 +1,1080 @@
+terraform_version = "0.12.24"
+
+planned_values = {
+	"outputs": {},
+	"resources": {
+		"aws_security_group.allow_tls": {
+			"address":        "aws_security_group.allow_tls",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "allow_tls",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_security_group",
+			"values": {
+				"description": "Allow TLS inbound traffic",
+				"ingress": [
+					{
+						"cidr_blocks": [
+							"0.0.0.0/0",
+						],
+						"description":      "",
+						"from_port":        444,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "tcp",
+						"security_groups":  [],
+						"self":             false,
+						"to_port":          444,
+					},
+					{
+						"cidr_blocks":      [],
+						"description":      "",
+						"from_port":        443,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "tcp",
+						"security_groups":  [],
+						"self":             true,
+						"to_port":          443,
+					},
+				],
+				"name":                   "allow_tls",
+				"name_prefix":            null,
+				"revoke_rules_on_delete": false,
+				"tags": {
+					"Name": "allow_all",
+				},
+				"timeouts": null,
+			},
+		},
+		"aws_security_group_rule.allow_all[0]": {
+			"address":        "aws_security_group_rule.allow_all[0]",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          0,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "allow_all",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_security_group_rule",
+			"values": {
+				"cidr_blocks":       null,
+				"description":       null,
+				"from_port":         0,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              true,
+				"to_port":           65535,
+				"type":              "ingress",
+			},
+		},
+		"aws_security_group_rule.allow_all[1]": {
+			"address":        "aws_security_group_rule.allow_all[1]",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          1,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "allow_all",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_security_group_rule",
+			"values": {
+				"cidr_blocks":       null,
+				"description":       null,
+				"from_port":         0,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              true,
+				"to_port":           65535,
+				"type":              "ingress",
+			},
+		},
+		"aws_security_group_rule.allow_ssh": {
+			"address":        "aws_security_group_rule.allow_ssh",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "allow_ssh",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_security_group_rule",
+			"values": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":       null,
+				"from_port":         22,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              false,
+				"to_port":           22,
+				"type":              "ingress",
+			},
+		},
+		"module.more-sgrs.aws_security_group_rule.https": {
+			"address":        "module.more-sgrs.aws_security_group_rule.https",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "module.more-sgrs",
+			"name":           "https",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_security_group_rule",
+			"values": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":       null,
+				"from_port":         443,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              false,
+				"to_port":           443,
+				"type":              "ingress",
+			},
+		},
+		"module.more-sgrs.module.even-more-sgrs.aws_security_group_rule.http": {
+			"address":        "module.more-sgrs.module.even-more-sgrs.aws_security_group_rule.http",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "module.more-sgrs.module.even-more-sgrs",
+			"name":           "http",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_security_group_rule",
+			"values": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":       null,
+				"from_port":         80,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              false,
+				"to_port":           80,
+				"type":              "ingress",
+			},
+		},
+	},
+}
+
+variables = {}
+
+resource_changes = {
+	"aws_security_group.allow_tls": {
+		"address": "aws_security_group.allow_tls",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "Allow TLS inbound traffic",
+				"ingress": [
+					{
+						"cidr_blocks": [
+							"0.0.0.0/0",
+						],
+						"description":      "",
+						"from_port":        444,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "tcp",
+						"security_groups":  [],
+						"self":             false,
+						"to_port":          444,
+					},
+					{
+						"cidr_blocks":      [],
+						"description":      "",
+						"from_port":        443,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "tcp",
+						"security_groups":  [],
+						"self":             true,
+						"to_port":          443,
+					},
+				],
+				"name":                   "allow_tls",
+				"name_prefix":            null,
+				"revoke_rules_on_delete": false,
+				"tags": {
+					"Name": "allow_all",
+				},
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"arn":    true,
+				"egress": true,
+				"id":     true,
+				"ingress": [
+					{
+						"cidr_blocks": [
+							false,
+						],
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"security_groups":  [],
+					},
+					{
+						"cidr_blocks":      [],
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"security_groups":  [],
+					},
+				],
+				"owner_id": true,
+				"tags":     {},
+				"vpc_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "allow_tls",
+		"provider_name":  "aws",
+		"type":           "aws_security_group",
+	},
+	"aws_security_group_rule.allow_all[0]": {
+		"address": "aws_security_group_rule.allow_all[0]",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks":       null,
+				"description":       null,
+				"from_port":         0,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              true,
+				"to_port":           65535,
+				"type":              "ingress",
+			},
+			"after_unknown": {
+				"id": true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          0,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "allow_all",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+	"aws_security_group_rule.allow_all[1]": {
+		"address": "aws_security_group_rule.allow_all[1]",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks":       null,
+				"description":       null,
+				"from_port":         0,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              true,
+				"to_port":           65535,
+				"type":              "ingress",
+			},
+			"after_unknown": {
+				"id": true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          1,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "allow_all",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+	"aws_security_group_rule.allow_ssh": {
+		"address": "aws_security_group_rule.allow_ssh",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":       null,
+				"from_port":         22,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              false,
+				"to_port":           22,
+				"type":              "ingress",
+			},
+			"after_unknown": {
+				"cidr_blocks": [
+					false,
+				],
+				"id": true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "allow_ssh",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+	"module.more-sgrs.aws_security_group_rule.https": {
+		"address": "module.more-sgrs.aws_security_group_rule.https",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":       null,
+				"from_port":         443,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              false,
+				"to_port":           443,
+				"type":              "ingress",
+			},
+			"after_unknown": {
+				"cidr_blocks": [
+					false,
+				],
+				"id": true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "module.more-sgrs",
+		"name":           "https",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+	"module.more-sgrs.module.even-more-sgrs.aws_security_group_rule.http": {
+		"address": "module.more-sgrs.module.even-more-sgrs.aws_security_group_rule.http",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":       null,
+				"from_port":         80,
+				"ipv6_cidr_blocks":  null,
+				"prefix_list_ids":   null,
+				"protocol":          "tcp",
+				"security_group_id": "sg-008b502d0a24d0136",
+				"self":              false,
+				"to_port":           80,
+				"type":              "ingress",
+			},
+			"after_unknown": {
+				"cidr_blocks": [
+					false,
+				],
+				"id": true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "module.more-sgrs.module.even-more-sgrs",
+		"name":           "http",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+}
+
+output_changes = {}
+
+raw = {
+	"configuration": {
+		"root_module": {
+			"module_calls": {
+				"more-sgrs": {
+					"expressions": {
+						"owner": {
+							"constant_value": "Roger",
+						},
+					},
+					"module": {
+						"module_calls": {
+							"even-more-sgrs": {
+								"module": {
+									"resources": [
+										{
+											"address": "aws_security_group_rule.http",
+											"expressions": {
+												"cidr_blocks": {
+													"constant_value": [
+														"0.0.0.0/0",
+													],
+												},
+												"from_port": {
+													"constant_value": 80,
+												},
+												"protocol": {
+													"constant_value": "tcp",
+												},
+												"security_group_id": {
+													"constant_value": "sg-008b502d0a24d0136",
+												},
+												"to_port": {
+													"constant_value": 80,
+												},
+												"type": {
+													"constant_value": "ingress",
+												},
+											},
+											"mode":                "managed",
+											"name":                "http",
+											"provider_config_key": "even-more-sgrs:aws",
+											"schema_version":      2,
+											"type":                "aws_security_group_rule",
+										},
+									],
+								},
+								"source": "./even-more-rules",
+							},
+						},
+						"resources": [
+							{
+								"address": "aws_security_group_rule.https",
+								"expressions": {
+									"cidr_blocks": {
+										"constant_value": [
+											"0.0.0.0/0",
+										],
+									},
+									"from_port": {
+										"constant_value": 443,
+									},
+									"protocol": {
+										"constant_value": "tcp",
+									},
+									"security_group_id": {
+										"constant_value": "sg-008b502d0a24d0136",
+									},
+									"to_port": {
+										"constant_value": 443,
+									},
+									"type": {
+										"constant_value": "ingress",
+									},
+								},
+								"mode":                "managed",
+								"name":                "https",
+								"provider_config_key": "more-sgrs:aws",
+								"schema_version":      2,
+								"type":                "aws_security_group_rule",
+							},
+							{
+								"address": "data.aws_security_group.selected",
+								"expressions": {
+									"id": {
+										"constant_value": "sg-008b502d0a24d0136",
+									},
+								},
+								"mode":                "data",
+								"name":                "selected",
+								"provider_config_key": "more-sgrs:aws",
+								"schema_version":      0,
+								"type":                "aws_security_group",
+							},
+						],
+						"variables": {
+							"owner": {
+								"description": "owner",
+							},
+						},
+					},
+					"source": "./modules/more-rules",
+				},
+			},
+			"resources": [
+				{
+					"address": "aws_security_group.allow_tls",
+					"expressions": {
+						"description": {
+							"constant_value": "Allow TLS inbound traffic",
+						},
+						"name": {
+							"constant_value": "allow_tls",
+						},
+						"tags": {
+							"constant_value": {
+								"Name": "allow_all",
+							},
+						},
+					},
+					"mode":                "managed",
+					"name":                "allow_tls",
+					"provider_config_key": "aws",
+					"schema_version":      1,
+					"type":                "aws_security_group",
+				},
+				{
+					"address": "aws_security_group_rule.allow_all",
+					"count_expression": {
+						"constant_value": 2,
+					},
+					"expressions": {
+						"from_port": {
+							"constant_value": 0,
+						},
+						"protocol": {
+							"constant_value": "tcp",
+						},
+						"security_group_id": {
+							"constant_value": "sg-008b502d0a24d0136",
+						},
+						"self": {
+							"constant_value": true,
+						},
+						"to_port": {
+							"constant_value": 65535,
+						},
+						"type": {
+							"constant_value": "ingress",
+						},
+					},
+					"mode":                "managed",
+					"name":                "allow_all",
+					"provider_config_key": "aws",
+					"schema_version":      2,
+					"type":                "aws_security_group_rule",
+				},
+				{
+					"address": "aws_security_group_rule.allow_ssh",
+					"expressions": {
+						"cidr_blocks": {
+							"constant_value": [
+								"0.0.0.0/0",
+							],
+						},
+						"from_port": {
+							"constant_value": 22,
+						},
+						"protocol": {
+							"constant_value": "tcp",
+						},
+						"security_group_id": {
+							"constant_value": "sg-008b502d0a24d0136",
+						},
+						"to_port": {
+							"constant_value": 22,
+						},
+						"type": {
+							"constant_value": "ingress",
+						},
+					},
+					"mode":                "managed",
+					"name":                "allow_ssh",
+					"provider_config_key": "aws",
+					"schema_version":      2,
+					"type":                "aws_security_group_rule",
+				},
+			],
+		},
+	},
+	"format_version": "0.1",
+	"planned_values": {
+		"root_module": {
+			"child_modules": [
+				{
+					"address": "module.more-sgrs",
+					"child_modules": [
+						{
+							"address": "module.more-sgrs.module.even-more-sgrs",
+							"resources": [
+								{
+									"address":        "module.more-sgrs.module.even-more-sgrs.aws_security_group_rule.http",
+									"mode":           "managed",
+									"name":           "http",
+									"provider_name":  "aws",
+									"schema_version": 2,
+									"type":           "aws_security_group_rule",
+									"values": {
+										"cidr_blocks": [
+											"0.0.0.0/0",
+										],
+										"description":       null,
+										"from_port":         80,
+										"ipv6_cidr_blocks":  null,
+										"prefix_list_ids":   null,
+										"protocol":          "tcp",
+										"security_group_id": "sg-008b502d0a24d0136",
+										"self":              false,
+										"to_port":           80,
+										"type":              "ingress",
+									},
+								},
+							],
+						},
+					],
+					"resources": [
+						{
+							"address":        "module.more-sgrs.aws_security_group_rule.https",
+							"mode":           "managed",
+							"name":           "https",
+							"provider_name":  "aws",
+							"schema_version": 2,
+							"type":           "aws_security_group_rule",
+							"values": {
+								"cidr_blocks": [
+									"0.0.0.0/0",
+								],
+								"description":       null,
+								"from_port":         443,
+								"ipv6_cidr_blocks":  null,
+								"prefix_list_ids":   null,
+								"protocol":          "tcp",
+								"security_group_id": "sg-008b502d0a24d0136",
+								"self":              false,
+								"to_port":           443,
+								"type":              "ingress",
+							},
+						},
+					],
+				},
+			],
+			"resources": [
+				{
+					"address":        "aws_security_group.allow_tls",
+					"mode":           "managed",
+					"name":           "allow_tls",
+					"provider_name":  "aws",
+					"schema_version": 1,
+					"type":           "aws_security_group",
+					"values": {
+						"description": "Allow TLS inbound traffic",
+						"ingress": [
+							{
+								"cidr_blocks": [
+									"0.0.0.0/0",
+								],
+								"description":      "",
+								"from_port":        444,
+								"ipv6_cidr_blocks": [],
+								"prefix_list_ids":  [],
+								"protocol":         "tcp",
+								"security_groups":  [],
+								"self":             false,
+								"to_port":          444,
+							},
+							{
+								"cidr_blocks":      [],
+								"description":      "",
+								"from_port":        443,
+								"ipv6_cidr_blocks": [],
+								"prefix_list_ids":  [],
+								"protocol":         "tcp",
+								"security_groups":  [],
+								"self":             true,
+								"to_port":          443,
+							},
+						],
+						"name":                   "allow_tls",
+						"name_prefix":            null,
+						"revoke_rules_on_delete": false,
+						"tags": {
+							"Name": "allow_all",
+						},
+						"timeouts": null,
+					},
+				},
+				{
+					"address":        "aws_security_group_rule.allow_all[0]",
+					"index":          0,
+					"mode":           "managed",
+					"name":           "allow_all",
+					"provider_name":  "aws",
+					"schema_version": 2,
+					"type":           "aws_security_group_rule",
+					"values": {
+						"cidr_blocks":       null,
+						"description":       null,
+						"from_port":         0,
+						"ipv6_cidr_blocks":  null,
+						"prefix_list_ids":   null,
+						"protocol":          "tcp",
+						"security_group_id": "sg-008b502d0a24d0136",
+						"self":              true,
+						"to_port":           65535,
+						"type":              "ingress",
+					},
+				},
+				{
+					"address":        "aws_security_group_rule.allow_all[1]",
+					"index":          1,
+					"mode":           "managed",
+					"name":           "allow_all",
+					"provider_name":  "aws",
+					"schema_version": 2,
+					"type":           "aws_security_group_rule",
+					"values": {
+						"cidr_blocks":       null,
+						"description":       null,
+						"from_port":         0,
+						"ipv6_cidr_blocks":  null,
+						"prefix_list_ids":   null,
+						"protocol":          "tcp",
+						"security_group_id": "sg-008b502d0a24d0136",
+						"self":              true,
+						"to_port":           65535,
+						"type":              "ingress",
+					},
+				},
+				{
+					"address":        "aws_security_group_rule.allow_ssh",
+					"mode":           "managed",
+					"name":           "allow_ssh",
+					"provider_name":  "aws",
+					"schema_version": 2,
+					"type":           "aws_security_group_rule",
+					"values": {
+						"cidr_blocks": [
+							"0.0.0.0/0",
+						],
+						"description":       null,
+						"from_port":         22,
+						"ipv6_cidr_blocks":  null,
+						"prefix_list_ids":   null,
+						"protocol":          "tcp",
+						"security_group_id": "sg-008b502d0a24d0136",
+						"self":              false,
+						"to_port":           22,
+						"type":              "ingress",
+					},
+				},
+			],
+		},
+	},
+	"prior_state": {
+		"format_version":    "0.1",
+		"terraform_version": "0.12.24",
+		"values": {
+			"root_module": {
+				"child_modules": [
+					{
+						"address": "module.more-sgrs",
+						"resources": [
+							{
+								"address":        "data.aws_security_group.selected",
+								"mode":           "data",
+								"name":           "selected",
+								"provider_name":  "aws",
+								"schema_version": 0,
+								"type":           "aws_security_group",
+								"values": {
+									"arn":         "arn:aws:ec2:us-east-1:753646501470:security-group/sg-008b502d0a24d0136",
+									"description": "Enable SSH access via port 22",
+									"filter":      null,
+									"id":          "sg-008b502d0a24d0136",
+									"name":        "roger-sybase-InstanceSecurityGroup-45E1MVITZTH3",
+									"tags": {
+										"Name":  "roger_sybase",
+										"owner": "roger@hashicorp.com",
+										"ttl":   "-1",
+									},
+									"vpc_id": "vpc-07b9e9b345ad12921",
+								},
+							},
+						],
+					},
+				],
+			},
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "aws_security_group.allow_tls",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"description": "Allow TLS inbound traffic",
+					"ingress": [
+						{
+							"cidr_blocks": [
+								"0.0.0.0/0",
+							],
+							"description":      "",
+							"from_port":        444,
+							"ipv6_cidr_blocks": [],
+							"prefix_list_ids":  [],
+							"protocol":         "tcp",
+							"security_groups":  [],
+							"self":             false,
+							"to_port":          444,
+						},
+						{
+							"cidr_blocks":      [],
+							"description":      "",
+							"from_port":        443,
+							"ipv6_cidr_blocks": [],
+							"prefix_list_ids":  [],
+							"protocol":         "tcp",
+							"security_groups":  [],
+							"self":             true,
+							"to_port":          443,
+						},
+					],
+					"name":                   "allow_tls",
+					"name_prefix":            null,
+					"revoke_rules_on_delete": false,
+					"tags": {
+						"Name": "allow_all",
+					},
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"arn":    true,
+					"egress": true,
+					"id":     true,
+					"ingress": [
+						{
+							"cidr_blocks": [
+								false,
+							],
+							"ipv6_cidr_blocks": [],
+							"prefix_list_ids":  [],
+							"security_groups":  [],
+						},
+						{
+							"cidr_blocks":      [],
+							"ipv6_cidr_blocks": [],
+							"prefix_list_ids":  [],
+							"security_groups":  [],
+						},
+					],
+					"owner_id": true,
+					"tags":     {},
+					"vpc_id":   true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "allow_tls",
+			"provider_name": "aws",
+			"type":          "aws_security_group",
+		},
+		{
+			"address": "aws_security_group_rule.allow_all[0]",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"cidr_blocks":       null,
+					"description":       null,
+					"from_port":         0,
+					"ipv6_cidr_blocks":  null,
+					"prefix_list_ids":   null,
+					"protocol":          "tcp",
+					"security_group_id": "sg-008b502d0a24d0136",
+					"self":              true,
+					"to_port":           65535,
+					"type":              "ingress",
+				},
+				"after_unknown": {
+					"id": true,
+					"source_security_group_id": true,
+				},
+				"before": null,
+			},
+			"index":         0,
+			"mode":          "managed",
+			"name":          "allow_all",
+			"provider_name": "aws",
+			"type":          "aws_security_group_rule",
+		},
+		{
+			"address": "aws_security_group_rule.allow_all[1]",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"cidr_blocks":       null,
+					"description":       null,
+					"from_port":         0,
+					"ipv6_cidr_blocks":  null,
+					"prefix_list_ids":   null,
+					"protocol":          "tcp",
+					"security_group_id": "sg-008b502d0a24d0136",
+					"self":              true,
+					"to_port":           65535,
+					"type":              "ingress",
+				},
+				"after_unknown": {
+					"id": true,
+					"source_security_group_id": true,
+				},
+				"before": null,
+			},
+			"index":         1,
+			"mode":          "managed",
+			"name":          "allow_all",
+			"provider_name": "aws",
+			"type":          "aws_security_group_rule",
+		},
+		{
+			"address": "aws_security_group_rule.allow_ssh",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"cidr_blocks": [
+						"0.0.0.0/0",
+					],
+					"description":       null,
+					"from_port":         22,
+					"ipv6_cidr_blocks":  null,
+					"prefix_list_ids":   null,
+					"protocol":          "tcp",
+					"security_group_id": "sg-008b502d0a24d0136",
+					"self":              false,
+					"to_port":           22,
+					"type":              "ingress",
+				},
+				"after_unknown": {
+					"cidr_blocks": [
+						false,
+					],
+					"id": true,
+					"source_security_group_id": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "allow_ssh",
+			"provider_name": "aws",
+			"type":          "aws_security_group_rule",
+		},
+		{
+			"address": "module.more-sgrs.aws_security_group_rule.https",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"cidr_blocks": [
+						"0.0.0.0/0",
+					],
+					"description":       null,
+					"from_port":         443,
+					"ipv6_cidr_blocks":  null,
+					"prefix_list_ids":   null,
+					"protocol":          "tcp",
+					"security_group_id": "sg-008b502d0a24d0136",
+					"self":              false,
+					"to_port":           443,
+					"type":              "ingress",
+				},
+				"after_unknown": {
+					"cidr_blocks": [
+						false,
+					],
+					"id": true,
+					"source_security_group_id": true,
+				},
+				"before": null,
+			},
+			"mode":           "managed",
+			"module_address": "module.more-sgrs",
+			"name":           "https",
+			"provider_name":  "aws",
+			"type":           "aws_security_group_rule",
+		},
+		{
+			"address": "module.more-sgrs.module.even-more-sgrs.aws_security_group_rule.http",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"cidr_blocks": [
+						"0.0.0.0/0",
+					],
+					"description":       null,
+					"from_port":         80,
+					"ipv6_cidr_blocks":  null,
+					"prefix_list_ids":   null,
+					"protocol":          "tcp",
+					"security_group_id": "sg-008b502d0a24d0136",
+					"self":              false,
+					"to_port":           80,
+					"type":              "ingress",
+				},
+				"after_unknown": {
+					"cidr_blocks": [
+						false,
+					],
+					"id": true,
+					"source_security_group_id": true,
+				},
+				"before": null,
+			},
+			"mode":           "managed",
+			"module_address": "module.more-sgrs.module.even-more-sgrs",
+			"name":           "http",
+			"provider_name":  "aws",
+			"type":           "aws_security_group_rule",
+		},
+	],
+	"terraform_version": "0.12.24",
+}

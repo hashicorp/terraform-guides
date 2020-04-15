@@ -1,0 +1,67 @@
+# This policy uses the Sentinel tfplan/v2 import to validate that no security group
+# rules have the CIDR "0.0.0.0/0".  It covers both the aws_security_group and
+# the aws_security_group_rule resources.
+
+# Import the v2 tfplan import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions.sentinel with alias "plan"
+import "tfplan-functions" as plan
+
+# Import the standard types import
+import "types"
+
+# Forbidden CIDRs
+forbidden_cidrs = [
+  "0.0.0.0/0",
+]
+
+# Get all Security Group Ingress Rules
+SGIngressRules = filter tfplan.resource_changes as address, rc {
+  rc.type is "aws_security_group_rule" and
+  rc.mode is "managed" and
+  rc.change.after.type is "ingress" and
+  (rc.change.actions contains "create" or rc.change.actions contains "update")
+}
+
+# Filter to Ingress Security Group Rules with violations
+# The called function prints warnings for all violations
+violatingSGRules =
+  plan.filter_attribute_contains_items_from_list(SGIngressRules, "cidr_blocks",
+       forbidden_cidrs)
+
+# Determine if there are Security Group Rule violations
+if length(violatingSGRules) is 0 {
+  sgRulesValidated = true
+} else {
+  sgRulesValidated = false
+}
+
+# Get all Security Groups
+allSGs = plan.find_resources("aws_security_group")
+
+# Validate Security Groups
+sgsValidated = true
+for allSGs as address, rc {
+  if types.type_of(rc.change.after.ingress) is "list" {
+    # Iterate over the ingress blocks
+    for rc.change.after.ingress as ingress_index, ingress {
+      cidr_blocks = ingress.cidr_blocks else null
+      if types.type_of(cidr_blocks) is "list" {
+        for cidr_blocks as cb_index, cb {
+          if cb in forbidden_cidrs {
+            print(address, "has ingress", ingress_index, "with cidr block", cb,
+                  "that is in the forbidden list", forbidden_cidrs)
+            sgsValidated = false
+          } // end if cb in forbidden_cidrs
+        } // end for cidr_blocks
+      } // end if cidr_blocks is list
+    } // end for ingress
+  } // end if ingress is list
+} // end for SGs
+
+# Main rule
+validated = sgRulesValidated and sgsValidated
+main = rule {
+  validated
+}
