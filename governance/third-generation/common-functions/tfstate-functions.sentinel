@@ -94,7 +94,8 @@ filter_attribute_not_in_list = func(resources, attr, allowed) {
     if v not in allowed {
       # If not, add it to the violators list and print a warning
       violators[address] = r
-      print(address, "has", attr, v, "that is not in the allowed list:", allowed)
+      print(address, "has", attr, "with value", v,
+            "that is not in the allowed list:", allowed)
     }
   }
   return violators
@@ -115,7 +116,8 @@ filter_attribute_in_list = func(resources, attr, disallowed) {
     if v in disallowed {
       # If so, add it to the violators list and print a warning
       violators[address] = r
-      print(address, "has", attr, v, "that is in the disallowed list:", disallowed)
+      print(address, "has", attr, "with value", v,
+            "that is in the disallowed list:", disallowed)
     }
   }
   return violators
@@ -142,8 +144,8 @@ filter_attribute_not_contains_list = func(resources, attr, required) {
       for required as rv {
         if v not contains rv {
           violators[address] = r
-          print(address, "has", attr, v, "that is missing the required item",
-                rv, "from the list:", required)
+          print(address, "has", attr, "with value", v,
+                "that is missing the required item", rv, "from the list:", required)
         } // end rv
       } // end for
     } // end else
@@ -172,13 +174,14 @@ filter_attribute_contains_items_from_list = func(resources, attr, forbidden) {
     } else if v is null {
       if null in forbidden {
         violators[address] = r
-        print(address, "has", attr, v, "from the forbidden list:", forbidden)
+        print(address, "has", attr, "with value", v,
+              "from the forbidden list:", forbidden)
       }
     } else {
       for forbidden as fv {
         if v contains fv {
           violators[address] = r
-          print(address, "has", attr, v, "with item", fv,
+          print(address, "has", attr, "with value", v, "with item", fv,
                 "from the forbidden list:", forbidden)
         } // end rv
       } // end for
@@ -197,24 +200,24 @@ filter_attribute_contains_items_not_in_list = func(resources, attr, allowed) {
   violators = {}
   for resources as address, r {
     # Evaluate the value (values) of the attribute
-    values = evaluate_attribute(r.values, attr) else null
+    vals = evaluate_attribute(r.values, attr) else null
     # Check if the value contains items not in allowed list
-    if not (types.type_of(values) is "list" or types.type_of(values) is "map" or
-            types.type_of(values) is "null") {
+    if not (types.type_of(vals) is "list" or types.type_of(vals) is "map" or
+            types.type_of(vals) is "null") {
         # Add it to the violators list and print a warning
         violators[address] = r
-        print(address, "has", attr, values, "that is not a map, a list, or null")
-    } else if values is null {
+        print(address, "has", attr, vals, "that is not a map, a list, or null")
+    } else if vals is null {
       if null not in allowed {
         violators[address] = r
-        print(address, "has", attr, values, "that is not in the allowed list:",
-              allowed)
+        print(address, "has", attr, "with value", vals,
+              "that is not in the allowed list:", allowed)
       }
     } else {
-      for values as v {
+      for vals as v {
         if v not in allowed {
           violators[address] = r
-          print(address, "has", attr, values, "with item", v,
+          print(address, "has", attr,  "with value", vals, "with item", v,
                 "that is not in the allowed list:", allowed)
         } // end if
       } // end for
@@ -237,7 +240,7 @@ filter_attribute_is_not_value = func(resources, attr, value) {
       print(address, "has", attr, "that is null or undefined")
     } else if v is not value {
       violators[address] = r
-      print(address, "has", attr, v, "that is not equal to", value)
+      print(address, "has", attr, "with value", v, "that is not equal to", value)
     }
   }
   return violators
@@ -257,7 +260,7 @@ filter_attribute_is_value = func(resources, attr, value) {
       print(address, "has", attr, "that is null or undefined")
     } else if v is value {
       violators[address] = r
-      print(address, "has", attr, v, "that is equal to", value)
+      print(address, "has", attr, "with value", v, "that is equal to", value)
     }
   }
   return violators
@@ -277,7 +280,7 @@ filter_attribute_greater_than_value = func(resources, attr, value) {
       print(address, "has", attr, "that is null or undefined")
     } else if float(v) > value {
       violators[address] = r
-      print(address, "has", attr, v, "that is greater than", value)
+      print(address, "has", attr, "with value", v, "that is greater than", value)
     }
   }
   return violators
@@ -297,7 +300,7 @@ filter_attribute_less_than_value = func(resources, attr, value) {
       print(address, "has", attr, "that is null or undefined")
     } else if float(v) < value {
       violators[address] = r
-      print(address, "has", attr, v, "that is less than", value)
+      print(address, "has", attr, "with value", v, "that is less than", value)
     }
   }
   return violators
@@ -317,7 +320,7 @@ filter_attribute_does_not_match_regex = func(resources, attr, expr) {
       print(address, "has", attr, "that is null or undefined")
     } else if v not matches expr {
       violators[address] = r
-      print(address, "has", attr, v, "that does not match the regex", expr)
+      print(address, "has", attr, "with value", v, "that does not match the regex", expr)
     }
   }
   return violators
@@ -337,7 +340,7 @@ filter_attribute_matches_regex = func(resources, attr, expr) {
       print(address, "has", attr, "that is null or undefined")
     } else if v matches expr {
       violators[address] = r
-      print(address, "has", attr, v, "that matches the regex", expr)
+      print(address, "has", attr, "with value", v, "that matches the regex", expr)
     }
   }
   return violators
@@ -357,7 +360,8 @@ filter_attribute_does_not_have_prefix = func(resources, attr, prefix) {
       print(address, "has", attr, "that is null or undefined")
     } else if not strings.has_prefix(v, prefix) {
       violators[address] = r
-      print(address, "has", attr, v, "that does not have the prefix", prefix)
+      print(address, "has", attr, "with value", v,
+            "that does not have the prefix", prefix)
     }
   }
   return violators
@@ -377,7 +381,7 @@ filter_attribute_has_prefix = func(resources, attr, prefix) {
       print(address, "has", attr, "that is null or undefined")
     } else if strings.has_prefix(v, prefix) {
       violators[address] = r
-      print(address, "has", attr, v, "that has the prefix", prefix)
+      print(address, "has", attr, "with value", v, "that has the prefix", prefix)
     }
   }
   return violators
@@ -397,7 +401,8 @@ filter_attribute_does_not_have_suffix = func(resources, attr, suffix) {
       print(address, "has", attr, "that is null or undefined")
     } else if not strings.has_suffix(v, suffix) {
       violators[address] = r
-      print(address, "has", attr, v, "that does not have the suffix", suffix)
+      print(address, "has", attr, "with value", v,
+            "that does not have the suffix", suffix)
     }
   }
   return violators
@@ -417,7 +422,7 @@ filter_attribute_has_suffix = func(resources, attr, suffix) {
       print(address, "has", attr, "that is null or undefined")
     } else if strings.has_suffix(v, suffix) {
       violators[address] = r
-      print(address, "has", attr, v, "that has the suffix", suffix)
+      print(address, "has", attr, "with value", v, "that has the suffix", suffix)
     }
   }
   return violators

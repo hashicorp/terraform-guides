@@ -1,5 +1,5 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
-# all Azure VMs have vm sizes from an allowed list
+# all Azure VMs have all mandatory tags
 
 # Import the v2 tfplan import, but use the alias "tfplan"
 import "tfplan/v2" as tfplan
@@ -7,13 +7,9 @@ import "tfplan/v2" as tfplan
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
 import "tfplan-functions" as plan
 
-# Allowed Azure VM Sizes
-# Include null to allow missing values
-allowed_sizes = [
-  "Standard_A1",
-  "Standard_A2",
-  "Standard_D1_v2",
-  "Standard_D2_v2",
+### List of mandatory tags ###
+mandatory_tags = [
+  "environment",
 ]
 
 # Get all Azure VMs
@@ -22,7 +18,7 @@ allAzureVMs = plan.find_resources("azurerm_virtual_machine")
 # Filter to Azure VMs with violations
 # The called function prints warnings for all violations
 violatingAzureVMs =
-  plan.filter_attribute_not_in_list(allAzureVMs, "vm_size", allowed_sizes)
+  plan.filter_attribute_not_contains_list(allAzureVMs, "tags", mandatory_tags)
 
 # Count violations
 violations = length(violatingAzureVMs)

@@ -12,6 +12,7 @@ import "tfplan-functions" as plan
 import "types"
 
 # Forbidden CIDRs
+# Include null to forbid missing or computed values
 forbidden_cidrs = [
   "0.0.0.0/0",
 ]

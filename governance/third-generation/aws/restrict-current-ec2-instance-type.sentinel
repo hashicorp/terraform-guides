@@ -8,7 +8,7 @@ import "tfstate/v2" as tfstate
 import "tfstate-functions" as state
 
 # Allowed EC2 Instance Types
-# Include null to allow computed values
+# Include null to allow missing or computed values
 allowed_types = [
   "t2.small",
   "t2.medium",

@@ -1,0 +1,1251 @@
+terraform_version = "0.12.24"
+
+planned_values = {
+	"outputs": {
+		"container_app_url": {
+			"name":      "container_app_url",
+			"sensitive": false,
+			"value":     undefined,
+		},
+	},
+	"resources": {
+		"azurerm_resource_group.arcade": {
+			"address":        "azurerm_resource_group.arcade",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "arcade",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_resource_group",
+			"values": {
+				"location": "centralus",
+				"name":     "roger-pizza-planet-containerapp-demo",
+				"tags":     null,
+				"timeouts": null,
+			},
+		},
+		"module.web_app_container.azurerm_app_service.main": {
+			"address":        "module.web_app_container.azurerm_app_service.main",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "module.web_app_container",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_app_service",
+			"values": {
+				"app_settings": {
+					"DOCKER_REGISTRY_SERVER_URL":          "https://index.docker.io",
+					"WEBSITES_CONTAINER_START_TIME_LIMIT": "230",
+					"WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+					"WEBSITES_PORT":                       "80",
+				},
+				"backup":                  [],
+				"client_affinity_enabled": false,
+				"client_cert_enabled":     null,
+				"enabled":                 true,
+				"https_only":              false,
+				"identity": [
+					{
+						"identity_ids": null,
+						"type":         "SystemAssigned",
+					},
+				],
+				"name":                "roger-pizza-planet",
+				"resource_group_name": "roger-pizza-planet-containerapp-demo",
+				"site_config": [
+					{
+						"always_on":                 false,
+						"app_command_line":          "",
+						"auto_swap_slot_name":       null,
+						"default_documents":         null,
+						"dotnet_framework_version":  "v4.0",
+						"ftps_state":                "Disabled",
+						"http2_enabled":             false,
+						"ip_restriction":            [],
+						"java_container":            null,
+						"java_container_version":    null,
+						"java_version":              null,
+						"linux_fx_version":          "DOCKER|scarolan/pizzaplanet",
+						"php_version":               null,
+						"python_version":            null,
+						"remote_debugging_enabled":  false,
+						"scm_type":                  "None",
+						"use_32_bit_worker_process": true,
+					},
+				],
+				"tags":     null,
+				"timeouts": null,
+			},
+		},
+		"module.web_app_container.azurerm_app_service_plan.main[0]": {
+			"address":        "module.web_app_container.azurerm_app_service_plan.main[0]",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          0,
+			"mode":           "managed",
+			"module_address": "module.web_app_container",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_app_service_plan",
+			"values": {
+				"app_service_environment_id": null,
+				"is_xenon":                   null,
+				"kind":                       "linux",
+				"name":                       "roger-pizza-planet-plan",
+				"per_site_scaling":           null,
+				"reserved":                   true,
+				"resource_group_name":        "roger-pizza-planet-containerapp-demo",
+				"sku": [
+					{
+						"size": "F1",
+						"tier": "Free",
+					},
+				],
+				"tags":     null,
+				"timeouts": null,
+			},
+		},
+		"module.web_app_container.azurerm_resource_group.main": {
+			"address":        "module.web_app_container.azurerm_resource_group.main",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "data",
+			"module_address": "module.web_app_container",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"tainted":        false,
+			"type":           "azurerm_resource_group",
+			"values": {
+				"name": "roger-pizza-planet-containerapp-demo",
+			},
+		},
+	},
+}
+
+variables = {
+	"https_only": {
+		"name":  "https_only",
+		"value": "false",
+	},
+	"image": {
+		"name":  "image",
+		"value": "scarolan/pizzaplanet",
+	},
+	"location": {
+		"name":  "location",
+		"value": "centralus",
+	},
+	"prefix": {
+		"name":  "prefix",
+		"value": "roger-pizza-planet",
+	},
+}
+
+resource_changes = {
+	"azurerm_resource_group.arcade": {
+		"address": "azurerm_resource_group.arcade",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"location": "centralus",
+				"name":     "roger-pizza-planet-containerapp-demo",
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "arcade",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_resource_group",
+	},
+	"module.web_app_container.azurerm_app_service.main": {
+		"address": "module.web_app_container.azurerm_app_service.main",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"app_settings": {
+					"DOCKER_REGISTRY_SERVER_URL":          "https://index.docker.io",
+					"WEBSITES_CONTAINER_START_TIME_LIMIT": "230",
+					"WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+					"WEBSITES_PORT":                       "80",
+				},
+				"backup":                  [],
+				"client_affinity_enabled": false,
+				"client_cert_enabled":     null,
+				"enabled":                 true,
+				"https_only":              false,
+				"identity": [
+					{
+						"identity_ids": null,
+						"type":         "SystemAssigned",
+					},
+				],
+				"name":                "roger-pizza-planet",
+				"resource_group_name": "roger-pizza-planet-containerapp-demo",
+				"site_config": [
+					{
+						"always_on":                 false,
+						"app_command_line":          "",
+						"auto_swap_slot_name":       null,
+						"default_documents":         null,
+						"dotnet_framework_version":  "v4.0",
+						"ftps_state":                "Disabled",
+						"http2_enabled":             false,
+						"ip_restriction":            [],
+						"java_container":            null,
+						"java_container_version":    null,
+						"java_version":              null,
+						"linux_fx_version":          "DOCKER|scarolan/pizzaplanet",
+						"php_version":               null,
+						"python_version":            null,
+						"remote_debugging_enabled":  false,
+						"scm_type":                  "None",
+						"use_32_bit_worker_process": true,
+					},
+				],
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"app_service_plan_id":   true,
+				"app_settings":          {},
+				"auth_settings":         true,
+				"backup":                [],
+				"connection_string":     true,
+				"default_site_hostname": true,
+				"id": true,
+				"identity": [
+					{
+						"principal_id": true,
+						"tenant_id":    true,
+					},
+				],
+				"location":                       true,
+				"logs":                           true,
+				"outbound_ip_addresses":          true,
+				"possible_outbound_ip_addresses": true,
+				"site_config": [
+					{
+						"cors":                     true,
+						"ip_restriction":           [],
+						"local_mysql_enabled":      true,
+						"managed_pipeline_mode":    true,
+						"min_tls_version":          true,
+						"remote_debugging_version": true,
+						"websockets_enabled":       true,
+						"windows_fx_version":       true,
+					},
+				],
+				"site_credential": true,
+				"source_control":  true,
+				"storage_account": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "module.web_app_container",
+		"name":           "main",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_app_service",
+	},
+	"module.web_app_container.azurerm_app_service_plan.main[0]": {
+		"address": "module.web_app_container.azurerm_app_service_plan.main[0]",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"app_service_environment_id": null,
+				"is_xenon":                   null,
+				"kind":                       "linux",
+				"name":                       "roger-pizza-planet-plan",
+				"per_site_scaling":           null,
+				"reserved":                   true,
+				"resource_group_name":        "roger-pizza-planet-containerapp-demo",
+				"sku": [
+					{
+						"size": "F1",
+						"tier": "Free",
+					},
+				],
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"id":                           true,
+				"location":                     true,
+				"maximum_elastic_worker_count": true,
+				"maximum_number_of_workers":    true,
+				"sku": [
+					{
+						"capacity": true,
+					},
+				],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          0,
+		"mode":           "managed",
+		"module_address": "module.web_app_container",
+		"name":           "main",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_app_service_plan",
+	},
+	"module.web_app_container.data.azurerm_resource_group.main": {
+		"address": "module.web_app_container.data.azurerm_resource_group.main",
+		"change": {
+			"actions": [
+				"read",
+			],
+			"after": {
+				"name": "roger-pizza-planet-containerapp-demo",
+			},
+			"after_unknown": {
+				"id":       true,
+				"location": true,
+				"tags":     true,
+				"timeouts": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "module.web_app_container",
+		"name":           "main",
+		"provider_name":  "azurerm",
+		"type":           "azurerm_resource_group",
+	},
+}
+
+output_changes = {
+	"container_app_url": {
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after":         undefined,
+			"after_unknown": true,
+			"before":        null,
+		},
+		"name": "container_app_url",
+	},
+}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"azurerm": {
+				"expressions": {
+					"features": [
+						{},
+					],
+				},
+				"name":               "azurerm",
+				"version_constraint": "=2.0.0",
+			},
+		},
+		"root_module": {
+			"module_calls": {
+				"web_app_container": {
+					"expressions": {
+						"container_image": {
+							"references": [
+								"var.image",
+							],
+						},
+						"container_type": {
+							"constant_value": "docker",
+						},
+						"https_only": {
+							"references": [
+								"var.https_only",
+							],
+						},
+						"name": {
+							"references": [
+								"var.prefix",
+							],
+						},
+						"port": {
+							"constant_value": "80",
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.arcade",
+							],
+						},
+					},
+					"module": {
+						"outputs": {
+							"hostname": {
+								"description": "The default hostname for the App Service.",
+								"expression": {
+									"references": [
+										"azurerm_app_service.main",
+									],
+								},
+							},
+							"id": {
+								"description": "The ID of the App Service.",
+								"expression": {
+									"references": [
+										"azurerm_app_service.main",
+									],
+								},
+							},
+							"identity": {
+								"description": "A mapping og identity properties for the web app.",
+								"expression": {
+									"references": [
+										"azurerm_app_service.main",
+										"azurerm_app_service.main",
+									],
+								},
+							},
+							"name": {
+								"description": "The name of the App Service.",
+								"expression": {
+									"references": [
+										"azurerm_app_service.main",
+									],
+								},
+							},
+							"outbound_ips": {
+								"description": "A list of outbound IP addresses for the App Service.",
+								"expression": {
+									"references": [
+										"azurerm_app_service.main",
+									],
+								},
+							},
+							"plan": {
+								"description": "A mapping of App Service plan properties.",
+								"expression": {
+									"references": [
+										"azurerm_app_service.main",
+									],
+								},
+							},
+							"possible_outbound_ips": {
+								"description": "A list of possible outbound IP addresses for the App Service. Superset of outbound_ips.",
+								"expression": {
+									"references": [
+										"azurerm_app_service.main",
+									],
+								},
+							},
+						},
+						"resources": [
+							{
+								"address": "azurerm_app_service.main",
+								"depends_on": [
+									"azurerm_key_vault_secret.main",
+								],
+								"expressions": {
+									"app_service_plan_id": {
+										"references": [
+											"local.plan_id",
+										],
+									},
+									"app_settings": {
+										"references": [
+											"var.app_settings",
+											"local.secure_app_settings",
+											"local.app_settings",
+										],
+									},
+									"client_affinity_enabled": {
+										"constant_value": false,
+									},
+									"https_only": {
+										"references": [
+											"var.https_only",
+										],
+									},
+									"identity": [
+										{
+											"identity_ids": {
+												"references": [
+													"local.identity",
+												],
+											},
+											"type": {
+												"references": [
+													"local.identity",
+													"local.identity",
+												],
+											},
+										},
+									],
+									"location": {
+										"references": [
+											"data.azurerm_resource_group.main",
+										],
+									},
+									"name": {
+										"references": [
+											"var.name",
+										],
+									},
+									"resource_group_name": {
+										"references": [
+											"data.azurerm_resource_group.main",
+										],
+									},
+									"site_config": [
+										{
+											"always_on": {
+												"references": [
+													"local.always_on",
+												],
+											},
+											"app_command_line": {
+												"references": [
+													"var.command",
+												],
+											},
+											"ftps_state": {
+												"references": [
+													"var.ftps_state",
+												],
+											},
+											"ip_restriction": {
+												"references": [
+													"local.ip_restrictions",
+												],
+											},
+											"linux_fx_version": {
+												"references": [
+													"local.linux_fx_version",
+												],
+											},
+											"use_32_bit_worker_process": {
+												"references": [
+													"local.use_32_bit_worker_process",
+												],
+											},
+										},
+									],
+									"tags": {
+										"references": [
+											"var.tags",
+										],
+									},
+								},
+								"mode":                "managed",
+								"name":                "main",
+								"provider_config_key": "web_app_container:azurerm",
+								"schema_version":      0,
+								"type":                "azurerm_app_service",
+							},
+							{
+								"address": "azurerm_app_service_custom_hostname_binding.main",
+								"count_expression": {
+									"references": [
+										"var.custom_hostnames",
+									],
+								},
+								"expressions": {
+									"app_service_name": {
+										"references": [
+											"azurerm_app_service.main",
+										],
+									},
+									"hostname": {
+										"references": [
+											"var.custom_hostnames",
+											"count.index",
+										],
+									},
+									"resource_group_name": {
+										"references": [
+											"data.azurerm_resource_group.main",
+										],
+									},
+								},
+								"mode":                "managed",
+								"name":                "main",
+								"provider_config_key": "web_app_container:azurerm",
+								"schema_version":      0,
+								"type":                "azurerm_app_service_custom_hostname_binding",
+							},
+							{
+								"address": "azurerm_app_service_plan.main",
+								"count_expression": {
+									"references": [
+										"local.plan",
+									],
+								},
+								"expressions": {
+									"kind": {
+										"constant_value": "linux",
+									},
+									"location": {
+										"references": [
+											"data.azurerm_resource_group.main",
+										],
+									},
+									"name": {
+										"references": [
+											"local.plan",
+											"local.default_plan_name",
+										],
+									},
+									"reserved": {
+										"constant_value": true,
+									},
+									"resource_group_name": {
+										"references": [
+											"data.azurerm_resource_group.main",
+										],
+									},
+									"sku": [
+										{
+											"size": {
+												"references": [
+													"local.plan",
+												],
+											},
+											"tier": {
+												"references": [
+													"local.sku_tiers",
+													"local.plan",
+												],
+											},
+										},
+									],
+									"tags": {
+										"references": [
+											"var.tags",
+										],
+									},
+								},
+								"mode":                "managed",
+								"name":                "main",
+								"provider_config_key": "web_app_container:azurerm",
+								"schema_version":      0,
+								"type":                "azurerm_app_service_plan",
+							},
+							{
+								"address": "azurerm_key_vault_access_policy.main",
+								"count_expression": {
+									"references": [
+										"var.secure_app_settings",
+									],
+								},
+								"expressions": {
+									"key_vault_id": {
+										"references": [
+											"var.key_vault_id",
+										],
+									},
+									"object_id": {
+										"references": [
+											"azurerm_app_service.main",
+										],
+									},
+									"secret_permissions": {
+										"constant_value": [
+											"get",
+										],
+									},
+									"tenant_id": {
+										"references": [
+											"azurerm_app_service.main",
+										],
+									},
+								},
+								"mode":                "managed",
+								"name":                "main",
+								"provider_config_key": "web_app_container:azurerm",
+								"schema_version":      0,
+								"type":                "azurerm_key_vault_access_policy",
+							},
+							{
+								"address": "azurerm_key_vault_secret.main",
+								"count_expression": {
+									"references": [
+										"local.key_vault_secrets",
+									],
+								},
+								"expressions": {
+									"key_vault_id": {
+										"references": [
+											"var.key_vault_id",
+										],
+									},
+									"name": {
+										"references": [
+											"local.key_vault_secrets",
+											"count.index",
+										],
+									},
+									"value": {
+										"references": [
+											"local.key_vault_secrets",
+											"count.index",
+										],
+									},
+								},
+								"mode":                "managed",
+								"name":                "main",
+								"provider_config_key": "web_app_container:azurerm",
+								"schema_version":      0,
+								"type":                "azurerm_key_vault_secret",
+							},
+							{
+								"address":             "data.azurerm_client_config.main",
+								"mode":                "data",
+								"name":                "main",
+								"provider_config_key": "web_app_container:azurerm",
+								"schema_version":      0,
+								"type":                "azurerm_client_config",
+							},
+							{
+								"address": "data.azurerm_resource_group.main",
+								"expressions": {
+									"name": {
+										"references": [
+											"var.resource_group_name",
+										],
+									},
+								},
+								"mode":                "data",
+								"name":                "main",
+								"provider_config_key": "web_app_container:azurerm",
+								"schema_version":      0,
+								"type":                "azurerm_resource_group",
+							},
+						],
+						"variables": {
+							"always_on": {
+								"default":     true,
+								"description": "Either `true` to ensure the web app gets loaded all the time, or `false` to to unload after being idle.",
+							},
+							"app_settings": {
+								"default":     {},
+								"description": "Set app settings. These are avilable as environment variables at runtime.",
+							},
+							"auth": {
+								"default":     {},
+								"description": "Auth settings for the web app. This should be `auth` object.",
+							},
+							"command": {
+								"default":     "",
+								"description": "A command to be run on the container.",
+							},
+							"container_config": {
+								"default":     "",
+								"description": "Configuration for the container. This should be YAML.",
+							},
+							"container_image": {
+								"default":     "",
+								"description": "Container image name. Example: `innovationnorway/python-hello-world:latest`.",
+							},
+							"container_type": {
+								"default":     "docker",
+								"description": "Type of container. The options are: `docker`, `compose` or `kube`.",
+							},
+							"custom_hostnames": {
+								"default":     [],
+								"description": "List of custom hostnames to use for the web app.",
+							},
+							"docker_registry_password": {
+								"description": "The container registry password.",
+							},
+							"docker_registry_url": {
+								"default":     "https://index.docker.io",
+								"description": "The container registry url.",
+							},
+							"docker_registry_username": {
+								"description": "The container registry username.",
+							},
+							"enable_storage": {
+								"default":     "false",
+								"description": "Mount an SMB share to the `/home/` directory.",
+							},
+							"ftps_state": {
+								"default":     "Disabled",
+								"description": "Set the FTPS state value the web app. The options are: `AllAllowed`, `Disabled` and `FtpsOnly`.",
+							},
+							"https_only": {
+								"default":     true,
+								"description": "Redirect all traffic made to the web app using HTTP to HTTPS.",
+							},
+							"identity": {
+								"default":     {},
+								"description": "Managed service identity properties.",
+							},
+							"ip_restrictions": {
+								"default":     [],
+								"description": "A list of IP addresses in CIDR format specifying Access Restrictions.",
+							},
+							"key_vault_id": {
+								"default":     "",
+								"description": "The ID of an existing Key Vault. Required if `secure_app_settings` is set.",
+							},
+							"name": {
+								"description": "The name of the web app.",
+							},
+							"plan": {
+								"default":     {},
+								"description": "A map of app service plan properties.",
+							},
+							"port": {
+								"description": "The value of the expected container port number.",
+							},
+							"resource_group_name": {
+								"description": "The name of an existing resource group to use for the web app.",
+							},
+							"secure_app_settings": {
+								"default":     {},
+								"description": "Set sensitive app settings. Uses Key Vault references as values for app settings.",
+							},
+							"start_time_limit": {
+								"default":     230,
+								"description": "Configure the amount of time (in seconds) the app service will wait before it restarts the container.",
+							},
+							"storage_mounts": {
+								"default":     [],
+								"description": "List of storage mounts.",
+							},
+							"tags": {
+								"default":     {},
+								"description": "A mapping of tags to assign to the web app.",
+							},
+						},
+					},
+					"source":             "innovationnorway/web-app-container/azurerm",
+					"version_constraint": "2.6.0",
+				},
+			},
+			"outputs": {
+				"container_app_url": {
+					"expression": {
+						"references": [
+							"module.web_app_container.hostname",
+						],
+					},
+				},
+			},
+			"resources": [
+				{
+					"address": "azurerm_resource_group.arcade",
+					"expressions": {
+						"location": {
+							"references": [
+								"var.location",
+							],
+						},
+						"name": {
+							"references": [
+								"var.prefix",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "arcade",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_resource_group",
+				},
+			],
+			"variables": {
+				"https_only": {
+					"default": "false",
+				},
+				"image": {
+					"default": "scarolan/pizzaplanet",
+				},
+				"location": {
+					"default": "centralus",
+				},
+				"prefix": {
+					"default": "roger-pizza-planet",
+				},
+			},
+		},
+	},
+	"format_version": "0.1",
+	"output_changes": {
+		"container_app_url": {
+			"actions": [
+				"create",
+			],
+			"after_unknown": true,
+			"before":        null,
+		},
+	},
+	"planned_values": {
+		"outputs": {
+			"container_app_url": {
+				"sensitive": false,
+			},
+		},
+		"root_module": {
+			"child_modules": [
+				{
+					"address": "module.web_app_container",
+					"resources": [
+						{
+							"address":        "module.web_app_container.azurerm_app_service.main",
+							"mode":           "managed",
+							"name":           "main",
+							"provider_name":  "azurerm",
+							"schema_version": 0,
+							"type":           "azurerm_app_service",
+							"values": {
+								"app_settings": {
+									"DOCKER_REGISTRY_SERVER_URL":          "https://index.docker.io",
+									"WEBSITES_CONTAINER_START_TIME_LIMIT": "230",
+									"WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+									"WEBSITES_PORT":                       "80",
+								},
+								"backup":                  [],
+								"client_affinity_enabled": false,
+								"client_cert_enabled":     null,
+								"enabled":                 true,
+								"https_only":              false,
+								"identity": [
+									{
+										"identity_ids": null,
+										"type":         "SystemAssigned",
+									},
+								],
+								"name":                "roger-pizza-planet",
+								"resource_group_name": "roger-pizza-planet-containerapp-demo",
+								"site_config": [
+									{
+										"always_on":                 false,
+										"app_command_line":          "",
+										"auto_swap_slot_name":       null,
+										"default_documents":         null,
+										"dotnet_framework_version":  "v4.0",
+										"ftps_state":                "Disabled",
+										"http2_enabled":             false,
+										"ip_restriction":            [],
+										"java_container":            null,
+										"java_container_version":    null,
+										"java_version":              null,
+										"linux_fx_version":          "DOCKER|scarolan/pizzaplanet",
+										"php_version":               null,
+										"python_version":            null,
+										"remote_debugging_enabled":  false,
+										"scm_type":                  "None",
+										"use_32_bit_worker_process": true,
+									},
+								],
+								"tags":     null,
+								"timeouts": null,
+							},
+						},
+						{
+							"address":        "module.web_app_container.azurerm_app_service_plan.main[0]",
+							"index":          0,
+							"mode":           "managed",
+							"name":           "main",
+							"provider_name":  "azurerm",
+							"schema_version": 0,
+							"type":           "azurerm_app_service_plan",
+							"values": {
+								"app_service_environment_id": null,
+								"is_xenon":                   null,
+								"kind":                       "linux",
+								"name":                       "roger-pizza-planet-plan",
+								"per_site_scaling":           null,
+								"reserved":                   true,
+								"resource_group_name":        "roger-pizza-planet-containerapp-demo",
+								"sku": [
+									{
+										"size": "F1",
+										"tier": "Free",
+									},
+								],
+								"tags":     null,
+								"timeouts": null,
+							},
+						},
+						{
+							"address":        "module.web_app_container.data.azurerm_resource_group.main",
+							"mode":           "data",
+							"name":           "main",
+							"provider_name":  "azurerm",
+							"schema_version": 0,
+							"type":           "azurerm_resource_group",
+							"values": {
+								"name": "roger-pizza-planet-containerapp-demo",
+							},
+						},
+					],
+				},
+			],
+			"resources": [
+				{
+					"address":        "azurerm_resource_group.arcade",
+					"mode":           "managed",
+					"name":           "arcade",
+					"provider_name":  "azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_resource_group",
+					"values": {
+						"location": "centralus",
+						"name":     "roger-pizza-planet-containerapp-demo",
+						"tags":     null,
+						"timeouts": null,
+					},
+				},
+			],
+		},
+	},
+	"prior_state": {
+		"format_version":    "0.1",
+		"terraform_version": "0.12.24",
+		"values": {
+			"root_module": {
+				"child_modules": [
+					{
+						"address": "module.web_app_container",
+						"resources": [
+							{
+								"address":        "data.azurerm_client_config.main",
+								"mode":           "data",
+								"name":           "main",
+								"provider_name":  "azurerm",
+								"schema_version": 0,
+								"type":           "azurerm_client_config",
+								"values": {
+									"client_id":       "7f89cd95-38e0-4d69-8737-adba7985626a",
+									"id":              "2020-04-15 23:30:16.233800559 +0000 UTC",
+									"object_id":       "d04e249a-968c-432c-b5e6-630bbe10bb4d",
+									"subscription_id": "14692f20-9428-451b-8298-102ed4e39c2a",
+									"tenant_id":       "0e3e2e88-8caf-41ca-b4da-e3b33b6c52ec",
+									"timeouts":        null,
+								},
+							},
+						],
+					},
+				],
+			},
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "azurerm_resource_group.arcade",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"location": "centralus",
+					"name":     "roger-pizza-planet-containerapp-demo",
+					"tags":     null,
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"id": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "arcade",
+			"provider_name": "azurerm",
+			"type":          "azurerm_resource_group",
+		},
+		{
+			"address": "module.web_app_container.azurerm_app_service.main",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"app_settings": {
+						"DOCKER_REGISTRY_SERVER_URL":          "https://index.docker.io",
+						"WEBSITES_CONTAINER_START_TIME_LIMIT": "230",
+						"WEBSITES_ENABLE_APP_SERVICE_STORAGE": "false",
+						"WEBSITES_PORT":                       "80",
+					},
+					"backup":                  [],
+					"client_affinity_enabled": false,
+					"client_cert_enabled":     null,
+					"enabled":                 true,
+					"https_only":              false,
+					"identity": [
+						{
+							"identity_ids": null,
+							"type":         "SystemAssigned",
+						},
+					],
+					"name":                "roger-pizza-planet",
+					"resource_group_name": "roger-pizza-planet-containerapp-demo",
+					"site_config": [
+						{
+							"always_on":                 false,
+							"app_command_line":          "",
+							"auto_swap_slot_name":       null,
+							"default_documents":         null,
+							"dotnet_framework_version":  "v4.0",
+							"ftps_state":                "Disabled",
+							"http2_enabled":             false,
+							"ip_restriction":            [],
+							"java_container":            null,
+							"java_container_version":    null,
+							"java_version":              null,
+							"linux_fx_version":          "DOCKER|scarolan/pizzaplanet",
+							"php_version":               null,
+							"python_version":            null,
+							"remote_debugging_enabled":  false,
+							"scm_type":                  "None",
+							"use_32_bit_worker_process": true,
+						},
+					],
+					"tags":     null,
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"app_service_plan_id":   true,
+					"app_settings":          {},
+					"auth_settings":         true,
+					"backup":                [],
+					"connection_string":     true,
+					"default_site_hostname": true,
+					"id": true,
+					"identity": [
+						{
+							"principal_id": true,
+							"tenant_id":    true,
+						},
+					],
+					"location":                       true,
+					"logs":                           true,
+					"outbound_ip_addresses":          true,
+					"possible_outbound_ip_addresses": true,
+					"site_config": [
+						{
+							"cors":                     true,
+							"ip_restriction":           [],
+							"local_mysql_enabled":      true,
+							"managed_pipeline_mode":    true,
+							"min_tls_version":          true,
+							"remote_debugging_version": true,
+							"websockets_enabled":       true,
+							"windows_fx_version":       true,
+						},
+					],
+					"site_credential": true,
+					"source_control":  true,
+					"storage_account": true,
+				},
+				"before": null,
+			},
+			"mode":           "managed",
+			"module_address": "module.web_app_container",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"type":           "azurerm_app_service",
+		},
+		{
+			"address": "module.web_app_container.azurerm_app_service_plan.main[0]",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"app_service_environment_id": null,
+					"is_xenon":                   null,
+					"kind":                       "linux",
+					"name":                       "roger-pizza-planet-plan",
+					"per_site_scaling":           null,
+					"reserved":                   true,
+					"resource_group_name":        "roger-pizza-planet-containerapp-demo",
+					"sku": [
+						{
+							"size": "F1",
+							"tier": "Free",
+						},
+					],
+					"tags":     null,
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"id":                           true,
+					"location":                     true,
+					"maximum_elastic_worker_count": true,
+					"maximum_number_of_workers":    true,
+					"sku": [
+						{
+							"capacity": true,
+						},
+					],
+				},
+				"before": null,
+			},
+			"index":          0,
+			"mode":           "managed",
+			"module_address": "module.web_app_container",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"type":           "azurerm_app_service_plan",
+		},
+		{
+			"address": "module.web_app_container.data.azurerm_resource_group.main",
+			"change": {
+				"actions": [
+					"read",
+				],
+				"after": {
+					"name": "roger-pizza-planet-containerapp-demo",
+				},
+				"after_unknown": {
+					"id":       true,
+					"location": true,
+					"tags":     true,
+					"timeouts": true,
+				},
+				"before": null,
+			},
+			"mode":           "data",
+			"module_address": "module.web_app_container",
+			"name":           "main",
+			"provider_name":  "azurerm",
+			"type":           "azurerm_resource_group",
+		},
+	],
+	"terraform_version": "0.12.24",
+	"variables": {
+		"https_only": {
+			"value": "false",
+		},
+		"image": {
+			"value": "scarolan/pizzaplanet",
+		},
+		"location": {
+			"value": "centralus",
+		},
+		"prefix": {
+			"value": "roger-pizza-planet",
+		},
+	},
+}

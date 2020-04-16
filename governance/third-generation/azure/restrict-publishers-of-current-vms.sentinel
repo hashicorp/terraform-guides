@@ -1,0 +1,32 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all existing Azure VMs have publishers from a specified list
+
+# Import the v2 tfplan import, but use the alias "tfplan"
+import "tfstate/v2" as tfstate
+
+# Import common-functions/tfstate-functions.sentinel with alias "state"
+import "tfstate-functions" as state
+
+# List of allowed publishers
+# Include null to allow missing or computed values
+allowed_publishers = [
+  "RedHat",
+  "Canonical",
+]
+
+# Get all Azure VMs
+allAzureVMs = state.find_resources("azurerm_virtual_machine")
+
+# Filter to Azure VMs with violations
+# The called function prints warnings for all violations
+violatingAzureVMs =
+  state.filter_attribute_not_in_list(allAzureVMs,
+        "storage_image_reference.0.publisher", allowed_publishers)
+
+# Count violations
+violations = length(violatingAzureVMs)
+
+# Main rule
+main = rule {
+  violations is 0
+}
