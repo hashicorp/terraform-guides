@@ -1,0 +1,152 @@
+# Common functions that use the tfconfig/v2 import
+
+##### Imports #####
+import "tfconfig/v2" as tfconfig
+import "strings"
+import "types"
+
+##### Functions #####
+
+### find_resources_by_type ###
+# Find all resources of a specific type using the tfconfig/v2 import.
+# The parameter, type, should be a string like "aws_instance".
+find_resources_by_type = func(type) {
+  resources = filter tfconfig.resources as address, r {
+  	r.type is type and
+  	r.mode is "managed"
+  }
+
+  return resources
+}
+
+### find_resources_in_module ###
+# Find all resources from a specific module using the tfconfig/v2 import.
+find_resources_in_module = func(module_address) {
+  resources = filter tfconfig.resources as address, r {
+  	r.module_address is module_address and
+  	r.mode is "managed"
+  }
+
+  return resources
+}
+
+### find_resources_by_provider ###
+# Find all resources from a specific provider using the tfconfig/v2 import.
+# The parameter, provider, should be given as a string such as "aws".
+find_resources_by_provider = func(provider) {
+  resources = filter tfconfig.resources as address, r {
+  	r.provider_config_key matches "(.*)" + provider + "(.*)" and
+  	r.mode is "managed"
+  }
+
+  return resources
+}
+
+### find_datasources_by_type ###
+# Find all data sources of a specific type using the tfconfig/v2 import.
+# The parameter, type, should be a string like "aws_ami".
+find_datasources_by_type = func(type) {
+  datasources = filter tfconfig.resources as address, d {
+  	d.type is type and
+  	d.mode is "data"
+  }
+
+  return datasources
+}
+
+### find_datasources_in_module ###
+# Find all data sources from a specific module using the tfconfig/v2 import.
+find_datasources_in_module = func(module_address) {
+  datasources = filter tfconfig.resources as address, d {
+  	d.module_address is module_address and
+  	d.mode is "data"
+  }
+
+  return datasources
+}
+
+### find_datasources_by_provider ###
+# Find all data sources from a specific provider using the tfconfig/v2 import.
+# The parameter, provider, should be given as a string such as "aws".
+find_datasources_by_provider = func(provider) {
+  datasources = filter tfconfig.resources as address, d {
+  	d.provider_config_key matches "(.*)" + provider + "(.*)" and
+  	d.mode is "data"
+  }
+
+  return datasources
+}
+
+### find_provisioners_by_type ###
+# Find all provisioners of a specific type from all resources using the
+# tfconfig/v2 import.
+# The parameter, type, should be a string like "local_exec".
+find_provisioners_by_type = func(type) {
+  provisioners = filter tfconfig.provisioners as address, p {
+  	p.type is type
+  }
+
+  return provisioners
+}
+
+### find_variables_in_module ###
+# Find all variables from a specific module using the tfconfig/v2 import.
+find_variables_in_module = func(module_address) {
+  variables = filter tfconfig.variables as address, v {
+  	v.module_address is module_address
+  }
+
+  return variables
+}
+
+### find_providers_by_type ###
+# Find all providers of a specific type using the tfconfig/v2 import.
+# The parameter, provider, should be given as a string such as "aws".
+find_providers_by_type = func(provider) {
+  providers = filter tfconfig.providers as address, p {
+  	p.provider_config_key matches "(.*)" + provider + "(.*)"
+  }
+
+  return providers
+}
+
+### find_providers_in_module ###
+# Find all providers from a specific module using the tfconfig/v2 import.
+find_providers_in_module = func(module_address) {
+  providers = filter tfconfig.providers as address, p {
+  	p.module_address is module_address
+  }
+
+  return providers
+}
+
+### find_outputs_in_module ###
+# Find all providers from a specific module using the tfconfig/v2 import.
+find_outputs_in_module = func(module_address) {
+  outputs = filter tfconfig.outputs as address, o {
+  	o.module_address is module_address
+  }
+
+  return outputs
+}
+
+### find_outputs_by_sensitivity ###
+# Find all providers of specific sensitivity using the tfconfig/v2 import.
+# The parameter, sensitive, should be true or false (without quotes)
+find_outputs_by_sensitivity = func(sensitive) {
+  outputs = filter tfconfig.outputs as address, o {
+  	o.sensitive is sensitive
+  }
+
+  return outputs
+}
+
+### find_module_calls_in_module ###
+# Find all module calls made from a specific module using the tfconfig/v2 import.
+find_module_calls_in_module = func(module_address) {
+  module_calls = filter tfconfig.module_calls as address, mc {
+  	mc.module_address is module_address
+  }
+
+  return module_calls
+}

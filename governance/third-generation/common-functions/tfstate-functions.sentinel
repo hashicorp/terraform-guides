@@ -1,10 +1,10 @@
 # Common functions that use the tfstate/v2 import
 
-# The filter functions all accept a collection of resource changes, an attribute,
+# The filter functions all accept a collection of resources, an attribute,
 # a value or a list of values, and a boolean, prtmsg, which can be true or false
 # and indicates whether the filter function should print violation messages.
 # The filter functions return a map consisting of 3 items:
-#   * "resources": a map consisting of resource changes that violate a condition
+#   * "resources": a map consisting of resources that violate a condition
 #   * "messages":  a map of violation messages associated with the resources
 #   * "length":    the length of the resources and messages collections
 # Note that both the resources and messages collections are indexed by the
@@ -21,7 +21,6 @@ import "types"
 
 ### find_resources ###
 # Find all resources of a specific type using the tfstate/v2 import.
-# Technically, this returns a map of resource changes.
 find_resources = func(type) {
   resources = filter tfstate.resources as address, r {
   	r.type is type and
@@ -33,19 +32,19 @@ find_resources = func(type) {
 
 ### find_datasources ###
 # Find all data sources of a specific type using the tfstate/v2 import.
-# Technically, this returns a map of resource changes.
 find_datasources = func(type) {
-  resources = filter tfstate.resources as address, r {
-  	r.type is type and
-  	r.mode is "data"
+  datasources = filter tfstate.resources as address, d {
+  	d.type is type and
+  	d.mode is "data"
   }
 
-  return resources
+  return datasources
 }
 
 ### find_blocks ###
 # Find all blocks of a specific type from a resource using the tfstate/v2 import.
-# parent should be a single resource or block of a resource.
+# parent should be a single resource or block of a resource or a data source
+# or block of a data source.
 # child should be a string representing a block of parent
 # that contains a list of objects.
 find_blocks = func(parent, child) {
