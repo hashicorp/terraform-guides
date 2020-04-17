@@ -9,24 +9,17 @@ import "tfstate-functions" as state
 
 # List of allowed publishers
 # Include null to allow missing or computed values
-allowed_publishers = [
-  "RedHat",
-  "Canonical",
-]
+allowed_publishers = ["RedHat","Canonical"]
 
 # Get all Azure VMs
 allAzureVMs = state.find_resources("azurerm_virtual_machine")
 
 # Filter to Azure VMs with violations
 # The called function prints warnings for all violations
-violatingAzureVMs =
-  state.filter_attribute_not_in_list(allAzureVMs,
-        "storage_image_reference.0.publisher", allowed_publishers)
-
-# Count violations
-violations = length(violatingAzureVMs)
+violatingAzureVMs = state.filter_attribute_not_in_list(allAzureVMs,
+  "storage_image_reference.0.publisher", allowed_publishers, true)
 
 # Main rule
 main = rule {
-  violations is 0
+  violatingAzureVMs["length"] is 0
 }

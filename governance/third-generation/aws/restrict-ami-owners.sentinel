@@ -9,11 +9,7 @@ import "tfstate-functions" as state
 
 # Allowed Owners
 # Include null to allow missing or computed values
-allowed_owners = [
-  "self",
-  "099720109477",
-  "099720109478",
-]
+allowed_owners = ["self", "099720109477", "099720109478"]
 
 # Get all AMIs
 allAMIs = state.find_datasources("aws_ami")
@@ -23,10 +19,7 @@ allAMIs = state.find_datasources("aws_ami")
 violatingAMIs =
   state.filter_attribute_contains_items_not_in_list(allAMIs, "owners", allowed_owners)
 
-# Count violations
-violations = length(violatingAMIs)
-
 # Main rule
 main = rule {
-  violations is 0
+  length(violatingAMIs) is 0
 }

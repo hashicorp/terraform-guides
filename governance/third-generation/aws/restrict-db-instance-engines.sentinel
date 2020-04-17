@@ -9,24 +9,16 @@ import "tfplan-functions" as plan
 
 # Allowed RDS engines
 # Include null to allow missing or computed values
-allowed_engines = [
-  "mysql",
-  "postgres",
-  "mariadb",
-]
+allowed_engines = ["mysql", "postgres"]
 
 # Get all RDS instances
 allRDSInstances = plan.find_resources("aws_db_instance")
 
 # Filter to RDS instances with violations
-# The called function prints warnings for all violations
-violatingRDSInstances =
-  plan.filter_attribute_not_in_list(allRDSInstances, "engine", allowed_engines)
-
-# Count violations
-violations = length(violatingRDSInstances)
+violatingRDSInstances = plan.filter_attribute_not_in_list(allRDSInstances,
+                        "engine", allowed_engines, true)
 
 # Main rule
 main = rule {
-  violations is 0
+  violatingRDSInstances["length"] is 0
 }

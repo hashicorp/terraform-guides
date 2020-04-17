@@ -1,0 +1,39 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all VMware VMs obey a disk limit
+
+# Import the v2 tfplan import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions.sentinel with alias "plan"
+import "tfplan-functions" as plan
+
+# Set disk size limit (in GB)
+maxDiskSize = 100
+
+# Get all VMs
+allVMs = plan.find_resources("vsphere_virtual_machine")
+
+# Validate VM Disks
+disksValidated = true
+for allVMs as address, vm {
+
+  # Find the disks of the current VM
+  disks = plan.find_blocks(vm, "disk")
+
+  # Filter to violating disks of the current VM
+  violatingDisks = plan.filter_attribute_greater_than_value(disks,
+                   "size", maxDiskSize, false)
+
+  # Print warnings if any violating disks
+  if violatingDisks["length"] > 0 {
+    disksValidated = false
+    print(address, "has at least one disk with size greater than", maxDiskSize)
+    plan.print_violations(violatingDisks["messages"], "Disk")
+  } // end if
+
+} // end for VMs
+
+# Main rule
+main = rule {
+  disksValidated
+}
