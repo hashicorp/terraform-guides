@@ -1,7 +1,7 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all S3 buckets have ACL "private" and be encrypted by a KMS key
 
-# Import the v2 tfplan import, but use the alias "tfplan"
+# Import the tfplan/v2 import, but use the alias "tfplan"
 import "tfplan/v2" as tfplan
 
 # Import common-functions/tfplan-functions.sentinel with alias "plan"

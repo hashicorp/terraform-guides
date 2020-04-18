@@ -4,7 +4,7 @@
 # Note that the comparison is case-sensitive but also that GCE labels are only
 # allowed to contain lowercase letters, numbers, hypens, and underscores.
 
-# Import the v2 tfplan import, but use the alias "tfplan"
+# Import the tfplan/v2 import, but use the alias "tfplan"
 import "tfplan/v2" as tfplan
 
 # Import common-functions/tfplan-functions.sentinel with alias "plan"

@@ -1,0 +1,430 @@
+import "strings"
+
+providers = {}
+
+resources = {
+	"aws_security_group.allow_tls": {
+		"address": "aws_security_group.allow_tls",
+		"config": {
+			"description": {
+				"constant_value": "Allow TLS inbound traffic",
+			},
+			"name": {
+				"constant_value": "allow_tls",
+			},
+			"tags": {
+				"constant_value": {
+					"Name": "allow_all",
+				},
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "allow_tls",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_security_group",
+	},
+	"aws_security_group_rule.allow_all": {
+		"address": "aws_security_group_rule.allow_all",
+		"config": {
+			"from_port": {
+				"constant_value": 0,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"self": {
+				"constant_value": true,
+			},
+			"to_port": {
+				"constant_value": 65535,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count": {
+			"constant_value": 2,
+		},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "allow_all",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+	"aws_security_group_rule.allow_ssh": {
+		"address": "aws_security_group_rule.allow_ssh",
+		"config": {
+			"cidr_blocks": {
+				"constant_value": [
+					"10.100.0.0/16",
+				],
+			},
+			"from_port": {
+				"constant_value": 22,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"to_port": {
+				"constant_value": 22,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "allow_ssh",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+	"module.more-sgrs-carol.aws_security_group_rule.https": {
+		"address": "module.more-sgrs-carol.aws_security_group_rule.https",
+		"config": {
+			"cidr_blocks": {
+				"constant_value": [
+					"0.0.0.0/0",
+				],
+			},
+			"from_port": {
+				"constant_value": 443,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"to_port": {
+				"constant_value": 443,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.more-sgrs-carol",
+		"name":                "https",
+		"provider_config_key": "module.more-sgrs-carol:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+	"module.more-sgrs-carol.data.aws_security_group.selected": {
+		"address": "module.more-sgrs-carol.data.aws_security_group.selected",
+		"config": {
+			"id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "module.more-sgrs-carol",
+		"name":                "selected",
+		"provider_config_key": "module.more-sgrs-carol:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group",
+	},
+	"module.more-sgrs-carol.module.even-more-sgrs.aws_security_group_rule.http": {
+		"address": "module.more-sgrs-carol.module.even-more-sgrs.aws_security_group_rule.http",
+		"config": {
+			"cidr_blocks": {
+				"constant_value": [
+					"0.0.0.0/0",
+				],
+			},
+			"from_port": {
+				"constant_value": 80,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"to_port": {
+				"constant_value": 80,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.more-sgrs-carol.module.even-more-sgrs",
+		"name":                "http",
+		"provider_config_key": "module.more-sgrs-carol.module.even-more-sgrs:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+	"module.more-sgrs-carol.module.even-more-sgrs.module.still-more-sgrs.aws_security_group_rule.http": {
+		"address": "module.more-sgrs-carol.module.even-more-sgrs.module.still-more-sgrs.aws_security_group_rule.http",
+		"config": {
+			"cidr_blocks": {
+				"constant_value": [
+					"0.0.0.0/0",
+				],
+			},
+			"from_port": {
+				"constant_value": 80,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"to_port": {
+				"constant_value": 80,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.more-sgrs-carol.module.even-more-sgrs.module.still-more-sgrs",
+		"name":                "http",
+		"provider_config_key": "module.more-sgrs-carol.module.even-more-sgrs.module.still-more-sgrs:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+	"module.more-sgrs-roger.aws_security_group_rule.https": {
+		"address": "module.more-sgrs-roger.aws_security_group_rule.https",
+		"config": {
+			"cidr_blocks": {
+				"constant_value": [
+					"0.0.0.0/0",
+				],
+			},
+			"from_port": {
+				"constant_value": 443,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"to_port": {
+				"constant_value": 443,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.more-sgrs-roger",
+		"name":                "https",
+		"provider_config_key": "module.more-sgrs-roger:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+	"module.more-sgrs-roger.data.aws_security_group.selected": {
+		"address": "module.more-sgrs-roger.data.aws_security_group.selected",
+		"config": {
+			"id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "module.more-sgrs-roger",
+		"name":                "selected",
+		"provider_config_key": "module.more-sgrs-roger:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group",
+	},
+	"module.more-sgrs-roger.module.even-more-sgrs.aws_security_group_rule.http": {
+		"address": "module.more-sgrs-roger.module.even-more-sgrs.aws_security_group_rule.http",
+		"config": {
+			"cidr_blocks": {
+				"constant_value": [
+					"0.0.0.0/0",
+				],
+			},
+			"from_port": {
+				"constant_value": 80,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"to_port": {
+				"constant_value": 80,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.more-sgrs-roger.module.even-more-sgrs",
+		"name":                "http",
+		"provider_config_key": "module.more-sgrs-roger.module.even-more-sgrs:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+	"module.more-sgrs-roger.module.even-more-sgrs.module.still-more-sgrs.aws_security_group_rule.http": {
+		"address": "module.more-sgrs-roger.module.even-more-sgrs.module.still-more-sgrs.aws_security_group_rule.http",
+		"config": {
+			"cidr_blocks": {
+				"constant_value": [
+					"0.0.0.0/0",
+				],
+			},
+			"from_port": {
+				"constant_value": 80,
+			},
+			"protocol": {
+				"constant_value": "tcp",
+			},
+			"security_group_id": {
+				"constant_value": "sg-008b502d0a24d0136",
+			},
+			"to_port": {
+				"constant_value": 80,
+			},
+			"type": {
+				"constant_value": "ingress",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.more-sgrs-roger.module.even-more-sgrs.module.still-more-sgrs",
+		"name":                "http",
+		"provider_config_key": "module.more-sgrs-roger.module.even-more-sgrs.module.still-more-sgrs:aws",
+		"provisioners":        [],
+		"type":                "aws_security_group_rule",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"module.more-sgrs-carol:owner": {
+		"default":        null,
+		"description":    "owner",
+		"module_address": "module.more-sgrs-carol",
+		"name":           "owner",
+	},
+	"module.more-sgrs-roger:owner": {
+		"default":        null,
+		"description":    "owner",
+		"module_address": "module.more-sgrs-roger",
+		"name":           "owner",
+	},
+}
+
+outputs = {}
+
+module_calls = {
+	"module.more-sgrs-carol.module.even-more-sgrs:still-more-sgrs": {
+		"config":             {},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.more-sgrs-carol.module.even-more-sgrs",
+		"name":               "still-more-sgrs",
+		"source":             "./more-rules",
+		"version_constraint": "",
+	},
+	"module.more-sgrs-carol:even-more-sgrs": {
+		"config":             {},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.more-sgrs-carol",
+		"name":               "even-more-sgrs",
+		"source":             "./even-more-rules",
+		"version_constraint": "",
+	},
+	"module.more-sgrs-roger.module.even-more-sgrs:still-more-sgrs": {
+		"config":             {},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.more-sgrs-roger.module.even-more-sgrs",
+		"name":               "still-more-sgrs",
+		"source":             "./more-rules",
+		"version_constraint": "",
+	},
+	"module.more-sgrs-roger:even-more-sgrs": {
+		"config":             {},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.more-sgrs-roger",
+		"name":               "even-more-sgrs",
+		"source":             "./even-more-rules",
+		"version_constraint": "",
+	},
+	"more-sgrs-carol": {
+		"config": {
+			"owner": {
+				"constant_value": "Carol",
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "more-sgrs-carol",
+		"source":             "./modules/more-rules",
+		"version_constraint": "",
+	},
+	"more-sgrs-roger": {
+		"config": {
+			"owner": {
+				"constant_value": "Roger",
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "more-sgrs-roger",
+		"source":             "./modules/more-rules",
+		"version_constraint": "",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

@@ -2,7 +2,7 @@
 # all Azure app services have https_only set to true so that
 # they can only be accessed via HTTPS
 
-# Import the v2 tfplan import, but use the alias "tfplan"
+# Import the tfplan/v2 import, but use the alias "tfplan"
 import "tfplan/v2" as tfplan
 
 # Import common-functions/tfplan-functions.sentinel with alias "plan"

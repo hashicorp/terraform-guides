@@ -1,0 +1,36 @@
+created_at = "2020-04-15T13:41:20.058Z"
+message = "try again"
+speculative = false
+is_destroy = false
+
+variables = {
+	"AWS_ACCESS_KEY_ID": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"AWS_DEFAULT_REGION": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"AWS_SECRET_ACCESS_KEY": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"CONFIRM_DESTROY": {
+		"category":  "env",
+		"sensitive": false,
+	},
+}
+
+organization = {
+	"name": "Cloud-Operations",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2019-05-27T17:38:43.576Z",
+	"description":       null,
+	"name":              "test-sgr",
+	"vcs_repo":          null,
+	"working_directory": "",
+}

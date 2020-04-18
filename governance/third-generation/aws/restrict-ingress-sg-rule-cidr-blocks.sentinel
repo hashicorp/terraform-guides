@@ -2,7 +2,7 @@
 # rules have the CIDR "0.0.0.0/0".  It covers both the aws_security_group and
 # the aws_security_group_rule resources which can both define rules.
 
-# Import the v2 tfplan import, but use the alias "tfplan"
+# Import the tfplan/v2 import, but use the alias "tfplan"
 import "tfplan/v2" as tfplan
 
 # Import common-functions/tfplan-functions.sentinel with alias "plan"

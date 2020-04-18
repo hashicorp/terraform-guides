@@ -1,7 +1,7 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all existing Azure VMs have publishers from a specified list
 
-# Import the v2 tfplan import, but use the alias "tfplan"
+# Import the tfstate/v2 import, but use the alias "tfstate"
 import "tfstate/v2" as tfstate
 
 # Import common-functions/tfstate-functions.sentinel with alias "state"

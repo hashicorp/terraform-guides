@@ -142,11 +142,38 @@ find_outputs_by_sensitivity = func(sensitive) {
 }
 
 ### find_module_calls_in_module ###
-# Find all module calls made from a specific module using the tfconfig/v2 import.
+# Find all direct module calls made from a specific module
+# using the tfconfig/v2 import.
+# The parameter, module_address, should be "" for the root module,
+# "module.A" for a module A called by the root module,
+# "module.A.module.B" for module B called by module A called by the root module,
+# and so on.
 find_module_calls_in_module = func(module_address) {
   module_calls = filter tfconfig.module_calls as address, mc {
   	mc.module_address is module_address
   }
 
   return module_calls
+}
+
+### find_descendant_modules ###
+# Find addresses of all modules called directly or indirectly by a module.
+# The provided module address is included.
+# To find all module addresses, call find_descendant_modules("")
+# After calling this function against "", you can call find_module_calls_in_module
+# against any item in the list that is returned.
+find_descendant_modules = func(module_address) {
+  module_addresses = [module_address]
+  mcs = find_module_calls_in_module(module_address)
+  if length(mcs) > 0 {
+    for mcs as ma, mc {
+      if mc.module_address is "" {
+        new_module_address = "module." + mc.name
+      } else {
+        new_module_address = mc.module_address + ".module." + mc.name
+      }
+      module_addresses += find_descendant_modules(new_module_address)
+    }
+  }
+  return module_addresses
 }

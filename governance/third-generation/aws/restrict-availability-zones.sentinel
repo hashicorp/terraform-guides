@@ -4,7 +4,7 @@
 # the region of the AWS provider since that requires the
 # tfconfig/v2 import.
 
-# Import the v2 tfplan import, but use the alias "tfplan"
+# Import the tfplan/v2 import, but use the alias "tfplan"
 import "tfplan/v2" as tfplan
 
 # Import common-functions/tfplan-functions.sentinel with alias "plan"

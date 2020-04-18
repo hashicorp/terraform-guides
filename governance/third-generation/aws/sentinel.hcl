@@ -6,6 +6,10 @@ module "tfstate-functions" {
     source = "../common-functions/tfstate-functions.sentinel"
 }
 
+module "tfconfig-functions" {
+    source = "../common-functions/tfconfig-functions.sentinel"
+}
+
 policy "enforce-mandatory-tags" {
     enforcement_level = "advisory"
 }
