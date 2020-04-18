@@ -1,0 +1,46 @@
+# This policy uses the tfconfig/v2 import to blacklist specified providers
+
+# Import the tfconfig/v2 import, but use the alias "tfconfig"
+import "tfconfig/v2" as tfconfig
+
+# Import common-functions/tfconfig-functions.sentinel with alias "config"
+import "tfconfig-functions" as config
+
+# Find blacklisted providers
+validate_providers = func(blacklist) {
+
+  validated = true
+
+  # Iterate over blacklisted provider types
+  for blacklist as type {
+    # Find providers by type
+    violators = config.find_providers_by_type(type)
+    # Iterate over violators to print warnings
+    for violators as index, p {
+      if p.module_address is "" {
+        print("The root module has provider", p.provider_config_key,
+              "of blacklisted type", type, "with alias", p.alias)
+      } else {
+        print("Module", p.module_address, "has provider", p.provider_config_key,
+              "of blacklisted type", type, "with alias", p.alias)
+      }
+      validated = false
+    } // end for violators
+  } //end for type
+
+  return validated
+}
+
+# List of blacklisted providers
+blacklist = [
+  "external",
+  "http",
+]
+
+# Call the validation function
+providers_validated = validate_providers(blacklist)
+
+# Main rule
+main = rule {
+ providers_validated
+}
