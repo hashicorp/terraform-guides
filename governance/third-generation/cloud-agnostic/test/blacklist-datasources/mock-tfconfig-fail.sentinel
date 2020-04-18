@@ -1,0 +1,96 @@
+import "strings"
+
+providers = {
+	"external": {
+		"alias":               "",
+		"config":              {},
+		"module_address":      "",
+		"name":                "external",
+		"provider_config_key": "external",
+		"version_constraint":  "",
+	},
+	"http": {
+		"alias":               "",
+		"config":              {},
+		"module_address":      "",
+		"name":                "http",
+		"provider_config_key": "http",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"data.external.example": {
+		"address": "data.external.example",
+		"config": {
+			"program": {
+				"references": [
+					"random_id.random",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "external",
+		"provisioners":        [],
+		"type":                "external",
+	},
+	"data.http.example": {
+		"address": "data.http.example",
+		"config": {
+			"url": {
+				"constant_value": "https://checkpoint-api.hashicorp.com/v1/check/terraform",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "http",
+		"provisioners":        [],
+		"type":                "http",
+	},
+	"random_id.random": {
+		"address": "random_id.random",
+		"config": {
+			"byte_length": {
+				"constant_value": 32,
+			},
+			"keepers": {
+				"constant_value": null,
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "random",
+		"provider_config_key": "random",
+		"provisioners":        [],
+		"type":                "random_id",
+	},
+}
+
+provisioners = {}
+
+variables = {}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
