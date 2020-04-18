@@ -1,0 +1,13 @@
+{
+  "modules": {
+    "tfrun-functions": {
+      "path": "../../../common-functions/tfrun-functions.sentinel"
+    }
+  },
+  "mock": {
+    "tfrun": "mock-tfrun-fail-other.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}

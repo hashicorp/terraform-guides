@@ -10,6 +10,38 @@ module "tfconfig-functions" {
     source = "../common-functions/tfconfig-functions.sentinel"
 }
 
+module "tfrun-functions" {
+    source = "../common-functions/tfrun-functions.sentinel"
+}
+
+policy "blacklist-datasources" {
+    enforcement_level = "advisory"
+}
+
+policy "blacklist-providers" {
+    enforcement_level = "advisory"
+}
+
+policy "blacklist-provisioners" {
+    enforcement_level = "advisory"
+}
+
 policy "find-all-module-addresses" {
+    enforcement_level = "advisory"
+}
+
+policy "limit-cost-by-workspace-type" {
+    enforcement_level = "advisory"
+}
+
+policy "limit-proposed-monthly-cost" {
+    enforcement_level = "advisory"
+}
+
+policy "restrict-cost-and-percentage-increase" {
+    enforcement_level = "advisory"
+}
+
+policy "whitelist-providers" {
     enforcement_level = "advisory"
 }
