@@ -21,6 +21,7 @@ for allVMs as address, vm {
   disks = plan.find_blocks(vm, "disk")
 
   # Filter to violating disks of the current VM
+  # Warnings will not be printed for violations since the last parameter is false
   violatingDisks = plan.filter_attribute_greater_than_value(disks,
                    "size", maxDiskSize, false)
 

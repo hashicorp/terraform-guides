@@ -17,6 +17,7 @@ whitelist = [
 ]
 
 # Filter to providers with violations
+# Warnings will not be printed for violations since the last parameter is false
 violatingProviders = config.filter_attribute_not_in_list(tfconfig.providers,
                      "name", whitelist, false)
 

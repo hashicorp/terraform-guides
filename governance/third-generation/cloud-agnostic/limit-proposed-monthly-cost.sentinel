@@ -13,6 +13,7 @@ import "tfrun-functions" as run
 limit = decimal.new(1000)
 
 # Call the validation function
+# Warnings will be printed for violations
 cost_validated = run.limit_proposed_monthly_cost(limit)
 
 # Main rule

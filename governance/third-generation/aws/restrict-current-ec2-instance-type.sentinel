@@ -15,7 +15,7 @@ allowed_types = ["t2.small", "t2.medium", "t2.large"]
 allEC2Instances = state.find_resources("aws_instance")
 
 # Filter to EC2 instances with violations
-# The called function prints warnings for all violations
+# Warnings will be printed for all violations since the last parameter is true
 violatingEC2Instances = state.filter_attribute_not_in_list(allEC2Instances,
                         "instance_type", allowed_types, true)
 

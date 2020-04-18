@@ -18,6 +18,7 @@ allDatasources = filter tfconfig.resources as address, d {
 }
 
 # Filter to data sources with violations
+# Warnings will be printed for all violations since the last parameter is true
 violatingDatasources = config.filter_attribute_in_list(allDatasources,
                      "type", blacklist, true)
 

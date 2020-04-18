@@ -15,6 +15,7 @@ allowed_types = ["t2.small", "t2.medium", "t2.large"]
 allEC2LaunchConfigs = plan.find_resources("aws_launch_configuration")
 
 # Filter to EC2 launch configurations with violations
+# Warnings will be printed for all violations since the last parameter is true
 violatingEC2LaunchConfigs = plan.filter_attribute_not_in_list(allEC2LaunchConfigs,
                             "instance_type", allowed_types, true)
 

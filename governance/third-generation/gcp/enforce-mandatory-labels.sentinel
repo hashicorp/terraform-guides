@@ -17,6 +17,7 @@ mandatory_labels = ["name", "ttl", "owner"]
 allGCEInstances = plan.find_resources("google_compute_instance")
 
 # Filter to GCE compute instances with violations
+# Warnings will be printed for all violations since the last parameter is true
 violatingGCEInstances = plan.filter_attribute_not_contains_list(allGCEInstances,
                         "labels", mandatory_labels, true)
 

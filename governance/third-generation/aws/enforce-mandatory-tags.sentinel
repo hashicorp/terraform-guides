@@ -14,6 +14,7 @@ mandatory_tags = ["Name", "ttl", "Owner"]
 allEC2Instances = plan.find_resources("aws_instance")
 
 # Filter to EC2 instances with violations
+# Warnings will be printed for all violations since the last parameter is true
 violatingEC2Instances = plan.filter_attribute_not_contains_list(allEC2Instances,
                         "tags", mandatory_tags, true)
 

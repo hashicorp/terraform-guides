@@ -15,7 +15,7 @@ allowed_publishers = ["RedHat","Canonical"]
 allAzureVMs = state.find_resources("azurerm_virtual_machine")
 
 # Filter to Azure VMs with violations
-# The called function prints warnings for all violations
+# Warnings will be printed for all violations since the last parameter is true
 violatingAzureVMs = state.filter_attribute_not_in_list(allAzureVMs,
   "storage_image_reference.0.publisher", allowed_publishers, true)
 

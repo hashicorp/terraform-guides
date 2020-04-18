@@ -15,6 +15,7 @@ limit = decimal.new(1000)
 max_percent = decimal.new(10.0)
 
 # Call the validation function
+# Warnings will be printed for violations
 cost_validated = run.restrict_cost_and_percentage_increase(limit, max_percent)
 
 # Main rule

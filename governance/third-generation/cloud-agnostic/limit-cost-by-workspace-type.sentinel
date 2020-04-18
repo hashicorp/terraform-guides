@@ -19,6 +19,7 @@ limits = {
 }
 
 # Call the validation function
+# Warnings will be printed for violations
 cost_validated = run.limit_cost_by_workspace_type(limits)
 
 # Main rule

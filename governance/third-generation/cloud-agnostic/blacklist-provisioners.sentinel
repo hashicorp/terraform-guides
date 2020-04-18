@@ -13,6 +13,7 @@ blacklist = [
 ]
 
 # Filter to provisioners with violations
+# Warnings will not be printed for violations since the last parameter is false
 violatingProvisioners = config.filter_attribute_in_list(tfconfig.provisioners,
                      "type", blacklist, false)
 

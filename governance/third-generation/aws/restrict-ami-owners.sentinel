@@ -15,7 +15,7 @@ allowed_owners = ["self", "099720109477", "099720109478"]
 allAMIs = state.find_datasources("aws_ami")
 
 # Filter to AMIs with violations
-# The called function prints warnings for all violations
+# Warnings will be printed for all violations since the last parameter is true
 violatingAMIs =
   state.filter_attribute_contains_items_not_in_list(allAMIs, "owners", allowed_owners, true)
 
