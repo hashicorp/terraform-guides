@@ -177,3 +177,128 @@ find_descendant_modules = func(module_address) {
   }
   return module_addresses
 }
+
+### print_violations ###
+# Prints violations returned by any of the filter functions defined below.
+# This would normally only be called if the filter function had been called
+# with prtmsg set to false, which is sometimes done when processing resources
+# and their blocks.
+# If the result of a filter function is assigned to a map like violatingIRs,
+# then you should pass violatingIRs["message"] as the first argument.
+# The prefix argument is printed before the message of each resource.
+print_violations = func(messages, prefix) {
+  for messages as address, message {
+    print(prefix, message)
+  }
+  return true
+}
+
+### to_string ###
+# Convert objects of unknown type to string
+# It is used to build messages added to the messages map returned by the
+# filter functions
+to_string = func(obj) {
+  case types.type_of(obj) {
+    when "string":
+      return obj
+    when "int", "float", "bool":
+      return string(obj)
+    when "null":
+      return "null"
+    when "undefined":
+      return "undefined"
+    when "list":
+      output = "["
+      lastIndex = length(obj) - 1
+      for obj as index, value {
+        if index < lastIndex {
+          output += to_string(value) + ", "
+        } else {
+          output += to_string(value) + "]"
+        }
+      }
+      return output
+    when "map":
+      output = "{"
+      theKeys = keys(obj)
+      lastIndex = length(theKeys) - 1
+      for theKeys as index, key {
+        if index < lastIndex {
+          output += to_string(key) + ": " + to_string(obj[key]) + ", "
+        } else {
+          output += to_string(key) + ": " + to_string(obj[key]) + "}"
+        }
+      }
+      return output
+    else:
+      return ""
+  }
+}
+
+### filter_attribute_not_in_list ###
+# Filter a list of items such as providers to those with a specified
+# attribute (attr) that is not in a given list of allowed values (allowed).
+# The parameter, attr, can only be a top-level attribute of the collection, items.
+# Set prtmsg to `true` (without quotes) if you want to print violation messages.
+# If you want to disallow null, include "null" in the list (forbidden).
+filter_attribute_not_in_list = func(items, attr, allowed, prtmsg) {
+  violators = {}
+  messages = {}
+
+  # Iterate over items
+  for items as index, item {
+    val = item[attr] else null
+    # Check if the value is null
+    if val is null {
+      val = "null"
+    }
+    # Check if the value is in the forbidden list
+    if val not in allowed {
+      # Add the item and a warning message to the violators list
+      message = to_string(index) + " has " + to_string(attr) + " with value " +
+                to_string(val) + " that is not in the allowed list: " +
+                to_string(allowed)
+      violators[index] = item
+      messages[index] = message
+      if prtmsg {
+        print(message)
+      } // end if prtmsg
+    } // end if forbidden
+  } // end for items
+
+  return {"items":violators,"messages":messages,"length":length(violators)}
+}
+
+### filter_attribute_in_list ###
+# Filter a list of items such as providers to those with a specified
+# attribute (attr) that is in a given list of forbidden values (forbidden).
+# The parameter, attr, can only be a top-level attribute of the collection, items.
+# Set prtmsg to `true` (without quotes) if you want to print violation messages.
+# If you want to disallow null, include "null" in the list (forbidden).
+filter_attribute_in_list = func(items, attr, forbidden, prtmsg) {
+  violators = {}
+  messages = {}
+
+  # Iterate over items
+  for items as index, item {
+    val = item[attr] else null
+    # Check if the value is null
+    if val is null {
+      val = "null"
+    }
+    # Check if the value is in the forbidden list
+    if val in forbidden {
+      # Add the item and a warning message to the violators list
+      message = to_string(index) + " has " + to_string(attr) + " with value " +
+                to_string(val) + " that is in the forbidden list: " +
+                to_string(forbidden)
+      violators[index] = item
+      messages[index] = message
+      if prtmsg {
+        print(message)
+      } // end if prtmsg
+    } // end if forbidden
+  } // end for items
+
+  return {"items":violators,"messages":messages,"length":length(violators)}
+}
