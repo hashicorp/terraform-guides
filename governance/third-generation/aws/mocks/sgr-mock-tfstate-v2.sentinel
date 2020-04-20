@@ -1,0 +1,31 @@
+terraform_version = "0.12.24"
+
+outputs = {}
+
+resources = {
+	"module.more-sgrs.aws_security_group.selected": {
+		"address":        "module.more-sgrs.aws_security_group.selected",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "module.more-sgrs",
+		"name":           "selected",
+		"provider_name":  "aws",
+		"tainted":        false,
+		"type":           "aws_security_group",
+		"values": {
+			"arn":         "arn:aws:ec2:us-east-1:753646501470:security-group/sg-008b502d0a24d0136",
+			"description": "Enable SSH access via port 22",
+			"filter":      null,
+			"id":          "sg-008b502d0a24d0136",
+			"name":        "roger-sybase-InstanceSecurityGroup-45E1MVITZTH3",
+			"tags": {
+				"Name":  "roger_sybase",
+				"owner": "roger@hashicorp.com",
+				"ttl":   "-1",
+			},
+			"vpc_id": "vpc-07b9e9b345ad12921",
+		},
+	},
+}

@@ -1,0 +1,24 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all Azure VMs have all mandatory tags
+
+# Import the tfplan/v2 import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions.sentinel with alias "plan"
+import "tfplan-functions" as plan
+
+### List of mandatory tags ###
+mandatory_tags = ["environment"]
+
+# Get all Azure VMs
+allAzureVMs = plan.find_resources("azurerm_virtual_machine")
+
+# Filter to Azure VMs with violations
+# Warnings will be printed for all violations since the last parameter is true
+violatingAzureVMs = plan.filter_attribute_not_contains_list(allAzureVMs,
+                    "tags", mandatory_tags, true)
+
+# Main rule
+main = rule {
+  violatingAzureVMs["length"] is 0
+}

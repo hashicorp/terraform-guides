@@ -1,0 +1,22 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all Azure app services have https_only set to true so that
+# they can only be accessed via HTTPS
+
+# Import the tfplan/v2 import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions.sentinel with alias "plan"
+import "tfplan-functions" as plan
+
+# Get all Azure app services
+allAzureAppServices = plan.find_resources("azurerm_app_service")
+
+# Filter to Azure app services with violations
+# Warnings will be printed for all violations since the last parameter is true
+violatingAzureAppServices = plan.filter_attribute_is_not_value(allAzureAppServices,
+                            "https_only", true, true)
+
+# Main rule
+main = rule {
+  violatingAzureAppServices["length"] is 0
+}

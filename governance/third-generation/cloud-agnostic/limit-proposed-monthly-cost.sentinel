@@ -1,0 +1,22 @@
+# This policy uses the Sentinel tfrun import to restrict the
+# proposed monthly cost that would be incurred if the current
+# plan were applied
+
+##### Imports #####
+
+import "tfrun"
+import "decimal"
+# Import common-functions/tfrun-functions.sentinel with alias "run"
+import "tfrun-functions" as run
+
+##### Monthly Limit #####
+limit = decimal.new(1000)
+
+# Call the validation function
+# Warnings will be printed for violations
+cost_validated = run.limit_proposed_monthly_cost(limit)
+
+# Main rule
+main = rule {
+  cost_validated
+}

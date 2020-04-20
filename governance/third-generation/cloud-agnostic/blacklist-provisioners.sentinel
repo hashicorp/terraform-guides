@@ -1,0 +1,28 @@
+# This policy uses the tfconfig/v2 import to blacklist specified provisioners
+
+# Import the tfconfig/v2 import, but use the alias "tfconfig"
+import "tfconfig/v2" as tfconfig
+
+# Import common-functions/tfconfig-functions.sentinel with alias "config"
+import "tfconfig-functions" as config
+
+# List of blacklisted provisioners
+blacklist = [
+  "local-exec",
+  "remote-exec",
+]
+
+# Filter to provisioners with violations
+# Warnings will not be printed for violations since the last parameter is false
+violatingProvisioners = config.filter_attribute_in_list(tfconfig.provisioners,
+                     "type", blacklist, false)
+
+# Print any violations
+if violatingProvisioners["length"] > 0 {
+  config.print_violations(violatingProvisioners["messages"], "Blacklisted provisioner:")
+}
+
+# Main rule
+main = rule {
+ violatingProvisioners["length"] is 0
+}

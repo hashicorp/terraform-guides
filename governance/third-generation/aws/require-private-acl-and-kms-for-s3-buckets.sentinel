@@ -1,7 +1,7 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all S3 buckets have ACL "private" and be encrypted by a KMS key
 
-# Import the v2 tfplan import, but use the alias "tfplan"
+# Import the tfplan/v2 import, but use the alias "tfplan"
 import "tfplan/v2" as tfplan
 
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
@@ -11,23 +11,18 @@ import "tfplan-functions" as plan
 allS3Buckets = plan.find_resources("aws_s3_bucket")
 
 # Filter to S3 buckets that do not have private ACL
-# The called function prints warnings for all violations
-nonPrivateS3Buckets =
-  plan.filter_attribute_is_not_value(allS3Buckets, "acl", "private")
-
-# Count S3 buckets that do not have private ACL
-aclViolations = length(nonPrivateS3Buckets)
+# Warnings will be printed for all violations since the last parameter is true
+nonPrivateS3Buckets = plan.filter_attribute_is_not_value(allS3Buckets,
+                      "acl", "private", true)
 
 # Filter to S3 buckets that are not encrypted by KMS
-# The called function prints warnings for all violations
-nonEncryptedS3Buckets =
-  plan.filter_attribute_is_not_value(allS3Buckets, "server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm", "aws:kms")
-
-# Count S3 buckets that do not have private ACL
-encryptionViolations = length(nonEncryptedS3Buckets)
+# Warnings will be printed for all violations since the last parameter is true
+nonEncryptedS3Buckets = plan.filter_attribute_is_not_value(allS3Buckets,
+  "server_side_encryption_configuration.0.rule.0.apply_server_side_encryption_by_default.0.sse_algorithm",
+"aws:kms", true)
 
 # Main rule
-validated = aclViolations is 0 and encryptionViolations is 0
+validated = nonPrivateS3Buckets["length"] is 0 and nonEncryptedS3Buckets["length"] is 0
 main = rule {
-  validated
+  validated is true
 }

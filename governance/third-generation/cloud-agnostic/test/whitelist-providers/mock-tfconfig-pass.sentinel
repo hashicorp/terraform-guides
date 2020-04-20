@@ -1,0 +1,84 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+	"local": {
+		"alias":               "",
+		"config":              {},
+		"module_address":      "",
+		"name":                "local",
+		"provider_config_key": "local",
+		"version_constraint":  "",
+	},
+	"null": {
+		"alias":               "",
+		"config":              {},
+		"module_address":      "",
+		"name":                "null",
+		"provider_config_key": "null",
+		"version_constraint":  "",
+	},
+	"random": {
+		"alias":               "",
+		"config":              {},
+		"module_address":      "",
+		"name":                "random",
+		"provider_config_key": "random",
+		"version_constraint":  "",
+	},
+	"terraform": {
+		"alias":               "",
+		"config":              {},
+		"module_address":      "",
+		"name":                "terraform",
+		"provider_config_key": "terraform",
+		"version_constraint":  "",
+	},
+	"tfe": {
+		"alias":               "",
+		"config":              {},
+		"module_address":      "",
+		"name":                "tfe",
+		"provider_config_key": "tfe",
+		"version_constraint":  "~> 0.15.0",
+	},
+}
+
+resources = {}
+
+provisioners = {}
+
+variables = {
+	"aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "",
+		"name":           "aws_region",
+	},
+}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
