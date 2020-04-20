@@ -26,18 +26,22 @@ We will update this document when Sentinel modules can be used in Terraform Ente
 
 ## Important Characterizations of the New Policies
 These new third-generation policies have several important characteristics:
-1. As mentioned above, they use the new Terraform Sentinel v2 imports which are more closely aligned with Terraform 0.12's data model and leverage the recently added [filter expression](https://docs.hashicorp.com/sentinel/language/collection-operations/#filter-expression) and make it easier to restrict policies to specific operations performed by Terraform against resources. The policies currently only use the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import, but we will add policies that use the [tfconfig/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfconfig-v2.html) and [tfstate/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfstate-v2.html) imports in the near future.
-1. The new policies use new, parameterized functions defined in a [Sentinel module](./common-functions/tfplan-functions.sentinel). Since they are defined in a module, their implementations do **not** need to be pasted into the policies. This is a **HUGE** improvement over the second-generation common functions! (As mentioned above, this benefit is only realized for now with the Sentinel CLI, but it will be extended to TFC and TFE soon.) We will add Sentinel modules that use the tfconfig/v2, tfstate/v2, and tfrun imports in the near future.
+1. As mentioned above, they use the new Terraform Sentinel v2 imports which are more closely aligned with Terraform 0.12's data model and leverage the recently added [filter expression](https://docs.hashicorp.com/sentinel/language/collection-operations/#filter-expression) and make it easier to restrict policies to specific operations performed by Terraform against resources.
+1. The new policies use new, parameterized functions defined in four [Sentinel modules]. Since they are defined in modules, their implementations do **not** need to be pasted into the policies. This is a **HUGE** improvement over the second-generation common functions! (As mentioned above, this benefit is only realized for now with the Sentinel CLI and TFC, but it will be extended to TFE soon.)
 1. A related benefit of using functions from modules is that the policies themselves do not have any `for` loops or `if/else` conditionals. This makes it easier for users to understand the sample policies and to write their own policies that copy them.
 1. The new policies have been written in a way that causes all violations to be reported. This means a user who violates a policy will be informed about all of their violations in a single shot without having to run multiple Sentinel CLI tests or TFC/TFE plans.
 1. The policies print out the full address of each resource instance that does violate a rule in the same format that is used in plan and apply logs, namely `module.<A>.module.<B>.<type>.<name>[<index>]`. (Note that `index` will only be present if multiple instances of a resource are defined either with the `count` or the `for_each` meta-arguments.) This allows writers of Terraform code to quickly determine the resources they need to fix even if the violations occur in modules that they did not write.
 1. They are written in a way that makes Sentinel's default output much less verbose. Users looking at Sentinel policy violations that occur during their runs will get all the information they need from the messages explicitly printed from the policies using Sentinel's `print` function. (Sentinel's default output that reports `TRUE` or `FALSE` for various rules and boolean expressions used by them along with Sentinel policy line numbers is really only useful to the policy's author.)
-1. The common function, `evaluate_attribute`, can evaluate the values of any attribute of any resource even if it is deeply nested inside the resource. It does this by calling itself recursively. We could have used a similar function in the second-generation policies a year ago, but we would have had to embed it inside every policy and worried that users of those policies would find it too complex. However, now that we were able to write it inside a Sentinel module, its code does not appear inside the policies that call it. Additionally, the closer alignment of the tfstate/v2 import with the Terraform 0.12 data model made writing the function easier.
+1. The common function `evaluate_attribute`, which is in the tfplan-functions.sentinel and tfstate-functions.sentinel modules, can evaluate the values of any attribute of any resource even if it is deeply nested inside the resource. It does this by calling itself recursively.
 
 ## Common Functions
-You can find all of the functions used in the third-generation policies in the Sentinel modules in the [common functions](./common-functions) directory. Currently, there is only one module.
+You can find all of the functions used in the third-generation policies in the Sentinel modules in the [common functions](./common-functions) directory:
+  * [tfplan-functions.sentinel](./common-functions/tfplan-functions.sentinel)
+  * [tfstate-functions.sentinel](./common-functions/tfstate-functions.sentinel)
+  * [tfconfig-functions.sentinel](./common-functions/tfconfig-functions.sentinel)
+  * [tfrun-functions.sentinel](./common-functions/tfrun-functions.sentinel)
 
-Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use the tfplan/v2 import are defined in the single file, [tfplan-functions.sentinel](./common-functions/tfplan-functions.sentinel). This makes it easier to import all of these functions into the Sentinel CLI test cases, since those only need a single stanza such as this one:
+Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use any of the 4 Terraform Sentinel imports (tfplan/v2, tfstate/v2, tfconfig/v2, and tfrun) are defined in the single file. This makes it easier to import all of the functions that use one of those imports into the Sentinel CLI test cases, since those only need a single stanza such as this one for each module:
 ```
 "modules": {
   "tfplan-functions": {
@@ -45,21 +49,55 @@ Unlike the second-generation common functions that were each defined in a separa
   }
 }
 ```
+Test cases that wanted to use the other 3 modules would either change bot occurrences of "tfplan" in that stanza to "tfstate", "tfconfig", or "tfrun" or would add additional stanzas with those changes.
 
 While having multiple functions in a single file and module does make examining the function code a bit harder, we think the reduced work associated with referencing the functions in the test cases justifies this.
 
-To use any of the functions in a new policy, be sure to include a line like this one:
+To use any of the functions in a new policy, be sure to include lines like these:
 ```
 import "tfplan-functions" as plan
+import "tfstate-functions" as state
+import "tfconfig-functions" as config
+import "tfrun-functions" as run
 ```
-In this case, we are using "plan" as an alias for the "tfplan-functions" import to keep lines that use it shorter. You can use something different from "plan" as long as it is not the name of an existing import and is not a Sentinel keyword.
+In this case, we are using `plan`, `state`, `config`, and `run` as aliases for the four imports to keep lines that their functions shorter. Of course, you only need to import the modules that contain functions that your policy actually calls.
+
+### The Functions of the tfplan-functions and tfstate-functions Modules
+We discuss these two modules together because they are essentially identical except for their use of the tfplan/v2 and tfstate/v2 imports.
+
+Each of these modules has several types of functions:
+ * `find_*` functions that find resources or data sources of a specific type or blocks of a specific type within a specific resource.
+ * `filter_*` functions that filter a collection of resources, data sources, or blocks to a sub-collection that violates some condition. (When we say resources below, we are including data sources which are really just read-only resources.) The filter functions all accept a collection of resource changes (for tfplan/v2) or resources (for tfstate/v2), an attribute, a value or a list of values, and a boolean, `prtmsg`, which can be `true` or `false` and indicates whether the filter function should print violation messages. The filter functions return a map consisting of 3 items:
+   * `resources`: a map consisting of resource changes (for tfplan/v2) or resources (for tfstate/v2) or blocks that violate a condition.
+   * `messages`: a map of violation messages associated with the resource changes, resources, or blocks.
+   * `length`: the length of the `resources` and `messages` collections.
+ Note that both the `resources` and `messages` collections are indexed by the address of the resources, so they will have the same order and length. The filter functions all call the `evaluate_attribute` function to evaluate attributes of resources even if nested deep within them.
+ * The `evaluate_attribute` function, which can evaluate the values of any attribute of any resource even if it is deeply nested inside the resource. It does this by calling itself recursively.
+ * The `to_string` function which can convert any Sentinel object to a string. It is used to build the messages in the `messages` collection returned by the filter functions.
+ * The `print_violations` function which can be called after calling one of the filter function to print the violation messages. This would only be called if the `prtmsg` argument had been set to `false` when calling the filter function. This is sometimes desirable especially if processing blocks of resources since your policy can then print some other message that gives the address of the resource with block-level violations before printing them.
+
+### The Functions of the tfconfig-functions Module
+The `tfconfig-functions` module has several types of functions:
+  * `find_*_by_type` functions that find resources, data sources, provisioners, or providers of a specific type.
+  * `find_*_in_module` functions that find resources, data sources, variables, providers, outputs, or module calls in a specific module.
+  * `find_*_by_provider` functions that find resources or data sources created by a specific provider.
+  * The `find_outputs_by_sensitivity` function that finds outputs based on their `sensitive` setting.
+  * The `find_descendant_modules` function that finds all module addresses called directly or indirectly by a specific module including that module itself. Calling `find_descendant_modules("")` will return all module addresses within the Terraform configuration.
+  * Two filter functions, `filter_attribute_not_in_list` and `filter_attribute_in_list`, that are similar to the filter functions in the tfplan-functions module. However, these can only be used against top-level attributes of the items in the collection passed to them. Those collections can be any type of entity covered by the tfconfig/v2 import including resources, data sources, providers, provisioners, variables, outputs, and module calls.
+  * The same `to_string` and `print_violations` functions that are in the tfplan-functions module.
+
+### The Functions of the tfrun-functions Module
+The `tfrun-functions` module has the following functions:
+  * The `limit_proposed_monthly_cost` function validates that the proposed monthly cost estimate is less than the given limit.
+  * The `limit_cost_and_percentage_increase` function validates that the proposed monthly cost estimate and percentage increase over the previous cost estimate ar both less than limits.
+  * The `limit_cost_by_workspace_name` function validates that the monthly cost estimate is less than the limit in a map associated with a workspace name prefix or suffix that the current workspace has.
 
 ## Mock Files and Test Cases
 Sentinel [mock files](https://www.terraform.io/docs/enterprise/sentinel/mock.html) and [test cases](https://docs.hashicorp.com/sentinel/commands/config#test-cases) have been provided under the test directory of each cloud so that all the policies can be tested with the [Sentinel CLI](https://docs.hashicorp.com/sentinel/commands). The mocks were generated from actual Terraform 0.12 plans run against Terraform code that provisioned resources in these clouds. The pass and fail mock files were edited to respectively pass and fail the associated Sentinel policies. Some policies, including those that have multiple rules, have multiple fail mock files with names that indicate which condition or conditions they fail.
 
 ## Testing Policies
 To test the policies of any of the clouds, please do the following:
-1. Download the Sentinel CLI from the [Sentinel Downloads](https://docs.hashicorp.com/sentinel/downloads) page. (Be sure to use Sentinel 0.15.1 or higher.)
+1. Download the Sentinel CLI from the [Sentinel Downloads](https://docs.hashicorp.com/sentinel/downloads) page. (Be sure to use Sentinel 0.15.2 or higher.)
 1. Unzip the zip file and place the sentinel binary in your path.
 1. Clone this repository to your local machine.
 1. Navigate to any of the cloud directories (aws, azure, gcp, or vmware) or to the cloud-agnostic directory.
@@ -72,6 +110,8 @@ Adding the `-verbose` flag to the above commands will show you the output that y
 As mentioned in the introduction of this file, this repository contains [Policy Set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#the-sentinel-hcl-configuration-file) configuration files so that the cloud-specific and cloud-agnostic policies can easily be added to Terraform Cloud organizations using [VCS Integrations](https://www.terraform.io/docs/cloud/vcs/index.html) after forking this repository.
 
 Each of these files is called "sentinel.hcl" and should list all policies in its directory with an [Enforcement Level](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#enforcement-levels) of "advisory". This means that registering these policy sets in a Terraform Cloud or Terraform Enterprise organization will not actually have any impact on provisioning of resources from those organizations even if some of the policy checks do report violations.
+
+The `sentinel.hcl` files should also include any Sentinel modules used by any of the policies they list.
 
 Users who wish to actually enforce any of these policies should change the enforcement levels of them to "soft-mandatory" or "hard-mandatory" in their forks of this repository or in other VCS repositories that contain copies of the policies.
 

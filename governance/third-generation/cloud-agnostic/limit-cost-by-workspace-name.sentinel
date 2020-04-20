@@ -1,7 +1,7 @@
 # This policy uses the Sentinel tfrun import to restrict the
-# both the total monthly cost and the percentage increase in
-# the monthly cost that would be incurred if the current plan
-# were applied
+# proposed monthly cost that would be incurred if the current
+# plan were applied, using different limits for different
+# workspaces based on their names.
 
 ##### Imports #####
 
@@ -10,13 +10,16 @@ import "decimal"
 # Import common-functions/tfrun-functions.sentinel with alias "run"
 import "tfrun-functions" as run
 
-##### Parameters #####
-limit = decimal.new(1000)
-max_percent = decimal.new(10.0)
+##### Monthly Limits #####
+limits = {
+  "dev": decimal.new(200),
+  "qa": decimal.new(500),
+  "prod": decimal.new(1000),
+}
 
 # Call the validation function
 # Warnings will be printed for violations
-cost_validated = run.restrict_cost_and_percentage_increase(limit, max_percent)
+cost_validated = run.limit_cost_by_workspace_name(limits)
 
 # Main rule
 main = rule {
