@@ -26,7 +26,7 @@ for allVMs as address, vm {
                    "size", maxDiskSize, false)
 
   # Print warnings if any violating disks
-  if violatingDisks["length"] > 0 {
+  if length(violatingDisks["messages"]) > 0 {
     disksValidated = false
     print(address, "has at least one disk with size greater than", maxDiskSize)
     plan.print_violations(violatingDisks["messages"], "Disk")

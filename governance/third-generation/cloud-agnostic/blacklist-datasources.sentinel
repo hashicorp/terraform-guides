@@ -24,5 +24,5 @@ violatingDatasources = config.filter_attribute_in_list(allDatasources,
 
 # Main rule
 main = rule {
- violatingDatasources["length"] is 0
+ length(violatingDatasources["messages"]) is 0
 }

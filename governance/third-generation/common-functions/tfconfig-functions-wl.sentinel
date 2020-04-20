@@ -266,7 +266,7 @@ filter_attribute_not_in_list = func(items, attr, allowed, prtmsg) {
     } // end if forbidden
   } // end for items
 
-  return {"items":violators,"messages":messages}
+  return {"items":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_in_list ###
@@ -300,5 +300,5 @@ filter_attribute_in_list = func(items, attr, forbidden, prtmsg) {
     } // end if forbidden
   } // end for items
 
-  return {"items":violators,"messages":messages}
+  return {"items":violators,"messages":messages,"length":length(violators)}
 }

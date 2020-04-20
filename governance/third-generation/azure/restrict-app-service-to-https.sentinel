@@ -18,5 +18,5 @@ violatingAzureAppServices = plan.filter_attribute_is_not_value(allAzureAppServic
 
 # Main rule
 main = rule {
-  violatingAzureAppServices["length"] is 0
+  length(violatingAzureAppServices["messages"]) is 0
 }

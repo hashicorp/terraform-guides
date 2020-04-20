@@ -20,5 +20,5 @@ violatingAzureVMs = plan.filter_attribute_not_contains_list(allAzureVMs,
 
 # Main rule
 main = rule {
-  violatingAzureVMs["length"] is 0
+  length(violatingAzureVMs["messages"]) is 0
 }

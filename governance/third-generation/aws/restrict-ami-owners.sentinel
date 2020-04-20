@@ -21,5 +21,5 @@ violatingAMIs =
 
 # Main rule
 main = rule {
-  violatingAMIs["length"] is 0
+  length(violatingAMIs["messages"]) is 0
 }

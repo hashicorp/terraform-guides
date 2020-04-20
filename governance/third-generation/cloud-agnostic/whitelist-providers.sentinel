@@ -22,11 +22,11 @@ violatingProviders = config.filter_attribute_not_in_list(tfconfig.providers,
                      "name", whitelist, false)
 
 # Print any violations
-if violatingProviders["length"] > 0 {
+if length(violatingProviders["messages"]) > 0 {
   config.print_violations(violatingProviders["messages"], "Provider not in whitelist:")
 }
 
 # Main rule
 main = rule {
- violatingProviders["length"] is 0
+ length(violatingProviders["messages"]) is 0
 }
