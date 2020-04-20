@@ -18,11 +18,11 @@ violatingProviders = config.filter_attribute_in_list(tfconfig.providers,
                      "name", blacklist, false)
 
 # Print any violations
-if violatingProviders["length"] > 0 {
+if length(violatingProviders["messages"]) > 0 {
   config.print_violations(violatingProviders["messages"], "Blacklisted provider:")
 }
 
 # Main rule
 main = rule {
- violatingProviders["length"] is 0
+ length(violatingProviders["messages"]) is 0
 }

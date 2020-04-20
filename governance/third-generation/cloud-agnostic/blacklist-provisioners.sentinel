@@ -18,11 +18,11 @@ violatingProvisioners = config.filter_attribute_in_list(tfconfig.provisioners,
                      "type", blacklist, false)
 
 # Print any violations
-if violatingProvisioners["length"] > 0 {
+if length(violatingProvisioners["messages"]) > 0 {
   config.print_violations(violatingProvisioners["messages"], "Blacklisted provisioner:")
 }
 
 # Main rule
 main = rule {
- violatingProvisioners["length"] is 0
+ length(violatingProvisioners["messages"]) is 0
 }

@@ -25,7 +25,7 @@ highMemoryVMs = plan.filter_attribute_greater_than_value(allVMs,
                 "memory", maxMemory, true)
 
 # Main rule
-validated = highCPUVMs["length"] is 0 and highMemoryVMs["length"] is 0
+validated = length(highCPUVMs["messages"]) is 0 and length(highMemoryVMs["messages"]) is 0
 main = rule {
   validated
 }

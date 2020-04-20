@@ -22,7 +22,7 @@ nonEncryptedS3Buckets = plan.filter_attribute_is_not_value(allS3Buckets,
 "aws:kms", true)
 
 # Main rule
-validated = nonPrivateS3Buckets["length"] is 0 and nonEncryptedS3Buckets["length"] is 0
+validated = length(nonPrivateS3Buckets["messages"]) is 0 and length(nonEncryptedS3Buckets["messages"]) is 0
 main = rule {
   validated is true
 }

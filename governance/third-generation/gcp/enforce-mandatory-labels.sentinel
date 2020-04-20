@@ -23,5 +23,5 @@ violatingGCEInstances = plan.filter_attribute_not_contains_list(allGCEInstances,
 
 # Main rule
 main = rule {
-  violatingGCEInstances["length"] is 0
+  length(violatingGCEInstances["messages"]) is 0
 }

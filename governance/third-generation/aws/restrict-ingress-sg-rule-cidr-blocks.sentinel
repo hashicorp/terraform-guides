@@ -40,7 +40,7 @@ for allSGs as address, sg {
                  "cidr_blocks", forbidden_cidrs, false)
 
   # Print violation messages
-  if violatingIRs["length"] > 0 {
+  if length(violatingIRs["messages"]) > 0 {
     violatingSGsCount += 1
     print("SG Ingress Violation:", address, "has at least one ingress rule",
           "with forbidden cidr blocks")
@@ -50,7 +50,7 @@ for allSGs as address, sg {
 } // end for SGs
 
 # Main rule
-validated = violatingSGRules["length"] is 0 and violatingSGsCount is 0
+validated = length(violatingSGRules["messages"]) is 0 and violatingSGsCount is 0
 main = rule {
   validated is true
 }

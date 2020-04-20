@@ -3,9 +3,10 @@
 # The filter functions all accept a collection of resource changes, an attribute,
 # a value or a list of values, and a boolean, prtmsg, which can be true or false
 # and indicates whether the filter function should print violation messages.
-# The filter functions return a map consisting of 2 items:
+# The filter functions return a map consisting of 3 items:
 #   * "resources": a map consisting of resource changes that violate a condition
 #   * "messages":  a map of violation messages associated with the resources
+#   * "length":    the length of the resources and messages collections
 # Note that both the resources and messages collections are indexed by the
 # address of the resources, so they will have the same order and length.
 # The filter functions all call evaluate_attribute() to evaluate attributes
@@ -210,7 +211,7 @@ filter_attribute_not_in_list = func(resources, attr, allowed, prtmsg) {
       }
     } // end if
   } // end for
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_in_list ###
@@ -242,7 +243,7 @@ filter_attribute_in_list = func(resources, attr, forbidden, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_not_contains_list ###
@@ -289,7 +290,7 @@ filter_attribute_not_contains_list = func(resources, attr, required, prtmsg) {
       } // end length(missing_values)
     } // end else v not null
   } // end for
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_contains_items_from_list ###
@@ -349,7 +350,7 @@ filter_attribute_contains_items_from_list = func(resources, attr, forbidden, prt
       } // end length(forbidden_values)
     } // end v not null
   } // end for
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_contains_items_not_in_list ###
@@ -408,7 +409,7 @@ filter_attribute_contains_items_not_in_list = func(resources, attr, allowed, prt
       } // end length(forbidden_values)
     } // end if null
   } // end for
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_is_not_value ###
@@ -441,7 +442,7 @@ filter_attribute_is_not_value = func(resources, attr, value, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_is_value ###
@@ -474,7 +475,7 @@ filter_attribute_is_value = func(resources, attr, value, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_greater_than_value ###
@@ -507,7 +508,7 @@ filter_attribute_greater_than_value = func(resources, attr, value, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_less_than_value ###
@@ -540,7 +541,7 @@ filter_attribute_less_than_value = func(resources, attr, value, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_does_not_match_regex ###
@@ -573,7 +574,7 @@ filter_attribute_does_not_match_regex = func(resources, attr, expr, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_matches_regex ###
@@ -606,7 +607,7 @@ filter_attribute_matches_regex = func(resources, attr, expr, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_does_not_have_prefix ###
@@ -639,7 +640,7 @@ filter_attribute_does_not_have_prefix = func(resources, attr, prefix, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_has_prefix ###
@@ -672,7 +673,7 @@ filter_attribute_has_prefix = func(resources, attr, prefix, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_does_not_have_suffix ###
@@ -705,7 +706,7 @@ filter_attribute_does_not_have_suffix = func(resources, attr, suffix, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
 
 ### filter_attribute_has_suffix ###
@@ -738,5 +739,5 @@ filter_attribute_has_suffix = func(resources, attr, suffix, prtmsg) {
       }
     }
   }
-  return {"resources":violators,"messages":messages}
+  return {"resources":violators,"messages":messages,"length":length(violators)}
 }
