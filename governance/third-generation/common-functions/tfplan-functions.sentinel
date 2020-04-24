@@ -48,6 +48,33 @@ find_datasources = func(type) {
   return datasources
 }
 
+### find_resources_being_destroyed ###
+# Find all resources being destroyed but not recreated using the tfplan/v2 import.
+# Technically, this returns a map of resource changes.
+find_resources_being_destroyed = func() {
+  resources = filter tfplan.resource_changes as address, rc {
+  	rc.mode is "managed" and
+  	rc.change.actions contains "delete" and
+    not (rc.change.actions contains "create" or rc.change.actions contains "update")
+  }
+
+  return resources
+}
+
+### find_datasources_being_destroyed ###
+# Find all data sources being destroyed but not recreated using the tfplan/v2 import.
+# Technically, this returns a map of resource changes.
+find_datasources_being_destroyed = func() {
+  datasources = filter tfplan.resource_changes as address, rc {
+  	rc.mode is "data" and
+    rc.change.actions contains "delete" and
+  	not (rc.change.actions contains "create" or
+    rc.change.actions contains "update")
+  }
+
+  return datasources
+}
+
 ### find_blocks ###
 # Find all blocks of a specific type from a resource using the tfplan/v2 import.
 # parent should be a single resource or block of a resource or a data source

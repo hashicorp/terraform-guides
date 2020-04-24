@@ -2,14 +2,12 @@
 # proposed monthly cost that would be incurred if the current
 # plan were applied
 
-##### Imports #####
-
-import "tfrun"
-import "decimal"
 # Import common-functions/tfrun-functions.sentinel with alias "run"
 import "tfrun-functions" as run
+# The standard decimal import
+import "decimal"
 
-##### Monthly Limit #####
+# Monthly Limit
 limit = decimal.new(1000)
 
 # Call the validation function

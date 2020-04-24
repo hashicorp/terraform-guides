@@ -22,6 +22,14 @@ policy "restrict-ami-owners" {
     enforcement_level = "advisory"
 }
 
+policy "restrict-assumed-roles-by-workspace" {
+    enforcement_level = "advisory"
+}
+
+policy "restrict-assumed-roles" {
+    enforcement_level = "advisory"
+}
+
 policy "restrict-availability-zones" {
     enforcement_level = "advisory"
 }

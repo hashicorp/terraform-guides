@@ -1,0 +1,26 @@
+# This policy uses the tfconfig/v2 import to validate that all variables
+# have descriptions
+
+# Import the tfconfig/v2 import, but use the alias "tfconfig"
+import "tfconfig/v2" as tfconfig
+
+# Filter to variables that don't have descriptions
+violatingVariables = filter tfconfig.variables as address, v {
+  v.description else null in ["", null]
+}
+
+# Print violation messages
+for violatingVariables as address, v {
+  if v.module_address is "" {
+    print("The variable", v.name, "in the root module",
+          "does not have a description.")
+  } else {
+    print("The variable", v.name, "in the module", v.module_address,
+        "does not have a description.")
+  }
+}
+
+# Main rule
+main = rule {
+ length(violatingVariables) is 0
+}

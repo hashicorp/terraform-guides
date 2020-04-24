@@ -1,0 +1,47 @@
+# This policy uses the tfconfig/v2 import to validate that all variables
+# have descriptions
+
+# Import the tfconfig/v2 import, but use the alias "tfconfig"
+import "tfconfig/v2" as tfconfig
+# Standard strings import
+import "strings"
+
+### Parameters ###
+# The address of the TFC or TFE server
+param address default "app.terraform.io"
+# The organization on the TFC or TFE server
+param organization
+
+# Fnd modules called from root module that are not in the desired PMR
+violatingMCs = filter tfconfig.module_calls as index, mc {
+  mc.module_address is "" and
+  not strings.has_prefix(mc.source, address + "/" + organization)
+}
+
+# Print violation messages for invalid modules
+if length(violatingMCs) > 0 {
+  print("All modules called from the root module must come from the",
+        "private module registry", address + "/" + organization)
+  for violatingMCs as address, mc {
+    print("The module", mc.name, "called from the root module has source",
+          mc.source)
+  }
+}
+
+# Find resources and data sources in root module
+rootModuleResources = filter tfconfig.resources as address, r {
+  r.module_address is ""
+}
+
+# Print violation messages for root module resources and data sources
+if length(rootModuleResources) > 0 {
+  print("Resources and data sources are not allowed in the root module.")
+  print("Your root module has", length(rootModuleResources), "resources and",
+        "data sources.")
+}
+
+# Main rule
+validated = length(violatingMCs) is 0 and length(rootModuleResources) is 0
+main = rule {
+ validated is true
+}

@@ -3,14 +3,12 @@
 # plan were applied, using different limits for different
 # workspaces based on their names.
 
-##### Imports #####
-
-import "tfrun"
-import "decimal"
 # Import common-functions/tfrun-functions.sentinel with alias "run"
 import "tfrun-functions" as run
+# The standard decimal import
+import "decimal"
 
-##### Monthly Limits #####
+# Monthly Limits
 limits = {
   "dev": decimal.new(200),
   "qa": decimal.new(500),

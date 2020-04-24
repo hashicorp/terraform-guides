@@ -1,0 +1,23 @@
+# This policy prevents the destruction without re-creation of resources
+# of blacklisted types.
+
+# Import common-functions/tfplan-functions.sentinel with alias "plan"
+import "tfplan-functions" as plan
+
+# List of blacklisted resources
+blacklist = ["aws_vpc", "azurerm_virtual_network", "google_compute_network"]
+
+# Get all Resources
+resourcesBeingDestroyed = plan.find_resources_being_destroyed()
+
+# Filter to resources with types in blacklist and Print violation messages
+violatingResources = filter resourcesBeingDestroyed as address, rc {
+  rc.type in blacklist and
+  print(address, "is not allowed to be destroyed because its type", rc.type,
+        "is in the blacklist:", blacklist)
+}
+
+# Main rule
+main = rule {
+ length(violatingResources) is 0
+}

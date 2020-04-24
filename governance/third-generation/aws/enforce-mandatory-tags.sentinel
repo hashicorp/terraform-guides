@@ -1,13 +1,10 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all EC2 instances have all mandatory tags
 
-# Import the tfplan/v2 import, but use the alias "tfplan"
-import "tfplan/v2" as tfplan
-
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
 import "tfplan-functions" as plan
 
-### List of mandatory tags ###
+# List of mandatory tags
 mandatory_tags = ["Name", "ttl", "Owner"]
 
 # Get all EC2 instances

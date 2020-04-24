@@ -30,6 +30,10 @@ policy "find-all-module-addresses" {
     enforcement_level = "advisory"
 }
 
+policy "limit-cost-and-percentage-increase" {
+    enforcement_level = "advisory"
+}
+
 policy "limit-cost-by-workspace-type" {
     enforcement_level = "advisory"
 }
@@ -38,10 +42,22 @@ policy "limit-proposed-monthly-cost" {
     enforcement_level = "advisory"
 }
 
-policy "restrict-cost-and-percentage-increase" {
+policy "require-all-resources-from-pmr" {
+    enforcement_level = "advisory"
+}
+
+policy "validate-variables-have-descriptions" {
+    enforcement_level = "advisory"
+}
+
+policy "whitelist-datasources" {
     enforcement_level = "advisory"
 }
 
 policy "whitelist-providers" {
+    enforcement_level = "advisory"
+}
+
+policy "whitelist-provisioners" {
     enforcement_level = "advisory"
 }

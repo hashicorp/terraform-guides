@@ -1,0 +1,23 @@
+# This policy uses the tfconfig/v2 import to whitelist specified provisioners
+
+# Import common-functions/tfconfig-functions.sentinel with alias "config"
+import "tfconfig-functions" as config
+
+# List of whitelisted provisioners
+whitelist = ["file", "chef"]
+
+# Get all provisioners
+allProvisioners = config.find_all_provisioners()
+
+# Filter to provisioners with violations
+# Warnings will not be printed for violations since the last parameter is false
+violatingProvisioners = config.filter_attribute_not_in_list(allProvisioners,
+                     "type", whitelist, false)
+
+# Print any violations
+config.print_violations(violatingProvisioners["messages"], "Provisioner not in whitelist:")
+
+# Main rule
+main = rule {
+ length(violatingProvisioners["messages"]) is 0
+}

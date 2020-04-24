@@ -1,0 +1,66 @@
+import "strings"
+
+providers = {}
+
+resources = {
+	"aws_vpc.vpc_from_root_module": {
+		"address": "aws_vpc.vpc_from_root_module",
+		"config": {
+			"cidr_block": {
+				"references": [
+					"var.cidr_for_root",
+				],
+			},
+			"tags": {
+				"constant_value": {
+					"Name": "vpc-from-root-module",
+				},
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "vpc_from_root_module",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_vpc",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"cidr_for_nested_module": {
+		"default":        "172.17.0.0/16",
+		"description":    "CIDR for use in nested module VPC",
+		"module_address": "",
+		"name":           "cidr_for_nested_module",
+	},
+	"cidr_for_pmr_module": {
+		"default":        "172.18.0.0/16",
+		"description":    "CIDR for use in PMR VPC",
+		"module_address": "",
+		"name":           "cidr_for_pmr_module",
+	},
+	"cidr_for_root": {
+		"default":        "172.16.0.0/16",
+		"description":    "CIDR for use in root module VPC",
+		"module_address": "",
+		"name":           "cidr_for_root",
+	},
+}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

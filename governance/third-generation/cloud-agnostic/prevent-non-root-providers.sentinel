@@ -1,0 +1,20 @@
+# This policy uses the tfconfig/v2 import to prevent providers from being
+# created in non-root modules
+
+# Import tfconfig/v2 with alias "tfconfig"
+import "tfconfig/v2" as tfconfig
+
+# Indicate that providers are only allowed in the root module
+print("Providers are only allowed in the root module.")
+
+# Filter to providers not in root module
+# Warnings will not be printed for violations since the last parameter is false
+violatingProviders = filter tfconfig.providers as address, p {
+  p.module_address is not "" and
+  print("provider", address, "was defined in module", p.module_address)
+}
+
+# Main rule
+main = rule {
+ length(violatingProviders) is 0
+}

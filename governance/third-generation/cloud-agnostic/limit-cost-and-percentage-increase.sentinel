@@ -3,14 +3,12 @@
 # the monthly cost that would be incurred if the current plan
 # were applied
 
-##### Imports #####
-
-import "tfrun"
-import "decimal"
 # Import common-functions/tfrun-functions.sentinel with alias "run"
 import "tfrun-functions" as run
+# The standard decimal import
+import "decimal"
 
-##### Parameters #####
+# Monthly Limit and Max Percent Increase
 limit = decimal.new(1000)
 max_percent = decimal.new(10.0)
 

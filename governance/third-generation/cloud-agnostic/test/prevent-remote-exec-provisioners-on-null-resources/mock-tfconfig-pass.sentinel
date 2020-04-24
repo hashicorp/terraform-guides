@@ -1,0 +1,149 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"aws_instance.ubuntu": {
+		"address": "aws_instance.ubuntu",
+		"config": {
+			"ami": {
+				"references": [
+					"var.ami_id",
+				],
+			},
+			"associate_public_ip_address": {
+				"references": [
+					"var.associate_public_ip_address",
+				],
+			},
+			"availability_zone": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+			"instance_type": {
+				"references": [
+					"var.instance_type",
+				],
+			},
+			"tags": {
+				"references": [
+					"var.name",
+				],
+			},
+		},
+		"count": {
+			"constant_value": 2,
+		},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "ubuntu",
+		"provider_config_key": "aws",
+		"provisioners":        [
+			{
+				"resource_address": "aws_instance.ubuntu",
+				"type": "file",
+				"index": "0",
+				"config": {},
+			},
+			{
+				"resource_address": "aws_instance.ubuntu",
+				"type": "chef",
+				"index": "1",
+				"config": {},
+			},
+		],
+		"type":                "aws_instance",
+	},
+}
+
+provisioners = {
+	"aws_instance.ubuntu:0": {
+		"resource_address": "aws_instance.ubuntu",
+		"type": "file",
+		"index": "0",
+		"config": {},
+	},
+	"aws_instance.ubuntu:1": {
+		"resource_address": "aws_instance.ubuntu",
+		"type": "chef",
+		"index": "1",
+		"config": {},
+	},
+}
+
+variables = {
+	"ami_id": {
+		"default":        "ami-2e1ef954",
+		"description":    "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image",
+		"module_address": "",
+		"name":           "ami_id",
+	},
+	"associate_public_ip_address": {
+		"default":        true,
+		"description":    "",
+		"module_address": "",
+		"name":           "associate_public_ip_address",
+	},
+	"aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "",
+		"name":           "aws_region",
+	},
+	"instance_type": {
+		"default":        "t2.micro",
+		"description":    "type of EC2 instance to provision.",
+		"module_address": "",
+		"name":           "instance_type",
+	},
+	"name": {
+		"default":        "roger-demo",
+		"description":    "name to pass to Name tag",
+		"module_address": "",
+		"name":           "name",
+	},
+}
+
+outputs = {
+	"public_dns": {
+		"depends_on":     [],
+		"description":    "",
+		"module_address": "",
+		"name":           "public_dns",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_instance.ubuntu",
+			],
+		},
+	},
+}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
