@@ -1,0 +1,161 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"assume_role": [
+				{
+					"external_id": {
+						"constant_value": "EXTERNAL_ID",
+					},
+					"role_arn": {
+						"references": [
+							"var.role",
+						],
+					},
+					"session_name": {
+						"constant_value": "SESSION_NAME",
+					},
+				},
+			],
+			"region": {
+				"constant_value": "us-east-1",
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+	"module.nested:aws.hard-coded-role": {
+		"alias": "hard-coded-role",
+		"config": {
+			"assume_role": [
+				{
+					"external_id": {
+						"constant_value": "EXTERNAL_ID",
+					},
+					"role_arn": {
+						"constant_value": "arn:aws:iam::123412341234:role/role-qa",
+					},
+					"session_name": {
+						"constant_value": "SESSION_NAME",
+					},
+				},
+			],
+			"region": {
+				"constant_value": "us-east-1",
+			},
+		},
+		"module_address":      "module.nested",
+		"name":                "aws",
+		"provider_config_key": "module.nested:aws.hard-coded-role",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"aws_instance.web": {
+		"address": "aws_instance.web",
+		"config": {
+			"ami": {
+				"constant_value": "ami-2e1ef954",
+			},
+			"instance_type": {
+				"constant_value": "t2.micro",
+			},
+			"tags": {
+				"constant_value": {
+					"Name": "assumed_role_instance",
+				},
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "web",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_instance",
+	},
+	"module.nested.aws_instance.web": {
+		"address": "module.nested.aws_instance.web",
+		"config": {
+			"ami": {
+				"constant_value": "ami-2e1ef954",
+			},
+			"instance_type": {
+				"constant_value": "t2.micro",
+			},
+			"tags": {
+				"constant_value": {
+					"Name": "assumed_role_instance",
+				},
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.nested",
+		"name":                "web",
+		"provider_config_key": "module.nested:aws",
+		"provisioners":        [],
+		"type":                "aws_instance",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"module.nested:role": {
+		"default":        null,
+		"description":    "IAM Role to assume",
+		"module_address": "module.nested",
+		"name":           "role",
+	},
+	"module.nested:session": {
+		"default":        "SESSION_NAME",
+		"description":    "",
+		"module_address": "module.nested",
+		"name":           "session",
+	},
+	"role": {
+		"default":        null,
+		"description":    "IAM Role to assume",
+		"module_address": "",
+		"name":           "role",
+	},
+}
+
+outputs = {}
+
+module_calls = {
+	"nested": {
+		"config": {
+			"role": {
+				"references": [
+					"var.role",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "nested",
+		"source":             "./module",
+		"version_constraint": "",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

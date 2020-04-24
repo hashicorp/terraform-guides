@@ -7,6 +7,16 @@ import "types"
 
 ##### Functions #####
 
+### find_all_resources ###
+# Find all resources of all types using the tfconfig/v2 import.
+find_all_resources = func() {
+  resources = filter tfconfig.resources as address, r {
+  	r.mode is "managed"
+  }
+
+  return resources
+}
+
 ### find_resources_by_type ###
 # Find all resources of a specific type using the tfconfig/v2 import.
 # The parameter, type, should be a string like "aws_instance".
@@ -40,6 +50,16 @@ find_resources_by_provider = func(provider) {
   }
 
   return resources
+}
+
+### find_all_datasources ###
+# Find all data sources of all types using the tfconfig/v2 import.
+find_all_datasources = func() {
+  datasources = filter tfconfig.resources as address, d {
+  	d.mode is "data"
+  }
+
+  return datasources
 }
 
 ### find_datasources_by_type ###
@@ -77,9 +97,14 @@ find_datasources_by_provider = func(provider) {
   return datasources
 }
 
+### find_all_provisioners ###
+# Find all provisioners using the tfconfig/v2 import.
+find_all_provisioners = func() {
+  return tfconfig.provisioners
+}
+
 ### find_provisioners_by_type ###
-# Find all provisioners of a specific type from all resources using the
-# tfconfig/v2 import.
+# Find all provisioners of a specific type using the tfconfig/v2 import.
 # The parameter, type, should be a string like "local_exec".
 find_provisioners_by_type = func(type) {
   provisioners = filter tfconfig.provisioners as address, p {
@@ -89,14 +114,10 @@ find_provisioners_by_type = func(type) {
   return provisioners
 }
 
-### find_variables_in_module ###
-# Find all variables from a specific module using the tfconfig/v2 import.
-find_variables_in_module = func(module_address) {
-  variables = filter tfconfig.variables as address, v {
-  	v.module_address is module_address
-  }
-
-  return variables
+### find_all_providers ###
+# Find all providers using the tfconfig/v2 import.
+find_all_providers = func() {
+  return tfconfig.providers
 }
 
 ### find_providers_by_type ###
@@ -120,6 +141,28 @@ find_providers_in_module = func(module_address) {
   return providers
 }
 
+### find_all_variables ###
+# Find all variables using the tfconfig/v2 import.
+find_all_variables = func() {
+  return tfconfig.variables
+}
+
+### find_variables_in_module ###
+# Find all variables from a specific module using the tfconfig/v2 import.
+find_variables_in_module = func(module_address) {
+  variables = filter tfconfig.variables as address, v {
+  	v.module_address is module_address
+  }
+
+  return variables
+}
+
+### find_all_outputs ###
+# Find all outputs using the tfconfig/v2 import.
+find_all_outputs = func() {
+  return tfconfig.outputs
+}
+
 ### find_outputs_in_module ###
 # Find all providers from a specific module using the tfconfig/v2 import.
 find_outputs_in_module = func(module_address) {
@@ -139,6 +182,12 @@ find_outputs_by_sensitivity = func(sensitive) {
   }
 
   return outputs
+}
+
+### find_all_module_calls ###
+# Find all module calls using the tfconfig/v2 import.
+find_all_module_calls = func() {
+  return tfconfig.module_calls
 }
 
 ### find_module_calls_in_module ###

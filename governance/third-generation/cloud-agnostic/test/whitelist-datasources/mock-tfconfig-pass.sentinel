@@ -1,0 +1,66 @@
+import "strings"
+
+providers = {}
+
+resources = {
+	"data.local_file.items": {
+		"address": "data.local_file.items",
+		"config": {
+			"filename": {
+				"references": [
+					"path.module",
+				],
+			},
+		},
+		"count": {},
+		"depends_on": [
+			"local_file.items",
+		],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "items",
+		"provider_config_key": "local",
+		"provisioners":        [],
+		"type":                "local_file",
+	},
+	"local_file.items": {
+		"address": "local_file.items",
+		"config": {
+			"content": {
+				"constant_value": "Food, Paper, Soap",
+			},
+			"filename": {
+				"references": [
+					"path.module",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "items",
+		"provider_config_key": "local",
+		"provisioners":        [],
+		"type":                "local_file",
+	},
+}
+
+provisioners = {}
+
+variables = {}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

@@ -9,7 +9,7 @@ import "tfplan/v2" as tfplan
 import "tfplan-functions" as plan
 
 # Forbidden CIDRs
-# Include null to forbid missing or computed values
+# Include "null" to forbid missing or computed values
 forbidden_cidrs = ["0.0.0.0/0"]
 
 # Get all Security Group Ingress Rules

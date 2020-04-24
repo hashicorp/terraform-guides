@@ -1,0 +1,12 @@
+{
+  "param": {
+    "address": "app.terraform.io",
+    "organization": "Cloud-Operations"
+  },
+  "mock": {
+    "tfconfig/v2": "mock-tfconfig-fail.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}

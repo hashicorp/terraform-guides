@@ -1,13 +1,10 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all VMware VMs obey a disk limit
 
-# Import the tfplan/v2 import, but use the alias "tfplan"
-import "tfplan/v2" as tfplan
-
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
 import "tfplan-functions" as plan
 
-# Set disk size limit (in GB)
+# Disk Size Limit (in GB)
 maxDiskSize = 100
 
 # Get all VMs

@@ -1,0 +1,62 @@
+variables = {
+	"ami_id": {
+		"default":        "ami-2e1ef954",
+		"description":    "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image",
+		"module_address": "",
+		"name":           "ami_id",
+	},
+	"associate_public_ip_address": {
+		"default":        true,
+		"description":    "whether to add a public IP address",
+		"module_address": "",
+		"name":           "associate_public_ip_address",
+	},
+	"aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "",
+		"name":           "aws_region",
+	},
+	"instance_type": {
+		"default":        "t2.micro",
+		"description":    "type of EC2 instance to provision.",
+		"module_address": "",
+		"name":           "instance_type",
+	},
+	"module.nested:ami_id": {
+		"default":        "ami-2e1ef954",
+		"description":    "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image",
+		"module_address": "module.nested",
+		"name":           "ami_id",
+	},
+	"module.nested:associate_public_ip_address": {
+		"default":        true,
+		"description":    "whether to add a public IP address",
+		"module_address": "module.nested",
+		"name":           "associate_public_ip_address",
+	},
+	"module.nested:aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "module.nested",
+		"name":           "aws_region",
+	},
+	"module.nested:instance_type": {
+		"default":        "t2.micro",
+		"description":    "type of EC2 instance to provision.",
+		"module_address": "module.nested",
+		"name":           "instance_type",
+	},
+	"module.nested:name": {
+		"default":        "roger-demo-nested",
+		"description":    "name to pass to Name tag",
+		"module_address": "module.nested",
+		"name":           "name",
+	},
+	"name": {
+		"default":        "roger-demo",
+		"description":    "name to pass to Name tag",
+		"module_address": "",
+		"name":           "name",
+	},
+}

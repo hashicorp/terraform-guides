@@ -1,14 +1,11 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all Azure VMs have vm sizes from an allowed list
 
-# Import the tfplan/v2 import, but use the alias "tfplan"
-import "tfplan/v2" as tfplan
-
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
 import "tfplan-functions" as plan
 
 # Allowed Azure VM Sizes
-# Include null to allow missing values
+# Include "null" to allow missing or computed values
 allowed_sizes = ["Standard_A1", "Standard_A2", "Standard_D1_v2", "Standard_D2_v2"]
 
 # Get all Azure VMs

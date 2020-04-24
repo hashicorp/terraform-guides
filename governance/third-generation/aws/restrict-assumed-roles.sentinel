@@ -1,0 +1,28 @@
+# This policy restricts accounts that can be assumed by the AWS provider.
+# It includes a list of allowed roles.
+
+# It can only determine the role_arn if it is set to either a hard-coded value
+# or to a reference to a single Terraform variable.
+# If you want to the policy to pass if the assumed role contains a single
+# non-variable reference or if it finds multiple references, then include a role
+# called "complex" in the allowed_roles list.
+
+# Import aws-functions/aws-functions.sentinel as aws
+import "aws-functions" as aws
+
+# Allowed Roles
+# Include "complex" to allow role_arn with reference that is not a variable
+# or that has multiple references.
+allowed_roles = [
+  "arn:aws:iam::123412341234:role/terraform-assumed-role",
+]
+
+##### Rules #####
+
+# Call the validation function
+roles_validated = aws.validate_assumed_roles_with_list(allowed_roles)
+
+# Main rule
+main = rule {
+  roles_validated
+}

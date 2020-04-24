@@ -1,14 +1,11 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all RDS instances have engines from an allowed list
 
-# Import the tfplan/v2 import, but use the alias "tfplan"
-import "tfplan/v2" as tfplan
-
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
 import "tfplan-functions" as plan
 
 # Allowed RDS engines
-# Include null to allow missing or computed values
+# Include "null" to allow missing or computed values
 allowed_engines = ["mysql", "postgres"]
 
 # Get all RDS instances

@@ -1,13 +1,10 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all VMware VMs respect CPU and memory limits
 
-# Import the tfplan/v2 import, but use the alias "tfplan"
-import "tfplan/v2" as tfplan
-
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
 import "tfplan-functions" as plan
 
-# Set CPU and Memory (MB) limits
+# CPU and Memory (MB) Limits
 maxCPUs = 4
 maxMemory = 8192
 

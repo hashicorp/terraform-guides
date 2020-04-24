@@ -1,0 +1,47 @@
+import "strings"
+
+provisioners = {
+	"null_resource.test": {
+		"resource_address": "null_resource.test",
+		"type": "remote-exec",
+		"index": "0",
+		"config": {},
+	},
+}
+
+resources = {
+	"null_resource.test": {
+		"address": "null_resource.test",
+		"config": {
+		},
+		"count": {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "test",
+		"provider_config_key": "null",
+		"provisioners":        [
+			{
+				"resource_address": "null_resource.test",
+				"type": "remote-exec",
+				"index": "0",
+				"config": {},
+			},
+		],
+		"type": "null_resource",
+	},
+}
+
+variables = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

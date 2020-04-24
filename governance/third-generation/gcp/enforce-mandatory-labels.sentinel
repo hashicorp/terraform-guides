@@ -4,13 +4,10 @@
 # Note that the comparison is case-sensitive but also that GCE labels are only
 # allowed to contain lowercase letters, numbers, hypens, and underscores.
 
-# Import the tfplan/v2 import, but use the alias "tfplan"
-import "tfplan/v2" as tfplan
-
 # Import common-functions/tfplan-functions.sentinel with alias "plan"
 import "tfplan-functions" as plan
 
-### List of mandatory labels ###
+# List of mandatory labels
 mandatory_labels = ["name", "ttl", "owner"]
 
 # Get all GCE compute instances

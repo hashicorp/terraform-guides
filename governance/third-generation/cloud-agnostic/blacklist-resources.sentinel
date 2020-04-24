@@ -1,0 +1,23 @@
+# This policy uses the tfconfig/v2 import to blacklist specified resources
+
+# Import common-functions/tfconfig-functions.sentinel with alias "config"
+import "tfconfig-functions" as config
+
+# List of blacklisted resources
+blacklist = ["aws_vpc", "azurerm_virtual_network", "google_compute_network"]
+
+# Get all Resources
+allResources = config.find_all_resources()
+
+# Filter to resources with violations
+# Warnings will be printed for all violations since the last parameter is true
+violatingResources = config.filter_attribute_in_list(allResources,
+                     "type", blacklist, false)
+
+# Print any violations
+config.print_violations(violatingResources["messages"], "Blacklisted resource:")
+
+# Main rule
+main = rule {
+ length(violatingResources["messages"]) is 0
+}

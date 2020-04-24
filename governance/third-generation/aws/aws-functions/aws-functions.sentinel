@@ -1,0 +1,144 @@
+# Common functions for use with the AWS provider
+
+##### Imports #####
+import "tfconfig-functions" as config
+import "tfplan/v2" as tfplan
+import "strings"
+
+##### Functions #####
+
+### determine_role_arn ###
+# This can only determine the role_arn if it is set to either a hard-coded value
+# or to a reference to a single Terraform variable.
+# It sets the role to "complex" if it finds a single non-variable reference
+# or if it finds multiple references.
+# It sets the role to "none" if no role arn is found.
+determine_role_arn = func(address, data) {
+
+  # Return empty string if provider does not assume a role
+  role_arn_value = "none"
+
+  # Check for role_arn
+  if (length(data.config) else 0) > 0 and
+     (length(data.config.assume_role) else 0) > 0 and
+     data.config.assume_role[0].role_arn else null is not null {
+    role_arn_data = data.config.assume_role[0].role_arn
+    # Check for constant value or references
+    if role_arn_data.constant_value else null is not null {
+      # role_arn of AWS provider was hard-coded role_arn
+      #print("Found a single constant value for role_arn.")
+      role_arn_value = role_arn_data.constant_value
+    } else if role_arn_data.references else [] is not [] {
+      if length(role_arn_data.references) == 1 {
+        # Process references
+        role_arn = role_arn_data.references[0]
+        if role_arn matches "var\\.(.*)" {
+          # role_arn of AWS provider was a variable
+          #print("Found a single variable reference for role_arn.")
+          role_arn_variable = strings.trim_prefix(role_arn, "var.")
+          role_arn_value = tfplan.variables[role_arn_variable].value
+        } else {
+          # reference was not a variable
+          print("Found a single reference in the role_arn attribute,",
+                "for provider", address, "but it was not a variable.")
+          print("This policy only handles a role_arn attribute that is",
+                "a constant value or a single reference to a variable.")
+          # Set role_arn_value to null to cause failure of policy
+          role_arn_value = "complex"
+        } // end if role_arn is variable
+      } else {
+        print("Found more than one reference in the role_arn attribute",
+              "for provider", address)
+        print("This policy only handles a role_arn attribute that is",
+              "a constant value or a single reference to a variable.")
+        # Set role_arn_value to null to cause failure of policy
+        role_arn_value = "complex"
+      } // end if single reference
+    } // end if constant_value or references
+  } else {
+    #print("Did not find role_arn.")
+  } // end if assume_role.role_arn in config
+
+  return role_arn_value
+}
+
+### get_assumed_roles ###
+# Get assumed roles from all AWS providers
+# Please note that the assumed roles returned could include "none" or "complex";
+# See the comments for the determine_role_arn function above.
+get_assumed_roles = func() {
+
+  # Initialize empty map of roles indexed by aliases
+  assumed_roles = {}
+
+  # Get all AWS provider aliases
+  aws_providers = config.find_providers_by_type("aws")
+
+  # Iterate through all AWS provider aliases
+  for aws_providers as address, data {
+    assumed_roles[address] = determine_role_arn(address, data)
+  } // end aws_providers
+
+  return assumed_roles
+
+}
+
+### validate_assumed_roles_with_list ###
+# Validate that all assumed roles are allowed.
+# If you want to the policy to pass if an assumed role contains a single
+# non-variable reference or if it finds multiple references, then include a role
+# called "complex" in the allowed_roles list.
+validate_assumed_roles_with_list = func(allowed_roles) {
+
+  validated = true
+
+  assumed_roles = get_assumed_roles()
+
+  for assumed_roles as address, role {
+    if role is not "none" and role not in allowed_roles {
+      print("AWS provider", address, "has assumed role",
+            role, "that is not allowed.")
+      validated = false
+    }
+  }
+
+  return validated
+}
+
+### validate_assumed_roles_with_map ###
+# Validate that all assumed roles are allowed for the current workspace.
+# If you want to a policy to pass if an assumed role contains a single
+# non-variable reference or if it finds multiple references, then include a role
+# called "complex" in the map passed to this function and associate it
+# with workspaces.
+validate_assumed_roles_with_map = func(roles_map, workspace_name) {
+
+  validated = true
+
+  assumed_roles = get_assumed_roles()
+
+  for assumed_roles as address, role {
+    if role is not "none" {
+      if role not in keys(roles_map) {
+        print("AWS provider", address, "has assumed role",
+              role, "that is not allowed.")
+        validated = false
+      } else {
+        # Validate that role is allowed for current workspace
+        matched = false
+        for roles_map[role] as workspace_regex {
+          if workspace_name matches workspace_regex {
+            matched = true
+          }
+        } // end for workspace_regex
+        if not matched {
+          print("Workspace", workspace_name, "is not allowed to use role", role)
+          print("It used that role in the AWS provider", address)
+          validated = false
+        } // end matched check
+      } // end role in roles_map
+    } // end if role is not ""
+  } // end for assumed_roles
+
+  return validated
+}

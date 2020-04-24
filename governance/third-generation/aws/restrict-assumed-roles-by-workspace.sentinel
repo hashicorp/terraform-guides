@@ -1,0 +1,41 @@
+# This policy restricts accounts that can be assumed by the AWS provider.
+# It includes a map that maps roles to lists of regex expressions
+# that match one or more workspace names
+
+# It can only determine the role_arn if it is set to either a hard-coded value
+# or to a reference to a single Terraform variable.
+# If you want to the policy to pass if the assumed role contains a single
+# non-variable reference or if it finds multiple references, then include a role
+# called "complex" in the allowed_roles map and associate it with workspaces.
+
+# Import aws-functions/aws-functions.sentinel as aws
+import "aws-functions" as aws
+# Import the tfrun import
+import "tfrun"
+
+# Allowed Roles Map
+allowed_roles = {
+  "arn:aws:iam::123412341234:role/role-dev": [
+    "(.*)-dev$",
+    "^dev-(.*)",
+  ],
+  "arn:aws:iam::567856785678:role/role-qa": [
+    "(.*)-qa$",
+    "^qa-(.*)",
+  ],
+  "arn:aws:iam::909012349090:role/role-prod": [
+    "(.*)-prod$",
+    "^prod-(.*)",
+  ],
+}
+
+# Get the current workspace name
+workspace_name = tfrun.workspace.name
+
+# Call the validation function
+roles_validated = aws.validate_assumed_roles_with_map(allowed_roles, workspace_name)
+
+# Main rule
+main = rule {
+  roles_validated
+}
