@@ -10,6 +10,7 @@ data "terraform_remote_state" "k8s_cluster" {
 }
 
 provider "kubernetes" {
+  load_config_file = false
   host = "${data.terraform_remote_state.k8s_cluster.k8s_endpoint}"
   client_certificate = "${base64decode(data.terraform_remote_state.k8s_cluster.k8s_master_auth_client_certificate)}"
   client_key = "${base64decode(data.terraform_remote_state.k8s_cluster.k8s_master_auth_client_key)}"
