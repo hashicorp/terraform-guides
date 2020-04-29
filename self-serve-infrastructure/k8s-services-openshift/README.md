@@ -1,6 +1,8 @@
 # OpenShift Pods and Services
 This guide gives an example of deploying OpenShift pods and services to an existing OpenShift cluster with Terraform Enterprise (TFE). It deploys two pods exposed as services:  The first runs a python application called "cats-and-dogs-frontend" that lets users vote for their favorite type of pet. It stores data in the second, "cats-and-dogs-backend", which runs a redis database. Before provisioning the pods, it provisions an OpenShift project (namespace) called "cats-and-dogs" and a Kubernetes service account called "cats-and-dogs" which the pods use. The two pods retrieve a shared database password from Vault.
 
+It was written for use with Terraform 0.11.x.
+
 The source code and docker files for the applications is in the [cats-and-dogs](../cats-and-dogs) directory of this repository.
 
 ## Reference Material
@@ -24,7 +26,9 @@ You would like to deploy some applications to an existing cluster that was alrea
 ## Solution
 Terraform's [Kubernetes Provider](https://www.terraform.io/docs/providers/kubernetes/index.html), the  [terraform_remote_state](https://www.terraform.io/docs/providers/terraform/d/remote_state.html) data source, and the [Vault Kubernetes auth method](https://www.vaultproject.io/docs/auth/kubernetes.html) save you a lot of time and trouble.
 
-This guide uses the kubernetes_pod and kubernetes_service resources of Terraform's Kubernetes Provider to deploy the pods and services into an OpenShift cluster previously provisioned by Terraform. It also uses the terraform_remote_state data source to copy the outputs of the targeted cluster's TFE workspace directly into the Kubernetes Provider block, avoiding the need to manually copy the outputs into variables of the TFE services workspace. It also uses the vault_addr, vault_user, and vault_k8s_auth_backend outputs from the cluster workspace.
+This guide uses the kubernetes_pod and kubernetes_service resources of Terraform's Kubernetes Provider to deploy the pods and services into an OpenShift cluster previously provisioned by Terraform.
+
+It also uses the terraform_remote_state data source to copy the outputs of the targeted cluster's TFE workspace directly into the Kubernetes Provider block, avoiding the need to manually copy the outputs into variables of the TFE services workspace. It also uses the vault_addr, vault_user, and vault_k8s_auth_backend outputs from the cluster workspace.
 
 The guide also uses a remote-exec provisioner to create an OpenShift project and a Kubernetes service account (both called "cats-and-dogs") which the pods use. It then uses additional provisioners to retrieve the JWT token of the cats-and-dogs service account from OpenShift and to expose the cats-and-dogs-frontend service via an OpenShift route.
 
@@ -34,6 +38,7 @@ The frontend application and the redis database both get the redis password from
 
 1. First deploy an OpenShift cluster with Terraform by using the Terraform code in the [k8s-cluster-openshift-aws](../../infrastructure-as-code/k8s-cluster-openshift-aws) directory of this repository and pointing a TFE workspace against it.
 1. We assume you have already fulfilled all the prerequisites of that guide including configuration of your Vault server and creation of the redis_pwd key under the path "secret/\<user\>/kubernetes/cats-and-dogs".
+1. Use a Vault server with version 1.2 or higher.
 
 
 ## Steps
@@ -79,3 +84,4 @@ Execute the following steps to delete the cats-and-dogs pods and services from y
 1. Define an environment variable CONFIRM_DESTROY with value 1 on the Variables tab of your k8s-services-openshift workspace.
 1. Queue a Destroy plan in TFE from the Settings tab of your workspace.
 1. On the Latest Run tab of your workspace, make sure that the Plan was successful and then click the "Confirm and Apply" button to actually remove the cats-and-dogs pods, and services.
+1. Additionally, you should manually delete the cats-and-dogs project in the OpenShift Application Console. This was created with the `oc` CLI using a remote-exec provisioner on a null resource and is not deleted by the destroy plan.
