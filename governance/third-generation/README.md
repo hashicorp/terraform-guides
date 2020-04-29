@@ -1,5 +1,4 @@
 # Third-Generation Sentinel Policies
-
 This directory and its sub-directories contain third-generation Sentinel policies and associated [Sentinel CLI](https://docs.hashicorp.com/sentinel/intro/getting-started/install) test cases and mocks which were created in 2020 for AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware. It also contains some some common, re-usable functions.
 
 Additionally, it contains [Policy Set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#the-sentinel-hcl-configuration-file) configuration files so that the cloud-specific and cloud-agnostic policies can easily be added to Terraform Cloud organizations using [VCS Integrations](https://www.terraform.io/docs/cloud/vcs/index.html) after forking this repository.
@@ -78,6 +77,10 @@ Each of these modules has several types of functions:
   * The `to_string` function which can convert any Sentinel object to a string. It is used to build the messages in the `messages` collection returned by the filter functions.
   * The `print_violations` function which can be called after calling one of the filter function to print the violation messages. This would only be called if the `prtmsg` argument had been set to `false` when calling the filter function. This is sometimes desirable especially if processing blocks of resources since your policy can then print some other message that gives the address of the resource with block-level violations before printing them.
 
+Documentation for each individual function can be found in these directories:
+  * [tfplan-functions](./common-functions/docs/tfplan-functions)
+  * [tfstate-functions](./common-functions/docs/tfstate-functions)
+
 ### The Functions of the tfconfig-functions Module
 The `tfconfig-functions` module has several types of functions:
   * `find_all_*` functions find all resources, data sources, provisioners, providers, variables, outputs, and module calls of all types.
@@ -89,11 +92,17 @@ The `tfconfig-functions` module has several types of functions:
   * Two filter functions, `filter_attribute_not_in_list` and `filter_attribute_in_list`, that are similar to the filter functions in the tfplan-functions module. However, these can only be used against top-level attributes of the items in the collection passed to them. Those collections can be any type of entity covered by the tfconfig/v2 import including resources, data sources, providers, provisioners, variables, outputs, and module calls.
   * The same `to_string` and `print_violations` functions that are in the tfplan-functions module.
 
+Documentation for each individual function can be found in this directory:
+  * [tfconfig-functions](./common-functions/docs/tfconfig-functions)
+
 ### The Functions of the tfrun-functions Module
 The `tfrun-functions` module has the following functions:
   * The `limit_proposed_monthly_cost` function validates that the proposed monthly cost estimate is less than the given limit.
   * The `limit_cost_and_percentage_increase` function validates that the proposed monthly cost estimate and percentage increase over the previous cost estimate ar both less than limits.
   * The `limit_cost_by_workspace_name` function validates that the monthly cost estimate is less than the limit in a map associated with a workspace name prefix or suffix that the current workspace has.
+
+Documentation for each individual function can be found in this directory:
+  * [tfrun-functions](./common-functions/docs/tfrun-functions)
 
 ### The Functions of the aws-functions Module
 The `aws-functions` module (which is located under in the aws/aws-functions directory) has the following functions:
