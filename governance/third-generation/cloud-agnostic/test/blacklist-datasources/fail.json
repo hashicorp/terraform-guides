@@ -1,7 +1,7 @@
 {
   "modules": {
     "tfconfig-functions": {
-      "path": "../../../common-functions/tfconfig-functions.sentinel"
+      "path": "../../../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
     }
   },
   "mock": {

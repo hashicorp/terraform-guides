@@ -1,7 +1,8 @@
 # This policy uses the Sentinel tfplan/v2 import to require that
 # all VMware VMs respect CPU and memory limits
 
-# Import common-functions/tfplan-functions.sentinel with alias "plan"
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
 import "tfplan-functions" as plan
 
 # CPU and Memory (MB) Limits

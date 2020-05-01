@@ -1,7 +1,8 @@
 # This policy uses the tfconfig/v2 import to prevent remote-exec provisioners
 # from being used on null resources
 
-# Import common-functions/tfconfig-functions.sentinel with alias "config"
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
 import "tfconfig-functions" as config
 # Standard strings import
 import "strings"

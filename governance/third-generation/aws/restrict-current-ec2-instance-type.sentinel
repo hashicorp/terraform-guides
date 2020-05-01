@@ -1,7 +1,8 @@
 # This policy uses the Sentinel tfstate/v2 import to require that
 # all existing EC2 instances have instance types from an allowed list
 
-# Import common-functions/tfstate-functions.sentinel with alias "state"
+# Import common-functions/tfstate-functions/tfstate-functions.sentinel
+# with alias "state"
 import "tfstate-functions" as state
 
 # Allowed EC2 Instance Types

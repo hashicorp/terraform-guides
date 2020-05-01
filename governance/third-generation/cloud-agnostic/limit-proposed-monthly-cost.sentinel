@@ -2,7 +2,8 @@
 # proposed monthly cost that would be incurred if the current
 # plan were applied
 
-# Import common-functions/tfrun-functions.sentinel with alias "run"
+# Import common-functions/tfrun-functions/tfrun-functions.sentinel
+# with alias "run"
 import "tfrun-functions" as run
 # The standard decimal import
 import "decimal"
