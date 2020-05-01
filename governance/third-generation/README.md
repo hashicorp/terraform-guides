@@ -33,12 +33,12 @@ These new third-generation policies have several important characteristics:
 
 ## Common Functions
 You can find most of the common functions used in the third-generation policies in the Sentinel modules in the [common functions](./common-functions) directory:
-  * [tfplan-functions.sentinel](./common-functions/tfplan-functions/tfplan-functions.sentinel)
-  * [tfstate-functions.sentinel](./common-functions/tfstate-functions/tfstate-functions.sentinel)
-  * [tfconfig-functions.sentinel](./common-functions/tfconfig-functions/tfconfig-functions.sentinel)
-  * [tfrun-functions.sentinel](./common-functions/tfrun-functions/tfrun-functions.sentinel)
+  * [tfplan-functions.sentinel](./common-functions/tfplan-functions)
+  * [tfstate-functions.sentinel](./common-functions/tfstate-functions)
+  * [tfconfig-functions.sentinel](./common-functions/tfconfig-functions)
+  * [tfrun-functions.sentinel](./common-functions/tfrun-functions)
 
-There are also some functions used to validate assumed roles for the AWS provider in [aws-functions.sentinel](./aws/aws-functions/aws-functions.sentinel).
+There are also some functions used to validate assumed roles for the AWS provider in [aws-functions.sentinel](./aws/aws-functions).
 
 Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use any of the 4 Terraform Sentinel imports (tfplan/v2, tfstate/v2, tfconfig/v2, and tfrun) are defined in a single file. This makes it easier to import all of the functions that use one of those imports into the Sentinel CLI test cases and Terraform Cloud policy sets, since those only need a single stanza such as this one for each module:
 ```
@@ -115,7 +115,7 @@ The `aws-functions` module (which is located under in the aws/aws-functions dire
 
 Documentation for each individual function can be found in this directory:
   * [aws-functions](./aws/aws-functions/docs)
-  
+
 ## Mock Files and Test Cases
 Sentinel [mock files](https://www.terraform.io/docs/enterprise/sentinel/mock.html) and [test cases](https://docs.hashicorp.com/sentinel/commands/config#test-cases) have been provided under the test directory of each cloud so that all the policies can be tested with the [Sentinel CLI](https://docs.hashicorp.com/sentinel/commands). The mocks were generated from actual Terraform 0.12 plans run against Terraform code that provisioned resources in these clouds. The pass and fail mock files were edited to respectively pass and fail the associated Sentinel policies. Some policies, including those that have multiple rules, have multiple fail mock files with names that indicate which condition or conditions they fail.
 
