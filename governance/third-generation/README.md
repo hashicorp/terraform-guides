@@ -33,10 +33,10 @@ These new third-generation policies have several important characteristics:
 
 ## Common Functions
 You can find most of the functions used in the third-generation policies in the Sentinel modules in the [common functions](./common-functions) directory:
-  * [tfplan-functions.sentinel](./common-functions/tfplan-functions.sentinel)
-  * [tfstate-functions.sentinel](./common-functions/tfstate-functions.sentinel)
-  * [tfconfig-functions.sentinel](./common-functions/tfconfig-functions.sentinel)
-  * [tfrun-functions.sentinel](./common-functions/tfrun-functions.sentinel)
+  * [tfplan-functions.sentinel](./common-functions/tfplan-functions/tfplan-functions.sentinel)
+  * [tfstate-functions.sentinel](./common-functions/tfstate-functions/tfstate-functions.sentinel)
+  * [tfconfig-functions.sentinel](./common-functions/tfconfig-functions/tfconfig-functions.sentinel)
+  * [tfrun-functions.sentinel](./common-functions/tfrun-functions/tfrun-functions.sentinel)
 
 There are also some functions used to validate assumed roles for the AWS provider in [aws-functions.sentinel](./aws/aws-functions/aws-functions.sentinel).
 
@@ -44,11 +44,13 @@ Unlike the second-generation common functions that were each defined in a separa
 ```
 "modules": {
   "tfplan-functions": {
-    "path": "../../../common-functions/tfplan-functions.sentinel"
+    "path": "../../../common-functions/tfplan-functions/tfplan-functions.sentinel"
   }
 }
 ```
-Test cases that use the other modules would either change both occurrences of "tfplan" in that stanza to "tfstate", "tfconfig", or "tfrun" or would add additional stanzas with those changes.
+Test cases that use the other modules would either change all three occurrences of "tfplan" in that stanza to "tfstate", "tfconfig", or "tfrun" or would add additional stanzas with those changes.
+
+We have put each Sentinel module in its own directory which also contains Markdown files for each of the module's functions. Each of these Markdown files describes the function, its declaration, its arguments, other common functions it uses, what it returns, and what it prints. It also gives examples of calling the function and sometimes lists some policies that call it.
 
 While having multiple functions in a single file and module does make examining the function code a bit harder, we think the reduced work associated with referencing the functions in the test cases justifies this.
 
