@@ -123,9 +123,9 @@ find_all_providers = func() {
 ### find_providers_by_type ###
 # Find all providers of a specific type using the tfconfig/v2 import.
 # The parameter, provider, should be given as a string such as "aws".
-find_providers_by_type = func(provider) {
+find_providers_by_type = func(type) {
   providers = filter tfconfig.providers as address, p {
-  	p.provider_config_key matches "(.*)" + provider + "(.*)"
+  	p.provider_config_key matches "(.*)" + type + "(.*)"
   }
 
   return providers

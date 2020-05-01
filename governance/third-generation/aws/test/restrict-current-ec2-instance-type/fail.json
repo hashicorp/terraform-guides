@@ -1,7 +1,7 @@
 {
   "modules": {
     "tfstate-functions": {
-      "path": "../../../common-functions/tfstate-functions.sentinel"
+      "path": "../../../common-functions/tfstate-functions/tfstate-functions.sentinel"
     }
   },
   "mock": {

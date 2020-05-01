@@ -1,7 +1,8 @@
 # This policy uses the Sentinel tfstatev2 import to restrict the owners set on
 # all instances of the aws_ami data source in all modules
 
-# Import common-functions/tfstate-functions.sentinel with alias "state"
+# Import common-functions/tfstate-functions/tfstate-functions.sentinel
+# with alias "state"
 import "tfstate-functions" as state
 
 # Allowed Owners

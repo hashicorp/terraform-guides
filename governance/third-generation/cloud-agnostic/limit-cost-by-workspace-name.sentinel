@@ -3,7 +3,8 @@
 # plan were applied, using different limits for different
 # workspaces based on their names.
 
-# Import common-functions/tfrun-functions.sentinel with alias "run"
+# Import common-functions/tfrun-functions/tfrun-functions.sentinel
+# with alias "run"
 import "tfrun-functions" as run
 # The standard decimal import
 import "decimal"

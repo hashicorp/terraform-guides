@@ -1,7 +1,8 @@
 # This policy prevents the destruction without re-creation of resources
 # of blacklisted types.
 
-# Import common-functions/tfplan-functions.sentinel with alias "plan"
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
 import "tfplan-functions" as plan
 
 # List of blacklisted resources

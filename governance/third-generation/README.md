@@ -1,5 +1,4 @@
 # Third-Generation Sentinel Policies
-
 This directory and its sub-directories contain third-generation Sentinel policies and associated [Sentinel CLI](https://docs.hashicorp.com/sentinel/intro/getting-started/install) test cases and mocks which were created in 2020 for AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware. It also contains some some common, re-usable functions.
 
 Additionally, it contains [Policy Set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#the-sentinel-hcl-configuration-file) configuration files so that the cloud-specific and cloud-agnostic policies can easily be added to Terraform Cloud organizations using [VCS Integrations](https://www.terraform.io/docs/cloud/vcs/index.html) after forking this repository.
@@ -33,25 +32,27 @@ These new third-generation policies have several important characteristics:
 1. The common function `evaluate_attribute`, which is in the tfplan-functions.sentinel and tfstate-functions.sentinel modules, can evaluate the values of any attribute of any resource even if it is deeply nested inside the resource. It does this by calling itself recursively.
 
 ## Common Functions
-You can find most of the functions used in the third-generation policies in the Sentinel modules in the [common functions](./common-functions) directory:
-  * [tfplan-functions.sentinel](./common-functions/tfplan-functions.sentinel)
-  * [tfstate-functions.sentinel](./common-functions/tfstate-functions.sentinel)
-  * [tfconfig-functions.sentinel](./common-functions/tfconfig-functions.sentinel)
-  * [tfrun-functions.sentinel](./common-functions/tfrun-functions.sentinel)
+You can find most of the common functions used in the third-generation policies in the Sentinel modules in the [common functions](./common-functions) directory:
+  * [tfplan-functions](./common-functions/tfplan-functions)
+  * [tfstate-functions](./common-functions/tfstate-functions)
+  * [tfconfig-functions](./common-functions/tfconfig-functions)
+  * [tfrun-functions](./common-functions/tfrun-functions)
 
-There are also some functions used to validate assumed roles for the AWS provider in [aws-functions.sentinel](./aws/aws-functions/aws-functions.sentinel).
+There are also some functions used to validate assumed roles for the AWS provider in [aws-functions](./aws/aws-functions).
 
-Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use any of the 4 Terraform Sentinel imports (tfplan/v2, tfstate/v2, tfconfig/v2, and tfrun) are defined in a single file. This makes it easier to import all of the functions that use one of those imports into the Sentinel CLI test cases, since those only need a single stanza such as this one for each module:
+Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use any of the 4 Terraform Sentinel imports (tfplan/v2, tfstate/v2, tfconfig/v2, and tfrun) are defined in a single file. This makes it easier to import all of the functions that use one of those imports into the Sentinel CLI test cases and Terraform Cloud policy sets, since those only need a single stanza such as this one for each module:
 ```
 "modules": {
   "tfplan-functions": {
-    "path": "../../../common-functions/tfplan-functions.sentinel"
+    "path": "../../../common-functions/tfplan-functions/tfplan-functions.sentinel"
   }
 }
 ```
-Test cases that use the other modules would either change both occurrences of "tfplan" in that stanza to "tfstate", "tfconfig", or "tfrun" or would add additional stanzas with those changes.
+Test cases that use the other modules would either change all three occurrences of "tfplan" in that stanza to "tfstate", "tfconfig", or "tfrun" or would add additional stanzas with those changes.
 
-While having multiple functions in a single file and module does make examining the function code a bit harder, we think the reduced work associated with referencing the functions in the test cases justifies this.
+We have put each Sentinel module in its own directory which also contains Markdown files for each of the module's functions under a docs directory. Each of these Markdown files describes the function, its declaration, its arguments, other common functions it uses, what it returns, and what it prints. It also gives examples of calling the function and sometimes lists some policies that call it.
+
+While having multiple Sentinel functions in a single file does make examining the function code a bit harder, we think the reduced work associated with referencing the functions in the test cases and policy sets justifies this.
 
 To use any of the functions in a new policy, be sure to include lines like these:
 ```
@@ -67,7 +68,7 @@ In this case, we are using `plan`, `state`, `config`, `run`, and `aws` as aliase
 We discuss these two modules together because they are essentially identical except for their use of the tfplan/v2 and tfstate/v2 imports.
 
 Each of these modules has several types of functions:
-  * `find_resources` and `find_datasources` functions that find resources or data sources of a specific type that are being created or updated.
+  * `find_resources` and `find_datasources` functions that find resources or data sources of a specific type that are being created or updated. Note that the tfplan versions of these functions only find resources that are being created or changed and data sources that are being created, changed, or read.
   * `find_resources_being_destroyed` and `find_datasources_being_destroyed` function that find resources or data sources that are being destroyed but not re-created.
   * The `find_blocks` function finds all blocks of a specific type in a single resource.
   * `filter_*` functions that filter a collection of resources, data sources, or blocks to a sub-collection that violates some condition. (When we say resources below, we are including data sources which are really just read-only resources.) The filter functions all accept a collection of resource changes (for tfplan/v2) or resources (for tfstate/v2), an attribute, a value or a list of values, and a boolean, `prtmsg`, which can be `true` or `false` and indicates whether the filter function should print violation messages. The filter functions return a map consisting of 2 items:
@@ -77,6 +78,10 @@ Each of these modules has several types of functions:
   * The `evaluate_attribute` function, which can evaluate the values of any attribute of any resource even if it is deeply nested inside the resource. It does this by calling itself recursively.
   * The `to_string` function which can convert any Sentinel object to a string. It is used to build the messages in the `messages` collection returned by the filter functions.
   * The `print_violations` function which can be called after calling one of the filter function to print the violation messages. This would only be called if the `prtmsg` argument had been set to `false` when calling the filter function. This is sometimes desirable especially if processing blocks of resources since your policy can then print some other message that gives the address of the resource with block-level violations before printing them.
+
+Documentation for each individual function can be found in these directories:
+  * [tfplan-functions](./common-functions/tfplan-functions/docs)
+  * [tfstate-functions](./common-functions/tfstate-functions/docs)
 
 ### The Functions of the tfconfig-functions Module
 The `tfconfig-functions` module has several types of functions:
@@ -89,11 +94,17 @@ The `tfconfig-functions` module has several types of functions:
   * Two filter functions, `filter_attribute_not_in_list` and `filter_attribute_in_list`, that are similar to the filter functions in the tfplan-functions module. However, these can only be used against top-level attributes of the items in the collection passed to them. Those collections can be any type of entity covered by the tfconfig/v2 import including resources, data sources, providers, provisioners, variables, outputs, and module calls.
   * The same `to_string` and `print_violations` functions that are in the tfplan-functions module.
 
+Documentation for each individual function can be found in this directory:
+  * [tfconfig-functions](./common-functions/tfconfig-functions/docs)
+
 ### The Functions of the tfrun-functions Module
 The `tfrun-functions` module has the following functions:
   * The `limit_proposed_monthly_cost` function validates that the proposed monthly cost estimate is less than the given limit.
   * The `limit_cost_and_percentage_increase` function validates that the proposed monthly cost estimate and percentage increase over the previous cost estimate ar both less than limits.
   * The `limit_cost_by_workspace_name` function validates that the monthly cost estimate is less than the limit in a map associated with a workspace name prefix or suffix that the current workspace has.
+
+Documentation for each individual function can be found in this directory:
+  * [tfrun-functions](./common-functions/tfrun-functions/docs)
 
 ### The Functions of the aws-functions Module
 The `aws-functions` module (which is located under in the aws/aws-functions directory) has the following functions:
@@ -101,6 +112,9 @@ The `aws-functions` module (which is located under in the aws/aws-functions dire
   * The `get_assumed_roles` function gets all roles assumed by AWS providers in the current Terraform configuration. It calls the `determine_role_arn` function.
   * The `validate_assumed_roles_with_list` function validates assumed roles found by the `get_assumed_roles` function against a list of role ARNs.
   * The `validate_assumed_roles_with_map` function validates assumed roles found by the `get_assumed_roles` function against a map of role ARNs which are associated with regular expressions representing workspace names that are allowed to use them.
+
+Documentation for each individual function can be found in this directory:
+  * [aws-functions](./aws/aws-functions/docs)
 
 ## Mock Files and Test Cases
 Sentinel [mock files](https://www.terraform.io/docs/enterprise/sentinel/mock.html) and [test cases](https://docs.hashicorp.com/sentinel/commands/config#test-cases) have been provided under the test directory of each cloud so that all the policies can be tested with the [Sentinel CLI](https://docs.hashicorp.com/sentinel/commands). The mocks were generated from actual Terraform 0.12 plans run against Terraform code that provisioned resources in these clouds. The pass and fail mock files were edited to respectively pass and fail the associated Sentinel policies. Some policies, including those that have multiple rules, have multiple fail mock files with names that indicate which condition or conditions they fail.
