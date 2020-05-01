@@ -33,12 +33,12 @@ These new third-generation policies have several important characteristics:
 
 ## Common Functions
 You can find most of the common functions used in the third-generation policies in the Sentinel modules in the [common functions](./common-functions) directory:
-  * [tfplan-functions.sentinel](./common-functions/tfplan-functions)
-  * [tfstate-functions.sentinel](./common-functions/tfstate-functions)
-  * [tfconfig-functions.sentinel](./common-functions/tfconfig-functions)
-  * [tfrun-functions.sentinel](./common-functions/tfrun-functions)
+  * [tfplan-functions](./common-functions/tfplan-functions)
+  * [tfstate-functions](./common-functions/tfstate-functions)
+  * [tfconfig-functions](./common-functions/tfconfig-functions)
+  * [tfrun-functions](./common-functions/tfrun-functions)
 
-There are also some functions used to validate assumed roles for the AWS provider in [aws-functions.sentinel](./aws/aws-functions).
+There are also some functions used to validate assumed roles for the AWS provider in [aws-functions](./aws/aws-functions).
 
 Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use any of the 4 Terraform Sentinel imports (tfplan/v2, tfstate/v2, tfconfig/v2, and tfrun) are defined in a single file. This makes it easier to import all of the functions that use one of those imports into the Sentinel CLI test cases and Terraform Cloud policy sets, since those only need a single stanza such as this one for each module:
 ```
