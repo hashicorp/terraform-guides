@@ -10,6 +10,10 @@ module "tfconfig-functions" {
     source = "../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
 }
 
+module "aws-functions" {
+    source = "./aws-functions/aws-functions.sentinel"
+}
+
 policy "enforce-mandatory-tags" {
     enforcement_level = "advisory"
 }
