@@ -2,10 +2,17 @@
   "modules": {
     "tfplan-functions": {
       "path": "../../../common-functions/tfplan-functions/tfplan-functions.sentinel"
+    },
+    "tfconfig-functions": {
+      "path": "../../../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
+    },
+    "aws-functions": {
+      "path": "../../aws-functions/aws-functions.sentinel"
     }
   },
   "mock": {
-    "tfplan/v2": "mock-tfplan-fail.sentinel"
+    "tfplan/v2": "mock-tfplan-fail.sentinel",
+    "tfconfig/v2": "mock-tfconfig-fail.sentinel"
   },
   "test": {
     "main": false

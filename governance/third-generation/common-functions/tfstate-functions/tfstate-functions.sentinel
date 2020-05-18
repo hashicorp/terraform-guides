@@ -29,11 +29,33 @@ find_resources = func(type) {
   return resources
 }
 
+### find_resources_by_provider ###
+# Find all resources for a specific provider using the tfstate/v2 import.
+find_resources_by_provider = func(provider) {
+  resources = filter tfstate.resources as address, r {
+  	r.provider_name is provider and
+  	r.mode is "managed"
+  }
+
+  return resources
+}
+
 ### find_datasources ###
 # Find all data sources of a specific type using the tfstate/v2 import.
 find_datasources = func(type) {
   datasources = filter tfstate.resources as address, d {
   	d.type is type and
+  	d.mode is "data"
+  }
+
+  return datasources
+}
+
+### find_datasources_by_provider ###
+# Find all data sources for a specific provider using the tfstate/v2 import.
+find_datasources_by_provider = func(provider) {
+  datasources = filter tfstate.resources as address, d {
+  	d.provider_name is provider and
   	d.mode is "data"
   }
 

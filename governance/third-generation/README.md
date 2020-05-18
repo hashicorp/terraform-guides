@@ -68,7 +68,8 @@ In this case, we are using `plan`, `state`, `config`, `run`, and `aws` as aliase
 We discuss these two modules together because they are essentially identical except for their use of the tfplan/v2 and tfstate/v2 imports.
 
 Each of these modules has several types of functions:
-  * `find_resources` and `find_datasources` functions that find resources or data sources of a specific type that are being created or updated. Note that the tfplan versions of these functions only find resources that are being created or changed and data sources that are being created, changed, or read.
+  * `find_resources` and `find_datasources` functions that find resources or data sources of a specific type. Note that the tfplan versions of these functions only find resources that are being created or changed and data sources that are being created, changed, or read.
+  * `find_resources_by_provider` and `find_datasources_by_provider` functions that find resources or data sources for a specific provider. Note that the tfplan versions of these functions only find resources that are being created or changed and data sources that are being created, changed, or read.
   * `find_resources_being_destroyed` and `find_datasources_being_destroyed` function that find resources or data sources that are being destroyed but not re-created.
   * The `find_blocks` function finds all blocks of a specific type in a single resource.
   * `filter_*` functions that filter a collection of resources, data sources, or blocks to a sub-collection that violates some condition. (When we say resources below, we are including data sources which are really just read-only resources.) The filter functions all accept a collection of resource changes (for tfplan/v2) or resources (for tfstate/v2), an attribute, a value or a list of values, and a boolean, `prtmsg`, which can be `true` or `false` and indicates whether the filter function should print violation messages. The filter functions return a map consisting of 2 items:
@@ -108,6 +109,7 @@ Documentation for each individual function can be found in this directory:
 
 ### The Functions of the aws-functions Module
 The `aws-functions` module (which is located under in the aws/aws-functions directory) has the following functions:
+  * The `find_resources_with_standard_tags` function finds all AWS resources that use standard AWS tags in the current plan that are being created or modified.
   * The `determine_role_arn` function determines the ARN of a role set in the `role_arn` parameter of an AWS provider. It can only determine the role_arn if it is set to either a hard-coded value or to a reference to a single Terraform variable. It sets the role to "complex" if it finds a single non-variable reference or if it finds multiple references. It sets the role to "none" if no role arn is found.
   * The `get_assumed_roles` function gets all roles assumed by AWS providers in the current Terraform configuration. It calls the `determine_role_arn` function.
   * The `validate_assumed_roles_with_list` function validates assumed roles found by the `get_assumed_roles` function against a list of role ARNs.
