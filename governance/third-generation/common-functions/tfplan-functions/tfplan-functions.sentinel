@@ -32,6 +32,20 @@ find_resources = func(type) {
   return resources
 }
 
+### find_resources_by_provider ###
+# Find all resources for a specific provider using the tfplan/v2 import.
+# Only include resources that are being created or updated.
+# Technically, this returns a map of resource changes.
+find_resources_by_provider = func(provider) {
+  resources = filter tfplan.resource_changes as address, rc {
+    rc.provider_name is provider and
+  	rc.mode is "managed" and
+  	(rc.change.actions contains "create" or rc.change.actions contains "update")
+  }
+
+  return resources
+}
+
 ### find_datasources ###
 # Find all data sources of a specific type using the tfplan/v2 import.
 # Only include data sources that are being created, updated, or read.
@@ -39,6 +53,22 @@ find_resources = func(type) {
 find_datasources = func(type) {
   datasources = filter tfplan.resource_changes as address, rc {
   	rc.type is type and
+  	rc.mode is "data" and
+  	(rc.change.actions contains "create" or
+    rc.change.actions contains "update" or
+    rc.change.actions contains "read")
+  }
+
+  return datasources
+}
+
+### find_datasources_by_provider ###
+# Find all data sources for a specific provider using the tfplan/v2 import.
+# Only include data sources that are being created, updated, or read.
+# Technically, this returns a map of resource changes.
+find_datasources_by_provider = func(provider) {
+  datasources = filter tfplan.resource_changes as address, rc {
+  	rc.provider_name is provider and
   	rc.mode is "data" and
   	(rc.change.actions contains "create" or
     rc.change.actions contains "update" or
