@@ -1,0 +1,16 @@
+{
+  "param": {
+    "public_registry": true,
+    "address": "registry.terraform.io",
+    "organization": "Azure",
+    "token": ""
+  },
+  "modules": {
+    "tfconfig-functions": {
+      "path": "../../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
+    }
+  },
+  "mock": {
+    "tfconfig/v2": "mocks/mock-tfconfig-fail.sentinel"
+  }
+}

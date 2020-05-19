@@ -34,3 +34,5 @@ This function calls itself recursively with this code:
 module_addresses += find_descendant_modules(new_module_address)
 ```
 It does not use `config.` before calling itself since that is not necessary when calling a function from inside the module that contains it.
+
+It is also called by the [use-lastest-module-versions.sentinel](../../../cloud-agnostic/http-examples/use-lastest-module-versions.sentinel) policy.

@@ -1,0 +1,67 @@
+# no-hazardous-asteroids-today.sentinel enforces that no
+# "potentially hazardous" asteroids are approaching their
+# closest point to Earth within 1,000,000 miles today. Because if
+# there's a potentially hazardous asteroid reaching within a
+# million miles o' here, we're way too nervous and distracted to
+# be changing our infrastructure right now!
+import "http"
+import "json"
+import "strings"
+import "time"
+
+param api_token
+param danger_distance
+
+print("danger distance set to:", danger_distance)
+
+year = string(time.now.year)
+month = string(time.now.month)
+if length(month) is 1 {
+  month = "0" + month
+}
+day = string(time.now.day)
+if length(day) is 1 {
+  day = "0" + day
+}
+today = strings.join([year, month, day], "-")
+base_url = "https://api.nasa.gov/neo/rest/v1/feed?"
+start_query = "start_date=" + today
+api_query = "&api_key=" + api_token
+full_url = base_url + start_query + api_query
+
+no_close_hazardous_asteroids = func(asteroids, danger_distance) {
+  is_safe = true
+  for asteroids else [] as asteroid {
+    hazardous = asteroid["is_potentially_hazardous_asteroid"]
+    approach_data = asteroid["close_approach_data"][0]
+    distance = approach_data["miss_distance"]["miles"]
+    if float(distance) < danger_distance {
+      diameter = asteroid["estimated_diameter"]["feet"]
+      max_diameter = diameter["estimated_diameter_max"]
+      mph = approach_data["relative_velocity"]["miles_per_hour"]
+
+      warning_message = [
+        "\n😱😱😱\n",
+        "The asteroid '" + string(asteroid["name"]) + "'",
+        "is estimated to be up to " + string(max_diameter),
+        "feet in diameter!\n",
+        "And it's traveling " + string(mph) + " miles per hour\n",
+        "and will reach minimum distance from Earth of " +  distance + " miles!!!\n",
+        "AHHHHHHH!!!!!!\n",
+      ]
+
+      print(strings.join(warning_message, " "))
+      is_safe = false
+    }
+  }
+  return is_safe
+}
+
+resp = http.get(full_url)
+near_earth_objects = json.unmarshal(resp.body)["near_earth_objects"][today]
+#print("near earth objects:", json.unmarshal(resp.body))
+
+no_close_asteroids = no_close_hazardous_asteroids(near_earth_objects, danger_distance)
+main = rule {
+  no_close_asteroids 
+}
