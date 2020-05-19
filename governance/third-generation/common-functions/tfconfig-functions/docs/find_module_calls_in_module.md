@@ -30,3 +30,5 @@ networkModuleCalls = config.find_module_calls_in_module("module.network")
 ```
 
 This function is called by the `find_descendant_modules` function of the tfconfig-functions.sentinel module.
+
+It is also called by the [use-lastest-module-versions.sentinel](../../../cloud-agnostic/http-examples/use-lastest-module-versions.sentinel) policy.

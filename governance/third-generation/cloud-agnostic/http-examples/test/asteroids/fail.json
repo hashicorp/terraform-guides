@@ -1,0 +1,9 @@
+{
+  "param": {
+    "api_token": "",
+    "danger_distance": 10000000
+  },
+  "test": {
+    "main": false
+  }
+}
