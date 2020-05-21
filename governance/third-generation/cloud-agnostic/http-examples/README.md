@@ -64,7 +64,6 @@ You can do this as follows:
 1. Copy the files [check-external-http-api.sentinel](./check-external-http-api.sentinel), [use-latest-module-versions.sentinel](./use-latest-module-versions.sentinel), and [sentinel.hcl](./sentinel.hcl) into a VCS repository. (Don't copy the file sentinel.json which is only for use with the Sentinel CLI.)
 1. Optionally edit the copy of sentinel.hcl to set the enforcement_level for the use-latest-module-versions policy to `soft-mandatory`.
 1. Commit the files to your VCS repository.
-1. Instead of doing the above 3 steps, you could fork the [test-http-policies-and-parameters](https://github.com/rberlind/test-http-policies-and-parameters) repository and use that fork.
 1. [Register a new policy set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#managing-policy-sets) on your Terraform Cloud or Terraform Enterprise server.
 1. Edit the registered policy sets to specify values for the `organization` and `token` parameters making sure you pick an organization that actually has some modules in its PMR and that the token you give is a valid API token with permission in that organization. (You cannot specify parameters until after creating the policy set.) Parameters are added at the bottom of the Policy Set screen.
 1. Be sure to mark your `token` parameter as sensitive so that nobody else can see it in the Terraform Cloud UI.
