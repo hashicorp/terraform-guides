@@ -31,6 +31,12 @@ Please make sure you do not check variables files containing sensitive items suc
 
 The delimited file containing your variables should normally be separated with semicolons (`;`) with each variable on its own line. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive` in that order with the last two corresponding to the hcl and sensitive check boxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"`.
 
+An example CSV entry:
+
+key;value;<variable type: terraform or env>;<HCL true or false>;<sensitive: true or false>;description
+
+aws_region;us-east-1;terraform;false;false;preferred region
+
 Be sure to set `sensitive` to `"true"` for any items such as cloud credentials that you would not want other people with access to the TFE workspace to see.
 
 You might also have to make some substitutions and escape some special characters both for ordinary and HCL variables. In particular, you need to single-escape forward slashes (`/`) in the values of all variables and replace line breaks with `\\n` in Terraform variables and with spaces in environment variables (which do not allow line breaks). (One case in which you will want to replace line breaks with `\\n` in Terraform variables is when a variable provides the contents of a private SSH key.) You also need to triple-escape any literal `\n` characters in environment variables (converting them to `\\\\n`) since TFE will treat them as actual line breaks and give errors.
