@@ -11,9 +11,11 @@ module "tfconfig-functions" {
 }
 
 policy "restrict-vm-cpu-and-memory" {
+    source = "./restrict-vm-cpu-and-memory.sentinel"
     enforcement_level = "advisory"
 }
 
 policy "restrict-vm-disk-size" {
+    source = "./restrict-vm-disk-size.sentinel"
     enforcement_level = "advisory"
 }
