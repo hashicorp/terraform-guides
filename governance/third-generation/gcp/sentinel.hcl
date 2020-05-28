@@ -11,9 +11,11 @@ module "tfconfig-functions" {
 }
 
 policy "enforce-mandatory-labels" {
+    source = "./enforce-mandatory-labels.sentinel"
     enforcement_level = "advisory"
 }
 
 policy "restrict-gce-machine-type" {
+    source = "./restrict-gce-machine-type.sentinel"
     enforcement_level = "advisory"
 }

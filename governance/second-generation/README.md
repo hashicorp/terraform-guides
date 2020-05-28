@@ -6,6 +6,8 @@ Additionally, it contains [Policy Set](https://www.terraform.io/docs/cloud/senti
 
 These policies are generally intended for use with Terraform 0.11 and 0.12. But some policies such as those that check cost estimates can only be used with Terraform 0.12.
 
+These policies use the older Terraform Sentinel v1 imports. If you are only using Terraform 0.12 and higher, we recommend you use the newer [third-generation](../third-generation) policies which use the newer Terraform Sentinel v2 imports and Sentinel modules.
+
 ## Note about Using These Policies with Terraform Cloud and Enterprise
 These policies test whether resources are being destroyed using the [destroy](https://www.terraform.io/docs/cloud/sentinel/import/tfplan.html#value-destroy) and [requires_new](https://www.terraform.io/docs/cloud/sentinel/import/tfplan.html#value-requires_new) values that were added to Terraform Cloud (https://app.terraform.io) on 8/15/2019 and to Terraform Enterprise (formerly known as PTFE) in the v201909-1 release on 9/13/2019. Please upgrade to that release or higher before using these policies on your Terraform Enterprise server. (If you are not currently able to upgrade your TFE server, see an older version of this document for a workaround that allows you to use these policies on older versions of TFE.)
 

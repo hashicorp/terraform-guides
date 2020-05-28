@@ -11,4 +11,6 @@ While these policies have the virtue of being simple and can be useful, they hav
 
 Finally, none of these policies included [mock files](https://www.terraform.io/docs/enterprise/sentinel/mock.html) and [test files](https://docs.hashicorp.com/sentinel/commands/config#test-cases) that would allow them to be tested with the [Sentinel Simulator](https://docs.hashicorp.com/sentinel/commands).
 
-We encourage users to use the [second-generation policies](../second-generation) in this repository and to model new policies on them instead of on these first-generation policies.
+These policies use the older Terraform Sentinel v1 imports.
+
+We encourage users to use the [second-generation policies](../second-generation) in this repository if they are still using Terraform 0.11 and to use the [third-generation policies](../third-generation) if they are using Terraform 0.12 or higher and to model new policies on them instead of on these first-generation policies.

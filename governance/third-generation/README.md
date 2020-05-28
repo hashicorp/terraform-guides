@@ -12,19 +12,19 @@ To learn more about the new Terraform Sentinel v2 imports, see this [blog post](
 
 To learn more about Sentinel Modules, see this [blog post](https://discuss.hashicorp.com/t/sentinel-v0-15-0-introducing-modules/6579).
 
-However, while using Sentinel modules is now possible in Terraform Cloud, the modules have to be in files located in or underneath the VCS directory containing the policy set definition file, `sentinel.hcl`.
-
-So, while these third-generation policies and common functions **can** be used as organized in this repository with the Sentinel CLI, they **cannot** yet be used *as organized* in Terraform Cloud. This will be remedied in the near future. We will update this document when that occurs.
-
-For now, if you want to use these policies with Terraform Cloud, you will need to create a repository like this [one](https://github.com/rberlind/sentinel-demo) in which the "common-functions" directory has been placed in the same VCS directory as the `sentinel.hcl` file. The directory does not have to be the top-level directory within the VCS repository.
-
 ## Using These Policies with Terraform Enterprise
 These policies and the common functions they use can be used with Terraform Enterprise (TFE) v202004-1 and higher. That version was released on April 24, 2020.
 
+However, while using Sentinel modules is now possible in Terraform Enterprise, the modules have to be in files located in or underneath the VCS directory containing the policy set definition file, `sentinel.hcl`.
+
+So, while these third-generation policies and common functions **can** be used as organized in this repository with the Sentinel CLI and Terraform Cloud, they **cannot** yet be used *as organized* in Terraform Enterprise. This will be remedied in a new TFE release at the end of June, 2020.
+
+For now, if you want to use these policies with Terraform Enterprise, you will need to create a repository like this [one](https://github.com/rberlind/sentinel-demo) in which the "common-functions" directory has been placed in the same VCS directory as the `sentinel.hcl` file. The directory does not have to be the top-level directory within the VCS repository.
+
 ## Important Characterizations of the New Policies
 These new third-generation policies have several important characteristics:
-1. As mentioned above, they use the new Terraform Sentinel v2 imports which are more closely aligned with Terraform 0.12's data model and leverage the recently added [filter expression](https://docs.hashicorp.com/sentinel/language/collection-operations/#filter-expression) and make it easier to restrict policies to specific operations performed by Terraform against resources.
-1. The new policies use new, parameterized functions defined in four [Sentinel modules]. Since they are defined in modules, their implementations do **not** need to be pasted into the policies. This is a **HUGE** improvement over the second-generation common functions! (As mentioned above, this benefit is only realized for now with the Sentinel CLI and TFC, but it will be extended to TFE soon.)
+1. As mentioned above, they use the new Terraform Sentinel v2 imports, which are more closely aligned with Terraform 0.12's data model and leverage the recently added [filter expression](https://docs.hashicorp.com/sentinel/language/collection-operations/#filter-expression), and make it easier to restrict policies to specific operations performed by Terraform against resources.
+1. The new policies use new, parameterized functions defined in four [Sentinel modules]. Since they are defined in modules, their implementations do **not** need to be pasted into the policies. This is a **HUGE** improvement over the second-generation common functions!
 1. A related benefit of using functions from modules is that the policies themselves do not have any `for` loops or `if/else` conditionals. This makes it easier for users to understand the sample policies and to write their own policies that copy them.
 1. The new policies have been written in a way that causes all violations to be reported. This means a user who violates a policy will be informed about all of their violations in a single shot without having to run multiple Sentinel CLI tests or TFC/TFE plans.
 1. The policies print out the full address of each resource instance that does violate a rule in the same format that is used in plan and apply logs, namely `module.<A>.module.<B>.<type>.<name>[<index>]`. (Note that `index` will only be present if multiple instances of a resource are defined either with the `count` or the `for_each` meta-arguments.) This allows writers of Terraform code to quickly determine the resources they need to fix even if the violations occur in modules that they did not write.
@@ -137,12 +137,14 @@ As mentioned in the introduction of this file, this repository contains [Policy 
 
 Each of these files is called "sentinel.hcl" and should list all policies in its directory with an [Enforcement Level](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#enforcement-levels) of "advisory". This means that registering these policy sets in a Terraform Cloud or Terraform Enterprise organization will not actually have any impact on provisioning of resources from those organizations even if some of the policy checks do report violations.
 
+The `sentinel.hcl` files list the source of each policy like this: `source = "./<policy>.sentinel"`. While including a source for a policy in the same directory as the `sentinel.hcl` file is not currently required, it will be required in the future. So, we added them now to avoid future problems.
+
 The `sentinel.hcl` files should also include any Sentinel modules used by any of the policies they list.
 
 Users who wish to actually enforce any of these policies should change the enforcement levels of them to "soft-mandatory" or "hard-mandatory" in their forks of this repository or in other VCS repositories that contain copies of the policies.
 
 ## Adding Policies
-If you add a new third-generation policy to one of the cloud directories or the cloud-agnostic directory, please add a new stanza to that directory's sentinel.hcl file listing the name of your new policy.
+If you add a new third-generation policy to one of the cloud directories or the cloud-agnostic directory, please add a new stanza to that directory's sentinel.hcl file listing the name and source of your new policy.
 
 The Sentinel Simulator expects test cases to be in a test/\<policy\> directory under the directory containing the policy being tested where \<policy\> is the name of the policy not including the ".sentinel" extension. When you add new policies for any of the clouds, please be sure to create a new directory with the same name of the policy under that cloud's directory and then add test cases and mock files to that directory.
 
