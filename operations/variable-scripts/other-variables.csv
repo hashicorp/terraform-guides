@@ -1,5 +1,5 @@
-aws_region;us-east-1;terraform;false;false
-instance_type;t2.micro;terraform;false;false
-CONFIRM_DESTROY;1;env;false;false
-AWS_ACCESS_KEY_ID;AKIA3449403293;env;false;true
-AWS_SECRET_ACCESS_KEY;dds9ip2330323wkd022ldw;env;false;true
+aws_region;us-east-1;terraform;false;false;preferred region
+instance_type;t2.micro;terraform;false;false;choose an appropriate instance size
+CONFIRM_DESTROY;1;env;false;false;allows destroy plans to be executed
+AWS_ACCESS_KEY_ID;AKIA3449403293;env;false;true;this is a secure value
+AWS_SECRET_ACCESS_KEY;dds9ip2330323wkd022ldw;env;false;true; this is a secure value

@@ -29,7 +29,13 @@ The set-variables.sh script accepts two arguments:
 
 Please make sure you do not check variables files containing sensitive items such as cloud credentials into source code management systems.
 
-The delimited file containing your variables should normally be separated with semicolons (`;`) with each variable on its own line. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive` in that order with the last two corresponding to the hcl and sensitive check boxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"`.
+The delimited file containing your variables should normally be separated with semicolons (`;`) with each variable on its own line. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive`, and `description` in that order with `hcl` and `sensitive` corresponding to the hcl and sensitive check boxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"`. `description` should be text without quotes.
+
+Here is an example CSV entry:
+```
+key;value;<variable type: terraform or env>;<HCL true or false>;<sensitive: true or false>;description
+aws_region;us-east-1;terraform;false;false;preferred region
+```
 
 Be sure to set `sensitive` to `"true"` for any items such as cloud credentials that you would not want other people with access to the TFE workspace to see.
 

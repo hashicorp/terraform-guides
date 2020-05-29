@@ -117,7 +117,8 @@ cat > variable.template.json <<EOF
       "value":"my-value",
       "category":"my-category",
       "hcl":my-hcl,
-      "sensitive":my-sensitive
+      "sensitive":my-sensitive,
+      "description":"my-description"
     }
   },
   "relationships": {
@@ -147,13 +148,13 @@ if [ "$delete_first" == "true" ]; then
 fi
 
 # Set variables in workspace
-while IFS=${delimiter} read -r key value category hcl sensitive
+while IFS=${delimiter} read -r key value category hcl sensitive description
 do
   # Create variable.json from variable.template.json
-  sed -e "s/my-workspace/${workspace_id}/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json  > variable.json
+  sed -e "s/my-workspace/${workspace_id}/" -e "s/my-key/$key/" -e "s/my-value/$value/" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" -e "s/my-description/$description/" < variable.template.json  > variable.json
 
   # Make the API call to set the variable
-  echo "Setting $category variable $key with value $value, hcl: $hcl, sensitive: $sensitive"
+  echo "Setting $category variable $key with value $value, hcl: $hcl, sensitive: $sensitive, with a description of $description"
   upload_variable_result=$(curl -s --header "Authorization: Bearer $token" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 
   # Show JSON returned from the TFE API call
