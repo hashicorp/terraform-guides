@@ -29,7 +29,11 @@ The set-variables.sh script accepts two arguments:
 
 Please make sure you do not check variables files containing sensitive items such as cloud credentials into source code management systems.
 
-The delimited file containing your variables should normally be separated with semicolons (`;`) with each variable on its own line. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive` in that order with the last two corresponding to the hcl and sensitive check boxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"`.
+The delimited file containing your variables should normally be separated with semicolons (`;`) with each variable on its own line. The columns are `key` (the name of the variable), `value`, `category`, `hcl`, and `sensitive`, and `description` in that order with the last two corresponding to the hcl and sensitive check boxes of variables in the TFE UI. See [Workspace Variables](https://www.terraform.io/docs/enterprise/workspaces/variables.html). `category` should be `terraform` for Terraform variables and `env` for environment variables. `hcl` and `sensitive` should be `"true"` or `"false"` and `description` is a free-form text without quotes.
+
+### An example CSV entry:
+key;value;<variable type: terraform or env>;<HCL true or false>;<sensitive: true or false>;description
+aws_region;us-east-1;terraform;false;false;preferred region
 
 Be sure to set `sensitive` to `"true"` for any items such as cloud credentials that you would not want other people with access to the TFE workspace to see.
 
@@ -52,16 +56,6 @@ Alternatively, you can do the following global substitutions in Atom or another 
 1. Replace each `\n` with `\\\\n`.
 
 When you paste the contents of the processed GCP credentials file into your delimited variables file, be careful to not add an actual newline between it and `;env;false;true`.
-
-### CSV Format Details
-
-The CSV file supports all values of the TFE Variables API endpoint. Here is the expected format for the CSV:
-
-key;value;<variable type: terraform or env>;<HCL true or false>;<sensitive: true or false>;description
-
-And here is an example for a Terraform variable aws_region:
-
-aws_region;us-east-1;terraform;false;false;preferred region
 
 ### Examples
 Here are two examples for running the set_variables.sh script:
