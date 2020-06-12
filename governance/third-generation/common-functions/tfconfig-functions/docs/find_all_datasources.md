@@ -27,4 +27,4 @@ Here is an example of calling this function, assuming that the tfconfig-function
 allDatasources = config.find_all_datasources()
 ```
 
-This function is used by the [blacklist-datasources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/blacklist-datasources.sentinel) and [whitelist-datasources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/whitelist-datasources.sentinel) policies.
+This function is used by the [prohibited-datasources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/prohibited-datasources.sentinel) and [allowed-datasources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/allowed-datasources.sentinel) policies.

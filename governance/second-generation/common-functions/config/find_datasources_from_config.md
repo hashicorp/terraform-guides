@@ -41,4 +41,4 @@ find_datasources_from_config("google_compute_instance")
 
 find_datasources_from_config("vsphere_nas_datastore")
 ```
-You can see this function being used in context in the policy [blacklist-datasources](../../cloud-agnostic/blacklist-datasources.sentinel).
+You can see this function being used in context in the policy [prohibited-datasources](../../cloud-agnostic/prohibited-datasources.sentinel).

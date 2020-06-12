@@ -1,14 +1,14 @@
-# Validate that resources of blacklisted types are not being destroyed
-validate_destroyed_resources = func(blacklist) {
+# Validate that resources of prohibited types are not being destroyed
+validate_destroyed_resources = func(prohibited_list) {
 
   valid = true
 
-  for blacklist as type {
+  for prohibited_list as type {
     found_resources = find_resources_from_plan(type)
     for found_resources as address, r {
       if r.destroy and not r.requires_new {
         print("You are trying to destroy a resource", address,
-              "of blacklisted type", type)
+              "of prohibited type", type)
         valid = false
       }
     }

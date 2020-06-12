@@ -23,7 +23,7 @@ resource "google_sql_database_instance" "cloudsql-postgres-master" {
             ipv4_enabled = true
             require_ssl = false
             authorized_networks = {
-                name = "terraform-server-IP-whitelist"
+                name = "terraform-server-IP-allowed-list"
                 value = "${var.authorized_network}"
             }
         }

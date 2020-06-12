@@ -1,16 +1,16 @@
-policy "blacklist-datasources" {
+policy "prohibited-datasources" {
     enforcement_level = "advisory"
 }
 
-policy "blacklist-providers" {
+policy "prohibited-providers" {
     enforcement_level = "advisory"
 }
 
-policy "blacklist-provisioners" {
+policy "prohibited-provisioners" {
     enforcement_level = "advisory"
 }
 
-policy "blacklist-resources" {
+policy "prohibited-resources" {
     enforcement_level = "advisory"
 }
 
@@ -22,7 +22,7 @@ policy "limit-proposed-monthly-cost" {
     enforcement_level = "advisory"
 }
 
-policy "prevent-destruction-of-blacklisted-resources" {
+policy "prevent-destruction-of-prohibited-resources" {
     enforcement_level = "advisory"
 }
 

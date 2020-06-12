@@ -28,13 +28,13 @@ This function prints the violation messages if the parameter, `prtmsg`, was set 
 Here are some examples of calling this function, assuming that the tfconfig-functions.sentinel file that contains it has been imported with the alias `plan`:
 ```
 violatingProviders = config.filter_attribute_in_list(allProviders,
-                     "name", blacklist, false)
+                     "name", prohibited_list, false)
 
 violatingResources = config.filter_attribute_in_list(allResources,
-                     "type", blacklist, false)
+                     "type", prohibited_list, false)
 
 violatingProvisioners = config.filter_attribute_in_list(allProvisioners,
-                     "type", blacklist, false)
+                     "type", prohibited_list, false)
 ```
 
-This function is used by several cloud-agnostic policies that blacklist certain types of items including [blacklist-datasources.sentinel](../../../cloud-agnostic/blacklist-datasources.sentinel), [blacklist-providers.sentinel](../../../cloud-agnostic/blacklist-providers.sentinel), [blacklist-provisioners.sentinel](../../../cloud-agnostic/blacklist-provisioners.sentinel), and [blacklist-resources.sentinel](../../../cloud-agnostic/blacklist-resources.sentinel).
+This function is used by several cloud-agnostic policies that prohibit certain types of items including [prohibited-datasources.sentinel](../../../cloud-agnostic/prohibited-datasources.sentinel), [prohibited-providers.sentinel](../../../cloud-agnostic/prohibited-providers.sentinel), [prohibited-provisioners.sentinel](../../../cloud-agnostic/prohibited-provisioners.sentinel), and [prohibited-resources.sentinel](../../../cloud-agnostic/prohibited-resources.sentinel).

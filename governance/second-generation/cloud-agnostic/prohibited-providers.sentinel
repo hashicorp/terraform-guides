@@ -1,4 +1,4 @@
-# This policy uses the tfconfig import to blacklist specified providers
+# This policy uses the tfconfig import to prohibited specified providers
 # across all modules
 
 ##### Imports #####
@@ -7,8 +7,8 @@ import "strings"
 
 ##### Functions #####
 
-# Prevent providers in non-root modules
-validate_providers = func(blacklist) {
+# Prevent providers that are not allowed
+validate_providers = func(prohibited_list) {
 
   validated = true
 
@@ -17,13 +17,13 @@ validate_providers = func(blacklist) {
     providers = tfconfig.module(path).providers
     # Iterate over providers of the module
     for providers as provider {
-      if provider in blacklist {
+      if provider in prohibited_list {
         if length(path) is 0 {
           print("The root module has provider", provider,
-                "from the blacklist:", blacklist )
+                "from the prohibited list:", prohibited_list )
         } else {
           print("The module module." + strings.join(path, ".module."),
-                "has provider", provider, "from the blacklist:", blacklist )
+                "has provider", provider, "from the prohibited list:", prohibited_list )
         }
 
         validated = false
@@ -36,8 +36,8 @@ validate_providers = func(blacklist) {
 
 ##### Lists #####
 
-# List of blacklisted providers
-blacklist = [
+# List of prohibited providers
+prohibited_list = [
   "external",
   "http",
 ]
@@ -45,7 +45,7 @@ blacklist = [
 ##### Rules #####
 
 # Call the validation function
-providers_validated = validate_providers(blacklist)
+providers_validated = validate_providers(prohibited_list)
 
 # Main rule
 main = rule {

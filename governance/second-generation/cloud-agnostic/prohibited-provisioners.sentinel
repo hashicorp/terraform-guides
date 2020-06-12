@@ -1,4 +1,4 @@
-# This policy uses the tfconfig import to prevent blacklisted provisioners
+# This policy uses the tfconfig import to prevent prohibited provisioners
 # from being used
 
 ##### Imports #####
@@ -48,8 +48,8 @@ find_all_provisioners = func() {
   return provisioners
 }
 
-# Validate that blacklisted provisioners are not present
-validate_provisioners = func(black_list) {
+# Validate that prohibited provisioners are not present
+validate_provisioners = func(prohibited_list) {
 
   validated = true
 
@@ -58,10 +58,10 @@ validate_provisioners = func(black_list) {
 
   # Loop through the provisioners
   for provisioners as address, p {
-      if p["type"] in black_list {
+      if p["type"] in prohibited_list {
         resource_address = strings.split(address, "-")[0]
         print(resource_address, "has provisioner of type", p["type"],
-              "that is in the black list:", black_list)
+              "that is in the prohibited list:", prohibited_list)
         validated = false
       }
   }
@@ -71,13 +71,13 @@ validate_provisioners = func(black_list) {
 
 ##### Lists #####
 
-# List of blacklisted provisioners
-blacklisted_provisioners = ["local-exec", "remote-exec"]
+# List of prohibited provisioners
+prohibited_provisioners = ["local-exec", "remote-exec"]
 
 ##### Rules #####
 
 # Call the validation function
-provisioners_validated = validate_provisioners(blacklisted_provisioners)
+provisioners_validated = validate_provisioners(prohibited_provisioners)
 
 # Main rule
 main = rule {

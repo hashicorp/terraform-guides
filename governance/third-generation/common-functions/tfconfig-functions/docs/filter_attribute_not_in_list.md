@@ -28,13 +28,13 @@ This function prints the violation messages if the parameter, `prtmsg`, was set 
 Here are some examples of calling this function, assuming that the tfconfig-functions.sentinel file that contains it has been imported with the alias `plan`:
 ```
 violatingProviders = config.filter_attribute_not_in_list(allProviders,
-                     "name", whitelist, false)
+                     "name", allowed_list, false)
 
 violatingResources = config.filter_attribute_not_in_list(allResources,
-                     "type", whitelist, false)
+                     "type", allowed_list, false)
 
 violatingProvisioners = config.filter_attribute_not_in_list(allProvisioners,
-                     "type", whitelist, false)
+                     "type", allowed_list, false)
 ```
 
-This function is used by several cloud-agnostic policies that whitelist certain types of items including [whitelist-datasources.sentinel](../../../cloud-agnostic/whitelist-datasources.sentinel), [whitelist-providers.sentinel](../../../cloud-agnostic/whitelist-providers.sentinel), [whitelist-provisioners.sentinel](../../../cloud-agnostic/whitelist-provisioners.sentinel), and [whitelist-resources.sentinel](../../../cloud-agnostic/whitelist-resources.sentinel).
+This function is used by several cloud-agnostic policies that allow certain types of items including [allowed-datasources.sentinel](../../../cloud-agnostic/allowed-datasources.sentinel), [allowed-providers.sentinel](../../../cloud-agnostic/allowed-providers.sentinel), [allowed-provisioners.sentinel](../../../cloud-agnostic/allowed-provisioners.sentinel), and [allowed-resources.sentinel](../../../cloud-agnostic/allowed-resources.sentinel).

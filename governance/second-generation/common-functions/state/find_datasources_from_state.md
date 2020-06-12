@@ -41,4 +41,4 @@ find_datasources_from_state("google_compute_image")
 
 find_datasources_from_state("vsphere_datastore")
 ```
-You can see this function being used in context in the policies [blacklist-datasources](../../cloud-agnostic/blacklist-dataources.sentinel) and [restrict-ami-owners](../../aws/restrict-ami-owners.sentinel).
+You can see this function being used in context in the policies [prohibited-datasources](../../cloud-agnostic/prohibited-dataources.sentinel) and [restrict-ami-owners](../../aws/restrict-ami-owners.sentinel).

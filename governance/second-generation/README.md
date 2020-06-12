@@ -60,7 +60,7 @@ However, given the amount of time that Terraform 0.12 has been GA, if you only w
 Ensure that the pass and fail mocks cause the policy to pass and fail respectively. If you add a policy with multiple conditions, add mock files that fail each condition and one that fails all of them. You can also add mocks under the cloud's mocks directory if your policy uses a resource for which no mocks currently exist.
 
 ### Policies that Use the tfconfig Import
-The cloud-agnostic policies [prevent-remote-exec-provisioners-on-null-resources](./cloud-agnostic/prevent-remote-exec-provisioners-on-null-resources.sentinel) and [blacklist-provisioners](./cloud-agnostic/blacklist-provisioners.sentinel) policies uses the `tfconfig` import.
+The cloud-agnostic policies [prevent-remote-exec-provisioners-on-null-resources](./cloud-agnostic/prevent-remote-exec-provisioners-on-null-resources.sentinel) and [prohibited-provisioners](./cloud-agnostic/prohibited-provisioners.sentinel) policies uses the `tfconfig` import.
 
 The `tfconfig` import treats static values and references to expressions including variables and attributes of other resources differently in Terraform 0.12. Static values will end up in the `config` value of the resource; but expressions will end up in the `references` value instead. In Terraform 0.11, static values and expressions both ended up in the `config` value. So, it is very important that policies using the `tfconfig` import check both the `config` and `references` values of resources.
 

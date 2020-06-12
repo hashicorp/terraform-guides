@@ -35,4 +35,4 @@ Here is an example of using this function:
 ```
 provisioners = find_all_provisioners()
 ```
-You can see this function being used in context in the policy [blacklist-provisioners](../../cloud-agnostic/blacklist-provisioners.sentinel) which prevents `local-exec` and `remote-exec` provisioners from being used in all resources in all modules.
+You can see this function being used in context in the policy [prohibited-provisioners](../../cloud-agnostic/prohibited-provisioners.sentinel) which prevents `local-exec` and `remote-exec` provisioners from being used in all resources in all modules.
