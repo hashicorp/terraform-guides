@@ -27,4 +27,4 @@ Here is an example of calling this function, assuming that the tfconfig-function
 allResources = config.find_all_resources()
 ```
 
-This function is used by the [blacklist-resources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/blacklist-resources.sentinel) and [whitelist-resources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/whitelist-resources.sentinel) policies.
+This function is used by the [prohibited-resources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/prohibited-resources.sentinel) and [allowed-resources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/allowed-resources.sentinel) policies.

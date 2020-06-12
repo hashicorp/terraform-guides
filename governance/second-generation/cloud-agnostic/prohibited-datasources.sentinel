@@ -1,4 +1,4 @@
-# This policy prevents the use of blacklisted datasources
+# This policy prevents the use of prohibited datasources
 # using the tfconfig import
 
 ##### Imports #####
@@ -37,15 +37,16 @@ find_datasources_from_config = func(type) {
 }
 
 
-# Validate that blacklisted datasources are not present
-validate_datasources = func(blacklist) {
+# Validate that prohibited datasources are not present
+validate_datasources = func(prohibited_list) {
   valid = true
 
-  for blacklist as type {
+  for prohibited_list as type {
     found_datasources = find_datasources_from_config(type)
 
     for found_datasources as address, d {
-      print("Blacklisted datasource", address, "was found")
+      print("Datasource", address, "was found that is",
+            "in the prohibited list", prohibited_list)
       valid = false
     }
   }
@@ -54,8 +55,8 @@ validate_datasources = func(blacklist) {
 
 ##### Lists #####
 
-# List of blacklisted datasources
-blacklist = [
+# List of prohibited datasources
+prohibited_list = [
   "external",
   "http",
 ]
@@ -63,7 +64,7 @@ blacklist = [
 ##### Rules #####
 
 # Call the validation function
-datasources_validated = validate_datasources(blacklist)
+datasources_validated = validate_datasources(prohibited_list)
 
 # Main rule
 main = rule {

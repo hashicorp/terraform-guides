@@ -1,4 +1,5 @@
-# This policy prevents any changes to resources that are not whitelisted
+# This policy prevents any changes to resources that are not in
+# an allowed list
 
 ##### Imports #####
 
@@ -24,15 +25,15 @@ find_resource_types_from_plan = func() {
   return types
 }
 
-# Validate that whitelisted resources are not present
-validate_resources = func(whitelist) {
+# Validate that disallowed resources are not present
+validate_resources = func(allowed_list) {
   valid = true
 
   found_types = find_resource_types_from_plan()
 
   for found_types as type {
-    if type not in whitelist {
-      print("Type", type, "is not in the resources whitelist", whitelist)
+    if type not in allowed_list {
+      print("Type", type, "is not in the list of allowed resources", allowed_list)
       valid = false
     }
   }
@@ -41,8 +42,8 @@ validate_resources = func(whitelist) {
 
 ##### Lists #####
 
-# List of whitelisted resources
-whitelist = [
+# List of allowed resources
+allowed_list = [
   "aws_vpc",
   "aws_instance",
 ]
@@ -50,7 +51,7 @@ whitelist = [
 ##### Rules #####
 
 # Call the validation function
-resources_validated = validate_resources(whitelist)
+resources_validated = validate_resources(allowed_list)
 
 # Main rule
 main = rule {

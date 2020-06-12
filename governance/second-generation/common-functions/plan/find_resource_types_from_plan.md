@@ -34,4 +34,4 @@ Here is an example of using this function:
 ```
 find_resource_types_from_plan()
 ```
-You can see this function being used in context in the policy [whitelist_resources](../../cloud-agnostic/whitelist-resources.sentinel)in this repository.
+You can see this function being used in context in the policy [allowed-resources](../../cloud-agnostic/allowed-resources.sentinel)in this repository.

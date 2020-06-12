@@ -25,4 +25,4 @@ Here is an example of calling this function, assuming that the tfplan-functions.
 resourcesBeingDestroyed = plan.find_resources_being_destroyed()
 ```
 
-This function is used by the [prevent-destruction-of-blacklisted-resources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/prevent-destruction-of-blacklisted-resources.sentinel) policy.
+This function is used by the [prevent-destruction-of-prohibited-resources.sentinel (Cloud Agnostic)](../../../cloud-agnostic/prevent-destruction-of-prohibited-resources.sentinel) policy.

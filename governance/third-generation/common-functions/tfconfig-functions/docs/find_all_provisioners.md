@@ -27,4 +27,4 @@ Here is an example of calling this function, assuming that the tfconfig-function
 allProvisioners = config.find_all_provisioners()
 ```
 
-This function is used by the [blacklist-provisioners.sentinel (Cloud Agnostic)](../../../cloud-agnostic/blacklist-provisioners.sentinel) and [whitelist-provisioners.sentinel (Cloud Agnostic)](../../../cloud-agnostic/whitelist-provisioners.sentinel) policies.
+This function is used by the [prohibited-provisioners.sentinel (Cloud Agnostic)](../../../cloud-agnostic/prohibited-provisioners.sentinel) and [allowed-provisioners.sentinel (Cloud Agnostic)](../../../cloud-agnostic/allowed-provisioners.sentinel) policies.

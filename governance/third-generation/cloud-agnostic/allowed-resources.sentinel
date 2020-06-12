@@ -1,11 +1,12 @@
-# This policy uses the tfconfig/v2 import to whitelist specified resources
+# This policy uses the tfconfig/v2 import to allow resources
+# from an allowed list
 
 # Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
 # with alias "config"
 import "tfconfig-functions" as config
 
-# List of whitelisted resources
-whitelist = ["aws_instance", "azurerm_virtualmachine",
+# List of allowed resources
+allowed_list = ["aws_instance", "azurerm_virtualmachine",
             "google_compute_instance"]
 
 # Get all Resources
@@ -14,10 +15,7 @@ allResources = config.find_all_resources()
 # Filter to resources with violations
 # Warnings will be printed for all violations since the last parameter is true
 violatingResources = config.filter_attribute_not_in_list(allResources,
-                     "type", whitelist, false)
-
-# Print any violations
-config.print_violations(violatingResources["messages"], "Resource not in whitelist:")
+                     "type", allowed_list, true)
 
 # Main rule
 main = rule {

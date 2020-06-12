@@ -14,23 +14,23 @@ module "tfrun-functions" {
     source = "../common-functions/tfrun-functions/tfrun-functions.sentinel"
 }
 
-policy "blacklist-datasources" {
-    source = "./blacklist-datasources.sentinel"
+policy "prohibited-datasources" {
+    source = "./prohibited-datasources.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "blacklist-providers" {
-    source = "./blacklist-providers.sentinel"
+policy "prohibited-providers" {
+    source = "./prohibited-providers.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "blacklist-provisioners" {
-    source = "./blacklist-provisioners.sentinel"
+policy "prohibited-provisioners" {
+    source = "./prohibited-provisioners.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "blacklist-resources" {
-    source = "./blacklist-resources.sentinel"
+policy "prohibited-resources" {
+    source = "./prohibited-resources.sentinel"
     enforcement_level = "advisory"
 }
 
@@ -49,8 +49,8 @@ policy "limit-proposed-monthly-cost" {
     enforcement_level = "advisory"
 }
 
-policy "prevent-destruction-of-blacklisted-resources" {
-    source = "./prevent-destruction-of-blacklisted-resources.sentinel"
+policy "prevent-destruction-of-prohibited-resources" {
+    source = "./prevent-destruction-of-prohibiteded-resources.sentinel"
     enforcement_level = "advisory"
 }
 
@@ -74,22 +74,22 @@ policy "validate-variables-have-descriptions" {
     enforcement_level = "advisory"
 }
 
-policy "whitelist-datasources" {
-    source = "./whitelist-datasources.sentinel"
+policy "allowed-datasources" {
+    source = "./allowed-datasources.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "whitelist-providers" {
-    source = "./whitelist-providers.sentinel"
+policy "allowed-providers" {
+    source = "./allowed-providers.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "whitelist-provisioners" {
-    source = "./whitelist-provisioners.sentinel"
+policy "allowed-provisioners" {
+    source = "./allowed-provisioners.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "whitelist-resources" {
-    source = "./whitelist-resources.sentinel"
+policy "allowed-resources" {
+    source = "./allowed-resources.sentinel"
     enforcement_level = "advisory"
 }

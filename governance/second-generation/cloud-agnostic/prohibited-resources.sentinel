@@ -1,4 +1,4 @@
-# This policy prevents any destruction of resources of blacklisted types.
+# This policy prevents prohibited resources from being used.
 
 ##### Imports #####
 
@@ -38,40 +38,35 @@ find_resources_from_plan = func(type) {
   return resources
 }
 
-# Validate that resources of blacklisted types are not being destroyed
-validate_destroyed_resources = func(blacklist) {
-
+# Validate that prohibited resources are not present
+validate_resources = func(prohibited_list)  {
   valid = true
 
-  for blacklist as type {
+  for prohibited_list as type {
     found_resources = find_resources_from_plan(type)
+
     for found_resources as address, r {
-      if r.destroy and not r.requires_new {
-        print("You are trying to destroy a resource", address,
-              "of blacklisted type", type)
-        valid = false
-      }
+      print("Prohibited resource", address, "was found that is",
+            "in the prohibited list", prohibited_list)
+      valid = false
     }
   }
-
   return valid
 }
 
 ##### Lists #####
 
-# List of blacklisted resources
-blacklist = [
+# List of prohibited resources
+prohibited_list = [
   "aws_vpc",
-  "azurerm_virtual_network",
-  "google_compute_network",
 ]
 
 ##### Rules #####
 
 # Call the validation function
-destroy_validated = validate_destroyed_resources(blacklist)
+resources_validated = validate_resources(prohibited_list)
 
 # Main rule
 main = rule {
-  destroy_validated
+  resources_validated
 }
