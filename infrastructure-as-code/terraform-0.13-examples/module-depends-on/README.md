@@ -306,10 +306,11 @@ fruit = [
   "apple",
   "banana",
   "orange",
+]
 ```
-Note that the reads are done **after** the writes and that the `fruit` output has the desired names of the 3 fruits. So, this approach has succeeded.
+Note that the reads are done in the apply **after** the writes and that the `fruit` output has the desired names of the 3 fruits. So, this approach has succeeded.
 
-However, it was a bit painful because we had to add an extraneous variable and extraneous data source and add 3 `depends_on` arguments.
+However, it was a bit painful because we had to add an extraneous variable, an extraneous output, an extraneous null resource, and 3 `depends_on` arguments.
 
 Please run `terraform destroy` before continuing to the last variation in this example.
 
@@ -367,6 +368,6 @@ fruit = [
 
 Note that the reads were done after the writes and that the output shows the names of the 3 fruits as desired.
 
-While the result is quite similar to our second attempt, the code is less complex.  We did not need to create extraneous variables and null resources and only needed one `depends_on` argument, this time at the module level instead of on each resource of the module.
+While the result is quite similar to our second attempt, the code is less complex.  We did not need to create extraneous objects and only needed one `depends_on` argument, this time at the module level instead of on each data source of the second module.
 
 Finally, run `terraform destroy` and type "yes" when prompted to destroy the files that were created.
