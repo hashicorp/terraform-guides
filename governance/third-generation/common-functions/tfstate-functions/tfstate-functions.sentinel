@@ -97,9 +97,10 @@ to_string = func(obj) {
         if index < lastIndex {
           output += to_string(value) + ", "
         } else {
-          output += to_string(value) + "]"
+          output += to_string(value)
         }
       }
+      output += "]"
       return output
     when "map":
       output = "{"

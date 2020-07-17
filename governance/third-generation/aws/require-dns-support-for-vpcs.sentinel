@@ -1,0 +1,25 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all VPCs support DNS so that EC2 instances created in them
+# will have public DNS if they have public IPs
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Get all VPCs
+allVPCs = plan.find_resources("aws_vpc")
+
+# Filter to VPCs with violations
+# Warnings will be printed for all violations since the last parameter is true
+# The first finds VPCs with enable_dns_support not set to true
+# The second finds VPCs with enable_dns_hostnames not set to true
+violatingSupportVPCs = plan.filter_attribute_is_not_value(allVPCs,
+                        "enable_dns_support", true, true)
+violatingHostnameVPCs = plan.filter_attribute_is_not_value(allVPCs,
+                        "enable_dns_hostnames", true, true)
+
+# Main rule
+validated = length(violatingSupportVPCs["messages"]) is 0 and length(violatingHostnameVPCs["messages"]) is 0
+main = rule {
+  validated
+}

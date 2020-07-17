@@ -1,0 +1,1118 @@
+terraform_version = "0.12.28"
+
+planned_values = {
+	"outputs": {},
+	"resources": {
+		"aws_iam_policy.lambda_basic_execution": {
+			"address":        "aws_iam_policy.lambda_basic_execution",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "lambda_basic_execution",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_iam_policy",
+			"values": {
+				"description": "A basic lambda policy",
+				"name":        "roger-basic-lambda-policy",
+				"name_prefix": null,
+				"path":        "/",
+				"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"logs:CreateLogGroup\",\n                \"logs:CreateLogStream\",\n                \"logs:PutLogEvents\"\n            ],\n            \"Resource\": \"arn:aws:logs:us-east-1:753646501470:log-group:*:*\"\n        }\n    ]\n}\n",
+			},
+		},
+		"aws_iam_policy.lambda_kms": {
+			"address":        "aws_iam_policy.lambda_kms",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "lambda_kms",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_iam_policy",
+			"values": {
+				"description": "A kms lambda policy",
+				"name":        "roger-lambda-kms-policy",
+				"name_prefix": null,
+				"path":        "/",
+				"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"kms:*\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+			},
+		},
+		"aws_iam_policy.lambda_vpc_access": {
+			"address":        "aws_iam_policy.lambda_vpc_access",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "lambda_vpc_access",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_iam_policy",
+			"values": {
+				"description": "A lambda vpc access policy",
+				"name":        "roger-lambda-vpc_access-policy",
+				"name_prefix": null,
+				"path":        "/",
+				"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ec2:CreateNetworkInterface\",\n                \"ec2:DescribeNetworkInterfaces\",\n                \"ec2:DeleteNetworkInterface\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+			},
+		},
+		"aws_iam_role.role_for_lambda": {
+			"address":        "aws_iam_role.role_for_lambda",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "role_for_lambda",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_iam_role",
+			"values": {
+				"assume_role_policy":    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\"\n    }\n  ]\n}\n",
+				"description":           null,
+				"force_detach_policies": false,
+				"max_session_duration":  3600,
+				"name":                  "roger-lambda-role",
+				"name_prefix":           null,
+				"path":                  "/",
+				"permissions_boundary":  null,
+				"tags":                  null,
+			},
+		},
+		"aws_iam_role_policy_attachment.attach_basic_lambda": {
+			"address":        "aws_iam_role_policy_attachment.attach_basic_lambda",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "attach_basic_lambda",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_iam_role_policy_attachment",
+			"values": {
+				"role": "roger-lambda-role",
+			},
+		},
+		"aws_iam_role_policy_attachment.attach_kms_lambda": {
+			"address":        "aws_iam_role_policy_attachment.attach_kms_lambda",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "attach_kms_lambda",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_iam_role_policy_attachment",
+			"values": {
+				"role": "roger-lambda-role",
+			},
+		},
+		"aws_iam_role_policy_attachment.attach_lambda_vpc_access": {
+			"address":        "aws_iam_role_policy_attachment.attach_lambda_vpc_access",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "attach_lambda_vpc_access",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_iam_role_policy_attachment",
+			"values": {
+				"role": "roger-lambda-role",
+			},
+		},
+		"aws_lambda_function.test_lambda": {
+			"address":        "aws_lambda_function.test_lambda",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "test_lambda",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_lambda_function",
+			"values": {
+				"dead_letter_config": [],
+				"description":        null,
+				"environment": [
+					{
+						"variables": {
+							"my_secret": "AQICAHhj5kWyeprUqLbu+1gkK2UeO5WuwRcjaI/IG27Us8zBRwHH745dQMacM8zkqhaRNB7cAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM/QPGAjv5Ak2faX6aAgEQgCm+snwc3SmmGGpAc6kahKKnOCZFWkg4hA3OpYt7Pp0yDGb9JYJJjDX9Nw==",
+						},
+					},
+				],
+				"file_system_config":             [],
+				"filename":                       "app.zip",
+				"function_name":                  "roger-test-lambda",
+				"handler":                        "app.handler",
+				"kms_key_arn":                    "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+				"layers":                         null,
+				"memory_size":                    128,
+				"publish":                        false,
+				"reserved_concurrent_executions": -1,
+				"runtime":                        "python2.7",
+				"s3_bucket":                      null,
+				"s3_key":                         null,
+				"s3_object_version":              null,
+				"source_code_hash":               "C8Q8zp0W6bsonUgxgV/ZRsGd8QuouLDSEAGtTVu9cdk=",
+				"tags":                           null,
+				"timeout":                        3,
+				"timeouts":                       null,
+				"vpc_config":                     [],
+			},
+		},
+	},
+}
+
+variables = {
+	"aws_account_id": {
+		"name":  "aws_account_id",
+		"value": "753646501470",
+	},
+	"aws_region": {
+		"name":  "aws_region",
+		"value": "us-east-1",
+	},
+	"iam_basic_execution_policy": {
+		"name":  "iam_basic_execution_policy",
+		"value": "roger-basic-lambda-policy",
+	},
+	"iam_kms_lambda_policy": {
+		"name":  "iam_kms_lambda_policy",
+		"value": "roger-lambda-kms-policy",
+	},
+	"iam_role_name": {
+		"name":  "iam_role_name",
+		"value": "roger-lambda-role",
+	},
+	"iam_vpc_access_policy": {
+		"name":  "iam_vpc_access_policy",
+		"value": "roger-lambda-vpc_access-policy",
+	},
+	"kms_key": {
+		"name":  "kms_key",
+		"value": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+	},
+	"lambda_function_name": {
+		"name":  "lambda_function_name",
+		"value": "roger-test-lambda",
+	},
+	"security_group_id": {
+		"name":  "security_group_id",
+		"value": "sg-042b9f3ab379aeb11",
+	},
+	"subnet_id": {
+		"name":  "subnet_id",
+		"value": "subnet-0395df0d90a099214",
+	},
+}
+
+resource_changes = {
+	"aws_iam_policy.lambda_basic_execution": {
+		"address": "aws_iam_policy.lambda_basic_execution",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "A basic lambda policy",
+				"name":        "roger-basic-lambda-policy",
+				"name_prefix": null,
+				"path":        "/",
+				"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"logs:CreateLogGroup\",\n                \"logs:CreateLogStream\",\n                \"logs:PutLogEvents\"\n            ],\n            \"Resource\": \"arn:aws:logs:us-east-1:753646501470:log-group:*:*\"\n        }\n    ]\n}\n",
+			},
+			"after_unknown": {
+				"arn": true,
+				"id":  true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "lambda_basic_execution",
+		"provider_name":  "aws",
+		"type":           "aws_iam_policy",
+	},
+	"aws_iam_policy.lambda_kms": {
+		"address": "aws_iam_policy.lambda_kms",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "A kms lambda policy",
+				"name":        "roger-lambda-kms-policy",
+				"name_prefix": null,
+				"path":        "/",
+				"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"kms:*\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+			},
+			"after_unknown": {
+				"arn": true,
+				"id":  true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "lambda_kms",
+		"provider_name":  "aws",
+		"type":           "aws_iam_policy",
+	},
+	"aws_iam_policy.lambda_vpc_access": {
+		"address": "aws_iam_policy.lambda_vpc_access",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "A lambda vpc access policy",
+				"name":        "roger-lambda-vpc_access-policy",
+				"name_prefix": null,
+				"path":        "/",
+				"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ec2:CreateNetworkInterface\",\n                \"ec2:DescribeNetworkInterfaces\",\n                \"ec2:DeleteNetworkInterface\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+			},
+			"after_unknown": {
+				"arn": true,
+				"id":  true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "lambda_vpc_access",
+		"provider_name":  "aws",
+		"type":           "aws_iam_policy",
+	},
+	"aws_iam_role.role_for_lambda": {
+		"address": "aws_iam_role.role_for_lambda",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"assume_role_policy":    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\"\n    }\n  ]\n}\n",
+				"description":           null,
+				"force_detach_policies": false,
+				"max_session_duration":  3600,
+				"name":                  "roger-lambda-role",
+				"name_prefix":           null,
+				"path":                  "/",
+				"permissions_boundary":  null,
+				"tags":                  null,
+			},
+			"after_unknown": {
+				"arn":         true,
+				"create_date": true,
+				"id":          true,
+				"unique_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "role_for_lambda",
+		"provider_name":  "aws",
+		"type":           "aws_iam_role",
+	},
+	"aws_iam_role_policy_attachment.attach_basic_lambda": {
+		"address": "aws_iam_role_policy_attachment.attach_basic_lambda",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"role": "roger-lambda-role",
+			},
+			"after_unknown": {
+				"id":         true,
+				"policy_arn": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "attach_basic_lambda",
+		"provider_name":  "aws",
+		"type":           "aws_iam_role_policy_attachment",
+	},
+	"aws_iam_role_policy_attachment.attach_kms_lambda": {
+		"address": "aws_iam_role_policy_attachment.attach_kms_lambda",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"role": "roger-lambda-role",
+			},
+			"after_unknown": {
+				"id":         true,
+				"policy_arn": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "attach_kms_lambda",
+		"provider_name":  "aws",
+		"type":           "aws_iam_role_policy_attachment",
+	},
+	"aws_iam_role_policy_attachment.attach_lambda_vpc_access": {
+		"address": "aws_iam_role_policy_attachment.attach_lambda_vpc_access",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"role": "roger-lambda-role",
+			},
+			"after_unknown": {
+				"id":         true,
+				"policy_arn": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "attach_lambda_vpc_access",
+		"provider_name":  "aws",
+		"type":           "aws_iam_role_policy_attachment",
+	},
+	"aws_lambda_function.test_lambda": {
+		"address": "aws_lambda_function.test_lambda",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"dead_letter_config": [],
+				"description":        null,
+				"environment": [
+					{
+						"variables": {
+							"my_secret": "AQICAHhj5kWyeprUqLbu+1gkK2UeO5WuwRcjaI/IG27Us8zBRwHH745dQMacM8zkqhaRNB7cAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM/QPGAjv5Ak2faX6aAgEQgCm+snwc3SmmGGpAc6kahKKnOCZFWkg4hA3OpYt7Pp0yDGb9JYJJjDX9Nw==",
+						},
+					},
+				],
+				"file_system_config":             [],
+				"filename":                       "app.zip",
+				"function_name":                  "roger-test-lambda",
+				"handler":                        "app.handler",
+				"kms_key_arn":                    "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+				"layers":                         null,
+				"memory_size":                    128,
+				"publish":                        false,
+				"reserved_concurrent_executions": -1,
+				"runtime":                        "python2.7",
+				"s3_bucket":                      null,
+				"s3_key":                         null,
+				"s3_object_version":              null,
+				"source_code_hash":               "C8Q8zp0W6bsonUgxgV/ZRsGd8QuouLDSEAGtTVu9cdk=",
+				"tags":                           null,
+				"timeout":                        3,
+				"timeouts":                       null,
+				"vpc_config":                     [],
+			},
+			"after_unknown": {
+				"arn":                true,
+				"dead_letter_config": [],
+				"environment": [
+					{
+						"variables": {},
+					},
+				],
+				"file_system_config": [],
+				"id":                 true,
+				"invoke_arn":         true,
+				"last_modified":      true,
+				"qualified_arn":      true,
+				"role":               true,
+				"source_code_size":   true,
+				"tracing_config":     true,
+				"version":            true,
+				"vpc_config":         [],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "test_lambda",
+		"provider_name":  "aws",
+		"type":           "aws_lambda_function",
+	},
+}
+
+output_changes = {}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"aws": {
+				"expressions": {
+					"region": {
+						"references": [
+							"var.aws_region",
+						],
+					},
+				},
+				"name": "aws",
+			},
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address": "aws_iam_policy.lambda_basic_execution",
+					"expressions": {
+						"description": {
+							"constant_value": "A basic lambda policy",
+						},
+						"name": {
+							"references": [
+								"var.iam_basic_execution_policy",
+							],
+						},
+						"policy": {
+							"references": [
+								"var.aws_region",
+								"var.aws_account_id",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "lambda_basic_execution",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_policy",
+				},
+				{
+					"address": "aws_iam_policy.lambda_kms",
+					"expressions": {
+						"description": {
+							"constant_value": "A kms lambda policy",
+						},
+						"name": {
+							"references": [
+								"var.iam_kms_lambda_policy",
+							],
+						},
+						"policy": {
+							"constant_value": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"kms:*\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+						},
+					},
+					"mode":                "managed",
+					"name":                "lambda_kms",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_policy",
+				},
+				{
+					"address": "aws_iam_policy.lambda_vpc_access",
+					"expressions": {
+						"description": {
+							"constant_value": "A lambda vpc access policy",
+						},
+						"name": {
+							"references": [
+								"var.iam_vpc_access_policy",
+							],
+						},
+						"policy": {
+							"constant_value": "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ec2:CreateNetworkInterface\",\n                \"ec2:DescribeNetworkInterfaces\",\n                \"ec2:DeleteNetworkInterface\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+						},
+					},
+					"mode":                "managed",
+					"name":                "lambda_vpc_access",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_policy",
+				},
+				{
+					"address": "aws_iam_role.role_for_lambda",
+					"expressions": {
+						"assume_role_policy": {
+							"constant_value": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\"\n    }\n  ]\n}\n",
+						},
+						"name": {
+							"references": [
+								"var.iam_role_name",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "role_for_lambda",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_role",
+				},
+				{
+					"address": "aws_iam_role_policy_attachment.attach_basic_lambda",
+					"expressions": {
+						"policy_arn": {
+							"references": [
+								"aws_iam_policy.lambda_basic_execution",
+							],
+						},
+						"role": {
+							"references": [
+								"aws_iam_role.role_for_lambda",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "attach_basic_lambda",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_role_policy_attachment",
+				},
+				{
+					"address": "aws_iam_role_policy_attachment.attach_kms_lambda",
+					"expressions": {
+						"policy_arn": {
+							"references": [
+								"aws_iam_policy.lambda_kms",
+							],
+						},
+						"role": {
+							"references": [
+								"aws_iam_role.role_for_lambda",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "attach_kms_lambda",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_role_policy_attachment",
+				},
+				{
+					"address": "aws_iam_role_policy_attachment.attach_lambda_vpc_access",
+					"expressions": {
+						"policy_arn": {
+							"references": [
+								"aws_iam_policy.lambda_vpc_access",
+							],
+						},
+						"role": {
+							"references": [
+								"aws_iam_role.role_for_lambda",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "attach_lambda_vpc_access",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_role_policy_attachment",
+				},
+				{
+					"address": "aws_lambda_function.test_lambda",
+					"expressions": {
+						"environment": [
+							{
+								"variables": {
+									"constant_value": {
+										"my_secret": "AQICAHhj5kWyeprUqLbu+1gkK2UeO5WuwRcjaI/IG27Us8zBRwHH745dQMacM8zkqhaRNB7cAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM/QPGAjv5Ak2faX6aAgEQgCm+snwc3SmmGGpAc6kahKKnOCZFWkg4hA3OpYt7Pp0yDGb9JYJJjDX9Nw==",
+									},
+								},
+							},
+						],
+						"filename": {
+							"constant_value": "app.zip",
+						},
+						"function_name": {
+							"references": [
+								"var.lambda_function_name",
+							],
+						},
+						"handler": {
+							"constant_value": "app.handler",
+						},
+						"kms_key_arn": {
+							"references": [
+								"var.kms_key",
+							],
+						},
+						"role": {
+							"references": [
+								"aws_iam_role.role_for_lambda",
+							],
+						},
+						"runtime": {
+							"constant_value": "python2.7",
+						},
+						"source_code_hash": {},
+					},
+					"mode":                "managed",
+					"name":                "test_lambda",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_lambda_function",
+				},
+			],
+			"variables": {
+				"aws_account_id": {
+					"default":     "753646501470",
+					"description": "ID of your AWS account",
+				},
+				"aws_region": {
+					"default":     "us-east-1",
+					"description": "AWS region",
+				},
+				"iam_basic_execution_policy": {
+					"default":     "roger-basic-lambda-policy",
+					"description": "name of basic execution policy",
+				},
+				"iam_kms_lambda_policy": {
+					"default":     "roger-lambda-kms-policy",
+					"description": "name of KMS Lambda policy",
+				},
+				"iam_role_name": {
+					"default":     "roger-lambda-role",
+					"description": "name of IAM role",
+				},
+				"iam_vpc_access_policy": {
+					"default":     "roger-lambda-vpc_access-policy",
+					"description": "name of vpc access policy",
+				},
+				"kms_key": {
+					"default":     "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+					"description": "arn of KMS key",
+				},
+				"lambda_function_name": {
+					"default":     "roger-test-lambda",
+					"description": "name of Lambda function",
+				},
+				"security_group_id": {
+					"default":     "sg-042b9f3ab379aeb11",
+					"description": "ID of security group",
+				},
+				"subnet_id": {
+					"default":     "subnet-0395df0d90a099214",
+					"description": "ID of subnet",
+				},
+			},
+		},
+	},
+	"format_version": "0.1",
+	"planned_values": {
+		"root_module": {
+			"resources": [
+				{
+					"address":        "aws_iam_policy.lambda_basic_execution",
+					"mode":           "managed",
+					"name":           "lambda_basic_execution",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_iam_policy",
+					"values": {
+						"description": "A basic lambda policy",
+						"name":        "roger-basic-lambda-policy",
+						"name_prefix": null,
+						"path":        "/",
+						"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"logs:CreateLogGroup\",\n                \"logs:CreateLogStream\",\n                \"logs:PutLogEvents\"\n            ],\n            \"Resource\": \"arn:aws:logs:us-east-1:753646501470:log-group:*:*\"\n        }\n    ]\n}\n",
+					},
+				},
+				{
+					"address":        "aws_iam_policy.lambda_kms",
+					"mode":           "managed",
+					"name":           "lambda_kms",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_iam_policy",
+					"values": {
+						"description": "A kms lambda policy",
+						"name":        "roger-lambda-kms-policy",
+						"name_prefix": null,
+						"path":        "/",
+						"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"kms:*\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+					},
+				},
+				{
+					"address":        "aws_iam_policy.lambda_vpc_access",
+					"mode":           "managed",
+					"name":           "lambda_vpc_access",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_iam_policy",
+					"values": {
+						"description": "A lambda vpc access policy",
+						"name":        "roger-lambda-vpc_access-policy",
+						"name_prefix": null,
+						"path":        "/",
+						"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ec2:CreateNetworkInterface\",\n                \"ec2:DescribeNetworkInterfaces\",\n                \"ec2:DeleteNetworkInterface\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+					},
+				},
+				{
+					"address":        "aws_iam_role.role_for_lambda",
+					"mode":           "managed",
+					"name":           "role_for_lambda",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_iam_role",
+					"values": {
+						"assume_role_policy":    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\"\n    }\n  ]\n}\n",
+						"description":           null,
+						"force_detach_policies": false,
+						"max_session_duration":  3600,
+						"name":                  "roger-lambda-role",
+						"name_prefix":           null,
+						"path":                  "/",
+						"permissions_boundary":  null,
+						"tags":                  null,
+					},
+				},
+				{
+					"address":        "aws_iam_role_policy_attachment.attach_basic_lambda",
+					"mode":           "managed",
+					"name":           "attach_basic_lambda",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_iam_role_policy_attachment",
+					"values": {
+						"role": "roger-lambda-role",
+					},
+				},
+				{
+					"address":        "aws_iam_role_policy_attachment.attach_kms_lambda",
+					"mode":           "managed",
+					"name":           "attach_kms_lambda",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_iam_role_policy_attachment",
+					"values": {
+						"role": "roger-lambda-role",
+					},
+				},
+				{
+					"address":        "aws_iam_role_policy_attachment.attach_lambda_vpc_access",
+					"mode":           "managed",
+					"name":           "attach_lambda_vpc_access",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_iam_role_policy_attachment",
+					"values": {
+						"role": "roger-lambda-role",
+					},
+				},
+				{
+					"address":        "aws_lambda_function.test_lambda",
+					"mode":           "managed",
+					"name":           "test_lambda",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_lambda_function",
+					"values": {
+						"dead_letter_config": [],
+						"description":        null,
+						"environment": [
+							{
+								"variables": {
+									"my_secret": "AQICAHhj5kWyeprUqLbu+1gkK2UeO5WuwRcjaI/IG27Us8zBRwHH745dQMacM8zkqhaRNB7cAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM/QPGAjv5Ak2faX6aAgEQgCm+snwc3SmmGGpAc6kahKKnOCZFWkg4hA3OpYt7Pp0yDGb9JYJJjDX9Nw==",
+								},
+							},
+						],
+						"file_system_config":             [],
+						"filename":                       "app.zip",
+						"function_name":                  "roger-test-lambda",
+						"handler":                        "app.handler",
+						"kms_key_arn":                    "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+						"layers":                         null,
+						"memory_size":                    128,
+						"publish":                        false,
+						"reserved_concurrent_executions": -1,
+						"runtime":                        "python2.7",
+						"s3_bucket":                      null,
+						"s3_key":                         null,
+						"s3_object_version":              null,
+						"source_code_hash":               "C8Q8zp0W6bsonUgxgV/ZRsGd8QuouLDSEAGtTVu9cdk=",
+						"tags":                           null,
+						"timeout":                        3,
+						"timeouts":                       null,
+						"vpc_config":                     [],
+					},
+				},
+			],
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "aws_iam_policy.lambda_basic_execution",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"description": "A basic lambda policy",
+					"name":        "roger-basic-lambda-policy",
+					"name_prefix": null,
+					"path":        "/",
+					"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"logs:CreateLogGroup\",\n                \"logs:CreateLogStream\",\n                \"logs:PutLogEvents\"\n            ],\n            \"Resource\": \"arn:aws:logs:us-east-1:753646501470:log-group:*:*\"\n        }\n    ]\n}\n",
+				},
+				"after_unknown": {
+					"arn": true,
+					"id":  true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "lambda_basic_execution",
+			"provider_name": "aws",
+			"type":          "aws_iam_policy",
+		},
+		{
+			"address": "aws_iam_policy.lambda_kms",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"description": "A kms lambda policy",
+					"name":        "roger-lambda-kms-policy",
+					"name_prefix": null,
+					"path":        "/",
+					"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"kms:*\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+				},
+				"after_unknown": {
+					"arn": true,
+					"id":  true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "lambda_kms",
+			"provider_name": "aws",
+			"type":          "aws_iam_policy",
+		},
+		{
+			"address": "aws_iam_policy.lambda_vpc_access",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"description": "A lambda vpc access policy",
+					"name":        "roger-lambda-vpc_access-policy",
+					"name_prefix": null,
+					"path":        "/",
+					"policy":      "{\n    \"Version\": \"2012-10-17\",\n    \"Statement\": [\n        {\n            \"Effect\": \"Allow\",\n            \"Action\": [\n                \"ec2:CreateNetworkInterface\",\n                \"ec2:DescribeNetworkInterfaces\",\n                \"ec2:DeleteNetworkInterface\"\n            ],\n            \"Resource\": \"*\"\n        }\n    ]\n}\n",
+				},
+				"after_unknown": {
+					"arn": true,
+					"id":  true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "lambda_vpc_access",
+			"provider_name": "aws",
+			"type":          "aws_iam_policy",
+		},
+		{
+			"address": "aws_iam_role.role_for_lambda",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"assume_role_policy":    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"lambda.amazonaws.com\"\n      },\n      \"Effect\": \"Allow\"\n    }\n  ]\n}\n",
+					"description":           null,
+					"force_detach_policies": false,
+					"max_session_duration":  3600,
+					"name":                  "roger-lambda-role",
+					"name_prefix":           null,
+					"path":                  "/",
+					"permissions_boundary":  null,
+					"tags":                  null,
+				},
+				"after_unknown": {
+					"arn":         true,
+					"create_date": true,
+					"id":          true,
+					"unique_id":   true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "role_for_lambda",
+			"provider_name": "aws",
+			"type":          "aws_iam_role",
+		},
+		{
+			"address": "aws_iam_role_policy_attachment.attach_basic_lambda",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"role": "roger-lambda-role",
+				},
+				"after_unknown": {
+					"id":         true,
+					"policy_arn": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "attach_basic_lambda",
+			"provider_name": "aws",
+			"type":          "aws_iam_role_policy_attachment",
+		},
+		{
+			"address": "aws_iam_role_policy_attachment.attach_kms_lambda",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"role": "roger-lambda-role",
+				},
+				"after_unknown": {
+					"id":         true,
+					"policy_arn": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "attach_kms_lambda",
+			"provider_name": "aws",
+			"type":          "aws_iam_role_policy_attachment",
+		},
+		{
+			"address": "aws_iam_role_policy_attachment.attach_lambda_vpc_access",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"role": "roger-lambda-role",
+				},
+				"after_unknown": {
+					"id":         true,
+					"policy_arn": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "attach_lambda_vpc_access",
+			"provider_name": "aws",
+			"type":          "aws_iam_role_policy_attachment",
+		},
+		{
+			"address": "aws_lambda_function.test_lambda",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"dead_letter_config": [],
+					"description":        null,
+					"environment": [
+						{
+							"variables": {
+								"my_secret": "AQICAHhj5kWyeprUqLbu+1gkK2UeO5WuwRcjaI/IG27Us8zBRwHH745dQMacM8zkqhaRNB7cAAAAbDBqBgkqhkiG9w0BBwagXTBbAgEAMFYGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM/QPGAjv5Ak2faX6aAgEQgCm+snwc3SmmGGpAc6kahKKnOCZFWkg4hA3OpYt7Pp0yDGb9JYJJjDX9Nw==",
+							},
+						},
+					],
+					"file_system_config":             [],
+					"filename":                       "app.zip",
+					"function_name":                  "roger-test-lambda",
+					"handler":                        "app.handler",
+					"kms_key_arn":                    "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+					"layers":                         null,
+					"memory_size":                    128,
+					"publish":                        false,
+					"reserved_concurrent_executions": -1,
+					"runtime":                        "python2.7",
+					"s3_bucket":                      null,
+					"s3_key":                         null,
+					"s3_object_version":              null,
+					"source_code_hash":               "C8Q8zp0W6bsonUgxgV/ZRsGd8QuouLDSEAGtTVu9cdk=",
+					"tags":                           null,
+					"timeout":                        3,
+					"timeouts":                       null,
+					"vpc_config":                     [],
+				},
+				"after_unknown": {
+					"arn":                true,
+					"dead_letter_config": [],
+					"environment": [
+						{
+							"variables": {},
+						},
+					],
+					"file_system_config": [],
+					"id":                 true,
+					"invoke_arn":         true,
+					"last_modified":      true,
+					"qualified_arn":      true,
+					"role":               true,
+					"source_code_size":   true,
+					"tracing_config":     true,
+					"version":            true,
+					"vpc_config":         [],
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "test_lambda",
+			"provider_name": "aws",
+			"type":          "aws_lambda_function",
+		},
+	],
+	"terraform_version": "0.12.28",
+	"variables": {
+		"aws_account_id": {
+			"value": "753646501470",
+		},
+		"aws_region": {
+			"value": "us-east-1",
+		},
+		"iam_basic_execution_policy": {
+			"value": "roger-basic-lambda-policy",
+		},
+		"iam_kms_lambda_policy": {
+			"value": "roger-lambda-kms-policy",
+		},
+		"iam_role_name": {
+			"value": "roger-lambda-role",
+		},
+		"iam_vpc_access_policy": {
+			"value": "roger-lambda-vpc_access-policy",
+		},
+		"kms_key": {
+			"value": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+		},
+		"lambda_function_name": {
+			"value": "roger-test-lambda",
+		},
+		"security_group_id": {
+			"value": "sg-042b9f3ab379aeb11",
+		},
+		"subnet_id": {
+			"value": "subnet-0395df0d90a099214",
+		},
+	},
+}
