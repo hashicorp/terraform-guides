@@ -1,0 +1,208 @@
+terraform_version = "0.12.24"
+
+planned_values = {
+	"outputs": {},
+	"resources": {
+		"aws_vpc.vpc_from_root_module": {
+			"address":        "aws_vpc.vpc_from_root_module",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "vpc_from_root_module",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_vpc",
+			"values": {
+				"assign_generated_ipv6_cidr_block": false,
+				"cidr_block":                       "172.16.0.0/16",
+				"enable_dns_support":               true,
+				"instance_tenancy":                 "default",
+				"tags": {
+					"Name": "vpc-from-root-module",
+				},
+			},
+		},
+	},
+}
+
+variables = {
+	"cidr_for_nested_module": {
+		"name":  "cidr_for_nested_module",
+		"value": "172.17.0.0/16",
+	},
+	"cidr_for_pmr_module": {
+		"name":  "cidr_for_pmr_module",
+		"value": "172.18.0.0/16",
+	},
+	"cidr_for_root": {
+		"name":  "cidr_for_root",
+		"value": "172.16.0.0/16",
+	},
+}
+
+resource_changes = {
+	"aws_vpc.vpc_from_root_module": {
+		"address": "aws_vpc.vpc_from_root_module",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"assign_generated_ipv6_cidr_block": false,
+				"cidr_block":                       "172.16.0.0/16",
+				"enable_dns_support":               true,
+				"instance_tenancy":                 "default",
+				"tags": {
+					"Name": "vpc-from-root-module",
+				},
+			},
+			"after_unknown": {
+				"arn": true,
+				"default_network_acl_id":         true,
+				"default_route_table_id":         true,
+				"default_security_group_id":      true,
+				"dhcp_options_id":                true,
+				"enable_classiclink":             true,
+				"enable_classiclink_dns_support": true,
+				"enable_dns_hostnames":           true,
+				"id": true,
+				"ipv6_association_id": true,
+				"ipv6_cidr_block":     true,
+				"main_route_table_id": true,
+				"owner_id":            true,
+				"tags":                {},
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "vpc_from_root_module",
+		"provider_name":  "aws",
+		"type":           "aws_vpc",
+	},
+}
+
+output_changes = {}
+
+raw = {
+	"configuration": {
+		"root_module": {
+			"resources": [
+				{
+					"address": "aws_vpc.vpc_from_root_module",
+					"expressions": {
+						"cidr_block": {
+							"references": [
+								"var.cidr_for_root",
+							],
+						},
+						"tags": {
+							"constant_value": {
+								"Name": "vpc-from-root-module",
+							},
+						},
+					},
+					"mode":                "managed",
+					"name":                "vpc_from_root_module",
+					"provider_config_key": "aws",
+					"schema_version":      1,
+					"type":                "aws_vpc",
+				},
+			],
+			"variables": {
+				"cidr_for_nested_module": {
+					"default":     "172.17.0.0/16",
+					"description": "CIDR for use in nested module VPC",
+				},
+				"cidr_for_pmr_module": {
+					"default":     "172.18.0.0/16",
+					"description": "CIDR for use in PMR VPC",
+				},
+				"cidr_for_root": {
+					"default":     "172.16.0.0/16",
+					"description": "CIDR for use in root module VPC",
+				},
+			},
+		},
+	},
+	"format_version": "0.1",
+	"planned_values": {
+		"root_module": {
+			"resources": [
+				{
+					"address":        "aws_vpc.vpc_from_root_module",
+					"mode":           "managed",
+					"name":           "vpc_from_root_module",
+					"provider_name":  "aws",
+					"schema_version": 1,
+					"type":           "aws_vpc",
+					"values": {
+						"assign_generated_ipv6_cidr_block": false,
+						"cidr_block":                       "172.16.0.0/16",
+						"enable_dns_support":               true,
+						"instance_tenancy":                 "default",
+						"tags": {
+							"Name": "vpc-from-root-module",
+						},
+					},
+				},
+			],
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "aws_vpc.vpc_from_root_module",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"assign_generated_ipv6_cidr_block": false,
+					"cidr_block":                       "172.16.0.0/16",
+					"enable_dns_support":               true,
+					"instance_tenancy":                 "default",
+					"tags": {
+						"Name": "vpc-from-root-module",
+					},
+				},
+				"after_unknown": {
+					"arn": true,
+					"default_network_acl_id":         true,
+					"default_route_table_id":         true,
+					"default_security_group_id":      true,
+					"dhcp_options_id":                true,
+					"enable_classiclink":             true,
+					"enable_classiclink_dns_support": true,
+					"enable_dns_hostnames":           true,
+					"id": true,
+					"ipv6_association_id": true,
+					"ipv6_cidr_block":     true,
+					"main_route_table_id": true,
+					"owner_id":            true,
+					"tags":                {},
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "vpc_from_root_module",
+			"provider_name": "aws",
+			"type":          "aws_vpc",
+		},
+	],
+	"terraform_version": "0.12.24",
+	"variables": {
+		"cidr_for_nested_module": {
+			"value": "172.17.0.0/16",
+		},
+		"cidr_for_pmr_module": {
+			"value": "172.18.0.0/16",
+		},
+		"cidr_for_root": {
+			"value": "172.16.0.0/16",
+		},
+	},
+}
