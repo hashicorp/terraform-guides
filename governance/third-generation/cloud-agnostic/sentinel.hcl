@@ -50,7 +50,7 @@ policy "limit-proposed-monthly-cost" {
 }
 
 policy "prevent-destruction-of-prohibited-resources" {
-    source = "./prevent-destruction-of-prohibiteded-resources.sentinel"
+    source = "./prevent-destruction-of-prohibited-resources.sentinel"
     enforcement_level = "advisory"
 }
 
