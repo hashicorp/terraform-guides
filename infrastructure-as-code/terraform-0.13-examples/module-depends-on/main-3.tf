@@ -3,6 +3,7 @@ terraform {
 }
 
 module "write-files" {
+  count = 2
   source = "./modules/write-files"
 }
 
