@@ -1,5 +1,6 @@
-# This policy uses the tfconfig/v2 import to validate that all variables
-# have descriptions
+# This policy uses the tfconfig/v2 import to require that all non-root
+# modules come from the Private Module Registry and that no resources
+# or data sources are created in the root module.
 
 # Import the tfconfig/v2 import, but use the alias "tfconfig"
 import "tfconfig/v2" as tfconfig
