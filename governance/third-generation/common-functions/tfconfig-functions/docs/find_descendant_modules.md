@@ -15,7 +15,7 @@ This function is contained in the [tfconfig-functions.sentinel](../../tfconfig-f
 You can determine all module addresses in your current configuration by calling `find_descendant_modules("")`.
 
 ## Common Functions Used
-None
+This function calls `find_module_calls_in_module()`.
 
 ## What It Returns
 This function returns a list of module addresses called directly or indirectly from the specified module.
