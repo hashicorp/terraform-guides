@@ -17,7 +17,10 @@ allEC2Instances = plan.find_resources("aws_instance")
 violatingEC2Instances = plan.filter_attribute_not_in_list(allEC2Instances,
                         "instance_type", allowed_types, true)
 
+# Count violations
+violations = length(violatingEC2Instances["messages"])
+
 # Main rule
 main = rule {
-  length(violatingEC2Instances["messages"]) is 0
+  violations is 0
 }

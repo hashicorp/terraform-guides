@@ -17,7 +17,10 @@ allAzureVMs = plan.find_resources("azurerm_virtual_machine")
 violatingAzureVMs = plan.filter_attribute_not_in_list(allAzureVMs,
                     "vm_size", allowed_sizes, true)
 
+# Count violations
+violations = length(violatingAzureVMs["messages"])
+
 # Main rule
 main = rule {
-  length(violatingAzureVMs["messages"]) is 0
+  violations is 0
 }
