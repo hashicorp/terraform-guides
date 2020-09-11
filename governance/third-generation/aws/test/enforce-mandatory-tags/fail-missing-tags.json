@@ -11,8 +11,8 @@
     }
   },
   "mock": {
-    "tfplan/v2": "mock-tfplan-fail.sentinel",
-    "tfconfig/v2": "mock-tfconfig-fail.sentinel"
+    "tfplan/v2": "mock-tfplan-fail-missing-tags.sentinel",
+    "tfconfig/v2": "mock-tfconfig-fail-missing-tags.sentinel"
   },
   "test": {
     "main": false
