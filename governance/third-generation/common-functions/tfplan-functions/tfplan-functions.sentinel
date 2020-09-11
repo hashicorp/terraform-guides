@@ -319,7 +319,7 @@ filter_attribute_not_contains_list = func(resources, attr, required, prtmsg) {
        not (types.type_of(v) is "list" or types.type_of(v) is "map") {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is missing, null, or is not a map or a list"
+                " that is missing, null, or is not a map or a list" + "\nIt should have had these tags: " + to_string(required)
       violators[address] = rc
       messages[address] = message
       if prtmsg {

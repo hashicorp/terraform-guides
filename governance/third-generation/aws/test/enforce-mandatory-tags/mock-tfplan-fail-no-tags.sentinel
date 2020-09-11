@@ -1,0 +1,463 @@
+terraform_version = "0.12.24"
+
+planned_values = {
+	"outputs": {
+		"sse": {
+			"name":      "sse",
+			"sensitive": false,
+			"value":     "aws:kms",
+		},
+	},
+	"resources": {
+		"aws_s3_bucket.bucket": {
+			"address":        "aws_s3_bucket.bucket",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "bucket",
+			"provider_name":  "aws",
+			"tainted":        false,
+			"type":           "aws_s3_bucket",
+			"values": {
+				"acl":            "private",
+				"bucket":         "roger-012-test",
+				"bucket_prefix":  null,
+				"cors_rule":      [],
+				"force_destroy":  false,
+				"grant":          [],
+				"lifecycle_rule": [],
+				"logging": [
+					{
+						"target_bucket": "roger-tf",
+						"target_prefix": "",
+					},
+				],
+				"object_lock_configuration": [],
+				"policy":                    null,
+				"replication_configuration": [],
+				"server_side_encryption_configuration": [
+					{
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"kms_master_key_id": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+										"sse_algorithm":     "aws:kms",
+									},
+								],
+							},
+						],
+					},
+				],
+				"tags": null,
+				"website": [
+					{
+						"error_document":           null,
+						"index_document":           "index.html",
+						"redirect_all_requests_to": null,
+						"routing_rules":            "[{\"Condition\":{\"KeyPrefixEquals\":\"docs/\"},\"Redirect\":{\"ReplaceKeyPrefixWith\":\"documents/\"}}]",
+					},
+				],
+			},
+		},
+	},
+}
+
+variables = {
+	"aws_region": {
+		"name":  "aws_region",
+		"value": "us-east-1",
+	},
+	"bucket_acl": {
+		"name":  "bucket_acl",
+		"value": "private",
+	},
+	"bucket_name": {
+		"name":  "bucket_name",
+		"value": "roger-012-test",
+	},
+}
+
+resource_changes = {
+	"aws_s3_bucket.bucket": {
+		"address": "aws_s3_bucket.bucket",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"acl":            "private",
+				"bucket":         "roger-012-test",
+				"bucket_prefix":  null,
+				"cors_rule":      [],
+				"force_destroy":  false,
+				"grant":          [],
+				"lifecycle_rule": [],
+				"logging": [
+					{
+						"target_bucket": "roger-tf",
+						"target_prefix": "",
+					},
+				],
+				"object_lock_configuration": [],
+				"policy":                    null,
+				"replication_configuration": [],
+				"server_side_encryption_configuration": [
+					{
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"kms_master_key_id": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+										"sse_algorithm":     "aws:kms",
+									},
+								],
+							},
+						],
+					},
+				],
+				"tags": null,
+				"website": [
+					{
+						"error_document":           null,
+						"index_document":           "index.html",
+						"redirect_all_requests_to": null,
+						"routing_rules":            "[{\"Condition\":{\"KeyPrefixEquals\":\"docs/\"},\"Redirect\":{\"ReplaceKeyPrefixWith\":\"documents/\"}}]",
+					},
+				],
+			},
+			"after_unknown": {
+				"acceleration_status": true,
+				"arn":                         true,
+				"bucket_domain_name":          true,
+				"bucket_regional_domain_name": true,
+				"cors_rule":                   [],
+				"grant":                       [],
+				"hosted_zone_id":              true,
+				"id":                          true,
+				"lifecycle_rule":              [],
+				"logging": [
+					{},
+				],
+				"object_lock_configuration": [],
+				"region":                    true,
+				"replication_configuration": [],
+				"request_payer":             true,
+				"server_side_encryption_configuration": [
+					{
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{},
+								],
+							},
+						],
+					},
+				],
+				"versioning": true,
+				"website": [
+					{},
+				],
+				"website_domain":   true,
+				"website_endpoint": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "bucket",
+		"provider_name":  "aws",
+		"type":           "aws_s3_bucket",
+	},
+}
+
+output_changes = {
+	"sse": {
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after":         "aws:kms",
+			"after_unknown": false,
+			"before":        null,
+		},
+		"name": "sse",
+	},
+}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"aws": {
+				"expressions": {
+					"region": {
+						"references": [
+							"var.aws_region",
+						],
+					},
+				},
+				"name": "aws",
+			},
+		},
+		"root_module": {
+			"outputs": {
+				"sse": {
+					"expression": {
+						"references": [
+							"aws_s3_bucket.bucket",
+						],
+					},
+				},
+			},
+			"resources": [
+				{
+					"address": "aws_s3_bucket.bucket",
+					"expressions": {
+						"acl": {
+							"references": [
+								"var.bucket_acl",
+							],
+						},
+						"bucket": {
+							"references": [
+								"var.bucket_name",
+							],
+						},
+						"logging": [
+							{
+								"target_bucket": {
+									"constant_value": "roger-tf",
+								},
+							},
+						],
+						"server_side_encryption_configuration": [
+							{
+								"rule": [
+									{
+										"apply_server_side_encryption_by_default": [
+											{
+												"kms_master_key_id": {
+													"constant_value": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+												},
+												"sse_algorithm": {
+													"constant_value": "aws:kms",
+												},
+											},
+										],
+									},
+								],
+							},
+						],
+						"website": [
+							{
+								"index_document": {
+									"constant_value": "index.html",
+								},
+								"routing_rules": {
+									"constant_value": "[{\n    \"Condition\": {\n        \"KeyPrefixEquals\": \"docs/\"\n    },\n    \"Redirect\": {\n        \"ReplaceKeyPrefixWith\": \"documents/\"\n    }\n}]\n",
+								},
+							},
+						],
+					},
+					"mode":                "managed",
+					"name":                "bucket",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_s3_bucket",
+				},
+			],
+			"variables": {
+				"aws_region": {
+					"default":     "us-east-1",
+					"description": "AWS region",
+				},
+				"bucket_acl": {
+					"default":     "private",
+					"description": "ACL for S3 bucket: private, public-read, public-read-write, etc",
+				},
+				"bucket_name": {
+					"description": "Name of the bucket to create",
+				},
+			},
+		},
+	},
+	"format_version": "0.1",
+	"output_changes": {
+		"sse": {
+			"actions": [
+				"create",
+			],
+			"after":         "aws:kms",
+			"after_unknown": false,
+			"before":        null,
+		},
+	},
+	"planned_values": {
+		"outputs": {
+			"sse": {
+				"sensitive": false,
+				"value":     "aws:kms",
+			},
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address":        "aws_s3_bucket.bucket",
+					"mode":           "managed",
+					"name":           "bucket",
+					"provider_name":  "aws",
+					"schema_version": 0,
+					"type":           "aws_s3_bucket",
+					"values": {
+						"acl":            "private",
+						"bucket":         "roger-012-test",
+						"bucket_prefix":  null,
+						"cors_rule":      [],
+						"force_destroy":  false,
+						"grant":          [],
+						"lifecycle_rule": [],
+						"logging": [
+							{
+								"target_bucket": "roger-tf",
+								"target_prefix": "",
+							},
+						],
+						"object_lock_configuration": [],
+						"policy":                    null,
+						"replication_configuration": [],
+						"server_side_encryption_configuration": [
+							{
+								"rule": [
+									{
+										"apply_server_side_encryption_by_default": [
+											{
+												"kms_master_key_id": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+												"sse_algorithm":     "aws:kms",
+											},
+										],
+									},
+								],
+							},
+						],
+						"tags": null,
+						"website": [
+							{
+								"error_document":           null,
+								"index_document":           "index.html",
+								"redirect_all_requests_to": null,
+								"routing_rules":            "[{\"Condition\":{\"KeyPrefixEquals\":\"docs/\"},\"Redirect\":{\"ReplaceKeyPrefixWith\":\"documents/\"}}]",
+							},
+						],
+					},
+				},
+			],
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "aws_s3_bucket.bucket",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"acl":            "private",
+					"bucket":         "roger-012-test",
+					"bucket_prefix":  null,
+					"cors_rule":      [],
+					"force_destroy":  false,
+					"grant":          [],
+					"lifecycle_rule": [],
+					"logging": [
+						{
+							"target_bucket": "roger-tf",
+							"target_prefix": "",
+						},
+					],
+					"object_lock_configuration": [],
+					"policy":                    null,
+					"replication_configuration": [],
+					"server_side_encryption_configuration": [
+						{
+							"rule": [
+								{
+									"apply_server_side_encryption_by_default": [
+										{
+											"kms_master_key_id": "arn:aws:kms:us-east-1:753646501470:key/00c892e8-40c4-4048-a650-0f755876503d",
+											"sse_algorithm":     "aws:kms",
+										},
+									],
+								},
+							],
+						},
+					],
+					"tags": null,
+					"website": [
+						{
+							"error_document":           null,
+							"index_document":           "index.html",
+							"redirect_all_requests_to": null,
+							"routing_rules":            "[{\"Condition\":{\"KeyPrefixEquals\":\"docs/\"},\"Redirect\":{\"ReplaceKeyPrefixWith\":\"documents/\"}}]",
+						},
+					],
+				},
+				"after_unknown": {
+					"acceleration_status": true,
+					"arn":                         true,
+					"bucket_domain_name":          true,
+					"bucket_regional_domain_name": true,
+					"cors_rule":                   [],
+					"grant":                       [],
+					"hosted_zone_id":              true,
+					"id":                          true,
+					"lifecycle_rule":              [],
+					"logging": [
+						{},
+					],
+					"object_lock_configuration": [],
+					"region":                    true,
+					"replication_configuration": [],
+					"request_payer":             true,
+					"server_side_encryption_configuration": [
+						{
+							"rule": [
+								{
+									"apply_server_side_encryption_by_default": [
+										{},
+									],
+								},
+							],
+						},
+					],
+					"versioning": true,
+					"website": [
+						{},
+					],
+					"website_domain":   true,
+					"website_endpoint": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "bucket",
+			"provider_name": "aws",
+			"type":          "aws_s3_bucket",
+		},
+	],
+	"terraform_version": "0.12.13",
+	"variables": {
+		"aws_region": {
+			"value": "us-east-1",
+		},
+		"bucket_acl": {
+			"value": "private",
+		},
+		"bucket_name": {
+			"value": "roger-012-test",
+		},
+	},
+}
