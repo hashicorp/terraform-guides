@@ -1,0 +1,99 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"constant_value": "us-east-1",
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"null_resource.no-provisioner": {
+		"address": "null_resource.no-provisioner",
+		"config": {
+			"triggers": {
+				"constant_value": null,
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "no-provisioner",
+		"provider_config_key": "null",
+		"provisioners":        [],
+		"type":                "null_resource",
+	},
+	"null_resource.test": {
+		"address":             "null_resource.test",
+		"config":              {},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "test",
+		"provider_config_key": "null",
+		"provisioners": [
+			{
+				"config": {
+					"command": {
+						"references": [
+							"var.private_key",
+						],
+					},
+				},
+				"index":            0,
+				"resource_address": "null_resource.test",
+				"type":             "local-exec",
+			},
+		],
+		"type": "null_resource",
+	},
+}
+
+provisioners = {
+	"null_resource.test:0": {
+		"config": {
+			"command": {
+				"references": [
+					"var.private_key",
+				],
+			},
+		},
+		"index":            0,
+		"resource_address": "null_resource.test",
+		"type":             "local-exec",
+	},
+}
+
+variables = {
+	"private_key": {
+		"default":        null,
+		"description":    "",
+		"module_address": "",
+		"name":           "private_key",
+	},
+}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
