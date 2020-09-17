@@ -45,7 +45,7 @@ find_resources_in_module = func(module_address) {
 # The parameter, provider, should be given as a string such as "aws".
 find_resources_by_provider = func(provider) {
   resources = filter tfconfig.resources as address, r {
-  	r.provider_config_key matches "(.*)" + provider + "(.*)" and
+  	r.provider_config_key matches "(.*:)?" + provider + "(\\..*)?" and
   	r.mode is "managed"
   }
 
@@ -90,7 +90,7 @@ find_datasources_in_module = func(module_address) {
 # The parameter, provider, should be given as a string such as "aws".
 find_datasources_by_provider = func(provider) {
   datasources = filter tfconfig.resources as address, d {
-  	d.provider_config_key matches "(.*)" + provider + "(.*)" and
+  	d.provider_config_key matches "(.*:)?" + provider + "(\\..*)?" and
   	d.mode is "data"
   }
 
@@ -125,7 +125,7 @@ find_all_providers = func() {
 # The parameter, provider, should be given as a string such as "aws".
 find_providers_by_type = func(type) {
   providers = filter tfconfig.providers as address, p {
-  	p.provider_config_key matches "(.*)" + type + "(.*)"
+  	p.provider_config_key matches "(.*:)?" + type + "(\\..*)?"
   }
 
   return providers
