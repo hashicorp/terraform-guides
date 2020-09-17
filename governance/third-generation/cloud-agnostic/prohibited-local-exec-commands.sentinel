@@ -1,0 +1,50 @@
+# This policy uses the tfconfig/v2 import to prohibit local-exec
+# provisioners from using commands in a prohibited list
+
+# Import tfconfig/v2
+import "tfconfig/v2" as tfconfig
+
+# List of prohibited commands for the local-exec provisioner
+prohibited_list = ["env", "sudo"]
+
+validate_command = func(prohibited) {
+
+  validated = true
+
+  # Get all local-exec provisioners
+  localExecProvisioners = filter tfconfig.provisioners as resource, p {
+  	p.type is "local-exec"
+  }
+
+  # Iterate over local-exec provisioners
+  for localExecProvisioners as resource, p {
+    command = p.config.command
+    # Check for constant value
+    if "constant_value" in keys(command) {
+      # Iterate over prohibited list
+      for prohibited as cur_command {
+        if command.constant_value matches "^" + cur_command {
+          print("Resource", resource, "used a local-exec provisioner that",
+            "started with a prohibited command,", command.constant_value, ", from the list", prohibited)
+          validated = false
+        } // end if
+      } // end for (over prohibited list)
+    } else if "references" in keys(command) {
+      print("Resource", resource, "used a local-exec provisioner with a command",
+            "that included a reference to a Terraform variable or resource.",
+            "Sentinel does not have access to the static part of the command",
+            "in this case and cannot validate that no prohibited command was used.")
+
+      # Comment out following line to allow local-exec provisoners with references
+      validated = false
+    } // end else
+  } // end for (over local-exec provisioners)
+
+  return validated
+}
+
+# Main rule
+validated = validate_command(prohibited_list)
+main = rule {
+  validated
+}
