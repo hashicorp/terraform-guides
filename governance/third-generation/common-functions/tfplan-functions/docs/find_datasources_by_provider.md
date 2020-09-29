@@ -3,6 +3,8 @@ This function finds all data source instances for a specific provider that are b
 
 When evaluating data sources that do not reference any computed values (those known after doing an apply), it is usually better to use the [tfstate/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfstate-v2.html) import and the corresponding [find_datasources](../tfstate-functions/find_datasources.md) function that uses that import.
 
+If you are using Terraform 0.12, use the short form of the provider name such as "aws". If you are using Terraform 0.13, use the fully-qualified provider source such as "registry.terraform.io/hashicorp/aws".
+
 ## Sentinel Module
 This function is contained in the [tfplan-functions.sentinel](../tfplan-functions.sentinel) Sentinel module.
 
@@ -25,6 +27,8 @@ This function does not print anything.
 Here are some examples of calling this function, assuming that the tfplan-functions.sentinel file that contains it has been imported with the alias `plan`:
 ```
 allAWSDataSources = plan.find_datasources_by_provider("aws")
+
+allAWSDataSources = plan.find_datasources_by_provider("registry.terraform.io/hashicorp/aws")
 
 allAzureDataSources = plan.find_datasources_by_provider("azurerm")
 

@@ -1,6 +1,8 @@
 # find_resources_by_provider
 This function finds all resource instances for a specific provider in the current plan that are being created or modified using the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import.
 
+If you are using Terraform 0.12, use the short form of the provider name such as "aws". If you are using Terraform 0.13, use the fully-qualified provider source such as "registry.terraform.io/hashicorp/aws".
+
 ## Sentinel Module
 This function is contained in the [tfplan-functions.sentinel](../tfplan-functions.sentinel) module.
 
@@ -23,6 +25,8 @@ This function does not print anything.
 Here are some examples of calling this function, assuming that the tfplan-functions.sentinel file that contains it has been imported with the alias `plan`:
 ```
 allAWSResources = plan.find_resources_by_provider("aws")
+
+allAWSResources = plan.find_resources_by_provider("registry.terraform.io/hashicorp/aws")
 
 allAzureResources = plan.find_resources_by_provider("azurerm")
 
