@@ -1,0 +1,42 @@
+# This policy uses the Sentinel tfplan/v2 import to restrict the
+# max number of workers in Databricks clusters and the sizes of their VMs
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+##  Parameters
+# Set the maximum number of workers when autoscaling is enabled
+param max_workers default 5
+# Set allowed node type IDs
+# We include "null" since node_type_id is optional
+# (since instance_pool_id can be used instead)
+param allowed_node_type_ids default ["Standard_A1", "Standard_A2", "Standard_D1_v2", "Standard_D2_v2", "null"]
+
+# Get all Databricks clusters
+allClusters = plan.find_resources("databricks_cluster")
+
+# Filter to Databricks clusters with invalid max_workers
+# But don't count null max_count as invalid since autoscale is optional
+ClustersWithInvalidMaxWorkers = plan.filter_attribute_greater_than_value(allClusters,
+                "autoscale.0.max_workers", max_workers, false)
+clusters_with_invalid_max_workers = 0
+for ClustersWithInvalidMaxWorkers["messages"] as address, message {
+  if message not contains "null" {
+    print(message)
+    clusters_with_invalid_max_workers += 1
+  }
+}
+
+# Filter to Databricks clusters with invalid node_type_id
+# Warnings will be printed for all violations since the last parameter is true
+ClustersWithInvalidNodeTypeID = plan.filter_attribute_not_in_list(allClusters,
+                    "node_type_id", allowed_node_type_ids, true)
+clusters_with_invalid_node_type_id = length(ClustersWithInvalidNodeTypeID["messages"])
+
+# Main rule
+validated = clusters_with_invalid_max_workers is 0 and
+            clusters_with_invalid_node_type_id is 0
+main = rule {
+  validated
+}
