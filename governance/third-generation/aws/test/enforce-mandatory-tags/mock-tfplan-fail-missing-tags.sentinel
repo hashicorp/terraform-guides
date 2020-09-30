@@ -184,7 +184,7 @@ resource_changes = {
 		"mode":           "managed",
 		"module_address": "",
 		"name":           "ubuntu",
-		"provider_name":  "aws",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
 		"type":           "aws_instance",
 	},
 	"aws_instance.ubuntu[1]": {

@@ -3,6 +3,8 @@ This function finds all resource instances for the AWS provider that use standar
 
 Currently, the only AWS resource excluded is `aws_autoscaling_group`. If you discover other AWS resources that do not use the `tags` attribute in the standard way, then add them to the list that already includes `aws_autoscaling_group`.
 
+It was updated on 9/29/2020 to work with both the short name of the AWS provider, "aws", and fully-qualfied provider names that match the regex, `(.*)aws$`. This was required because Terraform 0.13 returns the fully-qualified names of providers such as "registry.terraform.io/hashicorp/aws" to Sentinel. Older versions of Terraform only return the short-form such as "aws".
+
 ## Sentinel Module
 This function is contained in the [aws-functions.sentinel](../aws-functions.sentinel) module.
 
