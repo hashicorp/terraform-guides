@@ -1,0 +1,115 @@
+# This policy uses the tfconfig/v2 import to force EC2
+# instances to have subnet_id set to a specific reference
+
+# Standard tfconfig/v2 import
+import "tfconfig/v2" as tfconfig
+
+# Standard strings import
+import "strings"
+
+# Function to validate subnet_id of EC2 instances
+validate_subnet_ids = func(instances, allowed) {
+
+  # Set validated
+  validated = true
+
+  # Iterate over instances
+  for instances as address, instance {
+    # Check whether subnet_id was specified with a reference
+    if "subnet_id" not in instance.config {
+      validated = false
+      print("EC2 instance", address, "did not set the subnet_id argument.")
+    } else if "references" not in instance.config.subnet_id {
+      validated = false
+      print("EC2 instance", address, "has subnet_id set to a constant value",
+            instance.config.subnet_id.constant_value)
+    } else if length(instance.config.subnet_id.references) > 1 {
+      validated = false
+      print("EC2 instance", address, "has subnet_id set to an expression with",
+            "multiple references.")
+    } else {
+      # instance_id was set with exactly one reference
+      expression = instance.config.subnet_id.references[0] else null
+      # Check if the expression is null
+      if expression is null {
+        expression = "null"
+      }
+      # Check if the expression is the result of a random shuffle resource
+      if expression not matches "^random_shuffle\\.(.*)\\.result\\[\\b([0-9]|1[0-9])\\b\\]$" {
+        validated = false
+        print("EC2 instance", address, "has subnet_id set to", expression,
+              "which is not allowed")
+      } else {
+        # Check that the referenced random_shuffle resource refers to an
+        # allowed module
+        # This requires the referenced random_shuffle resource to be in the same
+        # module as the EC2 instance
+        random_shuffle_reference = strings.split(expression, ".")
+        random_shuffle_name = random_shuffle_reference[1]
+        random_shuffle_resources = filter tfconfig.resources as address, r {
+          r.type is "random_shuffle" and
+          r.name is random_shuffle_name and
+          r.module_address is instance.module_address
+        } // end filter
+        # We use a for loop here, but there should only be one instance
+        for random_shuffle_resources as rs_address, rs {
+          if "constant_value" in rs.config.input {
+            # We have a constant value instead of a single reference
+            validated = false
+            print("EC2 instance", address, "has subnet_id set to", expression,
+                  "which is a random_shuffle resource with a constant value",
+                  "in its input")
+          } else if "references" in rs.config.input and length(rs.config.input.references) > 1 {
+            # We have more than 1 reference
+            validated = false
+            print("EC2 instance", address, "has subnet_id set to", expression,
+                  "which is a random_shuffle resource with more than 1 references",
+                  "in its input")
+          } else if rs.config.input.references[0] not in allowed {
+            # The reference is not one of the allowed modules
+            validated = false
+            print("EC2 instance", address, "has subnet_id set to", expression,
+                  "with a single input", rs.config.input.references[0],
+                  "that is not allowed because it is not in the list", allowed)
+          } else {
+            # Valid subnet_id which is referencing an allowed module
+            print("EC2 instance", address, "has subnet_id set to", expression,
+                  "with a single input", rs.config.input.references[0],
+                  "that is allowed because it is in the list", allowed)
+          } // end check random_shuffle reference
+        } // end for random_shuffle resources
+      } // end if expression is reference to random_shuffle
+    } // end else instance_id had 1 reference
+
+  } // end for
+
+  if not validated {
+    print("You must set the subnet_id of every aws_instance resource to an",
+          "expression with the pattern 'random_shuffle.<label>.result[<index>]'",
+          "where <index> is between 0 and 19")
+    print("Additionally, the random_shuffle resource must reference a single module",
+          "in the list", allowed)
+  }
+
+  return validated
+}
+
+# List of allowed subnet modules
+allowed_subnet_modules = [
+  "module.acme.app_subnet_ids",
+  "module.acme.good_subnet_ids",
+]
+
+# Get all EC2 instances
+allEC2Instances = filter tfconfig.resources as address, r {
+  	r.type is "aws_instance" and
+  	r.mode is "managed"
+}
+
+# Validate subnets of EC2 instances
+validSubnetIDs = validate_subnet_ids(allEC2Instances, allowed_subnet_modules)
+
+# Main rule
+main = rule {
+  validSubnetIDs
+}

@@ -1,0 +1,13 @@
+{
+  "modules": {
+    "tfconfig-functions": {
+      "path": "../../../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
+    }
+  },
+  "mock": {
+    "tfconfig/v2": "mock-tfconfig-fail.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}
