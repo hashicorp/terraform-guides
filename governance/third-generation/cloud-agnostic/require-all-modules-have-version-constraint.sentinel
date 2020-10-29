@@ -1,5 +1,5 @@
-# This policy uses the tfconfig/v2 import to require providers to have
-# version constrain, this is a good practise.
+# This policy uses the tfconfig/v2 import to require modules to have
+# version constraint, this is a good practise.
 
 # Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
 # with alias "config"
