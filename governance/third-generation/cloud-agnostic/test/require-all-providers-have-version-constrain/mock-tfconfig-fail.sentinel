@@ -1,0 +1,137 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"constant_value": "ap-southeast-2",
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"aws_kms_key.mykey": {
+		"address": "aws_kms_key.mykey",
+		"config": {
+			"deletion_window_in_days": {
+				"constant_value": 10,
+			},
+			"description": {
+				"constant_value": "This key is used to encrypt bucket objects",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "mykey",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_kms_key",
+	},
+	"aws_s3_bucket.yulei-logging-target-hashicorp": {
+		"address": "aws_s3_bucket.yulei-logging-target-hashicorp",
+		"config": {
+			"acl": {
+				"constant_value": "log-delivery-write",
+			},
+			"bucket": {
+				"constant_value": "yulei-logging-target-hashicorp",
+			},
+			"tags": {
+				"constant_value": {
+					"TTL":    48,
+					"owner":  "yulei@hashicorp.com",
+					"region": "APJ",
+				},
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "yulei-logging-target-hashicorp",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket",
+	},
+	"aws_s3_bucket.yulei-terraform-remote-state-storage-s3-githubactions": {
+		"address": "aws_s3_bucket.yulei-terraform-remote-state-storage-s3-githubactions",
+		"config": {
+			"bucket": {
+				"constant_value": "yulei-terraform-remote-state-storage-s3-githubactions",
+			},
+			"server_side_encryption_configuration": [
+				{
+					"rule": [
+						{
+							"apply_server_side_encryption_by_default": [
+								{
+									"kms_master_key_id": {
+										"references": [
+											"aws_kms_key.mykey",
+										],
+									},
+									"sse_algorithm": {
+										"constant_value": "aws:kms",
+									},
+								},
+							],
+						},
+					],
+				},
+			],
+			"tags": {
+				"constant_value": {
+					"TTL":    48,
+					"owner":  "yulei@hashicorp.com",
+					"region": "APJ",
+				},
+			},
+			"versioning": [
+				{
+					"enabled": {
+						"constant_value": false,
+					},
+					"mfa_delete": {
+						"constant_value": false,
+					},
+				},
+			],
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "yulei-terraform-remote-state-storage-s3-githubactions",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket",
+	},
+}
+
+provisioners = {}
+
+variables = {}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

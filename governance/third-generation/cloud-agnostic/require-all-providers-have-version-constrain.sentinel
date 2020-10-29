@@ -1,0 +1,26 @@
+# This policy uses the tfconfig/v2 import to require providers to have
+# version constrain, this is a good practise.
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+# List of prohibited provisioners
+prohibited_list = [""]
+
+# Get all providers
+allProviders = config.find_all_providers()
+
+violatingProviders = config.filter_attribute_in_list(allProvisioners,
+                            "version_constraint",prohibited_list,false)
+
+# Print any violations
+config.print_violations(violatingProviders["messages"], "Provider")
+
+# Main rule
+main = rule {
+ length(violatingProviders["messages"]) is 0
+}
+
+
+                            
