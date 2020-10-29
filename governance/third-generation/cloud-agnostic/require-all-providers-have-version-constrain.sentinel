@@ -11,7 +11,7 @@ prohibited_list = [""]
 # Get all providers
 allProviders = config.find_all_providers()
 
-violatingProviders = config.filter_attribute_in_list(allProvisioners,
+violatingProviders = config.filter_attribute_in_list(allProviders,
                             "version_constraint",prohibited_list,false)
 
 # Print any violations
