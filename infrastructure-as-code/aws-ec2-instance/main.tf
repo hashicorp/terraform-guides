@@ -4,7 +4,7 @@ terraform {
 
 module "module2" {
   source  = "app.terraform.io/TFE_PoV/module2/demo"
-  version = "1.0.3"
+  version = "1.0.4"
   # insert required variables here
 }
 
