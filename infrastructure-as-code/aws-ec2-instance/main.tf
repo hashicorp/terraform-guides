@@ -2,6 +2,12 @@ terraform {
   required_version = ">= 0.11.0"
 }
 
+module "module2" {
+  source  = "app.terraform.io/TFE_PoV/module2/demo"
+  version = "1.0.3"
+  # insert required variables here
+}
+
 provider "aws" {
   region = "${var.aws_region}"
 }
