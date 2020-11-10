@@ -1,0 +1,42 @@
+# This policy requires all EC2 instances to have their ami field
+# set to an aws_ami datasource (using data.aws_ami.<name>.id)
+# and that all aws_ami data sources have most_recent set to true
+
+# Import common-functions/tfstate-functions/tfstate-functions.sentinel
+# with alias "state"
+import "tfstate-functions" as state
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+# Get all EC2 instances
+allEC2Instances = config.find_resources_by_type("aws_instance")
+
+# Filter to EC2 instances with violations
+# Warnings will be printed for all violations since the last parameter is true
+# Note that we test "config.ami" and expect a reference like "data.aws_ami.ubuntu"
+# While the actual reference might be "data.aws_ami.ubuntu.id", Terraform only
+# gives Sentinel references to resources and data sources, not to their attributes.
+violatingEC2Instances = config.filter_attribute_does_not_match_regex(allEC2Instances,
+                        "config.ami", "^data\\.aws_ami\\.(.*)$", true)
+
+# Count EC2 instance violations
+EC2InstanceViolations = length(violatingEC2Instances["messages"])
+
+# Get all aws_ami data sources
+allAMIs = state.find_datasources("aws_ami")
+
+# Filter to AMIs with violations
+violatingAMIs = state.filter_attribute_is_not_value(allAMIs, "most_recent", true, true)
+
+# Count AMI violations
+AMIViolations = length(violatingAMIs["messages"])
+
+# Add both kinds of violations
+violations = EC2InstanceViolations + AMIViolations
+
+# Main rule
+main = rule {
+  violations is 0
+}

@@ -10,7 +10,7 @@ This function is contained in the [tfplan-functions.sentinel](../tfplan-function
 ## Arguments
 * **resources**: a map of resources derived from [`tfplan.resource_changes`](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html#the-resource_changes-collection) or a list of blocks returned by the `find_blocks` function.
 * **attr**: the name of a resource attribute given as a string that should should only contain items from a given list. The attribute should be a list or a map. If the attribute is nested, the various blocks containing it should be delimited with periods (`.`). Indices of lists should not include brackets and should start with 0. So, you would use `boot_disk.0.initialize_params` rather than `boot_disk[0].initialize_params`.
-* **allowed**: a list of values the attribute is allowed to contain.
+* **allowed**: a list of values the attribute is allowed to contain. If you want to allow null, include "null" in the list.
 * **prtmsg**: a boolean indicating whether violation messages should be printed (if `true`) or not (if `false`).
 
 ## Common Functions Used

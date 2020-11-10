@@ -463,21 +463,16 @@ filter_attribute_is_not_value = func(resources, attr, value, prtmsg) {
 # attribute (attr) that has a given value.
 # Resources should be derived by applying filters to tfstate.resources.
 # Set prtmsg to `true` (without quotes) if you want to print violation messages.
+# If you want to match null, set value to "null".
 filter_attribute_is_value = func(resources, attr, value, prtmsg) {
   violators = {}
 	messages = {}
   for resources as address, r {
     v = evaluate_attribute(r, attr) else null
     if v is null {
-      # Add the resource and a warning message to the violators list
-      message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
-      violators[address] = r
-			messages[address] = message
-      if prtmsg {
-        print(message)
-      }
-    } else if v is value {
+      v = "null"
+    }
+    if v is value {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) + " with value " +
                 to_string(v) + " that is equal to " + to_string(value)
@@ -595,21 +590,16 @@ filter_attribute_does_not_match_regex = func(resources, attr, expr, prtmsg) {
 # attribute (attr) that matches a regular expression (expr).
 # Resources should be derived by applying filters to tfstate.resources.
 # Set prtmsg to `true` (without quotes) if you want to print violation messages.
+# If you want to match null, set expr to "null".
 filter_attribute_matches_regex = func(resources, attr, expr, prtmsg) {
   violators = {}
 	messages = {}
   for resources as address, r {
     v = evaluate_attribute(r, attr) else null
     if v is null {
-      # Add the resource and a warning message to the violators list
-      message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
-      violators[address] = r
-			messages[address] = message
-      if prtmsg {
-        print(message)
-      }
-    } else if v matches expr {
+      v = "null"
+    }
+    if v matches expr {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) + " with value " +
                 to_string(v) + " that matches the regex " + to_string(expr)
