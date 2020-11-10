@@ -85,7 +85,9 @@ The `tfconfig-functions` module has several types of functions:
   * `find_*_by_provider` functions that find resources or data sources created by a specific provider.
   * The `find_outputs_by_sensitivity` function that finds outputs based on their `sensitive` setting.
   * The `find_descendant_modules` function that finds all module addresses called directly or indirectly by a specific module including that module itself. Calling `find_descendant_modules("")` will return all module addresses within the Terraform configuration.
-  * Two filter functions, `filter_attribute_not_in_list` and `filter_attribute_in_list`, that are similar to the filter functions in the tfplan-functions module. However, these can only be used against top-level attributes of the items in the collection passed to them. Those collections can be any type of entity covered by the tfconfig/v2 import including resources, data sources, providers, provisioners, variables, outputs, and module calls.
+  * Various filter functions such as `filter_attribute_not_in_list` and `filter_attribute_in_list` that are similar to the filter functions in the tfplan-functions module. However, these can only be used against top-level attributes of the items in the collection passed to them. Those collections can be any type of entity covered by the tfconfig/v2 import including resources, data sources, providers, provisioners, variables, outputs, and module calls. The filter functions return a map consisting of 2 items:
+    * `items`: a map consisting of items that violate a condition.
+    * `messages`: a map of violation messages associated with the items.
   * The same `to_string` and `print_violations` functions that are in the tfplan-functions module.
 
 Documentation for each individual function can be found in this directory:
