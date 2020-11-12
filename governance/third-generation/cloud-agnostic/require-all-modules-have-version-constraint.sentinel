@@ -9,6 +9,7 @@ import "tfconfig-functions" as config
 allModuleCalls = config.find_all_module_calls()
 
 #Get all module calls tht have version_constraint as undefined or empty.
+#think it as : (mc.version_constrain else "") is ""
 violatingModuleCalls = filter allModuleCalls as address, mc {
     mc.version_constraint else "" is ""
 }
