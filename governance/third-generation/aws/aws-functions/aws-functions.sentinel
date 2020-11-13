@@ -160,7 +160,7 @@ validate_assumed_roles_with_map = func(roles_map, workspace_name) {
 # Filter resources to those from a specific provider alias in a specific region
 # using the tfconfig/v2 import.
 # The parameter, resources, should be a collection of AWS resources from tfconfig
-# The parameter, provider, should be given as a string such as "aws".
+# The parameter, provider, should be a provider derived from tfconfig.providers.
 # The parameter, region, should be given as a string such as "us-east-1"
 filter_resources_by_region = func(resources, provider, region) {
 
