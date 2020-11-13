@@ -1,0 +1,43 @@
+# This policy uses the Sentinel tfconfig/v2 and tfplan/v2 imports to require that
+# all AWS resources are in specified regions
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+# Import aws-functions/aws-functions.sentinel as aws
+import "aws-functions" as aws
+
+# Allowed AWS regions
+allowed_regions = ["us-east-1", "us-west-1"]
+
+# Get all AWS resources
+all_aws_resources = config.find_resources_by_provider("aws")
+
+// Get all providers
+all_aws_providers = config.find_providers_by_type("aws")
+
+# Find all AWS resources for allowed regions
+aws_resources_from_allowed_regions = {}
+for all_aws_providers as p {
+  for allowed_regions as region {
+      filtered_resources = aws.filter_resources_by_region(all_aws_resources, p, region)
+      # Add the filtered resources to aws_resources_from_allowed_regions
+      for filtered_resources as address, r {
+        aws_resources_from_allowed_regions[address] = r
+      }
+  }
+}
+
+# Compare numbers and print messages
+num_all = length(all_aws_resources)
+num_allowed = length(aws_resources_from_allowed_regions)
+difference = num_all - num_allowed
+print("Number of AWS resources from all regions:", num_all)
+print("Number of AWS resources from allowed regions:", num_allowed)
+print("Difference:", difference)
+
+# Main rule
+main = rule {
+  difference is 0
+}

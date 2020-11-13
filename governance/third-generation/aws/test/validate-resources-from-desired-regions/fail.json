@@ -1,0 +1,17 @@
+{
+  "modules": {
+    "aws-functions": {
+      "path": "../../aws-functions/aws-functions.sentinel"
+    },
+    "tfconfig-functions": {
+      "path": "../../../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
+    }
+  },
+  "mock": {
+    "tfplan/v2": "mock-tfplan-fail.sentinel",
+    "tfconfig/v2": "mock-tfconfig-fail.sentinel"
+  },
+  "test": {
+    "main": false
+  }
+}
