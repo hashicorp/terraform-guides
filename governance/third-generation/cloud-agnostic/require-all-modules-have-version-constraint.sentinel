@@ -1,0 +1,29 @@
+# This policy uses the tfconfig/v2 import to require modules to have
+# version constraint, this is a good practise.
+
+
+import "tfconfig-functions" as config
+
+# Get all modules
+
+allModuleCalls = config.find_all_module_calls()
+
+#Get all module calls tht have version_constraint as undefined or empty.
+#think it as : (mc.version_constrain else "") is ""
+violatingModuleCalls = filter allModuleCalls as address, mc {
+    mc.version_constraint else "" is ""
+}
+
+# Print any violations
+
+for violatingModuleCalls as address, mc {
+    print("Module", address, "does not have version_constraint set")
+}
+
+# Main rule
+main = rule {
+    length(violatingModuleCalls) is 0
+}
+
+
+                            
