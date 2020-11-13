@@ -157,12 +157,20 @@ validate_assumed_roles_with_map = func(roles_map, workspace_name) {
 }
 
 ### filter_resources_by_region ###
-# Filter resources to those from a specific provider alias in a specific region
-# using the tfconfig/v2 import.
+# Filter resources to those in a specific region using the tfconfig/v2 import.
 # The parameter, resources, should be a collection of AWS resources from tfconfig
-# The parameter, provider, should be a provider derived from tfconfig.providers.
 # The parameter, region, should be given as a string such as "us-east-1"
-filter_resources_by_region = func(resources, provider, region) {
+# This function inspects the provider aliases associated with the resources.
+# It attempts to identify the region of the provider aliases in several ways
+# including constant values assigned to their `region` argument and resolution
+# of references to variables. It even tries to match provider aliases in proxy
+# configuration blocks (which do not specify regions) of child modules to
+# similarly-named provider aliases in the root module.
+# However, if the alias passed in the module call does not match the alias
+# in the root module, Sentinel has no way of linking the two provider aliases.
+# So, while this function does its best to restrict resources to the allowed
+# regions, it cannot guarantee 100% success.
+filter_resources_by_region = func(resources, region) {
 
   resources_from_region = {}
 
@@ -170,33 +178,37 @@ filter_resources_by_region = func(resources, provider, region) {
     pck = r.provider_config_key
     p = tfconfig.providers[pck]
 
-    # First, process p itself
-    if "config" in keys(p) and "region" in keys(p.config) {
-      if validate_provider_region(p, region) {
-        resources_from_region[address] = r
-      }
-    } else {
-      # provider used by resource does not have region
-      # So, we process it as an alias to a root module provider
-      # A provider that does not have its own region should look like
-      # <module_address>:<provider>.<alias>
-      # we want to look at <provider>.<alias>
-      p_segments = strings.split(p.provider_config_key, ":")
-      if length(p_segments) == 1 {
-        # Current provider is already in root module
-        # So, it is not an alias to another provider
-        # Continue on to next resource in for loop
-        continue
-      }
-      # Get the provider in root module that current provider aliases
-      p_alias_name = p_segments[1]
-      p_alias = tfconfig.providers[p_alias_name]
+    # First make sure p is not null
+    if p is not null {
+      # First, process p itself
+      if "config" in keys(p) and "region" in keys(p.config) {
+        if validate_provider_region(p, region) {
+          resources_from_region[address] = r
+        }
+      } else {
+        # provider used by resource does not have region
+        # So, we process it as an alias to a root module provider
+        # A provider that does not have its own region should look like
+        # <module_address>:<provider>.<alias>
+        # we want to look at <provider>.<alias>
+        # However, that might not exist
+        p_segments = strings.split(p.provider_config_key, ":")
+        if length(p_segments) == 1 {
+          # Current provider is already in root module
+          # So, it is not an alias to another provider
+          # Continue on to next resource in for loop
+          continue
+        }
+        # Get the provider in root module that current provider aliases
+        p_alias_name = p_segments[1]
+        p_alias = tfconfig.providers[p_alias_name]
 
-      # Process p_alias
-      if validate_provider_region(p_alias, region) {
-        resources_from_region[address] = r
-      }
-    } // end processing of p_alias
+        # Process p_alias
+        if p_alias is not null and validate_provider_region(p_alias, region) {
+          resources_from_region[address] = r
+        }
+      } // end processing of p_alias
+    } // end check p not null
   } // end for resources
 
   return resources_from_region
