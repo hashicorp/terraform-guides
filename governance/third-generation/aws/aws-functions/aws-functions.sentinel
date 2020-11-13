@@ -3,6 +3,7 @@
 ##### Imports #####
 import "tfconfig-functions" as config
 import "tfplan/v2" as tfplan
+import "tfconfig/v2" as tfconfig
 import "strings"
 
 ##### Functions #####
@@ -153,4 +154,142 @@ validate_assumed_roles_with_map = func(roles_map, workspace_name) {
   } // end for assumed_roles
 
   return validated
+}
+
+### filter_resources_by_region ###
+# Filter resources to those from a specific provider alias in a specific region
+# using the tfconfig/v2 import.
+# The parameter, resources, should be a collection of AWS resources from tfconfig
+# The parameter, provider, should be given as a string such as "aws".
+# The parameter, region, should be given as a string such as "us-east-1"
+filter_resources_by_region = func(resources, provider, region) {
+
+  resources_from_region = {}
+
+  for resources as address, r {
+    pck = r.provider_config_key
+    p = tfconfig.providers[pck]
+
+    # First, process p itself
+    if "config" in keys(p) and "region" in keys(p.config) {
+      if validate_provider_region(p, region) {
+        resources_from_region[address] = r
+      }
+    } else {
+      # provider used by resource does not have region
+      # So, we process it as an alias to a root module provider
+      # A provider that does not have its own region should look like
+      # <module_address>:<provider>.<alias>
+      # we want to look at <provider>.<alias>
+      p_segments = strings.split(p.provider_config_key, ":")
+      if length(p_segments) == 1 {
+        # Current provider is already in root module
+        # So, it is not an alias to another provider
+        # Continue on to next resource in for loop
+        continue
+      }
+      # Get the provider in root module that current provider aliases
+      p_alias_name = p_segments[1]
+      p_alias = tfconfig.providers[p_alias_name]
+
+      # Process p_alias
+      if validate_provider_region(p_alias, region) {
+        resources_from_region[address] = r
+      }
+    } // end processing of p_alias
+  } // end for resources
+
+  return resources_from_region
+}
+
+### validate_provider_region ###
+# Validate if a specific provider instance is in a specific region
+# using the tfconfig/v2 and tfplan/v2 iimports.
+# The parameter, p, should be a provider derived from tfconfig.providers
+# or from provider_config_key or a resource from tfconfig.resources.
+# The parameter, region, should be given as a string such as "us-east-1"
+validate_provider_region = func(p, region) {
+  if "config" in keys(p) and "region" in keys(p.config) {
+    # provider has its own region
+    if "constant_value" in keys(p.config.region) {
+      if p.config.region.constant_value is region {
+        # Found resource from region
+        return true
+      } else {
+        return false
+      }
+    } else if "references" in keys(p.config.region) {
+      # Iterate over references in region
+      # Usually, there should only be one reference
+      for p.config.region.references as reference {
+        # Cross reference variables
+        # Note that this function does not handle other types of references
+        if strings.has_prefix(reference, "var.") {
+          variable_name = strings.split(reference, ".")[1]
+          if p.module_address is "" {
+            # Get root module variable from tfplan.variables
+            variable_value = tfplan.variables[variable_name].value
+            if variable_value is region {
+              # Found resource from region
+              return true
+            }
+          } else {
+            # Get non-root module variable
+            # Could be value passed into variable by module call
+            # or be the default value of a variable in the module
+
+            # First find parent module
+            module_segments = strings.split(p.module_address, ".")
+            num_segments = length(module_segments)
+            parent_module = strings.join(module_segments[0:num_segments-2], ".")
+            current_module_name = module_segments[num_segments -1]
+
+            # Find module call that called current module
+            if parent_module is "" {
+              # parent module is root module
+              mc = tfconfig.module_calls[current_module_name]
+            } else {
+              # parent module is not root module
+              mc = tfconfig.module_calls[parent_module + ":" + current_module_name]
+            }
+
+            # Check if referenced variable was passed in the module call
+            if variable_name in keys(mc.config) {
+              mc_var = mc.config[variable_name]
+              if "constant_value" in keys(mc_var) {
+                if mc_var.constant_value is region {
+                  # Found resource from region
+                  return true
+                } else {
+                  return false
+                }
+              } else if "references" in keys(mc_var) and parent_module is "" {
+                // Check root module variable references
+                for mc_var.references as mc_reference {
+                  if strings.has_prefix(mc_reference, "var.") {
+                    mc_variable_name = strings.split(mc_reference, ".")[1]
+                    mc_variable_value = tfplan.variables[mc_variable_name].value
+                    if mc_variable_value is region {
+                      # Found resource from region
+                      return true
+                    } // end region check
+                  } // end if mc_reference is a root module variable
+                } // end for mc_var.references
+              } // end constant_value or references in module call
+            } else {
+              # check default value of variable in current module
+              if tfconfig.variables[variable_name].default is region {
+                # Found resource from region
+                return true
+              }
+            } // end if matched variable in module config or default value
+          } // end else non-root module
+        } // end reference is a variable
+      } // end for references
+    } // end references
+  } // end if p has config.region
+
+  # If we did not already return true, then return false
+  return false
+
 }
