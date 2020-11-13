@@ -1,5 +1,15 @@
 # This policy uses the Sentinel tfconfig/v2 and tfplan/v2 imports to require that
 # all AWS resources are in specified regions
+# It does this by inspecting the provider aliases associated with the resources.
+# It attempts to identify the region of the provider aliases in several ways
+# including constant values assigned to their `region` argument and resolution
+# of references to variables. It even tries to match provider aliases in proxy
+# configuration blocks (which do not specify regions) of child modules to
+# similarly-named provider aliases in the root module.
+# However, if the alias passed in the module call does not match the alias
+# in the root module, Sentinel has no way of linking the two provider aliases.
+# So, while this policy does its best to restrict resources to the allowed
+# regions, it cannot guarantee 100% success.
 
 # Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
 # with alias "config"
