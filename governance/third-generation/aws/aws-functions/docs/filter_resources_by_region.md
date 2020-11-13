@@ -1,5 +1,5 @@
 # filter_resources_by_region
-This function filters a collection of AWS resources to those created by a specific alias of the AWS provider and a specific region. The resources should come from the tfconfig/v2 import
+This function filters a collection of AWS resources to those created in a specific region. The resources should come from the tfconfig/v2 import
 
 ## Sentinel Module
 This function is contained in the [aws-functions.sentinel](../aws-functions.sentinel) module.
@@ -9,7 +9,6 @@ This function is contained in the [aws-functions.sentinel](../aws-functions.sent
 
 ## Arguments
 * **resources**: a collection of AWS resources derived from the tfconfig.resources.
-* **provider**: a specific alias of the AWS provider derived from tfconfig.providers.
 * **region**: a specific AWS region, provided as a string
 
 ## Common Functions Used
@@ -24,10 +23,8 @@ This function does not print anything.
 ## Examples
 Here is an example of calling this function, assuming that the aws-functions.sentinel file that contains it has been imported with the alias `aws`:
 ```
-for all_aws_providers as p {
-  for allowed_regions as region {
-      filtered_resources = aws.filter_resources_by_region(all_aws_resources, p, region)
-  }
+for allowed_regions as region {
+  filtered_resources = aws.filter_resources_by_region(all_aws_resources, region)
 }
 ```
 

@@ -14,18 +14,13 @@ allowed_regions = ["us-east-1", "us-west-1"]
 # Get all AWS resources
 all_aws_resources = config.find_resources_by_provider("aws")
 
-// Get all providers
-all_aws_providers = config.find_providers_by_type("aws")
-
 # Find all AWS resources for allowed regions
 aws_resources_from_allowed_regions = {}
-for all_aws_providers as p {
-  for allowed_regions as region {
-      filtered_resources = aws.filter_resources_by_region(all_aws_resources, p, region)
-      # Add the filtered resources to aws_resources_from_allowed_regions
-      for filtered_resources as address, r {
-        aws_resources_from_allowed_regions[address] = r
-      }
+for allowed_regions as region {
+  filtered_resources = aws.filter_resources_by_region(all_aws_resources, region)
+  # Add the filtered resources to aws_resources_from_allowed_regions
+  for filtered_resources as address, r {
+    aws_resources_from_allowed_regions[address] = r
   }
 }
 
