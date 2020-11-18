@@ -9,7 +9,9 @@
   },
   "mock": {
     "tfplan/v2": "mock-tfplan-fail.sentinel",
-    "tfconfig/v2": "mock-tfconfig-fail.sentinel"
+    "tfconfig/v2": "mock-tfconfig-fail.sentinel",
+    "tfrun": "mock-tfrun-fail.sentinel"
+
   },
   "test": {
     "main": false

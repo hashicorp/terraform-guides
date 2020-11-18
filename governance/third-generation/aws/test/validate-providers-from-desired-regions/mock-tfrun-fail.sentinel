@@ -1,0 +1,42 @@
+id = "run-557oMkCwyNv4Jo38"
+created_at = "2020-11-12T21:52:41.641Z"
+message = "Queued manually using Terraform"
+commit_sha = undefined
+speculative = false
+is_destroy = false
+target_addrs = null
+
+variables = {
+	"AWS_ACCESS_KEY_ID": {
+		"category":  "env",
+		"sensitive": false,
+	},
+	"AWS_SECRET_ACCESS_KEY": {
+		"category":  "env",
+		"sensitive": true,
+	},
+	"AWS_DEFAULT_REGION": {
+		"category":  "env",
+		"sensitive": false,
+	},
+}
+
+organization = {
+	"name": "Cloud-Operations",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2020-11-12T19:11:39.670Z",
+	"description":       null,
+	"id":                "ws-dvnF3cQxvLD2icrx",
+	"name":              "test-ec2-instance-2",
+	"vcs_repo":          null,
+	"working_directory": "",
+}
+
+cost_estimate = {
+	"delta_monthly_cost":    "32.544",
+	"prior_monthly_cost":    "0.0",
+	"proposed_monthly_cost": "32.544",
+}
