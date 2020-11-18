@@ -5,6 +5,7 @@ import "tfconfig-functions" as config
 import "tfplan/v2" as tfplan
 import "tfconfig/v2" as tfconfig
 import "strings"
+import "types"
 
 ##### Functions #####
 
@@ -156,75 +157,91 @@ validate_assumed_roles_with_map = func(roles_map, workspace_name) {
   return validated
 }
 
-### filter_resources_by_region ###
-# Filter resources to those in a specific region using the tfconfig/v2 import.
-# The parameter, resources, should be a collection of AWS resources from tfconfig
-# The parameter, region, should be given as a string such as "us-east-1"
-# This function inspects the provider aliases associated with the resources.
-# It attempts to identify the region of the provider aliases in several ways
-# including constant values assigned to their `region` argument and resolution
-# of references to variables. It even tries to match provider aliases in proxy
-# configuration blocks (which do not specify regions) of child modules to
-# similarly-named provider aliases in the root module.
-# However, if the alias passed in the module call does not match the alias
-# in the root module, Sentinel has no way of linking the two provider aliases.
-# So, while this function does its best to restrict resources to the allowed
-# regions, it cannot guarantee 100% success.
-filter_resources_by_region = func(resources, region) {
+### filter_providers_by_regions ###
+# Filter instances of the AWS provider to those in a specific region using the
+# tfconfig/v2 and tfplan/v2 imports.
+# See the comments on the validate_provider_in_allowed_regions() function below
+# for details on how this is done.
+# The parameter, aws_providers, should be a list of AWS provider aliases
+# derived from tfconfig.providers.
+# The parameter, allowed_regions, should be given as a list of AWS regions
+# such as `["us-east-1" and "eu-west-2"]`.
+filter_providers_by_regions = func(aws_providers, allowed_regions) {
 
-  resources_from_region = {}
+  # Initialize empty list of validated AWS provider instances
+  validated_providers = {}
 
-  for resources as address, r {
-    pck = r.provider_config_key
-    p = tfconfig.providers[pck]
+  # Process  AWS providers
+  for aws_providers as index, p {
+    if "config" in keys(p) and "region" in keys(p.config) {
+      # provider alias has a region
+      validated = validate_provider_in_allowed_regions(p, allowed_regions)
+      if validated {
+        print("validated provider:", index)
+        validated_providers[index] = p
+      }
+    } else {
+      # provider alias does not have region
+      # So, we process it as an alias to a root module provider
+      # A provider that does not have its own region should look like
+      # <module_address>:<provider>.<alias>
+      # we want to look at <provider>.<alias>
+      p_segments = strings.split(p.provider_config_key, ":")
+      if length(p_segments) == 1 {
+        # Current provider is already in root module
+        # So, it is not an alias to another provider
+        # Continue on to next resource in for loop
+        continue
+      }
+      # Get the provider in root module that current provider aliases
+      p_alias_name = p_segments[1]
+      p_alias = tfconfig.providers[p_alias_name] else null
 
-    # First make sure p is not null
-    if p is not null {
-      # First, process p itself
-      if "config" in keys(p) and "region" in keys(p.config) {
-        if validate_provider_region(p, region) {
-          resources_from_region[address] = r
+      # Process p_alias
+      if p_alias is not null {
+        validated =
+              validate_provider_in_allowed_regions(p_alias, allowed_regions)
+        if validated {
+          print("validated provider:", index)
+          validated_providers[index] = p
         }
-      } else {
-        # provider used by resource does not have region
-        # So, we process it as an alias to a root module provider
-        # A provider that does not have its own region should look like
-        # <module_address>:<provider>.<alias>
-        # we want to look at <provider>.<alias>
-        # However, that might not exist
-        p_segments = strings.split(p.provider_config_key, ":")
-        if length(p_segments) == 1 {
-          # Current provider is already in root module
-          # So, it is not an alias to another provider
-          # Continue on to next resource in for loop
-          continue
-        }
-        # Get the provider in root module that current provider aliases
-        p_alias_name = p_segments[1]
-        p_alias = tfconfig.providers[p_alias_name]
+      } // end p_alias not null
+    } // end else no region
+  } // end for
 
-        # Process p_alias
-        if p_alias is not null and validate_provider_region(p_alias, region) {
-          resources_from_region[address] = r
-        }
-      } // end processing of p_alias
-    } // end check p not null
-  } // end for resources
+  # return validated providers
+  return validated_providers
 
-  return resources_from_region
 }
 
-### validate_provider_region ###
-# Validate if a specific provider instance is in a specific region
-# using the tfconfig/v2 and tfplan/v2 iimports.
+### validate_provider_in_allowed_regions ###
+# Validate if a specific provider instance is in a list of regions using the # tfconfig/v2 and tfplan/v2 iimports.
 # The parameter, p, should be a provider derived from tfconfig.providers
-# or from provider_config_key or a resource from tfconfig.resources.
-# The parameter, region, should be given as a string such as "us-east-1"
-validate_provider_region = func(p, region) {
+# or from provider_config_key of a resource from tfconfig.resources.
+# The parameter, regions, should be given as a list of allowed regions
+
+# It attempts to identify the region of the provider aliases in several ways
+# including constant values assigned to their `region` argument and resolution
+# of references to variables. It first tries to process references to variables
+# as strings, then as maps with a key called "region". It handles references
+# to variables in the root module by using tfplan.variables. It handles references
+# to variables in non-root modules by examining the module call from the current
+# module's parent.
+
+# It even tries to match provider aliases in proxy configuration blocks
+# (which do not specify regions) of child modules to similarly-named provider
+# aliases in the root module.
+
+# If the alias passed in the module call does not match the alias in the root
+# module, Sentinel has no way of linking the two provider aliases. However,
+# since all providers that do specify regions will be restricted and since
+# provider alias proxies must point to other provider aliases in ancestor modules,
+# all provider aliases should be restricted by this policy.
+validate_provider_in_allowed_regions = func(p, regions) {
   if "config" in keys(p) and "region" in keys(p.config) {
     # provider has its own region
     if "constant_value" in keys(p.config.region) {
-      if p.config.region.constant_value is region {
+      if p.config.region.constant_value in regions {
         # Found resource from region
         return true
       } else {
@@ -241,10 +258,17 @@ validate_provider_region = func(p, region) {
           if p.module_address is "" {
             # Get root module variable from tfplan.variables
             variable_value = tfplan.variables[variable_name].value
-            if variable_value is region {
+            # Check type of variable
+            variable_type = types.type_of(variable_value)
+            if variable_type is "string" and variable_value in regions {
               # Found resource from region
               return true
-            }
+            } else if variable_type is "map" and
+                      "region" in keys(variable_value) and
+                      variable_value["region"] in regions {
+              # Found resource from region
+              return true
+            } // end variable_type check
           } else {
             # Get non-root module variable
             # Could be value passed into variable by module call
@@ -269,7 +293,7 @@ validate_provider_region = func(p, region) {
             if variable_name in keys(mc.config) {
               mc_var = mc.config[variable_name]
               if "constant_value" in keys(mc_var) {
-                if mc_var.constant_value is region {
+                if mc_var.constant_value in regions {
                   # Found resource from region
                   return true
                 } else {
@@ -281,16 +305,29 @@ validate_provider_region = func(p, region) {
                   if strings.has_prefix(mc_reference, "var.") {
                     mc_variable_name = strings.split(mc_reference, ".")[1]
                     mc_variable_value = tfplan.variables[mc_variable_name].value
-                    if mc_variable_value is region {
+                    mc_variable_type = types.type_of(mc_variable_value)
+                    if mc_variable_type is "string" and mc_variable_value in regions {
                       # Found resource from region
                       return true
-                    } // end region check
+                    } else if mc_variable_type is "map" and
+                              "region" in keys(mc_variable_value) and
+                              mc_variable_value["region"] in regions {
+                      # Found resource from region
+                      return true
+                    } // end mc_variable_type check
                   } // end if mc_reference is a root module variable
                 } // end for mc_var.references
               } // end constant_value or references in module call
             } else {
               # check default value of variable in current module
-              if tfconfig.variables[variable_name].default is region {
+              default_value = tfconfig.variables[variable_name].default
+              default_value_type = types.type_of(default_value)
+              if default_value_type is "string" and default_value in regions {
+                # Found resource from region
+                return true
+              } else if default_value_type is "map" and
+                      "region" in keys(default_value) and
+                      default_value["region"] in regions {
                 # Found resource from region
                 return true
               }

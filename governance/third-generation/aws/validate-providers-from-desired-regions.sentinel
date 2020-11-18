@@ -1,0 +1,40 @@
+# This policy uses the Sentinel tfconfig/v2 and tfplan/v2 imports to require that
+# all AWS provider aliases are in specified regions
+
+# See the documentation for the [filter_providers_by_regions](./aws-functions/docs/filter_providers_by_regions.md)
+# and [validate_provider_in_allowed_regions](./aws-functions/docs/validate_provider_in_allowed_regions.md) functions for details on
+# how this is done.
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+# Standard imports
+import "tfconfig/v2" as tfconfig
+import "strings"
+
+# Import aws-functions/aws-functions.sentinel as aws
+import "aws-functions" as aws
+
+# Allowed AWS regions
+allowed_regions = ["us-east-1", "us-west-1"]
+
+# Get all AWS providers
+all_aws_providers = config.find_providers_by_type("aws")
+
+# Process all AWS providers
+validated_providers =
+            aws.filter_providers_by_regions(all_aws_providers, allowed_regions)
+
+# Compare numbers and print messages
+num_all_aws_providers = length(all_aws_providers)
+num_validated_providers = length(validated_providers)
+difference = num_all_aws_providers - num_validated_providers
+print("Number of AWS providers:", num_all_aws_providers)
+print("Number of validated AWS providers", num_validated_providers)
+print("Difference:", difference)
+
+# Main rule
+main = rule {
+  difference is 0
+}
