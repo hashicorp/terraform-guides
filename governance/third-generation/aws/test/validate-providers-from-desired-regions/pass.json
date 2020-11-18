@@ -8,10 +8,11 @@
     }
   },
   "mock": {
-    "tfplan/v2": "mock-tfplan-fail.sentinel",
-    "tfconfig/v2": "mock-tfconfig-fail.sentinel"
+    "tfplan/v2": "mock-tfplan-pass.sentinel",
+    "tfconfig/v2": "mock-tfconfig-pass.sentinel",
+    "tfrun": "mock-tfrun-pass.sentinel"
   },
   "test": {
-    "main": false
+    "main": true
   }
 }

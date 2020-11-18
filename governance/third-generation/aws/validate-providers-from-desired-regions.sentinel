@@ -1,0 +1,55 @@
+# This policy uses the Sentinel tfconfig/v2 and tfplan/v2 imports to require that
+# all AWS provider aliases are in specified regions
+
+# See the documentation for the [filter_providers_by_regions](./aws-functions/docs/filter_providers_by_regions.md)
+# and [validate_provider_in_allowed_regions](./aws-functions/docs/validate_provider_in_allowed_regions.md) functions for details on
+# how this is done.
+
+# It also prevents use of the AWS_DEFAULT_REGION and AWS_PROFILE environment
+# variables in TFC/E workspaces since those allow Terraform configurations
+# to create AWS resources without explicitly listing regions in AWS provider
+# instances. This is done with the tfrun import.
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+# Standard imports
+import "tfconfig/v2" as tfconfig
+import "tfrun"
+import "strings"
+
+# Import aws-functions/aws-functions.sentinel as aws
+import "aws-functions" as aws
+
+# Allowed AWS regions
+allowed_regions = ["us-east-1", "us-west-1"]
+
+# Get all AWS providers
+all_aws_providers = config.find_providers_by_type("aws")
+
+# Process all AWS providers
+validated_providers =
+            aws.filter_providers_by_regions(all_aws_providers, allowed_regions)
+
+# Compare numbers and print messages
+num_all_aws_providers = length(all_aws_providers)
+num_validated_providers = length(validated_providers)
+difference = num_all_aws_providers - num_validated_providers
+print("Number of AWS providers:", num_all_aws_providers)
+print("Number of validated AWS providers", num_validated_providers)
+print("Difference:", difference)
+
+# Prevent use of AWS_DEFAULT_REGION and AWS_PROFILE environment variables
+aws_env_vars_validated = true
+if "AWS_DEFAULT_REGION" in keys(tfrun.variables) or
+   "AWS_PROFILE" in keys(tfrun.variables) {
+  print("Workspaces are not allowed to set the AWS_DEFAULT_REGION and AWS_PROFILE environment variables.")
+  aws_env_vars_validated = false
+}
+
+validated = aws_env_vars_validated and difference is 0
+# Main rule
+main = rule {
+  validated
+}
