@@ -26,7 +26,8 @@ find_resources = func(type) {
   resources = filter tfplan.resource_changes as address, rc {
   	rc.type is type and
   	rc.mode is "managed" and
-  	(rc.change.actions contains "create" or rc.change.actions contains "update")
+  	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+     rc.change.actions contains "read" or rc.change.actions contains "no-op")
   }
 
   return resources
@@ -40,7 +41,8 @@ find_resources_by_provider = func(provider) {
   resources = filter tfplan.resource_changes as address, rc {
     rc.provider_name is provider and
   	rc.mode is "managed" and
-  	(rc.change.actions contains "create" or rc.change.actions contains "update")
+  	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+     rc.change.actions contains "read" or rc.change.actions contains "no-op")
   }
 
   return resources
@@ -56,7 +58,8 @@ find_datasources = func(type) {
   	rc.mode is "data" and
   	(rc.change.actions contains "create" or
     rc.change.actions contains "update" or
-    rc.change.actions contains "read")
+    rc.change.actions contains "read" or
+    rc.change.actions contains "no-op")
   }
 
   return datasources
@@ -72,7 +75,8 @@ find_datasources_by_provider = func(provider) {
   	rc.mode is "data" and
   	(rc.change.actions contains "create" or
     rc.change.actions contains "update" or
-    rc.change.actions contains "read")
+    rc.change.actions contains "read" or
+    rc.change.actions contains "no-op")
   }
 
   return datasources
