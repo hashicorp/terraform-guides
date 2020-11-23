@@ -14,7 +14,7 @@ allLambdaFunctions = plan.find_resources("aws_lambda_function")
 
 # Lambda functions that have not set a KMS key
 LambdasWithoutKMSKey = plan.filter_attribute_is_value(allLambdaFunctions,
-                        "kms_key_arn", null, true)
+                        "kms_key_arn", "null", true)
 
 # Lambda functions that have not set VPC subnets and security groups
 LambdasWithoutVPCs = plan.filter_attribute_is_value(allLambdaFunctions,

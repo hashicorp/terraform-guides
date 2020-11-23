@@ -1,5 +1,5 @@
 # find_resources_by_provider
-This function finds all resource instances for a specific provider in the current plan that are being created or modified using the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import.
+This function finds all resource instances for a specific provider in the current plan that are being created, modified, or read using the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import. Resources with the "no-op" action are also included.
 
 If you are using Terraform 0.12, use the short form of the provider name such as "aws". If you are using Terraform 0.13, use the fully-qualified provider source such as "registry.terraform.io/hashicorp/aws".
 
