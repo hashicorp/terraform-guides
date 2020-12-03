@@ -23,7 +23,7 @@ The script does the following steps:
 1. Creates the workspace if it does not already exist.
 1. Creates a new configuration version.
 1. Uploads the tar file as a new configuration.
-1. Adds Terraform and environment variables from the file variables.csv that was included in the cloned repository if it exists or from the local copy in the same directory as the script. That local version adds one Terraform variable called "name" and two Environment variables to the workspace. The first of the environment variables is "CONFIRM_DESTROY" with value 1; it allows a destroy to be done against the workspace. The second is "TF_CLI_ARGS" with value "-no-color"; it supresses color codes from the apply log output. You can edit this file to add as many variables as you want and then add it to your repository.
+1. Adds Terraform and environment variables from the file variables.csv that was included in the cloned repository if it exists or from the local copy in the same directory as the script. That local version adds one Terraform variable called "name" with value "Roger" and one Environment variable called "TF_CLI_ARGS" with value "-no-color" to the workspace. This supresses color codes from the apply log output. You can edit this file to add as many variables as you want and then add it to your repository.
 1. Determines the number of Sentinel policies so that it knows whether it needs to check them.
 1. Starts a new run.
 1. Enters a loop to check the run results periodically.
@@ -33,10 +33,14 @@ The script does the following steps:
     - If $run_status is "policy_override" and $override is "yes", it overrides the failed policy checks and does an Apply. In this case, one or more Sentinel policies failed, but they were marked "advisory" or "soft-mandatory" and the script was configured to override the failure.
     - If $run_status is "policy_override" and $override is "no", it prints out a message indicating that some policies failed and are not being overridden.
     - If $run_status is "errored", either the plan failed or a Sentinel policy marked "hard-mandatory" failed. The script terminates.
+    - If $run_status is "planned_and_finished", the plan had no changes to apply. The script terminates.
+    - If $run_status is "canceled", a user canceled the run. The script terminates.
+    - If $run_status is "force_canceled", a user forcefully canceled the run. The script terminates.
+    - If $run_status is "discarded", a user discarded the run. The script terminates.
     - Other values of $run_status cause the loop to repeat after a brief sleep.
 1. If $save_plan was set to "true" in the above loop, the script outputs and saves the plan log.
-1. If any apply was done, the script goes into a second loop to wait for it to finish.
-1. When the apply is finished, the script downloads the apply log and the state files from before and after the apply.
+1. If any apply was done, the script goes into a second loop to wait for the apply to finish, error, or be canceled.
+1. If and when the apply finishes, the script downloads the apply log and the state files from before and after the apply.
 
 In addition to the loadAndRunWorkspace.sh script, this example includes the following files:
 

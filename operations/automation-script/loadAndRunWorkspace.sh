@@ -291,6 +291,8 @@ while [ $continue -ne 0 ]; do
   # exist or are applicable to the workspace
 
   # Run is planning - get the plan
+  # Note that we use "True" rather than "true" because python converts the
+  # boolean "true" in json responses to "True" and "false" to "False"
   if [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
     continue=0
     echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
@@ -344,6 +346,19 @@ while [ $continue -ne 0 ]; do
     echo "Plan errored or hard-mandatory policy failed"
     save_plan="true"
     continue=0
+  elif [[ "$run_status" == "planned_and_finished" ]]; then
+    echo "Plan indicates no changes to apply."
+    save_plan="true"
+    continue=0
+  elif [[ "run_status" == "canceled" ]]; then
+    echo "The run was canceled."
+    continue=0
+  elif [[ "run_status" == "force_canceled" ]]; then
+    echo "The run was canceled forcefully."
+    continue=0
+  elif [[ "run_status" == "discarded" ]]; then
+    echo "The run was discarded."
+    continue=0
   else
     # Sleep and then check status again in next loop
     echo "We will sleep and try again soon."
@@ -391,6 +406,12 @@ if [[ "$applied" == "true" ]]; then
     # Decide whether to continue
     if [[ "$apply_status" == "finished" ]]; then
       echo "Apply finished."
+      continue=0
+    elif [[ "$apply_status" == "errored" ]]; then
+      echo "Apply errored."
+      continue=0
+    elif [[ "$apply_status" == "canceled" ]]; then
+      echo "Apply was canceled."
       continue=0
     else
       # Sleep and then check apply status again in next loop
@@ -451,6 +472,6 @@ rm run.json
 rm variable.template.json
 rm variable.json
 rm workspace.template.json
-rm workspace.json 
+rm workspace.json
 
 echo "Finished"
