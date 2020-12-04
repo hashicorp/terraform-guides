@@ -10,7 +10,10 @@ import "tfplan-functions" as plan
 import "aws-functions" as aws
 
 # List of mandatory tags
-mandatory_tags = ["Name", "ttl", "Owner"]
+# Note that the tags here are for internal HashiCorp usage
+# You should assign your own tags in a "mandatory_tags" parameter in your policy set
+# Or change the tags here in the policy.
+param mandatory_tags default ["Name", "ttl", "owner", "se-region", "purpose", "terraform"]
 
 # Get all AWS Resources with standard tags
 allAWSResourcesWithStandardTags = aws.find_resources_with_standard_tags()

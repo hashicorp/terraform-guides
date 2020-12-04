@@ -53,7 +53,7 @@ resources = {
 			},
 			"tags": {
 				"constant_value": {
-					"Owner": "roger@hashicorp.com",
+					"owner": "roger@hashicorp.com",
 					"Name":  "Roger Test Bucket",
 				},
 			},
