@@ -62,8 +62,9 @@ resource_changes = {
 					},
 				],
 				"tags": {
-					"Owner": "roger@hashicorp.com",
+					"owner": "roger@hashicorp.com",
 					"Name":  "Roger Test Bucket",
+					"ttl": "24",
 				},
 				"website": [
 					{
@@ -209,7 +210,8 @@ resource_changes = {
 				"source_dest_check":                    true,
 				"tags": {
 					"Name":  "roger-demo",
-					"Owner": "rberlind",
+					"owner": "rberlind",
+					"ttl": "24",
 				},
 				"timeouts":         null,
 				"user_data":        null,
@@ -277,7 +279,8 @@ resource_changes = {
 				"source_dest_check":                    true,
 				"tags": {
 					"Name":  "roger-demo-nested",
-					"Owner": "rberlind",
+					"owner": "rberlind",
+					"ttl": "24",
 				},
 				"timeouts":         null,
 				"user_data":        null,
@@ -562,7 +565,8 @@ raw = {
 								"source_dest_check":                    true,
 								"tags": {
 									"Name":  "roger-demo-nested",
-									"Owner": "rberlind",
+									"owner": "rberlind",
+									"ttl": "24",
 								},
 								"timeouts":         null,
 								"user_data":        null,
@@ -597,7 +601,8 @@ raw = {
 						"source_dest_check":                    true,
 						"tags": {
 							"Name":  "roger-demo",
-							"Owner": "rberlind",
+							"owner": "rberlind",
+							"ttl": "24",
 						},
 						"timeouts":         null,
 						"user_data":        null,
@@ -628,7 +633,8 @@ raw = {
 						"source_dest_check":                    true,
 						"tags": {
 							"Name":  "roger-demo",
-							"Owner": "rberlind",
+							"owner": "rberlind",
+							"ttl": "24",
 						},
 						"timeouts":         null,
 						"user_data":        null,
@@ -677,7 +683,8 @@ raw = {
 					"source_dest_check":                    true,
 					"tags": {
 						"Name":  "roger-demo",
-						"Owner": "rberlind",
+						"owner": "rberlind",
+						"ttl": "24",
 					},
 					"timeouts":         null,
 					"user_data":        null,
@@ -743,7 +750,8 @@ raw = {
 					"source_dest_check":                    true,
 					"tags": {
 						"Name":  "roger-demo",
-						"Owner": "rberlind",
+						"owner": "rberlind",
+						"ttl": "24",
 					},
 					"timeouts":         null,
 					"user_data":        null,
@@ -809,7 +817,8 @@ raw = {
 					"source_dest_check":                    true,
 					"tags": {
 						"Name":  "roger-demo-nested",
-						"Owner": "rberlind",
+						"owner": "rberlind",
+						"ttl": "24",
 					},
 					"timeouts":         null,
 					"user_data":        null,
