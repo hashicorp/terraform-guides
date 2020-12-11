@@ -1,0 +1,781 @@
+terraform_version = "0.13.5"
+
+variables = {}
+
+resource_changes = {
+	"azurerm_network_security_group.example": {
+		"address": "azurerm_network_security_group.example",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"location":            "westus",
+				"name":                "acceptanceTestSecurityGroup1",
+				"resource_group_name": "acceptanceTestResourceGroup1",
+				"security_rule": [
+					{
+						"access":                                     "Allow",
+						"description":                                "",
+						"destination_address_prefix":                 "*",
+						"destination_address_prefixes":               [],
+						"destination_application_security_group_ids": [],
+						"destination_port_range":                     "*",
+						"destination_port_ranges":                    [],
+						"direction":                                  "Inbound",
+						"name":                                       "test3",
+						"priority":                                   103,
+						"protocol":                                   "Tcp",
+						"source_address_prefix":                      "",
+						"source_address_prefixes": [
+							"0.0.0.0/0",
+						],
+						"source_application_security_group_ids": [],
+						"source_port_range":                     "*",
+						"source_port_ranges":                    [],
+					},
+				],
+				"tags": {
+					"environment": "Production",
+				},
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"id": true,
+				"security_rule": [
+					{
+						"destination_address_prefixes":               [],
+						"destination_application_security_group_ids": [],
+						"destination_port_ranges":                    [],
+						"source_address_prefixes":                    [],
+						"source_application_security_group_ids":      [],
+						"source_port_ranges":                         [],
+					},
+					{
+						"destination_address_prefixes":               [],
+						"destination_application_security_group_ids": [],
+						"destination_port_ranges":                    [],
+						"source_address_prefixes":                    [],
+						"source_application_security_group_ids":      [],
+						"source_port_ranges":                         [],
+					},
+					{
+						"destination_address_prefixes":               [],
+						"destination_application_security_group_ids": [],
+						"destination_port_ranges":                    [],
+						"source_address_prefixes": [
+							false,
+							false,
+						],
+						"source_application_security_group_ids": [],
+						"source_port_ranges":                    [],
+					},
+				],
+				"tags": {},
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "example",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_network_security_group",
+	},
+	"azurerm_network_security_group.separate_rules": {
+		"address": "azurerm_network_security_group.separate_rules",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"location":            "westus",
+				"name":                "acceptanceTestSecurityGroup1",
+				"resource_group_name": "acceptanceTestResourceGroup1",
+				"tags":                null,
+				"timeouts":            null,
+			},
+			"after_unknown": {
+				"id":            true,
+				"security_rule": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "separate_rules",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_network_security_group",
+	},
+	"azurerm_network_security_rule.rule2": {
+		"address": "azurerm_network_security_rule.rule2",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"access":                                     "Allow",
+				"description":                                null,
+				"destination_address_prefix":                 "*",
+				"destination_address_prefixes":               null,
+				"destination_application_security_group_ids": null,
+				"destination_port_range":                     "*",
+				"destination_port_ranges":                    null,
+				"direction":                                  "Inbound",
+				"name":                                       "rule2",
+				"network_security_group_name": "acceptanceTestSecurityGroup1",
+				"priority":                    102,
+				"protocol":                    "Tcp",
+				"resource_group_name":         "acceptanceTestResourceGroup1",
+				"source_address_prefix":       null,
+				"source_address_prefixes": [
+					"0.0.0.0/0",
+				],
+				"source_application_security_group_ids": null,
+				"source_port_range":                     "*",
+				"source_port_ranges":                    null,
+				"timeouts":                              null,
+			},
+			"after_unknown": {
+				"id": true,
+				"source_address_prefixes": [
+					false,
+				],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "rule2",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_network_security_rule",
+	},
+	"azurerm_resource_group.example": {
+		"address": "azurerm_resource_group.example",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"location": "westus",
+				"name":     "acceptanceTestResourceGroup1",
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "example",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_resource_group",
+	},
+}
+
+output_changes = {}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"azurerm": {
+				"expressions": {
+					"features": [
+						{},
+					],
+				},
+				"name": "azurerm",
+			},
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address": "azurerm_network_security_group.example",
+					"expressions": {
+						"location": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+						"name": {
+							"constant_value": "acceptanceTestSecurityGroup1",
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+						"tags": {
+							"constant_value": {
+								"environment": "Production",
+							},
+						},
+					},
+					"mode":                "managed",
+					"name":                "example",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_network_security_group",
+				},
+				{
+					"address": "azurerm_network_security_group.separate_rules",
+					"expressions": {
+						"location": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+						"name": {
+							"constant_value": "acceptanceTestSecurityGroup1",
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "separate_rules",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_network_security_group",
+				},
+				{
+					"address": "azurerm_network_security_rule.rule1",
+					"expressions": {
+						"access": {
+							"constant_value": "Allow",
+						},
+						"destination_address_prefix": {
+							"constant_value": "*",
+						},
+						"destination_port_range": {
+							"constant_value": "*",
+						},
+						"direction": {
+							"constant_value": "Inbound",
+						},
+						"name": {
+							"constant_value": "rule1",
+						},
+						"network_security_group_name": {
+							"references": [
+								"azurerm_network_security_group.separate_rules",
+							],
+						},
+						"priority": {
+							"constant_value": 101,
+						},
+						"protocol": {
+							"constant_value": "Tcp",
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+						"source_address_prefix": {
+							"constant_value": "*",
+						},
+						"source_port_range": {
+							"constant_value": "*",
+						},
+					},
+					"mode":                "managed",
+					"name":                "rule1",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_network_security_rule",
+				},
+				{
+					"address": "azurerm_network_security_rule.rule2",
+					"expressions": {
+						"access": {
+							"constant_value": "Allow",
+						},
+						"destination_address_prefix": {
+							"constant_value": "*",
+						},
+						"destination_port_range": {
+							"constant_value": "*",
+						},
+						"direction": {
+							"constant_value": "Inbound",
+						},
+						"name": {
+							"constant_value": "rule2",
+						},
+						"network_security_group_name": {
+							"references": [
+								"azurerm_network_security_group.separate_rules",
+							],
+						},
+						"priority": {
+							"constant_value": 102,
+						},
+						"protocol": {
+							"constant_value": "Tcp",
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+						"source_address_prefixes": {
+							"constant_value": [
+								"0.0.0.0/0",
+							],
+						},
+						"source_port_range": {
+							"constant_value": "*",
+						},
+					},
+					"mode":                "managed",
+					"name":                "rule2",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_network_security_rule",
+				},
+				{
+					"address": "azurerm_resource_group.example",
+					"expressions": {
+						"location": {
+							"constant_value": "West US",
+						},
+						"name": {
+							"constant_value": "acceptanceTestResourceGroup1",
+						},
+					},
+					"mode":                "managed",
+					"name":                "example",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_resource_group",
+				},
+			],
+		},
+	},
+	"format_version": "0.1",
+	"planned_values": {
+		"root_module": {
+			"resources": [
+				{
+					"address":        "azurerm_network_security_group.example",
+					"mode":           "managed",
+					"name":           "example",
+					"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_network_security_group",
+					"values": {
+						"location":            "westus",
+						"name":                "acceptanceTestSecurityGroup1",
+						"resource_group_name": "acceptanceTestResourceGroup1",
+						"security_rule": [
+							{
+								"access":                                     "Allow",
+								"description":                                "",
+								"destination_address_prefix":                 "*",
+								"destination_address_prefixes":               [],
+								"destination_application_security_group_ids": [],
+								"destination_port_range":                     "*",
+								"destination_port_ranges":                    [],
+								"direction":                                  "Inbound",
+								"name":                                       "test1",
+								"priority":                                   101,
+								"protocol":                                   "Tcp",
+								"source_address_prefix":                      "*",
+								"source_address_prefixes":                    [],
+								"source_application_security_group_ids":      [],
+								"source_port_range":                          "*",
+								"source_port_ranges":                         [],
+							},
+							{
+								"access":                                     "Allow",
+								"description":                                "",
+								"destination_address_prefix":                 "*",
+								"destination_address_prefixes":               [],
+								"destination_application_security_group_ids": [],
+								"destination_port_range":                     "*",
+								"destination_port_ranges":                    [],
+								"direction":                                  "Inbound",
+								"name":                                       "test2",
+								"priority":                                   102,
+								"protocol":                                   "Tcp",
+								"source_address_prefix":                      "0.0.0.0/0",
+								"source_address_prefixes":                    [],
+								"source_application_security_group_ids":      [],
+								"source_port_range":                          "*",
+								"source_port_ranges":                         [],
+							},
+							{
+								"access":                                     "Allow",
+								"description":                                "",
+								"destination_address_prefix":                 "*",
+								"destination_address_prefixes":               [],
+								"destination_application_security_group_ids": [],
+								"destination_port_range":                     "*",
+								"destination_port_ranges":                    [],
+								"direction":                                  "Inbound",
+								"name":                                       "test3",
+								"priority":                                   103,
+								"protocol":                                   "Tcp",
+								"source_address_prefix":                      "",
+								"source_address_prefixes": [
+									"10.0.0.0/24",
+									"10.10.0.0/24",
+								],
+								"source_application_security_group_ids": [],
+								"source_port_range":                     "*",
+								"source_port_ranges":                    [],
+							},
+						],
+						"tags": {
+							"environment": "Production",
+						},
+						"timeouts": null,
+					},
+				},
+				{
+					"address":        "azurerm_network_security_group.separate_rules",
+					"mode":           "managed",
+					"name":           "separate_rules",
+					"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_network_security_group",
+					"values": {
+						"location":            "westus",
+						"name":                "acceptanceTestSecurityGroup1",
+						"resource_group_name": "acceptanceTestResourceGroup1",
+						"tags":                null,
+						"timeouts":            null,
+					},
+				},
+				{
+					"address":        "azurerm_network_security_rule.rule1",
+					"mode":           "managed",
+					"name":           "rule1",
+					"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_network_security_rule",
+					"values": {
+						"access":                                     "Allow",
+						"description":                                null,
+						"destination_address_prefix":                 "*",
+						"destination_address_prefixes":               null,
+						"destination_application_security_group_ids": null,
+						"destination_port_range":                     "*",
+						"destination_port_ranges":                    null,
+						"direction":                                  "Inbound",
+						"name":                                       "rule1",
+						"network_security_group_name":           "acceptanceTestSecurityGroup1",
+						"priority":                              101,
+						"protocol":                              "Tcp",
+						"resource_group_name":                   "acceptanceTestResourceGroup1",
+						"source_address_prefix":                 "*",
+						"source_address_prefixes":               null,
+						"source_application_security_group_ids": null,
+						"source_port_range":                     "*",
+						"source_port_ranges":                    null,
+						"timeouts":                              null,
+					},
+				},
+				{
+					"address":        "azurerm_network_security_rule.rule2",
+					"mode":           "managed",
+					"name":           "rule2",
+					"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_network_security_rule",
+					"values": {
+						"access":                                     "Allow",
+						"description":                                null,
+						"destination_address_prefix":                 "*",
+						"destination_address_prefixes":               null,
+						"destination_application_security_group_ids": null,
+						"destination_port_range":                     "*",
+						"destination_port_ranges":                    null,
+						"direction":                                  "Inbound",
+						"name":                                       "rule2",
+						"network_security_group_name": "acceptanceTestSecurityGroup1",
+						"priority":                    102,
+						"protocol":                    "Tcp",
+						"resource_group_name":         "acceptanceTestResourceGroup1",
+						"source_address_prefix":       null,
+						"source_address_prefixes": [
+							"0.0.0.0/0",
+						],
+						"source_application_security_group_ids": null,
+						"source_port_range":                     "*",
+						"source_port_ranges":                    null,
+						"timeouts":                              null,
+					},
+				},
+				{
+					"address":        "azurerm_resource_group.example",
+					"mode":           "managed",
+					"name":           "example",
+					"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_resource_group",
+					"values": {
+						"location": "westus",
+						"name":     "acceptanceTestResourceGroup1",
+						"tags":     null,
+						"timeouts": null,
+					},
+				},
+			],
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "azurerm_network_security_group.example",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"location":            "westus",
+					"name":                "acceptanceTestSecurityGroup1",
+					"resource_group_name": "acceptanceTestResourceGroup1",
+					"security_rule": [
+						{
+							"access":                                     "Allow",
+							"description":                                "",
+							"destination_address_prefix":                 "*",
+							"destination_address_prefixes":               [],
+							"destination_application_security_group_ids": [],
+							"destination_port_range":                     "*",
+							"destination_port_ranges":                    [],
+							"direction":                                  "Inbound",
+							"name":                                       "test1",
+							"priority":                                   101,
+							"protocol":                                   "Tcp",
+							"source_address_prefix":                      "*",
+							"source_address_prefixes":                    [],
+							"source_application_security_group_ids":      [],
+							"source_port_range":                          "*",
+							"source_port_ranges":                         [],
+						},
+						{
+							"access":                                     "Allow",
+							"description":                                "",
+							"destination_address_prefix":                 "*",
+							"destination_address_prefixes":               [],
+							"destination_application_security_group_ids": [],
+							"destination_port_range":                     "*",
+							"destination_port_ranges":                    [],
+							"direction":                                  "Inbound",
+							"name":                                       "test2",
+							"priority":                                   102,
+							"protocol":                                   "Tcp",
+							"source_address_prefix":                      "0.0.0.0/0",
+							"source_address_prefixes":                    [],
+							"source_application_security_group_ids":      [],
+							"source_port_range":                          "*",
+							"source_port_ranges":                         [],
+						},
+						{
+							"access":                                     "Allow",
+							"description":                                "",
+							"destination_address_prefix":                 "*",
+							"destination_address_prefixes":               [],
+							"destination_application_security_group_ids": [],
+							"destination_port_range":                     "*",
+							"destination_port_ranges":                    [],
+							"direction":                                  "Inbound",
+							"name":                                       "test3",
+							"priority":                                   103,
+							"protocol":                                   "Tcp",
+							"source_address_prefix":                      "",
+							"source_address_prefixes": [
+								"10.0.0.0/24",
+								"10.10.0.0/24",
+							],
+							"source_application_security_group_ids": [],
+							"source_port_range":                     "*",
+							"source_port_ranges":                    [],
+						},
+					],
+					"tags": {
+						"environment": "Production",
+					},
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"id": true,
+					"security_rule": [
+						{
+							"destination_address_prefixes":               [],
+							"destination_application_security_group_ids": [],
+							"destination_port_ranges":                    [],
+							"source_address_prefixes":                    [],
+							"source_application_security_group_ids":      [],
+							"source_port_ranges":                         [],
+						},
+						{
+							"destination_address_prefixes":               [],
+							"destination_application_security_group_ids": [],
+							"destination_port_ranges":                    [],
+							"source_address_prefixes":                    [],
+							"source_application_security_group_ids":      [],
+							"source_port_ranges":                         [],
+						},
+						{
+							"destination_address_prefixes":               [],
+							"destination_application_security_group_ids": [],
+							"destination_port_ranges":                    [],
+							"source_address_prefixes": [
+								false,
+								false,
+							],
+							"source_application_security_group_ids": [],
+							"source_port_ranges":                    [],
+						},
+					],
+					"tags": {},
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "example",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"type":          "azurerm_network_security_group",
+		},
+		{
+			"address": "azurerm_network_security_group.separate_rules",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"location":            "westus",
+					"name":                "acceptanceTestSecurityGroup1",
+					"resource_group_name": "acceptanceTestResourceGroup1",
+					"tags":                null,
+					"timeouts":            null,
+				},
+				"after_unknown": {
+					"id":            true,
+					"security_rule": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "separate_rules",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"type":          "azurerm_network_security_group",
+		},
+		{
+			"address": "azurerm_network_security_rule.rule1",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"access":                                     "Allow",
+					"description":                                null,
+					"destination_address_prefix":                 "*",
+					"destination_address_prefixes":               null,
+					"destination_application_security_group_ids": null,
+					"destination_port_range":                     "*",
+					"destination_port_ranges":                    null,
+					"direction":                                  "Inbound",
+					"name":                                       "rule1",
+					"network_security_group_name":           "acceptanceTestSecurityGroup1",
+					"priority":                              101,
+					"protocol":                              "Tcp",
+					"resource_group_name":                   "acceptanceTestResourceGroup1",
+					"source_address_prefix":                 "*",
+					"source_address_prefixes":               null,
+					"source_application_security_group_ids": null,
+					"source_port_range":                     "*",
+					"source_port_ranges":                    null,
+					"timeouts":                              null,
+				},
+				"after_unknown": {
+					"id": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "rule1",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"type":          "azurerm_network_security_rule",
+		},
+		{
+			"address": "azurerm_network_security_rule.rule2",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"access":                                     "Allow",
+					"description":                                null,
+					"destination_address_prefix":                 "*",
+					"destination_address_prefixes":               null,
+					"destination_application_security_group_ids": null,
+					"destination_port_range":                     "*",
+					"destination_port_ranges":                    null,
+					"direction":                                  "Inbound",
+					"name":                                       "rule2",
+					"network_security_group_name": "acceptanceTestSecurityGroup1",
+					"priority":                    102,
+					"protocol":                    "Tcp",
+					"resource_group_name":         "acceptanceTestResourceGroup1",
+					"source_address_prefix":       null,
+					"source_address_prefixes": [
+						"0.0.0.0/0",
+					],
+					"source_application_security_group_ids": null,
+					"source_port_range":                     "*",
+					"source_port_ranges":                    null,
+					"timeouts":                              null,
+				},
+				"after_unknown": {
+					"id": true,
+					"source_address_prefixes": [
+						false,
+					],
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "rule2",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"type":          "azurerm_network_security_rule",
+		},
+		{
+			"address": "azurerm_resource_group.example",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"location": "westus",
+					"name":     "acceptanceTestResourceGroup1",
+					"tags":     null,
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"id": true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "example",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"type":          "azurerm_resource_group",
+		},
+	],
+	"terraform_version": "0.13.5",
+}

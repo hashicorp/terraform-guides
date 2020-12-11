@@ -56,19 +56,10 @@ resource_changes = {
 				"proximity_placement_group_id": null,
 				"resource_group_name":          "rogerberlind-resources",
 				"secret":                       [],
-				"size":                         "Standard_A2",
-				"source_image_id":              null,
-				"source_image_reference": [
-					{
-						"offer":     "UbuntuServer",
-						"publisher": "Canonical",
-						"sku":       "16.04-LTS",
-						"version":   "latest",
-					},
-				],
-				"tags": {
-					"environment": "staging",
-				},
+				"size":                         "Standard_F2",
+				"source_image_id":              "/subscriptions/00000000-5555-0000-8888-000000000000/resourceGroups/my-rg/providers/Microsoft.Compute/images/azure-consul-server",
+				"source_image_reference":       [],
+				"tags":                         null,
 				"timeouts":                     null,
 				"virtual_machine_scale_set_id": null,
 			},
@@ -89,17 +80,15 @@ resource_changes = {
 						"name":               true,
 					},
 				],
-				"plan":                 [],
-				"private_ip_address":   true,
-				"private_ip_addresses": true,
-				"public_ip_address":    true,
-				"public_ip_addresses":  true,
-				"secret":               [],
-				"source_image_reference": [
-					{},
-				],
-				"virtual_machine_id": true,
-				"zone":               true,
+				"plan":                   [],
+				"private_ip_address":     true,
+				"private_ip_addresses":   true,
+				"public_ip_address":      true,
+				"public_ip_addresses":    true,
+				"secret":                 [],
+				"source_image_reference": [],
+				"virtual_machine_id":     true,
+				"zone":                   true,
 			},
 			"before": null,
 		},
@@ -131,9 +120,7 @@ resource_changes = {
 				"location":            "eastus",
 				"name":                "rogerberlind-linux-nic",
 				"resource_group_name": "rogerberlind-resources",
-				"tags": {
-					"environment": "staging",
-				},
+				"tags":                null,
 				"timeouts":            null,
 			},
 			"after_unknown": {
@@ -184,9 +171,7 @@ resource_changes = {
 				"location":            "eastus",
 				"name":                "rogerberlind-main-nic",
 				"resource_group_name": "rogerberlind-resources",
-				"tags": {
-					"environment": "staging",
-				},
+				"tags":                null,
 				"timeouts":            null,
 			},
 			"after_unknown": {
@@ -237,9 +222,7 @@ resource_changes = {
 				"location":            "eastus",
 				"name":                "rogerberlind-windows-nic",
 				"resource_group_name": "rogerberlind-resources",
-				"tags": {
-					"environment": "staging",
-				},
+				"tags":                null,
 				"timeouts":            null,
 			},
 			"after_unknown": {
@@ -279,9 +262,7 @@ resource_changes = {
 			"after": {
 				"location": "eastus",
 				"name":     "rogerberlind-resources",
-				"tags": {
-					"environment": "staging",
-				},
+				"tags":     null,
 				"timeouts": null,
 			},
 			"after_unknown": {
@@ -368,11 +349,10 @@ resource_changes = {
 				"resource_group_name":          "rogerberlind-resources",
 				"storage_image_reference": [
 					{
-						"id":        "",
-						"offer":     "UbuntuServer",
-						"publisher": "Canonical",
-						"sku":       "16.04-LTS",
-						"version":   "latest",
+						"id":        "/subscriptions/22222222-0000-3333-0000-000000000000/resourceGroups/my-rg/providers/Microsoft.Compute/images/azure-nomad-server",
+						"offer":     "",
+						"publisher": "",
+						"sku":       "",
 					},
 				],
 				"storage_os_disk": [
@@ -390,7 +370,7 @@ resource_changes = {
 					"environment": "staging",
 				},
 				"timeouts": null,
-				"vm_size":  "Standard_A1",
+				"vm_size":  "Basic_A0",
 				"zones":    null,
 			},
 			"after_unknown": {
@@ -416,7 +396,9 @@ resource_changes = {
 				"plan":              [],
 				"storage_data_disk": true,
 				"storage_image_reference": [
-					{},
+					{
+						"version": true,
+					},
 				],
 				"storage_os_disk": [
 					{
@@ -425,9 +407,7 @@ resource_changes = {
 						"os_type":         true,
 					},
 				],
-				"tags": {
-					"environment": "staging",
-				},
+				"tags": {},
 			},
 			"before": null,
 		},
@@ -455,9 +435,7 @@ resource_changes = {
 				"location":              "eastus",
 				"name":                  "rogerberlind-network",
 				"resource_group_name":   "rogerberlind-resources",
-				"tags": {
-					"environment": "staging",
-				},
+				"tags":                  null,
 				"timeouts":              null,
 				"vm_protection_enabled": false,
 			},
@@ -521,19 +499,10 @@ resource_changes = {
 				"proximity_placement_group_id": null,
 				"resource_group_name":          "rogerberlind-resources",
 				"secret":                       [],
-				"size":                         "Standard_A2",
-				"source_image_id":              null,
-				"source_image_reference": [
-					{
-						"offer":     "WindowsServer",
-						"publisher": "MicrosoftWindowsServer",
-						"sku":       "2016-Datacenter",
-						"version":   "latest",
-					},
-				],
-				"tags": {
-					"environment": "staging",
-				},
+				"size":                         "Standard_F2",
+				"source_image_id":              "/subscriptions/00000000-5555-0000-8888-000000000000/resourceGroups/my-rg/providers/Microsoft.Compute/images/azure-consul-server",
+				"source_image_reference": [],
+				"tags":                         null,
 				"timeouts":                     null,
 				"timezone":                     null,
 				"virtual_machine_scale_set_id": null,

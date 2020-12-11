@@ -1,0 +1,25 @@
+# This policy uses the Sentinel tfplan/v2 import to limit the size
+# of EKS node groups
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Max size of an EKS node group
+param max_nodes default 5
+
+# Get all EKS Node groups
+allEKSNodeGroups = plan.find_resources("aws_eks_node_group")
+
+# Filter to EKS node groups with violations
+# Warnings will be printed for all violations since the last parameter is true
+violatingEKSNodeGroups = plan.filter_attribute_greater_than_value(allEKSNodeGroups,
+                        "scaling_config.0.max_size", max_nodes, true)
+
+# Count violations
+violations = length(violatingEKSNodeGroups["messages"])
+
+# Main rule
+main = rule {
+  violations is 0
+}
