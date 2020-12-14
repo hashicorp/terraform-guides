@@ -1,0 +1,123 @@
+terraform_version = "0.13.5"
+
+variables = {
+	"gcp_project": {
+		"name":  "gcp_project",
+		"value": "roger-berlind-demos",
+	},
+	"gcp_region": {
+		"name":  "gcp_region",
+		"value": "us-east1",
+	},
+}
+
+resource_changes = {
+	"google_compute_firewall.default": {
+		"address": "google_compute_firewall.default",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"allow": [
+					{
+						"ports": [
+							"80",
+							"8080",
+							"1000-2000",
+						],
+						"protocol": "tcp",
+					},
+					{
+						"ports":    [],
+						"protocol": "icmp",
+					},
+				],
+				"deny":        [],
+				"description": null,
+				"disabled":    null,
+				"log_config":  [],
+				"name":        "test-firewall",
+				"network":     "roger-network",
+				"priority":    1000,
+				"source_ranges": [
+					"10.0.25.0/24",
+					"10.0.50.0/24",
+				],
+				"source_service_accounts": null,
+				"source_tags":             null,
+				"target_service_accounts": null,
+				"target_tags":             null,
+				"timeouts":                null,
+			},
+			"after_unknown": {
+				"allow": [
+					{
+						"ports": [
+							false,
+							false,
+							false,
+						],
+					},
+					{
+						"ports": [],
+					},
+				],
+				"creation_timestamp": true,
+				"deny":               [],
+				"destination_ranges": true,
+				"direction":          true,
+				"enable_logging":     true,
+				"id":                 true,
+				"log_config":         [],
+				"project":            true,
+				"self_link":          true,
+				"source_ranges": [
+					false,
+					false,
+				],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "default",
+		"provider_name":  "registry.terraform.io/hashicorp/google",
+		"type":           "google_compute_firewall",
+	},
+	"google_compute_network.default": {
+		"address": "google_compute_network.default",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"auto_create_subnetworks":         true,
+				"delete_default_routes_on_create": false,
+				"description":                     null,
+				"name":                            "roger-network",
+				"timeouts":                        null,
+			},
+			"after_unknown": {
+				"gateway_ipv4": true,
+				"id":           true,
+				"mtu":          true,
+				"project":      true,
+				"routing_mode": true,
+				"self_link":    true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "default",
+		"provider_name":  "registry.terraform.io/hashicorp/google",
+		"type":           "google_compute_network",
+	},
+}
+
+output_changes = {}
