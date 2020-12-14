@@ -1,0 +1,244 @@
+terraform_version = "0.13.5"
+
+variables = {
+	"environment": {
+		"name":  "environment",
+		"value": "gke-dev",
+	},
+	"gcp_project": {
+		"name":  "gcp_project",
+		"value": "roger-berlind-demos",
+	},
+	"gcp_region": {
+		"name":  "gcp_region",
+		"value": "us-east1",
+	},
+	"initial_node_count": {
+		"name":  "initial_node_count",
+		"value": 1,
+	},
+	"master_password": {
+		"name":  "master_password",
+		"value": "k8smasterk8smaster",
+	},
+	"master_username": {
+		"name":  "master_username",
+		"value": "k8smaster",
+	},
+	"node_disk_size": {
+		"name":  "node_disk_size",
+		"value": "20",
+	},
+	"node_machine_type": {
+		"name":  "node_machine_type",
+		"value": "n1-standard-1",
+	},
+}
+
+resource_changes = {
+	"google_container_cluster.primary": {
+		"address": "google_container_cluster.primary",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description":                 null,
+				"enable_binary_authorization": false,
+				"enable_intranode_visibility": null,
+				"enable_kubernetes_alpha":     false,
+				"enable_legacy_abac":          false,
+				"enable_shielded_nodes":       false,
+				"enable_tpu":                  null,
+				"initial_node_count":          15,
+				"ip_allocation_policy":        [],
+				"location":                    "us-east1",
+				"maintenance_policy":          [],
+				"master_auth": [
+					{
+						"client_certificate_config": [
+							{
+								"issue_client_certificate": false,
+							},
+						],
+						"password": "k8smasterk8smaster",
+						"username": "k8smaster",
+					},
+				],
+				"master_authorized_networks_config": [],
+				"min_master_version":                null,
+				"name":                              "my-gke-cluster",
+				"network":                           "default",
+				"node_config": [
+					{
+						"machine_type": "n1-standard-8",
+						"metadata": {
+							"disable-legacy-endpoints": "true",
+						},
+						"min_cpu_platform": null,
+						"oauth_scopes": [
+							"https://www.googleapis.com/auth/cloud-platform",
+						],
+						"preemptible": false,
+						"tags":        null,
+					},
+				],
+				"pod_security_policy_config":   [],
+				"private_cluster_config":       [],
+				"remove_default_node_pool":     true,
+				"resource_labels":              null,
+				"resource_usage_export_config": [],
+				"timeouts":                     null,
+				"vertical_pod_autoscaling":     [],
+				"workload_identity_config":     [],
+			},
+			"after_unknown": {
+				"addons_config":               true,
+				"authenticator_groups_config": true,
+				"cluster_autoscaling":         true,
+				"cluster_ipv4_cidr":           true,
+				"database_encryption":         true,
+				"default_max_pods_per_node":   true,
+				"endpoint":                    true,
+				"id":                          true,
+				"instance_group_urls":  true,
+				"ip_allocation_policy": [],
+				"label_fingerprint":    true,
+				"logging_service":      true,
+				"maintenance_policy":   [],
+				"master_auth": [
+					{
+						"client_certificate": true,
+						"client_certificate_config": [
+							{},
+						],
+						"client_key":             true,
+						"cluster_ca_certificate": true,
+					},
+				],
+				"master_authorized_networks_config": [],
+				"master_version":                    true,
+				"monitoring_service":                true,
+				"network_policy":                    true,
+				"node_config": [
+					{
+						"disk_size_gb":      true,
+						"disk_type":         true,
+						"guest_accelerator": true,
+						"image_type":        true,
+						"labels":            true,
+						"local_ssd_count":   true,
+						"metadata":          {},
+						"oauth_scopes": [
+							false,
+						],
+						"service_account":          true,
+						"shielded_instance_config": true,
+						"taint":                    true,
+						"workload_metadata_config": true,
+					},
+				],
+				"node_locations":               true,
+				"node_pool":                    true,
+				"node_version":                 true,
+				"operation":                    true,
+				"pod_security_policy_config":   [],
+				"private_cluster_config":       [],
+				"project":                      true,
+				"release_channel":              true,
+				"resource_usage_export_config": [],
+				"self_link":                    true,
+				"services_ipv4_cidr":           true,
+				"subnetwork":                   true,
+				"vertical_pod_autoscaling":     [],
+				"workload_identity_config":     [],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "primary",
+		"provider_name":  "registry.terraform.io/hashicorp/google",
+		"type":           "google_container_cluster",
+	},
+	"google_container_node_pool.primary": {
+		"address": "google_container_node_pool.primary",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"autoscaling": [
+					{
+						"max_node_count": 20,
+						"min_node_count": 1,
+					},
+				],
+				"cluster":            "my-gke-cluster",
+				"initial_node_count": 12,
+				"location":           "us-east1",
+				"name":               "my-node-pool",
+				"node_config": [
+					{
+						"machine_type": "n1-standard-8",
+						"metadata": {
+							"disable-legacy-endpoints": "true",
+						},
+						"min_cpu_platform": null,
+						"oauth_scopes": [
+							"https://www.googleapis.com/auth/cloud-platform",
+						],
+						"preemptible": true,
+						"tags":        null,
+					},
+				],
+				"node_count": 16,
+				"timeouts":   null,
+			},
+			"after_unknown": {
+				"autoscaling": [
+					{},
+				],
+				"id": true,
+				"instance_group_urls": true,
+				"management":          true,
+				"max_pods_per_node":   true,
+				"name_prefix":         true,
+				"node_config": [
+					{
+						"disk_size_gb":      true,
+						"disk_type":         true,
+						"guest_accelerator": true,
+						"image_type":        true,
+						"labels":            true,
+						"local_ssd_count":   true,
+						"metadata":          {},
+						"oauth_scopes": [
+							false,
+						],
+						"service_account":          true,
+						"shielded_instance_config": true,
+						"taint":                    true,
+						"workload_metadata_config": true,
+					},
+				],
+				"node_locations":   true,
+				"project":          true,
+				"upgrade_settings": true,
+				"version":          true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "primary",
+		"provider_name":  "registry.terraform.io/hashicorp/google",
+		"type":           "google_container_node_pool",
+	},
+}
+
+output_changes = {}

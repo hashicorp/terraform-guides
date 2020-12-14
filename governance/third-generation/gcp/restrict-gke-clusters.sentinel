@@ -1,0 +1,98 @@
+# This policy uses the Sentinel tfplan/v2 import to restrict the
+# size of the pool of GKE clusters and the types of their VMs
+# Restrict both the default node pool of clusters and additional node pools
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+## Parameters
+# Set maximum pool size
+param max_pool_size default 10
+
+# Set allowed GCP machine types
+# include "null" since machine_type not required for google_container_cluster
+param allowed_types default [
+  "n1-standard-1",
+  "n1-standard-2",
+  "n1-standard-4",
+  "null",
+]
+
+# Get all GKE clusters
+allGKEClusters = plan.find_resources("google_container_cluster")
+
+# Filter to GKE clusters with invalid initial_node_count
+# But don't count null node_count as invalid
+GKEClustersWithInvalidNodeCount = plan.filter_attribute_greater_than_value(
+                allGKEClusters, "initial_node_count", max_pool_size, false)
+clusters_with_invalid_initial_node_count = 0
+for GKEClustersWithInvalidNodeCount["messages"] as address, message {
+  if message not contains "null" {
+    print(message)
+    clusters_with_invalid_initial_node_count += 1
+  }
+}
+
+# Filter to GKE clusters with invalid machine type
+# Warnings will be printed for all violations since the last parameter is true
+GKEClustersWithInvalidMachineType = plan.filter_attribute_not_in_list(allGKEClusters,
+                    "node_config.0.machine_type", allowed_types, true)
+clusters_with_invalid_machine_type = length(GKEClustersWithInvalidMachineType["messages"])
+
+# Get all GKE node pools
+allGKENodePools = plan.find_resources("google_container_node_pool")
+
+# Filter to GKE node pools with invalid initial_node_count
+# But don't count null initial_node_count as invalid
+GKENodePoolsWithInvalidInitialNodeCount = plan.filter_attribute_greater_than_value(
+                    allGKENodePools,"initial_node_count", max_pool_size, false)
+node_pools_with_invalid_initial_node_count = 0
+for GKENodePoolsWithInvalidInitialNodeCount["messages"] as address, message {
+  if message not contains "null" {
+    print(message)
+    node_pools_with_invalid_initial_node_count += 1
+  }
+}
+
+# Filter to GKE node pools with invalid node_count
+# But don't count null node_count as invalid
+GKENodePoolsWithInvalidNodeCount = plan.filter_attribute_greater_than_value(
+                        allGKENodePools, "node_count", max_pool_size, false)
+node_pools_with_invalid_node_count = 0
+for GKENodePoolsWithInvalidNodeCount["messages"] as address, message {
+  if message not contains "null" {
+    print(message)
+    node_pools_with_invalid_node_count += 1
+  }
+}
+
+# Filter to GKE node pools with invalid autoscaling.max_node_count
+# But don't count null max_node_count as invalid
+GKENodePoolsWithInvalidMaxNodeCount = plan.filter_attribute_greater_than_value(
+          allGKENodePools,"autoscaling.0.max_node_count", max_pool_size, false)
+node_pools_with_invalid_max_node_count = 0
+for GKENodePoolsWithInvalidMaxNodeCount["messages"] as address, message {
+  if message not contains "null" {
+    print(message)
+    node_pools_with_invalid_max_node_count += 1
+  }
+}
+
+# Filter to GKE node pools with invalid machine type
+# Warnings will be printed for all violations since the last parameter is true
+GKENodePoolsWithInvalidMachineType = plan.filter_attribute_not_in_list(
+        allGKENodePools,"node_config.0.machine_type", allowed_types, true)
+node_pools_with_invalid_machine_type = length(GKENodePoolsWithInvalidMachineType["messages"])
+
+# Main rule
+validated = clusters_with_invalid_initial_node_count is 0 and
+            clusters_with_invalid_machine_type is 0 and
+            node_pools_with_invalid_initial_node_count is 0 and
+            node_pools_with_invalid_node_count is 0 and
+            node_pools_with_invalid_max_node_count is 0 and
+            node_pools_with_invalid_machine_type is 0
+
+main = rule {
+  validated
+}
