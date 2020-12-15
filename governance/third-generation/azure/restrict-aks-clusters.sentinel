@@ -1,5 +1,6 @@
 # This policy uses the Sentinel tfplan/v2 import to restrict the
 # size of the pool of AKS clusters and the sizes of their VMs
+# Restrict both the default node pool of clusters and additional node pools
 
 # Import common-functions/tfplan-functions/tfplan-functions.sentinel
 # with alias "plan"
@@ -44,10 +45,47 @@ AKSClustersWithInvalidVMSize = plan.filter_attribute_not_in_list(allAKSClusters,
                     "default_node_pool.0.vm_size", allowed_sizes, true)
 clusters_with_invalid_vm_size = length(AKSClustersWithInvalidVMSize["messages"])
 
+# Get all AKS node pools
+allAKSNodePools = plan.find_resources("azurerm_kubernetes_cluster_node_pool")
+
+# Filter to AKS node pools with invalid node_count
+# But don't count null node_count as invalid
+AKSNodePoolsWithInvalidNodeCount = plan.filter_attribute_greater_than_value(allAKSNodePools,
+                "node_count", max_pool_size, false)
+node_pools_with_invalid_node_count = 0
+for AKSNodePoolsWithInvalidNodeCount["messages"] as address, message {
+  if message not contains "null" {
+    print(message)
+    node_pools_with_invalid_node_count += 1
+  }
+}
+
+# Filter to AKS node pools with invalid max_count
+# But don't count null max_count as invalid
+AKSNodePoolsWithInvalidMaxCount = plan.filter_attribute_greater_than_value(allAKSNodePools,
+                "max_count", max_pool_size, false)
+node_pools_with_invalid_max_count = 0
+for AKSNodePoolsWithInvalidMaxCount["messages"] as address, message {
+  if message not contains "null" {
+    print(message)
+    node_pools_with_invalid_max_count += 1
+  }
+}
+
+# Filter to AKS node pools with invalid VM size
+# Warnings will be printed for all violations since the last parameter is true
+AKSNodePoolsWithInvalidVMSize = plan.filter_attribute_not_in_list(allAKSNodePools,
+                    "vm_size", allowed_sizes, true)
+node_pools_with_invalid_vm_size = length(AKSNodePoolsWithInvalidVMSize["messages"])
+
 # Main rule
 validated = clusters_with_invalid_node_count is 0 and
             clusters_with_invalid_max_count is 0 and
-            clusters_with_invalid_vm_size is 0
+            clusters_with_invalid_vm_size is 0 and
+            node_pools_with_invalid_node_count is 0 and
+            node_pools_with_invalid_max_count is 0 and
+            node_pools_with_invalid_vm_size is 0
+            
 main = rule {
   validated
 }

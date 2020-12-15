@@ -1,0 +1,85 @@
+terraform_version = "0.13.5"
+
+outputs = {}
+
+resources = {
+	"aws_iam_policy_document.example": {
+		"address":        "aws_iam_policy_document.example",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "example",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"tainted":        false,
+		"type":           "aws_iam_policy_document",
+		"values": {
+			"id":            "1063863346",
+			"json":          "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"1\",\n      \"Effect\": \"Allow\",\n      \"Action\": [\n        \"s3:ListAllMyBuckets\",\n        \"s3:GetBucketLocation\"\n      ],\n      \"Resource\": \"arn:aws:s3:::*\"\n    },\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:ListBucket\",\n      \"Resource\": \"arn:aws:s3:::bucket-for-test\",\n      \"Condition\": {\n        \"StringLike\": {\n          \"s3:prefix\": [\n            \"home/${aws:username}/\",\n            \"home/\",\n            \"\"\n          ]\n        }\n      }\n    },\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"s3:*\",\n      \"Resource\": [\n        \"arn:aws:s3:::bucket-for-test/home/${aws:username}/*\",\n        \"arn:aws:s3:::bucket-for-test/home/${aws:username}\"\n      ]\n    }\n  ]\n}",
+			"override_json": null,
+			"policy_id":     null,
+			"source_json":   null,
+			"statement": [
+				{
+					"actions": [
+						"s3:GetBucketLocation",
+						"s3:ListAllMyBuckets",
+					],
+					"condition":      [],
+					"effect":         "Allow",
+					"not_actions":    [],
+					"not_principals": [],
+					"not_resources":  [],
+					"principals":     [],
+					"resources": [
+						"arn:aws:s3:::*",
+					],
+					"sid": "1",
+				},
+				{
+					"actions": [
+						"s3:ListBucket",
+					],
+					"condition": [
+						{
+							"test": "StringLike",
+							"values": [
+								"",
+								"home/",
+								"home/&{aws:username}/",
+							],
+							"variable": "s3:prefix",
+						},
+					],
+					"effect":         "Allow",
+					"not_actions":    [],
+					"not_principals": [],
+					"not_resources":  [],
+					"principals":     [],
+					"resources": [
+						"arn:aws:s3:::bucket-for-test",
+					],
+					"sid": "",
+				},
+				{
+					"actions": [
+						"s3:*",
+					],
+					"condition":      [],
+					"effect":         "Allow",
+					"not_actions":    [],
+					"not_principals": [],
+					"not_resources":  [],
+					"principals":     [],
+					"resources": [
+						"arn:aws:s3:::bucket-for-test/home/&{aws:username}",
+						"arn:aws:s3:::bucket-for-test/home/&{aws:username}/*",
+					],
+					"sid": "",
+				},
+			],
+			"version": "2012-10-17",
+		},
+	},
+}

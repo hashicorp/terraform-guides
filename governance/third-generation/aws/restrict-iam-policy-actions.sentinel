@@ -1,0 +1,37 @@
+# This policy uses the Sentinel tfstate/v2 import to prevent instances of
+# the aws_iam_policy_document data source from including forbidden actions
+
+# Import common-functions/tfstate-functions/tfstate-functions.sentinel
+# with alias "state"
+import "tfstate-functions" as state
+
+# Forbidden IAM actions
+param forbidden_actions default ["iam:Create*",  "iam:Delete*"]
+
+# Get all IAM policy document data sources
+allIAMPolicyDocs = state.find_datasources("aws_iam_policy_document")
+
+# Filter to IAM policy documents with violations
+validated = true
+for allIAMPolicyDocs as address, d {
+
+  # Find the statements of the current policy doc
+  statements = state.find_blocks(d, "statement")
+
+  # Filter to violating statements of current policy doc
+  violatingStatements = state.filter_attribute_contains_items_from_list(
+                        statements, "actions", forbidden_actions, false)
+
+  # Print warnings if any violating statements
+  if length(violatingStatements["messages"]) > 0 {
+    validated = false
+    print(address, "has at least one statement with forbidden actions:")
+    state.print_violations(violatingStatements["messages"], "Statement")
+  } // end if
+
+} // end for
+
+# Main rule
+main = rule {
+  validated
+}

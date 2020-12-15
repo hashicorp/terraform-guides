@@ -66,13 +66,25 @@ find_datasources_by_provider = func(provider) {
 # Find all blocks of a specific type from a resource using the tfstate/v2 import.
 # parent should be a single resource or block of a resource or a data source
 # or block of a data source.
+# If parent is a resource, you can pass it in the form r.values or just r.
 # child should be a string representing a block of parent
 # that contains a list of objects.
 find_blocks = func(parent, child) {
-  if types.type_of(parent[child] else null) is "list" {
-      return parent[child]
-  } else {
+  # Use parent.values if it exists
+  if (types.type_of(parent) is "map" and
+     "values" in keys(parent)) and
+     types.type_of(parent.values) is "map" {
+    if types.type_of(parent.values[child] else null) is "list" {
+      return parent.values[child]
+    } else {
       return []
+    }
+  } else {
+    if types.type_of(parent[child] else null) is "list" {
+      return parent[child]
+    } else {
+      return []
+    }
   }
 }
 
@@ -557,21 +569,16 @@ filter_attribute_less_than_value = func(resources, attr, value, prtmsg) {
 # attribute (attr) that does not match a regular expression (expr).
 # Resources should be derived by applying filters to tfstate.resources.
 # Set prtmsg to `true` (without quotes) if you want to print violation messages.
+# If you want to allow null, set `expr` to "(<regex>|null)".
 filter_attribute_does_not_match_regex = func(resources, attr, expr, prtmsg) {
   violators = {}
 	messages = {}
   for resources as address, r {
     v = evaluate_attribute(r, attr) else null
     if v is null {
-      # Add the resource and a warning message to the violators list
-      message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
-      violators[address] = r
-			messages[address] = message
-      if prtmsg {
-        print(message)
-      }
-    } else if v not matches expr {
+      v = "null"
+    }
+    if v not matches expr {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) + " with value " +
                 to_string(v) + " that does not match the regex " + to_string(expr)
