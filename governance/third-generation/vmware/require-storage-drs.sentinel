@@ -1,0 +1,21 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all VMware datastore clusters enable storage DRS
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Get all datastore clusters
+allDatastoreClusters = plan.find_resources("vsphere_datastore_cluster")
+
+# Filter to datastore clusters that do not enable storage DRS
+# Warnings will be printed for all violations since the last parameter is true
+datastoreClustersWithoutDRS = plan.filter_attribute_is_not_value(
+                              allDatastoreClusters, "sdrs_enabled", true, true)
+
+# Main rule
+validated = length(datastoreClustersWithoutDRS["messages"]) is 0
+
+main = rule {
+  validated
+}

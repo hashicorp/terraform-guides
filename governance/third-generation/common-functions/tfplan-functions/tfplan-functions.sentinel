@@ -323,7 +323,7 @@ filter_attribute_not_contains_list = func(resources, attr, required, prtmsg) {
        not (types.type_of(v) is "list" or types.type_of(v) is "map") {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is missing, null, or is not a map or a list" + "\nIt should have had these tags: " + to_string(required)
+                " that is missing, null, or is not a map or a list. " + "It should have had these items: " + to_string(required)
       violators[address] = rc
       messages[address] = message
       if prtmsg {
@@ -486,7 +486,8 @@ filter_attribute_is_not_value = func(resources, attr, value, prtmsg) {
     if v is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It is supposed to be " +
+                to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -523,7 +524,7 @@ filter_attribute_is_value = func(resources, attr, value, prtmsg) {
     if v is value {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) + " with value " +
-                to_string(v) + " that is equal to " + to_string(value)
+                to_string(v) + " that is not allowed."
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -547,7 +548,8 @@ filter_attribute_greater_than_value = func(resources, attr, value, prtmsg) {
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It is supposed to be less " +
+                "than or equal to " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -580,7 +582,8 @@ filter_attribute_less_than_value = func(resources, attr, value, prtmsg) {
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It is supposed to be greater " +
+                "than or equal to " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -669,7 +672,8 @@ filter_attribute_does_not_have_prefix = func(resources, attr, prefix, prtmsg) {
     if v is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It must have a value that " +
+                "starts with " + to_string(prefix)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -702,7 +706,8 @@ filter_attribute_has_prefix = func(resources, attr, prefix, prtmsg) {
     if v is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It must have a value that " +
+                "does not start with " + to_string(prefix)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -735,7 +740,8 @@ filter_attribute_does_not_have_suffix = func(resources, attr, suffix, prtmsg) {
     if v is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It must have a value that " +
+                "ends with " + to_string(prefix)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -768,7 +774,8 @@ filter_attribute_has_suffix = func(resources, attr, suffix, prtmsg) {
     if v is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It must have a value that " +
+                "does not end with " + to_string(suffix)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {

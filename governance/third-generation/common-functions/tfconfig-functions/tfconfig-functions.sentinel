@@ -398,7 +398,8 @@ filter_attribute_does_not_match_regex = func(items, attr, expr, prtmsg) {
     if val is null {
       # Add the item and a warning message to the violators list
       message = to_string(index) + " has " + to_string(attr) +
-                " that is null or undefined"
+                " that is null or undefined. " + "It is supposed to " +
+                "match the regex " + to_string(expr)
       violators[index] = item
 			messages[index] = message
       if prtmsg {
