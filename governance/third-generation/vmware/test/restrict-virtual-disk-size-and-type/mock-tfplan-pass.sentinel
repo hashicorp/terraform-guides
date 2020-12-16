@@ -1,0 +1,36 @@
+terraform_version = "0.13.5"
+
+variables = {}
+
+resource_changes = {
+	"vsphere_virtual_disk.myDisk": {
+		"address": "vsphere_virtual_disk.myDisk",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"adapter_type":       "lsiLogic",
+				"create_directories": null,
+				"datacenter":         "PacketDatacenter",
+				"datastore":          "datastore1",
+				"size":               50,
+				"type":               "thin",
+				"vmdk_path":          "myDisk.vmdk",
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "myDisk",
+		"provider_name":  "registry.terraform.io/hashicorp/vsphere",
+		"type":           "vsphere_virtual_disk",
+	},
+}
+
+output_changes = {}

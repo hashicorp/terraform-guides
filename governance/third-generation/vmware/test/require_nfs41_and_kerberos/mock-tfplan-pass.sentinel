@@ -1,0 +1,108 @@
+terraform_version = "0.13.5"
+
+variables = {}
+
+resource_changes = {
+	"vsphere_nas_datastore.datastore1": {
+		"address": "vsphere_nas_datastore.datastore1",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"access_mode":          "readWrite",
+				"custom_attributes":    null,
+				"datastore_cluster_id": null,
+				"folder":               null,
+				"host_system_ids": [
+					"host-9",
+				],
+				"name": "terraform-test-1",
+				"remote_hosts": [
+					"nfs",
+				],
+				"remote_path":   "/export/terraform-test-1",
+				"security_type": "SEC_KRB5",
+				"tags":          null,
+				"type":          "NFS41",
+			},
+			"after_unknown": {
+				"accessible": true,
+				"capacity":   true,
+				"free_space": true,
+				"host_system_ids": [
+					false,
+				],
+				"id":                   true,
+				"maintenance_mode":     true,
+				"multiple_host_access": true,
+				"protocol_endpoint":    true,
+				"remote_hosts": [
+					false,
+				],
+				"uncommitted_space": true,
+				"url":               true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "datastore1",
+		"provider_name":  "registry.terraform.io/hashicorp/vsphere",
+		"type":           "vsphere_nas_datastore",
+	},
+	"vsphere_nas_datastore.datastore2": {
+		"address": "vsphere_nas_datastore.datastore2",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"access_mode":          "readWrite",
+				"custom_attributes":    null,
+				"datastore_cluster_id": null,
+				"folder":               null,
+				"host_system_ids": [
+					"host-9",
+				],
+				"name": "terraform-test-2",
+				"remote_hosts": [
+					"nfs",
+				],
+				"remote_path":   "/export/terraform-test-2",
+				"security_type": "SEC_KRB5I",
+				"tags":          null,
+				"type":          "NFS41",
+			},
+			"after_unknown": {
+				"accessible": true,
+				"capacity":   true,
+				"free_space": true,
+				"host_system_ids": [
+					false,
+				],
+				"id":                   true,
+				"maintenance_mode":     true,
+				"multiple_host_access": true,
+				"protocol_endpoint":    true,
+				"remote_hosts": [
+					false,
+				],
+				"uncommitted_space": true,
+				"url":               true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "datastore2",
+		"provider_name":  "registry.terraform.io/hashicorp/vsphere",
+		"type":           "vsphere_nas_datastore",
+	},
+}
+
+output_changes = {}

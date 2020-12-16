@@ -1,0 +1,27 @@
+# This policy uses the Sentinel tfplan/v2 import to require that NAS
+# Datastores be type NFS41 and use Kerberos for security
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Get all NAS Datastores
+allDatastores = plan.find_resources("vsphere_nas_datastore")
+
+# Filter to Datastores that are not NFS
+# Warnings will be printed for all violations since the last parameter is true
+nonNFSDatastores = plan.filter_attribute_is_not_value(allDatastores,
+             "type", "NFS41", true)
+
+# Filter to Datastores that do not use Kerberos
+# Warnings will be printed for all violations since the last parameter is true
+nonKerberosDatastores = plan.filter_attribute_not_in_list(allDatastores,
+                "security_type", ["SEC_KRB5", "SEC_KRB5I"] , true)
+
+# Main rule
+validated = length(nonNFSDatastores["messages"]) is 0 and
+            length(nonKerberosDatastores["messages"]) is 0
+
+main = rule {
+  validated
+}

@@ -1,0 +1,30 @@
+# This policy uses the Sentinel tfplan/v2 import to limit the size
+# of VMware virtual disks and require thin disks
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Max Disk Size Limit (in GB)
+maxSize = 100
+
+# Get all Virtual Disks
+allVDs = plan.find_resources("vsphere_virtual_disk")
+
+# Filter to disks with large size
+# Warnings will be printed for all violations since the last parameter is true
+largeVDs = plan.filter_attribute_greater_than_value(allVDs,
+             "size", maxSize, true)
+
+# Filter to disks that are not thin
+# Warnings will be printed for all violations since the last parameter is true
+nonThinVDs = plan.filter_attribute_is_not_value(allVDs,
+                "type", "thin", true)
+
+# Main rule
+validated = length(largeVDs["messages"]) is 0 and
+            length(nonThinVDs["messages"]) is 0
+
+main = rule {
+  validated
+}

@@ -1,0 +1,92 @@
+terraform_version = "0.13.5"
+
+variables = {}
+
+resource_changes = {
+	"vsphere_virtual_disk.myDisk1": {
+		"address": "vsphere_virtual_disk.myDisk1",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"adapter_type":       "lsiLogic",
+				"create_directories": null,
+				"datacenter":         "PacketDatacenter",
+				"datastore":          "datastore1",
+				"size":               200,
+				"type":               "thin",
+				"vmdk_path":          "myDisk1.vmdk",
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "myDisk1",
+		"provider_name":  "registry.terraform.io/hashicorp/vsphere",
+		"type":           "vsphere_virtual_disk",
+	},
+	"vsphere_virtual_disk.myDisk2": {
+		"address": "vsphere_virtual_disk.myDisk2",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"adapter_type":       "lsiLogic",
+				"create_directories": null,
+				"datacenter":         "PacketDatacenter",
+				"datastore":          "datastore1",
+				"size":               80,
+				"type":               "lazy",
+				"vmdk_path":          "myDisk2.vmdk",
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "myDisk2",
+		"provider_name":  "registry.terraform.io/hashicorp/vsphere",
+		"type":           "vsphere_virtual_disk",
+	},
+	"vsphere_virtual_disk.myDisk3": {
+		"address": "vsphere_virtual_disk.myDisk3",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"adapter_type":       "lsiLogic",
+				"create_directories": null,
+				"datacenter":         "PacketDatacenter",
+				"datastore":          "datastore1",
+				"size":               150,
+				"type":               "lazy",
+				"vmdk_path":          "myDisk3.vmdk",
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "myDisk3",
+		"provider_name":  "registry.terraform.io/hashicorp/vsphere",
+		"type":           "vsphere_virtual_disk",
+	},
+}
+
+output_changes = {}
