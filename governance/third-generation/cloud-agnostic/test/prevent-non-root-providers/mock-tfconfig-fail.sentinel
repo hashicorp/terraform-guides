@@ -35,7 +35,7 @@ providers = {
 		"module_address":      "module.nested",
 		"name":                "aws",
 		"provider_config_key": "module.nested:aws",
-		"version_constraint":  "",
+		"version_constraint":  "2.0.0",
 	},
 	"module.nested:http.east": {
 		"alias": "east",
@@ -43,7 +43,7 @@ providers = {
 		"module_address":      "module.nested",
 		"name":                "http",
 		"provider_config_key": "module.nested:http.east",
-		"version_constraint":  "",
+		"version_constraint":  "2.0.0",
 	},
 }
 
