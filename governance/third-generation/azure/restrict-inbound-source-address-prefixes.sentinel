@@ -1,5 +1,6 @@
-# This policy uses the Sentinel tfplan/v2 import to validate that no security
-# group rules have the CIDRs "0.0.0.0/0", "0.0.0.0", "*", or "Internet".
+# This policy uses the Sentinel tfplan/v2 import to validate that no inbound
+# security group rules have the CIDRs "0.0.0.0/0", "0.0.0.0", "*", or "Internet"
+# in their source_address_prefix or source_address_prefixes fields.
 # It covers both the azurerm_network_security_group and the
 # azurerm_network_security_rule resources which can both define rules.
 
@@ -26,13 +27,13 @@ SGInboundAllowRules = filter tfplan.resource_changes as address, rc {
 # based on use of source_address_prefix (that specify a single prefix)
 # Warnings will be printed for all violations since the last parameter is true
 violatingSinglePrefixSGRules = plan.filter_attribute_in_list(
-    SGInboundAllowRules, "source_address_prefix",forbidden_cidrs, true)
+    SGInboundAllowRules, "source_address_prefix", forbidden_cidrs, true)
 
 # Filter to Inbound Allow Security Group Rules with violations
 # based on use of source_address_prefixes (that specify multiple prefixes)
 # Warnings will be printed for all violations since the last parameter is true
 violatingMultiPrefixSGRules = plan.filter_attribute_contains_items_from_list(
-    SGInboundAllowRules, "source_address_prefixes",forbidden_cidrs, true)
+    SGInboundAllowRules, "source_address_prefixes", forbidden_cidrs, true)
 
 # Get all Security Groups
 allSGs = plan.find_resources("azurerm_network_security_group")
