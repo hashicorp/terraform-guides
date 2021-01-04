@@ -1,5 +1,5 @@
 # This policy uses the Sentinel tfplan/v2 import to validate that no security group
-# rules have the CIDR "0.0.0.0/0" for ingress rules.  It covers both the
+# rules have the CIDR "0.0.0.0/0" for egress rules.  It covers both the
 # aws_security_group and the aws_security_group_rule resources which can both
 # define rules.
 
@@ -14,17 +14,17 @@ import "tfplan-functions" as plan
 # Include "null" to forbid missing or computed values
 forbidden_cidrs = ["0.0.0.0/0"]
 
-# Get all Security Group Ingress Rules
-SGIngressRules = filter tfplan.resource_changes as address, rc {
+# Get all Security Group Egress Rules
+SGEgressRules = filter tfplan.resource_changes as address, rc {
   rc.type is "aws_security_group_rule" and
-  rc.mode is "managed" and rc.change.after.type is "ingress" and
+  rc.mode is "managed" and rc.change.after.type is "egress" and
   (rc.change.actions contains "create" or rc.change.actions contains "update" or
    rc.change.actions contains "read" or rc.change.actions contains "no-op")
 }
 
-# Filter to Ingress Security Group Rules with violations
+# Filter to Egress Security Group Rules with violations
 # Warnings will be printed for all violations since the last parameter is true
-violatingSGRules = plan.filter_attribute_contains_items_from_list(SGIngressRules,
+violatingSGRules = plan.filter_attribute_contains_items_from_list(SGEgressRules,
                   "cidr_blocks",forbidden_cidrs, true)
 
 # Get all Security Groups
@@ -34,20 +34,20 @@ allSGs = plan.find_resources("aws_security_group")
 violatingSGsCount = 0
 for allSGs as address, sg {
 
-  # Find the ingress rules of the current SG
-  ingressRules = plan.find_blocks(sg, "ingress")
+  # Find the egress rules of the current SG
+  egressRules = plan.find_blocks(sg, "egress")
 
   # Filter to violating CIDR blocks
   # Warnings will not be printed for violations since the last parameter is false
-  violatingIRs = plan.filter_attribute_contains_items_from_list(ingressRules,
+  violatingERs = plan.filter_attribute_contains_items_from_list(egressRules,
                  "cidr_blocks", forbidden_cidrs, false)
 
   # Print violation messages
-  if length(violatingIRs["messages"]) > 0 {
+  if length(violatingERs["messages"]) > 0 {
     violatingSGsCount += 1
-    print("SG Ingress Violation:", address, "has at least one ingress rule",
+    print("SG Egress Violation:", address, "has at least one egress rule",
           "with forbidden cidr blocks")
-    plan.print_violations(violatingIRs["messages"], "Ingress Rule")
+    plan.print_violations(violatingERs["messages"], "Egress Rule")
   }  // end if
 
 } // end for SGs

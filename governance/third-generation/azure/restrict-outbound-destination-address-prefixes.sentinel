@@ -1,0 +1,87 @@
+# This policy uses the Sentinel tfplan/v2 import to validate that no outbound
+# security group rules have the CIDRs "0.0.0.0/0", "0.0.0.0", "*", or "Internet"
+# in their destination_address_prefix or destination_address_prefixes fields.
+# It covers both the azurerm_network_security_group and the
+# azurerm_network_security_rule resources which can both define rules.
+
+# Import the tfplan/v2 import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Forbidden CIDRs
+forbidden_cidrs = ["0.0.0.0/0", "0.0.0.0", "*", "Internet"]
+
+# Get all Network Security Group Outbound Allow Rules
+SGOutboundAllowRules = filter tfplan.resource_changes as address, rc {
+  rc.type is "azurerm_network_security_rule" and
+  rc.mode is "managed" and rc.change.after.direction is "Outbound" and
+  rc.change.after.access is "Allow" and
+  (rc.change.actions contains "create" or rc.change.actions contains "update" or
+   rc.change.actions contains "read" or rc.change.actions contains "no-op")
+}
+
+# Filter to Outbound Allow Security Group Rules with violations
+# based on use of destination_address_prefix (that specify a single prefix)
+# Warnings will be printed for all violations since the last parameter is true
+violatingSinglePrefixSGRules = plan.filter_attribute_in_list(
+    SGOutboundAllowRules, "destination_address_prefix", forbidden_cidrs, true)
+
+# Filter to Outbound Allow Security Group Rules with violations
+# based on use of destination_address_prefixes (that specify multiple prefixes)
+# Warnings will be printed for all violations since the last parameter is true
+violatingMultiPrefixSGRules = plan.filter_attribute_contains_items_from_list(
+    SGOutboundAllowRules, "destination_address_prefixes", forbidden_cidrs, true)
+
+# Get all Security Groups
+allSGs = plan.find_resources("azurerm_network_security_group")
+
+# Validate Security Groups
+violatingSGsCount = 0
+for allSGs as address, sg {
+
+  # Find the security rules of the current SG
+  securityRules = plan.find_blocks(sg, "security_rule")
+
+  # Filter to outbound allow rules from the current SG
+  outboundAllowRules = filter securityRules as index, sgr {
+    sgr.direction is "Outbound" and sgr.access is "Allow"
+  }
+
+  # Filter to violating CIDR blocks based on use of destination_address_prefix
+  # Warnings will not be printed for violations since the last parameter is false
+  violatingSinglePrefixSRs = plan.filter_attribute_in_list(
+    outboundAllowRules, "destination_address_prefix", forbidden_cidrs, false)
+
+  # Filter to violating CIDR blocks based on use of destination_address_prefixes
+  # Warnings will not be printed for violations since the last parameter is false
+  violatingMultiPrefixSRs = plan.filter_attribute_contains_items_from_list(
+      outboundAllowRules, "destination_address_prefixes", forbidden_cidrs, false)
+
+  # Print violation messages
+  if length(violatingSinglePrefixSRs["messages"]) > 0 or
+     length(violatingMultiPrefixSRs["messages"]) > 0 {
+    violatingSGsCount += 1
+    print("Security group", address, "has at least one outbound allow rule",
+          "with forbidden cidr blocks")
+    if length(violatingSinglePrefixSRs["messages"]) > 0 {
+      plan.print_violations(violatingSinglePrefixSRs["messages"],
+           "Outbound Rule")
+    }
+    if length(violatingMultiPrefixSRs["messages"]) > 0 {
+      plan.print_violations(violatingMultiPrefixSRs["messages"],
+          "Outbound Rule")
+    }
+  }  // end if
+} // end for SGs
+
+# Main rule
+validated = length(violatingSinglePrefixSGRules["messages"]) is 0 and
+            length(violatingMultiPrefixSGRules["messages"]) is 0 and
+            violatingSGsCount is 0
+
+main = rule {
+  validated is true
+}

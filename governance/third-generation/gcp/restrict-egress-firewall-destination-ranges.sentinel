@@ -1,0 +1,30 @@
+# This policy uses the Sentinel tfplan/v2 import to block use of the
+# forbidden CIDRs in egress google_compute_firewall resources
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Forbidden CIDRs
+forbidden_cidrs = ["0.0.0.0/0"]
+
+# Get all Firewalls
+allFirewalls = plan.find_resources("google_compute_firewall")
+
+# Filter to egress firewalls with violations
+# We only want the resources map from the returned map
+egressFirewalls = plan.filter_attribute_is_value(allFirewalls,
+                        "direction", "EGRESS", false).resources
+
+# Filter to egress firewalls with forbidden destination_ranges
+# Warnings will be printed for all violations since the last parameter is true
+violatingFirewalls = plan.filter_attribute_contains_items_from_list(
+                     egressFirewalls, "destination_ranges", forbidden_cidrs, true)
+
+# Count violations
+violations = length(violatingFirewalls["messages"])
+
+# Main rule
+main = rule {
+  violations is 0
+}

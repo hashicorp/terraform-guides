@@ -1,5 +1,5 @@
 # This policy uses the Sentinel tfplan/v2 import to block use of the
-# forbidden CIDRs in google_compute_firewall resources
+# forbidden CIDRs in ingress google_compute_firewall resources
 
 # Import common-functions/tfplan-functions/tfplan-functions.sentinel
 # with alias "plan"
