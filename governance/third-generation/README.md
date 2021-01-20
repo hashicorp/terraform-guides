@@ -3,7 +3,7 @@ This directory and its sub-directories contain third-generation Sentinel policie
 
 Additionally, it contains [Policy Set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#the-sentinel-hcl-configuration-file) configuration files so that the cloud-specific and cloud-agnostic policies can easily be added to Terraform Cloud organizations using [VCS Integrations](https://www.terraform.io/docs/cloud/vcs/index.html) after forking this repository.
 
-These policies and the Terraform Sentinel v2 imports they use can only be used with Terraform 0.12.
+These policies and the Terraform Sentinel v2 imports they use can only be used with Terraform 0.12 and above.
 
 These policies use the new Terraform Sentinel v2 imports. They also use a new feature called [Sentinel Modules](https://docs.hashicorp.com/sentinel/extending/modules) which allows Sentinel functions and rules to be defined in one file and used by Sentinel policies in other files.
 
@@ -12,7 +12,9 @@ To learn more about the new Terraform Sentinel v2 imports, see this [blog post](
 To learn more about Sentinel Modules, see this [blog post](https://discuss.hashicorp.com/t/sentinel-v0-15-0-introducing-modules/6579).
 
 ## Using These Policies with Terraform Cloud and Terraform Enterprise
-These policies and the common functions they use can be used as organized with the current version of Terraform Cloud (TFC) and with Terraform Enterprise (TFE) v202006-1 and higher. That version was released on June 23, 2020.
+These policies and the common functions they use can be used as organized with the current version of Terraform Cloud (TFC) and with Terraform Enterprise (TFE) v202011-1 and higher. That version was released on November 10, 2020. It added the Sentinel 0.16.0 runtime which introduced the option of using HCL instead of JSON configuration files.
+
+All the JSON Sentinel configuration files were replaced with new HCL equivalent files on January 20, 2021. If you running a version of Terraform Enterprise (TFE) betweeen v202006-1 and v202010-2 and would like to use these policies, you should use the most recent version of this repository before January 20, 2021 which included the JSON configuration files.
 
 ## Important Characterizations of the New Policies
 These new third-generation policies have several important characteristics:
