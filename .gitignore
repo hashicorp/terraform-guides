@@ -38,3 +38,6 @@ operations/sentinel-policies-scripts/create-policy.template.json
 operations/sentinel-policies-scripts/create-policy.json
 operations/variable-scripts/variable.template.json
 operations/variable-scripts/variable.json
+
+# Sentinel runtime directory
+.sentinel

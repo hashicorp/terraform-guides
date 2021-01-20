@@ -37,7 +37,7 @@ module_calls = {
 		"module_address":     "",
 		"name":               "network",
 		"source":             "app.terraform.io/Cloud-Operations/network/azurerm",
-		"version_constraint": "2.0.0",
+		"version_constraint": "3.2.1",
 	},
 	"windowsserver": {
 		"config": {
@@ -111,7 +111,7 @@ module_calls = {
 		"module_address":     "module.network",
 		"name":               "network2",
 		"source":             "app.terraform.io/Cloud-Operations/network/azurerm",
-		"version_constraint": "2.0.0",
+		"version_constraint": "3.2.1",
 	},
 	"module.network:windowsserver2": {
 		"config": {

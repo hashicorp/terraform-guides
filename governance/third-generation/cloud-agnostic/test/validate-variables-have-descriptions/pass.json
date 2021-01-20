@@ -1,8 +1,0 @@
-{
-  "mock": {
-    "tfconfig/v2": "mock-tfconfig-pass.sentinel"
-  },
-  "test": {
-    "main": true
-  }
-}

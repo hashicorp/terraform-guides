@@ -43,25 +43,25 @@ Consequently, you **cannot** test the use-latest-module-versions.sentinel policy
 
 You could test the policy with the `sentinel test` command if you edited the mocks to reference modules contained in a PMR in an organization on your own TFC or TFE organization or contained in the public registry and added your own valid API token to the test cases.
 
-Since many readers won't have modules in their own TFC/TFE organization, we have provided a [sentinel.json](./sentinel.json) configuration file and an additional mock file [mocks/mock-tfconfig-fail.sentinel](./mocks/mock-tfconfig-fail.sentinel) that references modules from the [public Terraform registry](https://registry.terraform.io). These allow you to run the `sentinel apply` command to use the use-latest-module-versions.sentinel policy.  
+Since many readers won't have modules in their own TFC/TFE organization, we have provided a [use-latest-module-versions.hcl](./use-latest-module-versions.hcl) Sentinel configuration file and an additional mock file [mocks/mock-tfconfig-fail.sentinel](./mocks/mock-tfconfig-fail.sentinel) that references modules from the [public Terraform registry](https://registry.terraform.io). These allow you to run the `sentinel apply` command to use the use-latest-module-versions.sentinel policy.  
 
 Specifically, you can run this command to test that the versions of the Azure modules from the public module registry are the latest:
 ```
-sentinel apply use-latest-module-versions.sentinel -trace
+sentinel apply -trace -config=use-latest-module-versions.hcl use-latest-module-versions.sentinel
 ```
-You do not need a token when talking to the public registry, so the sentinel.json file sets `token` to an empty string.
+You do not need a token when talking to the public registry, so the use-latest-module-versions.hcl file sets `token` to an empty string.
 
-The policy should fail since the mock does not use the most recent versions of the two modules. If you would like to see the policy pass, change the versions of the modules in mocks/mock-tfconfig-fail.sentinel to the most recent versions listed under https://registry.terraform.io/modules/Azure/network/azurerm and https://registry.terraform.io/modules/Azure/compute/azurerm. Currently, those are "3.0.1" and "3.2.0" respectively.
+The policy should fail since the mock does not use the most recent versions of the two modules. If you would like to see the policy pass, change the versions of the modules in mocks/mock-tfconfig-fail.sentinel to the most recent versions listed under https://registry.terraform.io/modules/Azure/network/azurerm and https://registry.terraform.io/modules/Azure/compute/azurerm. Currently, those are "3.2.1" and "3.10.0" respectively.
 
 Note that the `sentinel test` and `sentinel apply` commands for testing/applying the use-latest-module-versions.sentinel policy **really** are making HTTP calls to the API endpoints to retrieve the list of matching modules in the registries. However, the mocks simulate which modules would actually be used by Terraform code.
 
-You should **not** edit sentinel.json unless you also edit mocks/mock-tfconfig-fail.sentinel to reference actual modules in the registry and organization that sentinel.json refers to.
+You should **not** edit use-latest-module-versions.hcl unless you also edit mocks/mock-tfconfig-fail.sentinel to reference actual modules in the registry and organization that use-latest-module-versions.hcl refers to.
 
 ## Using Parameters with Terraform Cloud/Enterprise
 If you wish to use the [use-latest-module-versions.sentinel](./use-latest-module-versions.sentinel) policy on a Terraform Cloud (TFC) or Terraform Enterprise (TFE) server, you need to specify values for the `organization` and `token` parameters when registering the policy set that contains this policy. Only do this if you have actually created some modules in the Private Module Registry (PMR) in an organization on your server and have Terraform code that uses them.
 
 You can do this as follows:
-1. Copy the files [check-external-http-api.sentinel](./check-external-http-api.sentinel), [use-latest-module-versions.sentinel](./use-latest-module-versions.sentinel), and [sentinel.hcl](./sentinel.hcl) into a VCS repository. (Don't copy the file sentinel.json which is only for use with the Sentinel CLI.)
+1. Copy the files [check-external-http-api.sentinel](./check-external-http-api.sentinel), [use-latest-module-versions.sentinel](./use-latest-module-versions.sentinel), and [sentinel.hcl](./sentinel.hcl) into a VCS repository. (Don't copy the file use-latest-module-versions.hcl which is only for use with the Sentinel CLI.)
 1. Optionally edit the copy of sentinel.hcl to set the enforcement_level for the use-latest-module-versions policy to `soft-mandatory`.
 1. Commit the files to your VCS repository.
 1. [Register a new policy set](https://www.terraform.io/docs/cloud/sentinel/manage-policies.html#managing-policy-sets) on your Terraform Cloud or Terraform Enterprise server.
