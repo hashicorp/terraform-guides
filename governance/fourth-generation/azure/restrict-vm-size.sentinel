@@ -1,0 +1,93 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all Azure VMs have vm sizes from an allowed list
+
+# Import tfplan/v2 with alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Allowed Azure VM Sizes
+# Include "null" to allow missing or computed values
+allowed_sizes = ["Standard_A1", "Standard_A2", "Standard_D1_v2", "Standard_D2_v2"]
+
+# Get all Azure VMs using azurerm_virtual_machine
+allAzureVMs = filter tfplan.resource_changes as address, rc {
+  rc.type is "azurerm_virtual_machine" and
+  rc.mode is "managed" and
+  (rc.change.actions contains "create" or rc.change.actions contains "update" or
+   rc.change.actions contains "read" or rc.change.actions contains "no-op")
+}
+
+# Filter to Azure VMs with violations that use azurerm_virtual_machine
+violatingAzureVMs = filter allAzureVMs as address, rc {
+  rc.change.after.vm_size else "null" not in allowed_sizes
+}
+
+# Get all Azure VMs using azurerm_windows_virtual_machine
+allAzureWindowsVMs = filter tfplan.resource_changes as address, rc {
+  rc.type is "azurerm_windows_virtual_machine" and
+  rc.mode is "managed" and
+  (rc.change.actions contains "create" or rc.change.actions contains "update" or
+   rc.change.actions contains "read" or rc.change.actions contains "no-op")
+}
+
+# Filter to Azure VMs with violations that use azurerm_windows_virtual_machine
+violatingAzureWindowsVMs = filter allAzureWindowsVMs as address, rc {
+  rc.change.after.size else "null" not in allowed_sizes
+}
+
+# Get all Azure VMs using azurerm_linux_virtual_machine
+allAzureLinuxVMs = filter tfplan.resource_changes as address, rc {
+  rc.type is "azurerm_linux_virtual_machine" and
+  rc.mode is "managed" and
+  (rc.change.actions contains "create" or rc.change.actions contains "update" or
+   rc.change.actions contains "read" or rc.change.actions contains "no-op")
+}
+
+# Filter to Azure VMs with violations that use azurerm_linux_virtual_machine
+violatingAzureLinuxVMs = filter allAzureLinuxVMs as address, rc {
+  rc.change.after.size else "null" not in allowed_sizes
+}
+
+# Rule for azurerm_virtual_machine
+restrictAzureVMs = rule {
+  map violatingAzureVMs as address, rc {
+    {
+      "address": address,
+      "message": "invalid vm size",
+      "specified value": rc.change.after.vm_size,
+    }
+  }
+}
+
+# Rule for azurerm_windows_virtual_machine
+restrictAzureWindowsVMs = rule {
+  map violatingAzureWindowsVMs as address, rc {
+    {
+      "address": address,
+      "message": "invalid vm size",
+      "specified value": rc.change.after.size,
+    }
+  }
+}
+
+# Rule for azurerm_windows_virtual_machine
+restrictAzureLinuxVMs = rule {
+  map violatingAzureLinuxVMs as address, rc {
+    {
+      "address": address,
+      "message": "invalid vm size",
+      "specified value": rc.change.after.size,
+    }
+  }
+}
+
+# Main rule
+main = rule {
+  {
+    "Violations": {
+      "VMs": restrictAzureVMs,
+      "Windows VMs": restrictAzureWindowsVMs,
+      "Linux VMs": restrictAzureLinuxVMs,
+    },
+    "Allowed VM sizes": allowed_sizes,
+  }
+}
