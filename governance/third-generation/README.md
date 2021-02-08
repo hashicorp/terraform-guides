@@ -33,7 +33,7 @@ You can find most of the common functions used in the third-generation policies 
   * [tfconfig-functions](./common-functions/tfconfig-functions)
   * [tfrun-functions](./common-functions/tfrun-functions)
 
-There are also some functions used to validate assumed roles for the AWS provider in [aws-functions](./aws/aws-functions).
+There are also some functions that can be used with the AWS and Azure providers in [aws-functions](./aws/aws-functions) and [azure-functions](./azure/azure-functions).
 
 Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use any of the 4 Terraform Sentinel imports (tfplan/v2, tfstate/v2, tfconfig/v2, and tfrun) are defined in a single file. This makes it easier to import all of the functions that use one of those imports into the Sentinel CLI test cases and Terraform Cloud policy sets, since those only need a single stanza such as this one for each module:
 ```
@@ -43,7 +43,7 @@ Unlike the second-generation common functions that were each defined in a separa
   }
 }
 ```
-Test cases that use the other modules would either change all three occurrences of "tfplan" in that stanza to "tfstate", "tfconfig", or "tfrun" or would add additional stanzas with those changes.
+Test cases that use the other modules would either change all three occurrences of "tfplan" in that stanza to "tfstate", "tfconfig", "tfrun", "aws", or "azure" or would add additional stanzas with those changes.
 
 We have put each Sentinel module in its own directory which also contains Markdown files for each of the module's functions under a docs directory. Each of these Markdown files describes the function, its declaration, its arguments, other common functions it uses, what it returns, and what it prints. It also gives examples of calling the function and sometimes lists some policies that call it.
 
@@ -56,8 +56,9 @@ import "tfstate-functions" as state
 import "tfconfig-functions" as config
 import "tfrun-functions" as run
 import "aws-functions" as aws
+import "azure-functions" as azure
 ```
-In this case, we are using `plan`, `state`, `config`, `run`, and `aws` as aliases for the five imports to keep lines that use their functions shorter. Of course, you only need to import the modules that contain functions that your policy actually calls.
+In this case, we are using `plan`, `state`, `config`, `run`, `aws`, and `azure` as aliases for the six imports to keep lines that use their functions shorter. Of course, you only need to import the modules that contain functions that your policy actually calls.
 
 ### The Functions of the tfplan-functions and tfstate-functions Modules
 We discuss these two modules together because they are essentially identical except for their use of the tfplan/v2 and tfstate/v2 imports.
@@ -106,7 +107,7 @@ Documentation for each individual function can be found in this directory:
 
 ### The Functions of the aws-functions Module
 The `aws-functions` module (which is located under in the aws/aws-functions directory) has the following functions:
-  * The `find_resources_with_standard_tags` function finds all AWS resources that use standard AWS tags in the current plan that are being created or modified.
+  * The `find_resources_with_standard_tags` function finds all AWS resources of specified types that should have tags in the current plan that are not being permanently deleted.
   * The `determine_role_arn` function determines the ARN of a role set in the `role_arn` parameter of an AWS provider. It can only determine the role_arn if it is set to either a hard-coded value or to a reference to a single Terraform variable. It sets the role to "complex" if it finds a single non-variable reference or if it finds multiple references. It sets the role to "none" if no role arn is found.
   * The `get_assumed_roles` function gets all roles assumed by AWS providers in the current Terraform configuration. It calls the `determine_role_arn` function.
   * The `validate_assumed_roles_with_list` function validates assumed roles found by the `get_assumed_roles` function against a list of role ARNs.
@@ -114,6 +115,13 @@ The `aws-functions` module (which is located under in the aws/aws-functions dire
 
 Documentation for each individual function can be found in this directory:
   * [aws-functions](./aws/aws-functions/docs)
+
+### The Functions of the azure-functions Module
+The `azure-functions` module (which is located under in the azure/azure-functions directory) has the following functions:
+  * The `find_resources_with_standard_tags` function finds all Azure resources of specified types that should have tags in the current plan that are not being permanently deleted.
+
+Documentation for each individual function can be found in this directory:
+  * [azure-functions](./azure/azure-functions/docs)
 
 ## Mock Files and Test Cases
 Sentinel [mock files](https://www.terraform.io/docs/enterprise/sentinel/mock.html) and [test cases](https://docs.hashicorp.com/sentinel/commands/config#test-cases) have been provided under the test directory of each cloud so that all the policies can be tested with the [Sentinel CLI](https://docs.hashicorp.com/sentinel/commands). The mocks were generated from actual Terraform 0.12 plans run against Terraform code that provisioned resources in these clouds. The pass and fail mock files were edited to respectively pass and fail the associated Sentinel policies. Some policies, including those that have multiple rules, have multiple fail mock files with names that indicate which condition or conditions they fail.
