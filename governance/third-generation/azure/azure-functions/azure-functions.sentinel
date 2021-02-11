@@ -1,0 +1,19 @@
+# Common functions for use with the Azure provider
+
+##### Imports #####
+import "tfplan/v2" as tfplan
+
+##### Functions #####
+
+### find_resources_with_standard_tags ###
+find_resources_with_standard_tags = func(resource_types) {
+  resources = filter tfplan.resource_changes as address, rc {
+    rc.provider_name matches "(.*)azurerm$" and
+    rc.type in resource_types and
+  	rc.mode is "managed" and
+  	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+     rc.change.actions contains "read" or rc.change.actions contains "no-op")
+  }
+
+  return resources
+}
