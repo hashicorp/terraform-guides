@@ -10,6 +10,9 @@ import "tfplan/v2" as tfplan
 # with alias "plan"
 import "tfplan-functions" as plan
 
+# Import for looping through the Security Group Rules
+import "types"
+
 # Forbidden CIDRs
 # Include "null" to forbid missing or computed values
 forbidden_cidrs = ["0.0.0.0/0"]
@@ -22,10 +25,24 @@ SGIngressRules = filter tfplan.resource_changes as address, rc {
    rc.change.actions contains "read" or rc.change.actions contains "no-op")
 }
 
-# Filter to Ingress Security Group Rules with violations
-# Warnings will be printed for all violations since the last parameter is true
-violatingSGRules = plan.filter_attribute_contains_items_from_list(SGIngressRules,
-                  "cidr_blocks",forbidden_cidrs, true)
+# Validate Security Group Rules
+violatingSGRulesCount = 0
+for SGIngressRules as address, sgr {
+
+	# Validate that each SG rule does not have disallowed value
+	# Since cidr_blocks is optional and could be computed,
+	# We check that it is present and really a list
+	# before checking whether it contains "0.0.0.0/0"
+	if sgr.change.after.cidr_blocks else null is not null and
+		types.type_of(sgr.change.after.cidr_blocks) is "list" and
+		sgr.change.after.cidr_blocks contains "0.0.0.0/0"{
+		violatingSGRulesCount += 1
+		print("SG Rule Ingress Violation:", address, "has at least one ingress", 
+				"rule with forbidden cidr blocks")
+		print("  Ingress Rule", "has cidr_blocks", sgr.change.after.cidr_blocks, 
+				"that has items from the forbidden list:", forbidden_cidrs)
+  }
+} // end of SG Rules
 
 # Get all Security Groups
 allSGs = plan.find_resources("aws_security_group")
@@ -47,13 +64,13 @@ for allSGs as address, sg {
     violatingSGsCount += 1
     print("SG Ingress Violation:", address, "has at least one ingress rule",
           "with forbidden cidr blocks")
-    plan.print_violations(violatingIRs["messages"], "Ingress Rule")
+    plan.print_violations(violatingIRs["messages"], "  Ingress Rule")
   }  // end if
 
 } // end for SGs
 
 # Main rule
-validated = length(violatingSGRules["messages"]) is 0 and violatingSGsCount is 0
+validated = violatingSGsCount is 0 and violatingSGRulesCount is 0
 main = rule {
   validated is true
 }
