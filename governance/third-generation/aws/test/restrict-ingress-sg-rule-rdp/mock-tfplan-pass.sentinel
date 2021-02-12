@@ -19,7 +19,7 @@ resource_changes = {
 						"protocol":         "-1",
 						"security_groups":  [],
 						"self":             false,
-						"to_port":          3389,
+						"to_port":          80,
 					},
 				],
 				"name":                   "bar",
