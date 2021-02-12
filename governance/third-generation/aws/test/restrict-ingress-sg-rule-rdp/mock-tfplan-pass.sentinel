@@ -10,7 +10,7 @@ resource_changes = {
 				"ingress": [
 					{
 						"cidr_blocks": [
-							"10.0.0.0/0",
+							"10.0.0.0/8",
 						],
 						"description":      "bar",
 						"from_port":        0,
@@ -19,7 +19,7 @@ resource_changes = {
 						"protocol":         "-1",
 						"security_groups":  [],
 						"self":             false,
-						"to_port":          80,
+						"to_port":          3389,
 					},
 				],
 				"name":                   "bar",
