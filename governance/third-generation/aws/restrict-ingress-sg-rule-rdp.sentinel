@@ -3,7 +3,7 @@
 # aws_security_group and the aws_security_group_rule resources which can both
 # define rules.
 
-# Same targeting as terraform-foundational-policies-library/cis/
+# Similar targeting as terraform-foundational-policies-library/cis/
 # aws/networking/aws-cis-4.2-networking-deny-public-rdp-acl-rules
 # but adds "read" and "no-op" to resource changes, loops through 
 # both the aws_security_group and the aws_security_group_rule resources, 
