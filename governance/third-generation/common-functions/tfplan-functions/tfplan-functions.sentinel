@@ -548,8 +548,7 @@ filter_attribute_greater_than_value = func(resources, attr, value, prtmsg) {
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined. " + "It is supposed to be less " +
-                "than or equal to " + to_string(value)
+                " that is null or undefined."
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -559,6 +558,39 @@ filter_attribute_greater_than_value = func(resources, attr, value, prtmsg) {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) + " with value " +
                 to_string(v) + " that is greater than " + to_string(value)
+      violators[address] = rc
+			messages[address] = message
+      if prtmsg {
+        print(message)
+      }
+    }
+  }
+  return {"resources":violators,"messages":messages}
+}
+
+### filter_attribute_greater_than_equal_to_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is greater than a given numeric value.
+# Resources should be derived by applying filters to tfplan.resource_changes.
+# Set prtmsg to `true` (without quotes) if you want to print violation messages.
+filter_attribute_greater_than_equal_to_value = func(resources, attr, value, prtmsg) {
+  violators = {}
+	messages = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc, attr) else null
+    if float(v) else null is null {
+      # Add the resource and a warning message to the violators list
+      message = to_string(address) + " has " + to_string(attr) +
+                " that is null or undefined."
+      violators[address] = rc
+			messages[address] = message
+      if prtmsg {
+        print(message)
+      }
+    } else if float(v) >= value {
+      # Add the resource and a warning message to the violators list
+      message = to_string(address) + " has " + to_string(attr) + " with value " +
+                to_string(v) + " that is greater than or equal to " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -582,8 +614,7 @@ filter_attribute_less_than_value = func(resources, attr, value, prtmsg) {
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined. " + "It is supposed to be greater " +
-                "than or equal to " + to_string(value)
+                " that is null or undefined."
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -593,6 +624,39 @@ filter_attribute_less_than_value = func(resources, attr, value, prtmsg) {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) + " with value " +
                 to_string(v) + " that is less than " + to_string(value)
+      violators[address] = rc
+			messages[address] = message
+      if prtmsg {
+        print(message)
+      }
+    }
+  }
+  return {"resources":violators,"messages":messages}
+}
+
+### filter_attribute_less_than_equal_to_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that is less than a given numeric value.
+# Resources should be derived by applying filters to tfplan.resource_changes.
+# Set prtmsg to `true` (without quotes) if you want to print violation messages.
+filter_attribute_less_than_equal_to_value = func(resources, attr, value, prtmsg) {
+  violators = {}
+	messages = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc, attr) else null
+    if float(v) else null is null {
+      # Add the resource and a warning message to the violators list
+      message = to_string(address) + " has " + to_string(attr) +
+                " that is null or undefined. "
+      violators[address] = rc
+			messages[address] = message
+      if prtmsg {
+        print(message)
+      }
+    } else if float(v) <= value {
+      # Add the resource and a warning message to the violators list
+      message = to_string(address) + " has " + to_string(attr) + " with value " +
+                to_string(v) + " that is less than or equal to " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
