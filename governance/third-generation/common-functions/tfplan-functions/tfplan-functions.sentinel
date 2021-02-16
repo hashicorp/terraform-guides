@@ -20,7 +20,7 @@ import "types"
 
 ### find_resources ###
 # Find all resources of a specific type using the tfplan/v2 import.
-# Include resources that are not being permamently deleted.
+# Include resources that are not being permanently deleted.
 # Technically, this returns a map of resource changes.
 find_resources = func(type) {
   resources = filter tfplan.resource_changes as address, rc {
@@ -35,7 +35,7 @@ find_resources = func(type) {
 
 ### find_resources_by_provider ###
 # Find all resources for a specific provider using the tfplan/v2 import.
-# Include resources that are not being permamently deleted.
+# Include resources that are not being permanently deleted.
 # Technically, this returns a map of resource changes.
 find_resources_by_provider = func(provider) {
   resources = filter tfplan.resource_changes as address, rc {
@@ -50,7 +50,7 @@ find_resources_by_provider = func(provider) {
 
 ### find_datasources ###
 # Find all data sources of a specific type using the tfplan/v2 import.
-# Include data sources that are not being permamently deleted.
+# Include data sources that are not being permanently deleted.
 # Technically, this returns a map of resource changes.
 find_datasources = func(type) {
   datasources = filter tfplan.resource_changes as address, rc {
@@ -67,7 +67,7 @@ find_datasources = func(type) {
 
 ### find_datasources_by_provider ###
 # Find all data sources for a specific provider using the tfplan/v2 import.
-# Include data sources that are not being permamently deleted.
+# Include data sources that are not being permanently deleted.
 # Technically, this returns a map of resource changes.
 find_datasources_by_provider = func(provider) {
   datasources = filter tfplan.resource_changes as address, rc {
