@@ -1,0 +1,913 @@
+terraform_version = "0.13.5"
+
+variables = {}
+
+resource_changes = {
+	"aws_iam_role.sagemaker": {
+		"address": "aws_iam_role.sagemaker",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"assume_role_policy":    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+				"description":           null,
+				"force_detach_policies": false,
+				"max_session_duration":  3600,
+				"name":                  "instance_role",
+				"name_prefix":           null,
+				"path":                  "/system/",
+				"permissions_boundary":  null,
+				"tags":                  null,
+			},
+			"after_unknown": {
+				"arn":         true,
+				"create_date": true,
+				"id":          true,
+				"unique_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "sagemaker",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_iam_role",
+	},
+	"aws_sagemaker_notebook_instance.ni": {
+		"address": "aws_sagemaker_notebook_instance.ni",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"additional_code_repositories": null,
+				"default_code_repository":      null,
+				"direct_internet_access":       "Disabled",
+				"instance_type":                "ml.t2.medium",
+				"kms_key_id":                   null,
+				"lifecycle_config_name":        null,
+				"name":                         "roger-notebook-instance",
+				"root_access":                  "Disabled",
+				"tags":                         null,
+				"volume_size":                  5,
+			},
+			"after_unknown": {
+				"arn": true,
+				"id":  true,
+				"network_interface_id": true,
+				"role_arn":             true,
+				"security_groups":      true,
+				"subnet_id":            true,
+				"url":                  true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "ni",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_sagemaker_notebook_instance",
+	},
+	"aws_security_group.allow_tls": {
+		"address": "aws_security_group.allow_tls",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "Allow TLS inbound traffic",
+				"ingress": [
+					{
+						"cidr_blocks": [
+							"10.0.0.0/16",
+						],
+						"description":      "TLS from VPC",
+						"from_port":        443,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "tcp",
+						"security_groups":  [],
+						"self":             false,
+						"to_port":          443,
+					},
+				],
+				"name": "allow_tls",
+				"revoke_rules_on_delete": false,
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"arn":    true,
+				"egress": true,
+				"id":     true,
+				"ingress": [
+					{
+						"cidr_blocks": [
+							false,
+						],
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"security_groups":  [],
+					},
+				],
+				"name_prefix": true,
+				"owner_id":    true,
+				"vpc_id":      true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "allow_tls",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_security_group",
+	},
+	"aws_subnet.sagemaker": {
+		"address": "aws_subnet.sagemaker",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"assign_ipv6_address_on_creation": false,
+				"cidr_block":                      "10.0.1.0/24",
+				"customer_owned_ipv4_pool":        null,
+				"ipv6_cidr_block":                 null,
+				"map_customer_owned_ip_on_launch": null,
+				"map_public_ip_on_launch":         false,
+				"outpost_arn":                     null,
+				"tags":                            null,
+				"timeouts":                        null,
+			},
+			"after_unknown": {
+				"arn":                  true,
+				"availability_zone":    true,
+				"availability_zone_id": true,
+				"id": true,
+				"ipv6_cidr_block_association_id": true,
+				"owner_id":                       true,
+				"vpc_id":                         true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "sagemaker",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_subnet",
+	},
+	"aws_vpc.sagemaker": {
+		"address": "aws_vpc.sagemaker",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"assign_generated_ipv6_cidr_block": false,
+				"cidr_block":                       "10.0.0.0/16",
+				"enable_dns_support":               true,
+				"instance_tenancy":                 "default",
+				"tags":                             null,
+			},
+			"after_unknown": {
+				"arn": true,
+				"default_network_acl_id":         true,
+				"default_route_table_id":         true,
+				"default_security_group_id":      true,
+				"dhcp_options_id":                true,
+				"enable_classiclink":             true,
+				"enable_classiclink_dns_support": true,
+				"enable_dns_hostnames":           true,
+				"id": true,
+				"ipv6_association_id": true,
+				"ipv6_cidr_block":     true,
+				"main_route_table_id": true,
+				"owner_id":            true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "sagemaker",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_vpc",
+	},
+	"data.aws_iam_policy_document.instance-assume-role-policy": {
+		"address": "data.aws_iam_policy_document.instance-assume-role-policy",
+		"change": {
+			"actions": [
+				"no-op",
+			],
+			"after": {
+				"id":                        "1903849331",
+				"json":                      "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+				"override_json":             null,
+				"override_policy_documents": null,
+				"policy_id":                 null,
+				"source_json":               null,
+				"source_policy_documents":   null,
+				"statement": [
+					{
+						"actions": [
+							"sts:AssumeRole",
+						],
+						"condition":      [],
+						"effect":         "Allow",
+						"not_actions":    [],
+						"not_principals": [],
+						"not_resources":  [],
+						"principals": [
+							{
+								"identifiers": [
+									"ec2.amazonaws.com",
+								],
+								"type": "Service",
+							},
+						],
+						"resources": [],
+						"sid":       "",
+					},
+				],
+				"version": "2012-10-17",
+			},
+			"after_unknown": {},
+			"before": {
+				"id":                        "1903849331",
+				"json":                      "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+				"override_json":             null,
+				"override_policy_documents": null,
+				"policy_id":                 null,
+				"source_json":               null,
+				"source_policy_documents":   null,
+				"statement": [
+					{
+						"actions": [
+							"sts:AssumeRole",
+						],
+						"condition":      [],
+						"effect":         "Allow",
+						"not_actions":    [],
+						"not_principals": [],
+						"not_resources":  [],
+						"principals": [
+							{
+								"identifiers": [
+									"ec2.amazonaws.com",
+								],
+								"type": "Service",
+							},
+						],
+						"resources": [],
+						"sid":       "",
+					},
+				],
+				"version": "2012-10-17",
+			},
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "instance-assume-role-policy",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_iam_policy_document",
+	},
+}
+
+output_changes = {}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"aws": {
+				"expressions": {
+					"region": {
+						"constant_value": "us-east-1",
+					},
+				},
+				"name": "aws",
+			},
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address": "aws_iam_role.sagemaker",
+					"expressions": {
+						"assume_role_policy": {
+							"references": [
+								"data.aws_iam_policy_document.instance-assume-role-policy",
+							],
+						},
+						"name": {
+							"constant_value": "instance_role",
+						},
+						"path": {
+							"constant_value": "/system/",
+						},
+					},
+					"mode":                "managed",
+					"name":                "sagemaker",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_role",
+				},
+				{
+					"address": "aws_sagemaker_notebook_instance.ni",
+					"expressions": {
+						"direct_internet_access": {
+							"constant_value": "Enabled",
+						},
+						"instance_type": {
+							"constant_value": "ml.t2.medium",
+						},
+						"name": {
+							"constant_value": "roger-notebook-instance",
+						},
+						"role_arn": {
+							"references": [
+								"aws_iam_role.sagemaker",
+							],
+						},
+						"root_access": {
+							"constant_value": "Enabled",
+						},
+						"security_groups": {
+							"references": [
+								"aws_security_group.allow_tls",
+							],
+						},
+						"subnet_id": {
+							"references": [
+								"aws_subnet.sagemaker",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "ni",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_sagemaker_notebook_instance",
+				},
+				{
+					"address": "aws_security_group.allow_tls",
+					"expressions": {
+						"description": {
+							"constant_value": "Allow TLS inbound traffic",
+						},
+						"name": {
+							"constant_value": "allow_tls",
+						},
+						"vpc_id": {
+							"references": [
+								"aws_vpc.sagemaker",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "allow_tls",
+					"provider_config_key": "aws",
+					"schema_version":      1,
+					"type":                "aws_security_group",
+				},
+				{
+					"address": "aws_subnet.sagemaker",
+					"expressions": {
+						"cidr_block": {
+							"constant_value": "10.0.1.0/24",
+						},
+						"vpc_id": {
+							"references": [
+								"aws_vpc.sagemaker",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "sagemaker",
+					"provider_config_key": "aws",
+					"schema_version":      1,
+					"type":                "aws_subnet",
+				},
+				{
+					"address": "aws_vpc.sagemaker",
+					"expressions": {
+						"cidr_block": {
+							"constant_value": "10.0.0.0/16",
+						},
+					},
+					"mode":                "managed",
+					"name":                "sagemaker",
+					"provider_config_key": "aws",
+					"schema_version":      1,
+					"type":                "aws_vpc",
+				},
+				{
+					"address": "data.aws_iam_policy_document.instance-assume-role-policy",
+					"expressions": {
+						"statement": [
+							{
+								"actions": {
+									"constant_value": [
+										"sts:AssumeRole",
+									],
+								},
+								"principals": [
+									{
+										"identifiers": {
+											"constant_value": [
+												"ec2.amazonaws.com",
+											],
+										},
+										"type": {
+											"constant_value": "Service",
+										},
+									},
+								],
+							},
+						],
+					},
+					"mode":                "data",
+					"name":                "instance-assume-role-policy",
+					"provider_config_key": "aws",
+					"schema_version":      0,
+					"type":                "aws_iam_policy_document",
+				},
+			],
+		},
+	},
+	"format_version": "0.1",
+	"planned_values": {
+		"root_module": {
+			"resources": [
+				{
+					"address":        "aws_iam_role.sagemaker",
+					"mode":           "managed",
+					"name":           "sagemaker",
+					"provider_name":  "registry.terraform.io/hashicorp/aws",
+					"schema_version": 0,
+					"type":           "aws_iam_role",
+					"values": {
+						"assume_role_policy":    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+						"description":           null,
+						"force_detach_policies": false,
+						"max_session_duration":  3600,
+						"name":                  "instance_role",
+						"name_prefix":           null,
+						"path":                  "/system/",
+						"permissions_boundary":  null,
+						"tags":                  null,
+					},
+				},
+				{
+					"address":        "aws_sagemaker_notebook_instance.ni",
+					"mode":           "managed",
+					"name":           "ni",
+					"provider_name":  "registry.terraform.io/hashicorp/aws",
+					"schema_version": 0,
+					"type":           "aws_sagemaker_notebook_instance",
+					"values": {
+						"additional_code_repositories": null,
+						"default_code_repository":      null,
+						"direct_internet_access":       "Enabled",
+						"instance_type":                "ml.t2.medium",
+						"kms_key_id":                   null,
+						"lifecycle_config_name":        null,
+						"name":                         "roger-notebook-instance",
+						"root_access":                  "Enabled",
+						"tags":                         null,
+						"volume_size":                  5,
+					},
+				},
+				{
+					"address":        "aws_security_group.allow_tls",
+					"mode":           "managed",
+					"name":           "allow_tls",
+					"provider_name":  "registry.terraform.io/hashicorp/aws",
+					"schema_version": 1,
+					"type":           "aws_security_group",
+					"values": {
+						"description": "Allow TLS inbound traffic",
+						"ingress": [
+							{
+								"cidr_blocks": [
+									"10.0.0.0/16",
+								],
+								"description":      "TLS from VPC",
+								"from_port":        443,
+								"ipv6_cidr_blocks": [],
+								"prefix_list_ids":  [],
+								"protocol":         "tcp",
+								"security_groups":  [],
+								"self":             false,
+								"to_port":          443,
+							},
+						],
+						"name": "allow_tls",
+						"revoke_rules_on_delete": false,
+						"tags":     null,
+						"timeouts": null,
+					},
+				},
+				{
+					"address":        "aws_subnet.sagemaker",
+					"mode":           "managed",
+					"name":           "sagemaker",
+					"provider_name":  "registry.terraform.io/hashicorp/aws",
+					"schema_version": 1,
+					"type":           "aws_subnet",
+					"values": {
+						"assign_ipv6_address_on_creation": false,
+						"cidr_block":                      "10.0.1.0/24",
+						"customer_owned_ipv4_pool":        null,
+						"ipv6_cidr_block":                 null,
+						"map_customer_owned_ip_on_launch": null,
+						"map_public_ip_on_launch":         false,
+						"outpost_arn":                     null,
+						"tags":                            null,
+						"timeouts":                        null,
+					},
+				},
+				{
+					"address":        "aws_vpc.sagemaker",
+					"mode":           "managed",
+					"name":           "sagemaker",
+					"provider_name":  "registry.terraform.io/hashicorp/aws",
+					"schema_version": 1,
+					"type":           "aws_vpc",
+					"values": {
+						"assign_generated_ipv6_cidr_block": false,
+						"cidr_block":                       "10.0.0.0/16",
+						"enable_dns_support":               true,
+						"instance_tenancy":                 "default",
+						"tags":                             null,
+					},
+				},
+				{
+					"address":        "data.aws_iam_policy_document.instance-assume-role-policy",
+					"mode":           "data",
+					"name":           "instance-assume-role-policy",
+					"provider_name":  "registry.terraform.io/hashicorp/aws",
+					"schema_version": 0,
+					"type":           "aws_iam_policy_document",
+					"values": {
+						"id":                        "1903849331",
+						"json":                      "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+						"override_json":             null,
+						"override_policy_documents": null,
+						"policy_id":                 null,
+						"source_json":               null,
+						"source_policy_documents":   null,
+						"statement": [
+							{
+								"actions": [
+									"sts:AssumeRole",
+								],
+								"condition":      [],
+								"effect":         "Allow",
+								"not_actions":    [],
+								"not_principals": [],
+								"not_resources":  [],
+								"principals": [
+									{
+										"identifiers": [
+											"ec2.amazonaws.com",
+										],
+										"type": "Service",
+									},
+								],
+								"resources": [],
+								"sid":       "",
+							},
+						],
+						"version": "2012-10-17",
+					},
+				},
+			],
+		},
+	},
+	"prior_state": {
+		"format_version":    "0.1",
+		"terraform_version": "0.13.5",
+		"values": {
+			"root_module": {
+				"resources": [
+					{
+						"address":        "data.aws_iam_policy_document.instance-assume-role-policy",
+						"mode":           "data",
+						"name":           "instance-assume-role-policy",
+						"provider_name":  "registry.terraform.io/hashicorp/aws",
+						"schema_version": 0,
+						"type":           "aws_iam_policy_document",
+						"values": {
+							"id":                        "1903849331",
+							"json":                      "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+							"override_json":             null,
+							"override_policy_documents": null,
+							"policy_id":                 null,
+							"source_json":               null,
+							"source_policy_documents":   null,
+							"statement": [
+								{
+									"actions": [
+										"sts:AssumeRole",
+									],
+									"condition":      [],
+									"effect":         "Allow",
+									"not_actions":    [],
+									"not_principals": [],
+									"not_resources":  [],
+									"principals": [
+										{
+											"identifiers": [
+												"ec2.amazonaws.com",
+											],
+											"type": "Service",
+										},
+									],
+									"resources": [],
+									"sid":       "",
+								},
+							],
+							"version": "2012-10-17",
+						},
+					},
+				],
+			},
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "aws_iam_role.sagemaker",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"assume_role_policy":    "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+					"description":           null,
+					"force_detach_policies": false,
+					"max_session_duration":  3600,
+					"name":                  "instance_role",
+					"name_prefix":           null,
+					"path":                  "/system/",
+					"permissions_boundary":  null,
+					"tags":                  null,
+				},
+				"after_unknown": {
+					"arn":         true,
+					"create_date": true,
+					"id":          true,
+					"unique_id":   true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "sagemaker",
+			"provider_name": "registry.terraform.io/hashicorp/aws",
+			"type":          "aws_iam_role",
+		},
+		{
+			"address": "aws_sagemaker_notebook_instance.ni",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"additional_code_repositories": null,
+					"default_code_repository":      null,
+					"direct_internet_access":       "Enabled",
+					"instance_type":                "ml.t2.medium",
+					"kms_key_id":                   null,
+					"lifecycle_config_name":        null,
+					"name":                         "roger-notebook-instance",
+					"root_access":                  "Enabled",
+					"tags":                         null,
+					"volume_size":                  5,
+				},
+				"after_unknown": {
+					"arn": true,
+					"id":  true,
+					"network_interface_id": true,
+					"role_arn":             true,
+					"security_groups":      true,
+					"subnet_id":            true,
+					"url":                  true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "ni",
+			"provider_name": "registry.terraform.io/hashicorp/aws",
+			"type":          "aws_sagemaker_notebook_instance",
+		},
+		{
+			"address": "aws_security_group.allow_tls",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"description": "Allow TLS inbound traffic",
+					"ingress": [
+						{
+							"cidr_blocks": [
+								"10.0.0.0/16",
+							],
+							"description":      "TLS from VPC",
+							"from_port":        443,
+							"ipv6_cidr_blocks": [],
+							"prefix_list_ids":  [],
+							"protocol":         "tcp",
+							"security_groups":  [],
+							"self":             false,
+							"to_port":          443,
+						},
+					],
+					"name": "allow_tls",
+					"revoke_rules_on_delete": false,
+					"tags":     null,
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"arn":    true,
+					"egress": true,
+					"id":     true,
+					"ingress": [
+						{
+							"cidr_blocks": [
+								false,
+							],
+							"ipv6_cidr_blocks": [],
+							"prefix_list_ids":  [],
+							"security_groups":  [],
+						},
+					],
+					"name_prefix": true,
+					"owner_id":    true,
+					"vpc_id":      true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "allow_tls",
+			"provider_name": "registry.terraform.io/hashicorp/aws",
+			"type":          "aws_security_group",
+		},
+		{
+			"address": "aws_subnet.sagemaker",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"assign_ipv6_address_on_creation": false,
+					"cidr_block":                      "10.0.1.0/24",
+					"customer_owned_ipv4_pool":        null,
+					"ipv6_cidr_block":                 null,
+					"map_customer_owned_ip_on_launch": null,
+					"map_public_ip_on_launch":         false,
+					"outpost_arn":                     null,
+					"tags":                            null,
+					"timeouts":                        null,
+				},
+				"after_unknown": {
+					"arn":                  true,
+					"availability_zone":    true,
+					"availability_zone_id": true,
+					"id": true,
+					"ipv6_cidr_block_association_id": true,
+					"owner_id":                       true,
+					"vpc_id":                         true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "sagemaker",
+			"provider_name": "registry.terraform.io/hashicorp/aws",
+			"type":          "aws_subnet",
+		},
+		{
+			"address": "aws_vpc.sagemaker",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"assign_generated_ipv6_cidr_block": false,
+					"cidr_block":                       "10.0.0.0/16",
+					"enable_dns_support":               true,
+					"instance_tenancy":                 "default",
+					"tags":                             null,
+				},
+				"after_unknown": {
+					"arn": true,
+					"default_network_acl_id":         true,
+					"default_route_table_id":         true,
+					"default_security_group_id":      true,
+					"dhcp_options_id":                true,
+					"enable_classiclink":             true,
+					"enable_classiclink_dns_support": true,
+					"enable_dns_hostnames":           true,
+					"id": true,
+					"ipv6_association_id": true,
+					"ipv6_cidr_block":     true,
+					"main_route_table_id": true,
+					"owner_id":            true,
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "sagemaker",
+			"provider_name": "registry.terraform.io/hashicorp/aws",
+			"type":          "aws_vpc",
+		},
+		{
+			"address": "data.aws_iam_policy_document.instance-assume-role-policy",
+			"change": {
+				"actions": [
+					"no-op",
+				],
+				"after": {
+					"id":                        "1903849331",
+					"json":                      "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+					"override_json":             null,
+					"override_policy_documents": null,
+					"policy_id":                 null,
+					"source_json":               null,
+					"source_policy_documents":   null,
+					"statement": [
+						{
+							"actions": [
+								"sts:AssumeRole",
+							],
+							"condition":      [],
+							"effect":         "Allow",
+							"not_actions":    [],
+							"not_principals": [],
+							"not_resources":  [],
+							"principals": [
+								{
+									"identifiers": [
+										"ec2.amazonaws.com",
+									],
+									"type": "Service",
+								},
+							],
+							"resources": [],
+							"sid":       "",
+						},
+					],
+					"version": "2012-10-17",
+				},
+				"after_unknown": {},
+				"before": {
+					"id":                        "1903849331",
+					"json":                      "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"\",\n      \"Effect\": \"Allow\",\n      \"Action\": \"sts:AssumeRole\",\n      \"Principal\": {\n        \"Service\": \"ec2.amazonaws.com\"\n      }\n    }\n  ]\n}",
+					"override_json":             null,
+					"override_policy_documents": null,
+					"policy_id":                 null,
+					"source_json":               null,
+					"source_policy_documents":   null,
+					"statement": [
+						{
+							"actions": [
+								"sts:AssumeRole",
+							],
+							"condition":      [],
+							"effect":         "Allow",
+							"not_actions":    [],
+							"not_principals": [],
+							"not_resources":  [],
+							"principals": [
+								{
+									"identifiers": [
+										"ec2.amazonaws.com",
+									],
+									"type": "Service",
+								},
+							],
+							"resources": [],
+							"sid":       "",
+						},
+					],
+					"version": "2012-10-17",
+				},
+			},
+			"mode":          "data",
+			"name":          "instance-assume-role-policy",
+			"provider_name": "registry.terraform.io/hashicorp/aws",
+			"type":          "aws_iam_policy_document",
+		},
+	],
+	"terraform_version": "0.13.5",
+}
