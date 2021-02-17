@@ -1,0 +1,29 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# all Sagemaker Notebook instances have root access and direct internet access
+# disabled
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Get all Sagemaker notebooks
+allSagemakerNotebooks = plan.find_resources("aws_sagemaker_notebook_instance")
+#print("allSagemakerNotebooks:", allSagemakerNotebooks)
+
+# Filter to Sagemaker notebooks that have root_access set to "Enabled"
+# or missing.
+# Warnings will be printed for all violations since the last parameter is true
+sagemakerNotebooksWithRootAccess = plan.filter_attribute_is_not_value(
+                        allSagemakerNotebooks, "root_access", "Disabled", true)
+
+# Filter to Sagemaker notebooks that have direct_internet_access set to "Enabled"
+# or missing.
+# Warnings will be printed for all violations since the last parameter is true
+sagemakerNotebooksWithDirectInternetAccess = plan.filter_attribute_is_not_value(
+              allSagemakerNotebooks, "direct_internet_access", "Disabled", true)
+
+# Main rule
+validated = length(sagemakerNotebooksWithRootAccess["messages"]) is 0 and length(sagemakerNotebooksWithDirectInternetAccess["messages"]) is 0
+main = rule {
+  validated is true
+}
