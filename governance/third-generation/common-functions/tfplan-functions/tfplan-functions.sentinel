@@ -548,7 +548,8 @@ filter_attribute_greater_than_value = func(resources, attr, value, prtmsg) {
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined."
+                " that is null or undefined. " + "It is supposed to be less " +
+                "than or equal to " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -581,7 +582,8 @@ filter_attribute_greater_than_equal_to_value = func(resources, attr, value, prtm
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined."
+                " that is null or undefined. " + "It is supposed to be less " +
+                "than " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -614,7 +616,8 @@ filter_attribute_less_than_value = func(resources, attr, value, prtmsg) {
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined."
+                " that is null or undefined. " + "It is supposed to be greater " +
+                "than or equal to " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
@@ -647,7 +650,8 @@ filter_attribute_less_than_equal_to_value = func(resources, attr, value, prtmsg)
     if float(v) else null is null {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
-                " that is null or undefined. "
+                " that is null or undefined. " + "It is supposed to be greater " +
+                "than " + to_string(value)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
