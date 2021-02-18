@@ -1,0 +1,302 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"constant_value": "us-east-1",
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"aws_kms_key.my_key": {
+		"address": "aws_kms_key.my_key",
+		"config": {
+			"deletion_window_in_days": {
+				"constant_value": 10,
+			},
+			"description": {
+				"constant_value": "This key is used to encrypt bucket objects",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "my_key",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_kms_key",
+	},
+	"data.aws_iam_policy_document.example": {
+		"address": "data.aws_iam_policy_document.example",
+		"config": {
+			"statement": [
+				{
+					"actions": {
+						"constant_value": [
+							"s3:ListBucket",
+						],
+					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "Bool",
+							},
+							"values": {
+								"constant_value": [
+									"false",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SecureTransport",
+							},
+						},
+					],
+					"effect": {
+						"constant_value": "Deny",
+					},
+					"principals": [
+						{
+							"identifiers": {
+								"constant_value": [
+									"*",
+								],
+							},
+							"type": {
+								"constant_value": "*",
+							},
+						},
+					],
+					"resources": {
+						"references": [
+							"aws_s3_bucket.bucket_1",
+						],
+					},
+					"sid": {
+						"constant_value": "Deny HTTP for bucket level operations",
+					},
+				},
+				{
+					"actions": {
+						"constant_value": [
+							"s3:GetObject",
+							"s3:PutObject",
+						],
+					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "Bool",
+							},
+							"values": {
+								"constant_value": [
+									"false",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SecureTransport",
+							},
+						},
+					],
+					"effect": {
+						"constant_value": "Deny",
+					},
+					"principals": [
+						{
+							"identifiers": {
+								"constant_value": [
+									"*",
+								],
+							},
+							"type": {
+								"constant_value": "*",
+							},
+						},
+					],
+					"resources": {
+						"references": [
+							"aws_s3_bucket.bucket_1",
+						],
+					},
+					"sid": {
+						"constant_value": "Deny HTTP for object operations",
+					},
+				},
+				{
+					"actions": {
+						"constant_value": [
+							"s3:ListBucket",
+						],
+					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "NotIpAddress",
+							},
+							"values": {
+								"references": [
+									"var.ip_addresses",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SourceIp",
+							},
+						},
+						{
+							"test": {
+								"constant_value": "StringNotEquals",
+							},
+							"values": {
+								"references": [
+									"var.s3_vpce_id",
+									"var.shared_s3_vpce_id",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SourceVpce",
+							},
+						},
+					],
+					"effect": {
+						"constant_value": "Deny",
+					},
+					"principals": [
+						{
+							"identifiers": {
+								"constant_value": [
+									"*",
+								],
+							},
+							"type": {
+								"constant_value": "AWS",
+							},
+						},
+					],
+					"resources": {
+						"references": [
+							"aws_s3_bucket.bucket_1",
+						],
+					},
+					"sid": {
+						"constant_value": "Deny bucket access not through vpce",
+					},
+				},
+				{
+					"actions": {
+						"constant_value": [
+							"s3:GetObject",
+							"s3:PutObject",
+						],
+					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "StringNotEquals",
+							},
+							"values": {
+								"references": [
+									"var.s3_vpce_id",
+									"var.shared_s3_vpce_id",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SourceVpce",
+							},
+						},
+					],
+					"effect": {
+						"constant_value": "Deny",
+					},
+					"principals": [
+						{
+							"identifiers": {
+								"constant_value": [
+									"*",
+								],
+							},
+							"type": {
+								"constant_value": "AWS",
+							},
+						},
+					],
+					"resources": {
+						"references": [
+							"aws_s3_bucket.bucket_1",
+						],
+					},
+					"sid": {
+						"constant_value": "Deny object access not through vpce",
+					},
+				},
+			],
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_iam_policy_document",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"bucket_acl": {
+		"default":        "private",
+		"description":    "ACL for S3 bucket: private, public-read, public-read-write, etc",
+		"module_address": "",
+		"name":           "bucket_acl",
+	},
+	"bucket_name": {
+		"default":        "roger-bucket-0",
+		"description":    "Name of the bucket to create",
+		"module_address": "",
+		"name":           "bucket_name",
+	},
+	"ip_addresses": {
+		"default": [
+			"1.1.1.1",
+		],
+		"description":    "list of prohibited IP address",
+		"module_address": "",
+		"name":           "ip_addresses",
+	},
+	"s3_vpce_id": {
+		"default":        "",
+		"description":    "S3 VPC endpoint",
+		"module_address": "",
+		"name":           "s3_vpce_id",
+	},
+	"shared_s3_vpce_id": {
+		"default":        "",
+		"description":    "Shared S3 VPC endpoint",
+		"module_address": "",
+		"name":           "shared_s3_vpce_id",
+	},
+}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
