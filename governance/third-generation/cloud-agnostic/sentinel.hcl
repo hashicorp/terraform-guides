@@ -14,23 +14,23 @@ module "tfrun-functions" {
     source = "../common-functions/tfrun-functions/tfrun-functions.sentinel"
 }
 
-policy "prohibited-datasources" {
-    source = "./prohibited-datasources.sentinel"
+policy "allowed-datasources" {
+    source = "./allowed-datasources.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "prohibited-providers" {
-    source = "./prohibited-providers.sentinel"
+policy "allowed-providers" {
+    source = "./allowed-providers.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "prohibited-provisioners" {
-    source = "./prohibited-provisioners.sentinel"
+policy "allowed-provisioners" {
+    source = "./allowed-provisioners.sentinel"
     enforcement_level = "advisory"
 }
 
-policy "prohibited-resources" {
-    source = "./prohibited-resources.sentinel"
+policy "allowed-resources" {
+    source = "./allowed-resources.sentinel"
     enforcement_level = "advisory"
 }
 
@@ -64,32 +64,47 @@ policy "prevent-remote-exec-provisioners-on-null-resources" {
     enforcement_level = "advisory"
 }
 
+policy "prohibited-datasources" {
+    source = "./prohibited-datasources.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "prohibited-providers" {
+    source = "./prohibited-providers.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "prohibited-provisioners" {
+    source = "./prohibited-provisioners.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "prohibited-resources" {
+    source = "./prohibited-resources.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "require-all-modules-have-version-constraint" {
+    source = "./require-all-modules-have-version-constraint.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "require-all-providers-have-version-constraint" {
+    source = "./require-all-providers-have-version-constraint.sentinel"
+    enforcement_level = "advisory"
+}
+
 policy "require-all-resources-from-pmr" {
     source = "./require-all-resources-from-pmr.sentinel"
     enforcement_level = "advisory"
 }
 
+policy "restrict-databricks-clusters" {
+    source = "./restrict-databricks-clusters.sentinel"
+    enforcement_level = "advisory"
+}
+
 policy "validate-variables-have-descriptions" {
     source = "./validate-variables-have-descriptions.sentinel"
-    enforcement_level = "advisory"
-}
-
-policy "allowed-datasources" {
-    source = "./allowed-datasources.sentinel"
-    enforcement_level = "advisory"
-}
-
-policy "allowed-providers" {
-    source = "./allowed-providers.sentinel"
-    enforcement_level = "advisory"
-}
-
-policy "allowed-provisioners" {
-    source = "./allowed-provisioners.sentinel"
-    enforcement_level = "advisory"
-}
-
-policy "allowed-resources" {
-    source = "./allowed-resources.sentinel"
     enforcement_level = "advisory"
 }
