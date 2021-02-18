@@ -1,0 +1,313 @@
+resource_changes = {
+	"aws_security_group.bar": {
+		"address": "aws_security_group.bar",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "bar",
+				"ingress": [
+					{
+						"cidr_blocks": [
+							"10.0.0.0/8",
+						],
+						"description":      "bar",
+						"from_port":        0,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "-1",
+						"security_groups":  [],
+						"self":             false,
+						"to_port":          3389,
+					},
+				],
+				"name":                   "bar",
+				"name_prefix":            null,
+				"revoke_rules_on_delete": false,
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"arn":    true,
+				"egress": true,
+				"id":     true,
+				"ingress": [
+					{
+						"cidr_blocks": [
+							false,
+						],
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"security_groups":  [],
+					},
+				],
+				"owner_id": true,
+				"vpc_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "bar",
+		"provider_name":  "aws",
+		"type":           "aws_security_group",
+	},
+	"aws_security_group.baz": {
+		"address": "aws_security_group.baz",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "baz",
+				"ingress": [
+					{
+						"cidr_blocks": [
+							"10.0.0.0/0",
+						],
+						"description":      "baz",
+						"from_port":        0,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "tcp",
+						"security_groups":  [],
+						"self":             false,
+						"to_port":          9443,
+					},
+				],
+				"name":                   "baz",
+				"name_prefix":            null,
+				"revoke_rules_on_delete": false,
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"arn":    true,
+				"egress": true,
+				"id":     true,
+				"ingress": [
+					{
+						"cidr_blocks": [
+							false,
+						],
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"security_groups":  [],
+					},
+				],
+				"owner_id": true,
+				"vpc_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "baz",
+		"provider_name":  "aws",
+		"type":           "aws_security_group",
+	},
+	"aws_security_group.foo": {
+		"address": "aws_security_group.foo",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description": "foo",
+				"ingress": [
+					{
+						"cidr_blocks": [
+							"0.0.0.0/0",
+						],
+						"description":      "foo",
+						"from_port":        22,
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"protocol":         "tcp",
+						"security_groups":  [],
+						"self":             false,
+						"to_port":          22,
+					},
+				],
+				"name":                   "foo",
+				"name_prefix":            null,
+				"revoke_rules_on_delete": false,
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"arn":    true,
+				"egress": true,
+				"id":     true,
+				"ingress": [
+					{
+						"cidr_blocks": [
+							false,
+						],
+						"ipv6_cidr_blocks": [],
+						"prefix_list_ids":  [],
+						"security_groups":  [],
+					},
+				],
+				"owner_id": true,
+				"vpc_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "foo",
+		"provider_name":  "aws",
+		"type":           "aws_security_group",
+	},
+	"aws_security_group.seuss": {
+		"address": "aws_security_group.seuss",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"description":            "seuss",
+				"name":                   "seuss",
+				"name_prefix":            null,
+				"revoke_rules_on_delete": false,
+				"tags":     null,
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"arn":      true,
+				"egress":   true,
+				"id":       true,
+				"ingress":  true,
+				"owner_id": true,
+				"vpc_id":   true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "seuss",
+		"provider_name":  "aws",
+		"type":           "aws_security_group",
+	},
+	"aws_security_group_rule.eggs": {
+		"address": "aws_security_group_rule.eggs",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":      "eggs",
+				"from_port":        0,
+				"ipv6_cidr_blocks": null,
+				"prefix_list_ids":  null,
+				"protocol":         "-1",
+				"self":             false,
+				"to_port":          0,
+				"type":             "ingress",
+			},
+			"after_unknown": {
+				"cidr_blocks": [
+					false,
+				],
+				"id":                       true,
+				"security_group_id":        true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "eggs",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+	"aws_security_group_rule.green": {
+		"address": "aws_security_group_rule.green",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks": [
+					"10.0.0.0/8",
+				],
+				"description":      "green",
+				"from_port":        3389,
+				"ipv6_cidr_blocks": null,
+				"prefix_list_ids":  null,
+				"protocol":         "tcp",
+				"self":             false,
+				"to_port":          3389,
+				"type":             "ingress",
+			},
+			"after_unknown": {
+				"cidr_blocks": [
+					false,
+				],
+				"id":                       true,
+				"security_group_id":        true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "green",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+	"aws_security_group_rule.ham": {
+		"address": "aws_security_group_rule.ham",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"cidr_blocks": [
+					"0.0.0.0/0",
+				],
+				"description":      "ham",
+				"from_port":        0,
+				"ipv6_cidr_blocks": null,
+				"prefix_list_ids":  null,
+				"protocol":         "tcp",
+				"self":             false,
+				"to_port":          1024,
+				"type":             "ingress",
+			},
+			"after_unknown": {
+				"cidr_blocks": [
+					false,
+				],
+				"id":                       true,
+				"security_group_id":        true,
+				"source_security_group_id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "ham",
+		"provider_name":  "aws",
+		"type":           "aws_security_group_rule",
+	},
+}

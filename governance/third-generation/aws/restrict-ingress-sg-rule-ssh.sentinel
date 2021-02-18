@@ -1,0 +1,121 @@
+# This policy uses the Sentinel tfplan/v2 import to validate that no security group
+# rules have the have SSH open to CIDR "0.0.0.0/0" for ingress rules.  It covers both the
+# aws_security_group and the aws_security_group_rule resources which can both
+# define rules.
+
+# Same targeting as terraform-foundational-policies-library/cis/
+# aws/networking/aws-cis-4.1-networking-deny-public-ssh-acl-rules
+# but provides greater detail of violations
+
+# Import the tfplan/v2 import, but use the alias "tfplan"
+import "tfplan/v2" as tfplan
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Import for looping through the Security Group Rules
+import "types"
+
+# Variables and print() can be edited to tailor this policy as needed
+forbidden_cidrs = ["0.0.0.0/0"]
+forbidden_port = 22
+forbidden_to_port = 22
+forbidden_from_port = 22
+
+# Get all Security Group Ingress Rules
+aws_security_group_rules = filter tfplan.resource_changes as address, rc {
+  rc.type is "aws_security_group_rule" and
+  rc.mode is "managed" and rc.change.after.type is "ingress" and
+  (rc.change.actions contains "create" or rc.change.actions contains "update" or
+   rc.change.actions contains "read" or rc.change.actions contains "no-op")
+}
+
+# Validate Security Group Rules
+violatingSGRulesCount = 0
+for aws_security_group_rules as address, sgr {
+
+	# Validate that each SG rule does not have disallowed value
+	# Since cidr_blocks is optional and could be computed,
+	# We check that it is present and really a list
+	# before checking whether it contains "0.0.0.0/0"
+	if sgr.change.after.cidr_blocks else null is not null and
+		types.type_of(sgr.change.after.cidr_blocks) is "list" and
+		sgr.change.after.cidr_blocks contains "0.0.0.0/0" and
+		sgr.change.after.from_port else null is not null and
+		sgr.change.after.from_port <= forbidden_from_port and 
+		sgr.change.after.to_port else null is not null and
+		sgr.change.after.to_port >= forbidden_to_port{
+		violatingSGRulesCount += 1
+		print("SG Rule Ingress Violation:", address, "has port", forbidden_port, 
+		"(SSH) open to", forbidden_cidrs, "that is not allowed")
+		print("  Ingress Rule", "has from_port with value", sgr.change.after.from_port, 
+		"that is less than or equal to", forbidden_from_port)
+		print("  and Ingress Rule has to_port with value", sgr.change.after.to_port, 
+		"that is greater than or equal to", forbidden_to_port)
+	} else if sgr.change.after.cidr_blocks else null is not null and
+		types.type_of(sgr.change.after.cidr_blocks) is "list" and
+		sgr.change.after.cidr_blocks contains "0.0.0.0/0" and
+		sgr.change.after.to_port else null is not null and
+		sgr.change.after.to_port is forbidden_port{
+		violatingSGRulesCount += 1
+		print("SG Rule Ingress Violation:", address, "has port", forbidden_port, 
+			"(SSH) open to", forbidden_cidrs, "that is not allowed")
+		print("  Ingress Rule", "has to_port with value", sgr.change.after.to_port)
+  }
+} // end of SG Rules
+
+# Get all Security Groups
+allSGs = plan.find_resources("aws_security_group")
+
+# Validate Security Groups
+violatingSGsCount = 0
+for allSGs as address, sg {
+
+	# Find the ingress rules of the current SG
+	ingressRules = plan.find_blocks(sg, "ingress")
+	
+	# Filter to violating CIDR blocks
+	# Warnings will not be printed for violations since the last parameter is false
+	violatingCidr = plan.filter_attribute_contains_items_from_list(ingressRules,
+					"cidr_blocks", forbidden_cidrs, false)
+	
+	# Filter to violating Service port
+	# Warnings will not be printed for violations since the last parameter is false
+	violatingToPort = plan.filter_attribute_is_value(ingressRules,
+						"to_port", forbidden_to_port, false)
+	
+	# Filter to violating Service port
+	# Warnings will not be printed for violations since the last parameter is false
+	violatingFromPortLess = plan.filter_attribute_less_than_equal_to_value(ingressRules,
+							"from_port", forbidden_from_port, false)
+	
+	# Filter to violating Service port
+	# Warnings will not be printed for violations since the last parameter is false
+	violatingToPortGreater = plan.filter_attribute_greater_than_equal_to_value(ingressRules,
+								"to_port", forbidden_to_port, false)
+	
+	# Print violation messages
+	if length(violatingCidr["messages"]) > 0 and length(violatingFromPortLess["messages"]) > 0 and 
+		length(violatingToPortGreater["messages"]) > 0{
+	violatingSGsCount += 1
+	print("SG Ingress Violation:", address, "has port", forbidden_port, 
+			"(SSH) open to", forbidden_cidrs, "that is not allowed")
+###Uncomment below if you want to show the CIDRs as a separate message as well
+#	plan.print_violations(violatingCidr["messages"], "  Ingress Rule")
+	plan.print_violations(violatingFromPortLess["messages"], "  Ingress Rule")
+	plan.print_violations(violatingToPortGreater["messages"], "  and Ingress Rule")
+	} else if length(violatingCidr["messages"]) > 0 and length(violatingToPort["messages"]) > 0{
+	violatingSGsCount += 1
+    print("SG Ingress Violation:", address, "has port", forbidden_port, 
+			"(SSH) open to", forbidden_cidrs, "that is not allowed")
+###Uncomment below if you want to show the CIDRs as a separate message as well
+#   plan.print_violations(violatingCidr["messages"], "  Ingress Rule")
+	plan.print_violations(violatingToPort["messages"], "  Ingress Rule")
+  }
+} // end for SGs
+
+validated = violatingSGsCount is 0 and violatingSGRulesCount is 0
+main = rule {
+  validated is true
+}
