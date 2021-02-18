@@ -15,13 +15,38 @@ policy "enforce-mandatory-tags" {
     enforcement_level = "advisory"
 }
 
+policy "restrict-aks-clusters" {
+    source = "./restrict-aks-clusters.sentinel"
+    enforcement_level = "advisory"
+}
+
 policy "restrict-app-service-to-https" {
     source = "./restrict-app-service-to-https.sentinel"
     enforcement_level = "advisory"
 }
 
+policy "restrict-inbound-source-address-prefixes" {
+    source = "./restrict-inbound-source-address-prefixes.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "restrict-outbound-destination-address-prefixes" {
+    source = "./restrict-outbound-destination-address-prefixes.sentinel"
+    enforcement_level = "advisory"
+}
+
 policy "restrict-publishers-of-current-vms" {
     source = "./restrict-publishers-of-current-vms.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "restrict-vm-image-id" {
+    source = "./restrict-vm-image-id.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "restrict-vm-publisher" {
+    source = "./restrict-vm-publisher.sentinel"
     enforcement_level = "advisory"
 }
 

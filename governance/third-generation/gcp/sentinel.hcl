@@ -15,7 +15,22 @@ policy "enforce-mandatory-labels" {
     enforcement_level = "advisory"
 }
 
+policy "restrict-egress-firewall-destination-ranges" {
+    source = "./restrict-egress-firewall-destination-ranges.sentinel"
+    enforcement_level = "advisory"
+}
+
 policy "restrict-gce-machine-type" {
     source = "./restrict-gce-machine-type.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "restrict-gke-clusters" {
+    source = "./restrict-gke-clusters.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "restrict-ingress-firewall-source-ranges" {
+    source = "./restrict-ingress-firewall-source-ranges.sentinel"
     enforcement_level = "advisory"
 }
