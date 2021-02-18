@@ -1,0 +1,282 @@
+terraform_version = "0.13.5"
+
+variables = {
+	"bucket_acl": {
+		"name":  "bucket_acl",
+		"value": "private",
+	},
+	"bucket_name": {
+		"name":  "bucket_name",
+		"value": "roger-bucket-0",
+	},
+	"ip_addresses": {
+		"name": "ip_addresses",
+		"value": [
+			"1.1.1.1",
+		],
+	},
+	"s3_vpce_id": {
+		"name":  "s3_vpce_id",
+		"value": "",
+	},
+	"shared_s3_vpce_id": {
+		"name":  "shared_s3_vpce_id",
+		"value": "",
+	},
+}
+
+resource_changes = {
+	"aws_kms_key.my_key": {
+		"address": "aws_kms_key.my_key",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"customer_master_key_spec": "SYMMETRIC_DEFAULT",
+				"deletion_window_in_days":  10,
+				"description":              "This key is used to encrypt bucket objects",
+				"enable_key_rotation":      false,
+				"is_enabled":               true,
+				"key_usage":                "ENCRYPT_DECRYPT",
+				"tags":                     null,
+			},
+			"after_unknown": {
+				"arn":    true,
+				"id":     true,
+				"key_id": true,
+				"policy": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "my_key",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_kms_key",
+	},
+	"data.aws_iam_policy_document.example": {
+		"address": "data.aws_iam_policy_document.example",
+		"change": {
+			"actions": [
+				"read",
+			],
+			"after": {
+				"override_json":             null,
+				"override_policy_documents": null,
+				"policy_id":                 null,
+				"source_json":               null,
+				"source_policy_documents":   null,
+				"statement": [
+					{
+						"actions": [
+							"s3:ListBucket",
+						],
+						"condition": [
+							{
+								"test": "Bool",
+								"values": [
+									"false",
+								],
+								"variable": "aws:SecureTransport",
+							},
+						],
+						"effect":         "Deny",
+						"not_actions":    null,
+						"not_principals": [],
+						"not_resources":  null,
+						"principals": [
+							{
+								"identifiers": [
+									"*",
+								],
+								"type": "*",
+							},
+						],
+						"resources": [],
+						"sid":       "Deny HTTP for bucket level operations",
+					},
+					{
+						"actions": [
+							"s3:GetObject",
+							"s3:PutObject",
+						],
+						"condition": [
+							{
+								"test": "Bool",
+								"values": [
+									"false",
+								],
+								"variable": "aws:SecureTransport",
+							},
+						],
+						"effect":         "Deny",
+						"not_actions":    null,
+						"not_principals": [],
+						"not_resources":  null,
+						"principals": [
+							{
+								"identifiers": [
+									"*",
+								],
+								"type": "*",
+							},
+						],
+						"resources": [],
+						"sid":       "Deny HTTP for object operations",
+					},
+					{
+						"actions": [
+							"s3:ListBucket",
+						],
+						"condition": [
+							{
+								"test": "NotIpAddress",
+								"values": [
+									"1.1.1.1",
+								],
+								"variable": "aws:SourceIp",
+							},
+						],
+						"effect":         "Deny",
+						"not_actions":    null,
+						"not_principals": [],
+						"not_resources":  null,
+						"principals": [
+							{
+								"identifiers": [
+									"*",
+								],
+								"type": "AWS",
+							},
+						],
+						"resources": [],
+						"sid":       "Deny bucket access not through vpce",
+					},
+				],
+				"version": null,
+			},
+			"after_unknown": {
+				"id":   true,
+				"json": true,
+				"statement": [
+					{
+						"actions": [
+							false,
+						],
+						"condition": [
+							{
+								"values": [
+									false,
+								],
+							},
+						],
+						"not_principals": [],
+						"principals": [
+							{
+								"identifiers": [
+									false,
+								],
+							},
+						],
+						"resources": [
+							true,
+						],
+					},
+					{
+						"actions": [
+							false,
+							false,
+						],
+						"condition": [
+							{
+								"values": [
+									false,
+								],
+							},
+						],
+						"not_principals": [],
+						"principals": [
+							{
+								"identifiers": [
+									false,
+								],
+							},
+						],
+						"resources": [
+							true,
+						],
+					},
+					{
+						"actions": [
+							false,
+						],
+						"condition": [
+							{
+								"values": [
+									false,
+								],
+							},
+							{
+								"values": [
+									false,
+									false,
+									false,
+								],
+							},
+						],
+						"not_principals": [],
+						"principals": [
+							{
+								"identifiers": [
+									false,
+								],
+							},
+						],
+						"resources": [
+							true,
+						],
+					},
+					{
+						"actions": [
+							false,
+							false,
+						],
+						"condition": [
+							{
+								"values": [
+									false,
+									false,
+									false,
+								],
+							},
+						],
+						"not_principals": [],
+						"principals": [
+							{
+								"identifiers": [
+									false,
+								],
+							},
+						],
+						"resources": [
+							true,
+						],
+					},
+				],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "example",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_iam_policy_document",
+	},
+}
+
+output_changes = {}

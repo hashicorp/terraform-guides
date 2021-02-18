@@ -1,0 +1,239 @@
+terraform_version = "0.13.5"
+
+variables = {
+	"bucket_acl": {
+		"name":  "bucket_acl",
+		"value": "private",
+	},
+	"bucket_name": {
+		"name":  "bucket_name",
+		"value": "roger-bucket-0",
+	},
+	"ip_addresses": {
+		"name": "ip_addresses",
+		"value": [
+			"1.1.1.1",
+		],
+	},
+	"s3_vpce_id": {
+		"name":  "s3_vpce_id",
+		"value": "",
+	},
+	"shared_s3_vpce_id": {
+		"name":  "shared_s3_vpce_id",
+		"value": "",
+	},
+}
+
+resource_changes = {
+	"aws_kms_key.my_key": {
+		"address": "aws_kms_key.my_key",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"customer_master_key_spec": "SYMMETRIC_DEFAULT",
+				"deletion_window_in_days":  10,
+				"description":              "This key is used to encrypt bucket objects",
+				"enable_key_rotation":      false,
+				"is_enabled":               true,
+				"key_usage":                "ENCRYPT_DECRYPT",
+				"tags":                     null,
+			},
+			"after_unknown": {
+				"arn":    true,
+				"id":     true,
+				"key_id": true,
+				"policy": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "my_key",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_kms_key",
+	},
+	"aws_s3_bucket.bucket_1": {
+		"address": "aws_s3_bucket.bucket_1",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"acl":                       "private",
+				"bucket":                    "roger-bucket-1",
+				"bucket_prefix":             null,
+				"cors_rule":                 [],
+				"force_destroy":             false,
+				"grant":                     [],
+				"lifecycle_rule":            [],
+				"logging":                   [],
+				"object_lock_configuration": [],
+				"policy":                    null,
+				"replication_configuration": [],
+				"server_side_encryption_configuration": [
+					{
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"sse_algorithm": "aws:kms",
+									},
+								],
+							},
+						],
+					},
+				],
+				"tags":    null,
+				"website": [],
+			},
+			"after_unknown": {
+				"acceleration_status": true,
+				"arn":                         true,
+				"bucket_domain_name":          true,
+				"bucket_regional_domain_name": true,
+				"cors_rule":                   [],
+				"grant":                       [],
+				"hosted_zone_id":              true,
+				"id":                          true,
+				"lifecycle_rule":              [],
+				"logging":                     [],
+				"object_lock_configuration":   [],
+				"region":                      true,
+				"replication_configuration":   [],
+				"request_payer":               true,
+				"server_side_encryption_configuration": [
+					{
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"kms_master_key_id": true,
+									},
+								],
+							},
+						],
+					},
+				],
+				"versioning":       true,
+				"website":          [],
+				"website_domain":   true,
+				"website_endpoint": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "bucket_1",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_s3_bucket",
+	},
+	"aws_s3_bucket.bucket_2": {
+		"address": "aws_s3_bucket.bucket_2",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"acl":                       "private",
+				"bucket":                    "roger-bucket-2",
+				"bucket_prefix":             null,
+				"cors_rule":                 [],
+				"force_destroy":             false,
+				"grant":                     [],
+				"lifecycle_rule":            [],
+				"logging":                   [],
+				"object_lock_configuration": [],
+				"policy":                    null,
+				"replication_configuration": [],
+				"server_side_encryption_configuration": [
+					{
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"sse_algorithm": "aws:kms",
+									},
+								],
+							},
+						],
+					},
+				],
+				"tags":    null,
+				"website": [],
+			},
+			"after_unknown": {
+				"acceleration_status": true,
+				"arn":                         true,
+				"bucket_domain_name":          true,
+				"bucket_regional_domain_name": true,
+				"cors_rule":                   [],
+				"grant":                       [],
+				"hosted_zone_id":              true,
+				"id":                          true,
+				"lifecycle_rule":              [],
+				"logging":                     [],
+				"object_lock_configuration":   [],
+				"region":                      true,
+				"replication_configuration":   [],
+				"request_payer":               true,
+				"server_side_encryption_configuration": [
+					{
+						"rule": [
+							{
+								"apply_server_side_encryption_by_default": [
+									{
+										"kms_master_key_id": true,
+									},
+								],
+							},
+						],
+					},
+				],
+				"versioning":       true,
+				"website":          [],
+				"website_domain":   true,
+				"website_endpoint": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "bucket_2",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_s3_bucket",
+	},
+	"aws_s3_bucket_policy.bucket_policy_2": {
+		"address": "aws_s3_bucket_policy.bucket_policy_2",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"policy": "{\n  \"Version\":\"2012-10-17\",\n  \"Statement\":[\n    {\n      \"Sid\":\"PublicRead\",\n      \"Effect\":\"Allow\",\n      \"Principal\": \"*\",\n      \"Action\":[\"s3:GetObject\",\"s3:GetObjectVersion\"],\n      \"Resource\":[\"arn:aws:s3:::*\"]\n    }\n  ]\n}\n",
+			},
+			"after_unknown": {
+				"bucket": true,
+				"id":     true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "bucket_policy_2",
+		"provider_name":  "registry.terraform.io/hashicorp/aws",
+		"type":           "aws_s3_bucket_policy",
+	},
+}
+
+output_changes = {}

@@ -1,0 +1,163 @@
+# This policy uses the Sentinel tfplan/v2 and tfconfig/v2 imports to require
+# that all S3 bucket policies are implemented with the aws_iam_policy_document
+# data source and that those policies require buckets to only be accessible
+# via HTTPS and from specific VPC endpoints.
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+# Restricted S3 Actions
+restricted_s3_actions = ["s3:ListBucket", "s3:GetObject", "s3:PutObject"]
+
+# Allowed VPC Endpoints
+allowed_vpc_endpoints = ["vpce-111111", "vpce-222222", "vpce-333333"]
+
+# Get all S3 buckets in configuration
+allS3Buckets = config.find_resources_by_type("aws_s3_bucket")
+
+# Filter to S3 buckets with the policy argument set since it is not mandatory.
+# Don't print violation messages
+S3BucketsWithPolicy = config.filter_attribute_not_in_list(
+  allS3Buckets, "config.policy", ["null"], false)
+
+# Filter to S3 buckets that set policy but do not set it to an instance of
+# the aws_iam_policy_document data source.
+# Print violation messages which will now only be for those buckets that
+# set policy to something other than an instance of aws_iam_policy_document
+S3BucketsWithInvalidPolicy = config.filter_attribute_does_not_match_regex(
+                             S3BucketsWithPolicy["items"], "config.policy",
+                             "^data\\.aws_iam_policy_document\\.(.*)$", true)
+if length(S3BucketsWithInvalidPolicy["messages"]) > 0 {
+  print("All aws_s3_bucket resources must get their policy from an instance of",
+        "the data_iam_policy_document data source.")
+}
+
+# Get all S3 bucket policies in configuration
+allS3BucketPolicies = config.find_resources_by_type("aws_s3_bucket_policy")
+
+# Filter to S3 bucket policies that set policy but do not set it to an instance
+# of the aws_iam_policy_document data source.
+# Print violation messages for s3 bucket policies that set policy to something
+# other than an instance of aws_iam_policy_document
+# Note that we do not need to screen out instances of aws_s3_bucket_policy that
+# are missing the policy argument because it is mandatory.
+S3BucketPoliciesWithInvalidPolicy = config.filter_attribute_does_not_match_regex(
+                                allS3BucketPolicies, "config.policy",
+                                "^data\\.aws_iam_policy_document\\.(.*)$", true)
+if length(S3BucketPoliciesWithInvalidPolicy["messages"]) > 0 {
+  print("All aws_s3_bucket_policy resources must get their policy from",
+        "an instance of the data_iam_policy_document data source.")
+}
+
+# Find instances of aws_iam_policy_document
+allIAMPolicyDocuments = plan.find_datasources("aws_iam_policy_document")
+
+# Validate IAM Policy Documents
+policyDocumentsValidated = true
+for allIAMPolicyDocuments as address, pd {
+
+  # Find the statements of the current policy document
+  statements = plan.find_blocks(pd, "statement")
+
+  # Determine if any statements include restricted S3 actions
+  statementsWithS3actions = plan.filter_attribute_contains_items_from_list(
+                            statements, "actions", restricted_s3_actions, false)
+  if length(statementsWithS3actions["resources"]) is 0 {
+    # No statements included restricted S3 actions, so policy document is ok.
+    break
+  }
+
+  # Test each restricted S3 action separately to make sure some statement
+  # in the current policy document has the desired conditions.
+  for restricted_s3_actions as s3_action {
+    # Filter to statements of the current policy document that have an S3 action
+    statementsWithS3action = plan.filter_attribute_contains_items_from_list(
+          statements, "actions", [s3_action], false)
+
+    # Search for deny statement with aws:SecureTransport set to false
+    foundSecureTransportCondition = false
+    for statementsWithS3action["resources"] as _, statement {
+      if foundSecureTransportCondition {
+        break
+      }
+      if statement.effect else "" is "Deny" {
+        for statement.condition else [] as _, condition {
+          if condition.test is "Bool" and
+             condition.variable is "aws:SecureTransport" and
+             "false" in condition.values {
+            foundSecureTransportCondition = true
+            break
+          } // end if secureTransport condition test
+        } // end for condition
+      } // end if statement.effect is Deny
+    } // end for statementsWithS3actions
+
+    # If no statement had a valid condition for aws:SecureTransport,
+    # Then current policy document is invalid.
+    if not foundSecureTransportCondition {
+      print("IAM policy document", address, "has statements that apply to S3",
+            "buckets and/or objects, but does not have a Deny statement that",
+            "requires aws:SecureTransport to be false for action", s3_action)
+      policyDocumentsValidated = false
+    }
+
+    # Search for deny statement with valid aws:SourceVpce
+    foundVPCECondition = false
+    foundInvalidVPCE = false
+    for statementsWithS3action["resources"] as _, statement {
+      if foundVPCECondition {
+        break
+      }
+      if statement.effect else "" is "Deny" {
+        for statement.condition else [] as _, condition {
+          if condition.test is "StringNotEquals" and
+             condition.variable is "aws:SourceVpce" {
+            foundInvalidVPCE = false
+            for condition.values as value {
+              if value not in allowed_vpc_endpoints {
+                foundInvalidVPCE = true
+                break
+              } // end value check
+            } // end for condition.values
+            if not foundInvalidVPCE {
+              foundVPCECondition = true
+              break
+            } // end not foundInvalidVPCE
+          } // end if SourceVpce condition test
+        } // end for condition
+      } // end if statement.effect is Deny
+    } // end for statementsWithS3actions
+
+    # If no statement had a valid condition for aws:SourceVpce,
+    # Then current policy document is invalid.
+    if foundVPCECondition is false and  foundInvalidVPCE is false {
+      print("IAM policy document", address, "has statements that apply to S3",
+            "buckets and/or objects, but does not have a Deny statement that",
+            "restricts aws:SourceVpce to VPC endpoints in", allowed_vpc_endpoints,
+            "for action", s3_action)
+      policyDocumentsValidated = false
+    }
+    if foundVPCECondition is false and foundInvalidVPCE is true {
+      print("IAM policy document", address, "has statements that apply to S3",
+            "buckets and/or objects and does have a Deny statement that",
+            "restricts aws:SourceVpce to VPC endpoints, but it includes at",
+            "least one VPC endpoint that is not in", allowed_vpc_endpoints,
+            "for action", s3_action)
+      policyDocumentsValidated = false
+    }
+
+  } // end for restricted_s3_actions
+} // end for allIAMPolicyDocuments
+
+# Main rule
+validated = length(S3BucketsWithInvalidPolicy["messages"]) is 0 and
+            length(S3BucketPoliciesWithInvalidPolicy["messages"]) is 0 and
+            policyDocumentsValidated
+main = rule {
+  validated is true
+}

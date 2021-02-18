@@ -1,0 +1,136 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"constant_value": "us-east-1",
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"aws_kms_key.my_key": {
+		"address": "aws_kms_key.my_key",
+		"config": {
+			"deletion_window_in_days": {
+				"constant_value": 10,
+			},
+			"description": {
+				"constant_value": "This key is used to encrypt bucket objects",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "my_key",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_kms_key",
+	},
+	"aws_s3_bucket.bucket_0": {
+		"address": "aws_s3_bucket.bucket_0",
+		"config": {
+			"acl": {
+				"references": [
+					"var.bucket_acl",
+				],
+			},
+			"bucket": {
+				"references": [
+					"var.bucket_name",
+				],
+			},
+			"policy": {
+				"constant_value": "{\n  \"Version\":\"2012-10-17\",\n  \"Statement\":[\n    {\n      \"Sid\":\"PublicRead\",\n      \"Effect\":\"Allow\",\n      \"Principal\": \"*\",\n      \"Action\":[\"s3:GetObject\",\"s3:GetObjectVersion\"],\n      \"Resource\":[\"arn:aws:s3:::*\"]\n    }\n  ]\n}\n",
+			},
+			"server_side_encryption_configuration": [
+				{
+					"rule": [
+						{
+							"apply_server_side_encryption_by_default": [
+								{
+									"kms_master_key_id": {
+										"references": [
+											"aws_kms_key.my_key",
+										],
+									},
+									"sse_algorithm": {
+										"constant_value": "aws:kms",
+									},
+								},
+							],
+						},
+					],
+				},
+			],
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "bucket_0",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"bucket_acl": {
+		"default":        "private",
+		"description":    "ACL for S3 bucket: private, public-read, public-read-write, etc",
+		"module_address": "",
+		"name":           "bucket_acl",
+	},
+	"bucket_name": {
+		"default":        "roger-bucket-0",
+		"description":    "Name of the bucket to create",
+		"module_address": "",
+		"name":           "bucket_name",
+	},
+	"ip_addresses": {
+		"default": [
+			"1.1.1.1",
+		],
+		"description":    "list of prohibited IP address",
+		"module_address": "",
+		"name":           "ip_addresses",
+	},
+	"s3_vpce_id": {
+		"default":        "",
+		"description":    "S3 VPC endpoint",
+		"module_address": "",
+		"name":           "s3_vpce_id",
+	},
+	"shared_s3_vpce_id": {
+		"default":        "",
+		"description":    "Shared S3 VPC endpoint",
+		"module_address": "",
+		"name":           "shared_s3_vpce_id",
+	},
+}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
