@@ -499,3 +499,39 @@ filter_attribute_matches_regex = func(items, attr, expr, prtmsg) {
   } // end for items
   return {"items":violators,"messages":messages}
 }
+
+### get_module_source ###
+# Get the module source from a module address
+# Note that the module_address in many collections in the tfplan/v2, tfconfig/v2,
+# and tfstate/v2 imports gives the labels used in the module blocks.
+# For instance, a module_address like "module.A.module.B" means that the current
+# item is in a module with label "B" that is a module with label "A". But that
+# does not give you the source the module labeled "B".
+# But if you want to limit creation of resources to specific modules based on
+# their source, you need the module source.  This function computes it.
+get_module_source = func(module_address) {
+  # Check for root module
+  if module_address is "" {
+    return "root"
+  } else {
+    # Find parent module
+    module_segments = strings.split(module_address, ".")
+    num_segments = length(module_segments)
+    parent_module = strings.join(module_segments[0:num_segments-2], ".")
+    current_module_name = module_segments[num_segments-1]
+
+    # Find module call that called current module
+    if parent_module is "" {
+      # parent module is root module
+      mc = tfconfig.module_calls[current_module_name]
+    } else {
+      # parent module is not root module
+      mc = tfconfig.module_calls[parent_module + ":" + current_module_name]
+    }
+
+    # Set source from the module call
+    module_source = mc.source
+
+    return module_source
+  }
+}

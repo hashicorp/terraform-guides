@@ -279,7 +279,7 @@ validate_provider_in_allowed_regions = func(p, regions) {
             module_segments = strings.split(p.module_address, ".")
             num_segments = length(module_segments)
             parent_module = strings.join(module_segments[0:num_segments-2], ".")
-            current_module_name = module_segments[num_segments -1]
+            current_module_name = module_segments[num_segments-1]
 
             # Find module call that called current module
             if parent_module is "" {

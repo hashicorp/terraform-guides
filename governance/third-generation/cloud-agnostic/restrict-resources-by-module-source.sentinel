@@ -1,0 +1,58 @@
+# This policy restricts resources of specific types to only be created in
+# modules with sources in a given list.
+# If you want to allow creation of the resources in the root module, include
+# "root" in the `allowed_module_sources` list. But you generally would not
+# want to allow "root" since that sacrifices most control over creation of
+# the resource types in `restricted_resources`.
+
+##### Imports #####
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+##### Parameters #####
+param restricted_resources default [
+  "aws_s3_bucket",
+  "aws_s3_bucket_object",
+  "azurerm_storage_account",
+  "azurerm_storage_container",
+  "azurerm_storage_blob",
+
+]
+
+param allowed_module_sources default [
+  "app.terraform.io/Cloud-Operations/s3-bucket/aws",
+  "localterraform.com/Cloud-Operations/s3-bucket/aws",
+  "app.terraform.io/Cloud-Operations/caf/azurerm",
+  "localterraform.com/Cloud-Operations/caf/azurerm",
+  "app.terraform.io/Cloud-Operations/cloud-storage/google",
+  "localterraform.com/Cloud-Operations/cloud-storage/google",
+]
+
+# Initialize validated
+validated = true
+
+# Iterate over restricted resource types
+for restricted_resources as _, type {
+  # Find all resources of the given type
+  all_resources = config.find_resources_by_type(type)
+
+  # Iterate over the resources to find module source
+  for all_resources as address, r {
+    module_address = r.module_address
+    # Get module source
+    module_source = config.get_module_source(module_address)
+    # Check module_source
+    if module_source not in allowed_module_sources {
+      print("resource", address, "has module source", module_source,
+            "that is not in the allowed list:", allowed_module_sources)
+      validated = false
+    } // end if module_source in allowed_module_sources
+  } // end for all_resources
+} // end restricted_resources
+
+# Main rule
+main = rule {
+  validated
+}
