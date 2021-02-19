@@ -69,7 +69,7 @@ for allIAMPolicyDocuments as address, pd {
                             statements, "actions", restricted_s3_actions, false)
   if length(statementsWithS3actions["resources"]) is 0 {
     # No statements included restricted S3 actions, so policy document is ok.
-    break
+    continue
   }
 
   # Test each restricted S3 action separately to make sure some statement

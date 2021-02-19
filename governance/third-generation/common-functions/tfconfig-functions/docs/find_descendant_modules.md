@@ -10,7 +10,7 @@ This function is contained in the [tfconfig-functions.sentinel](../../tfconfig-f
 `find_descendant_modules = func(module_address)`
 
 ## Arguments
-* **module_address**: the address of the module containing descendant modules to find, given as a string. The root module is represented by "". A module named `network` called by the root module is represented by "module.network". if that module contained a module named `subnets`, it would be represented by "module.network.module.subnets".
+* **module_address**: the address of the module containing descendant modules to find, given as a string. The root module is represented by "". A module with label `network` called by the root module is represented by "module.network". if that module contained a module with label `subnets`, it would be represented by "module.network.module.subnets".
 
 You can determine all module addresses in your current configuration by calling `find_descendant_modules("")`.
 
@@ -35,4 +35,4 @@ module_addresses += find_descendant_modules(new_module_address)
 ```
 It does not use `config.` before calling itself since that is not necessary when calling a function from inside the module that contains it.
 
-It is also called by the [use-lastest-module-versions.sentinel](../../../cloud-agnostic/http-examples/use-lastest-module-versions.sentinel) policy.
+It is used by the [use-latest-module-versions.sentinel](../../../cloud-agnostic/http-examples/use-latest-module-versions.sentinel) policy.
