@@ -5,23 +5,23 @@ Additionally, it contains [Policy Set](https://www.terraform.io/docs/cloud/senti
 
 These policies and the Terraform Sentinel v2 imports they use can only be used with Terraform 0.12 and above.
 
-These policies use the new Terraform Sentinel v2 imports. They also use a new feature called [Sentinel Modules](https://docs.hashicorp.com/sentinel/extending/modules) which allows Sentinel functions and rules to be defined in one file and used by Sentinel policies in other files.
+These policies use the Terraform Sentinel v2 imports. They also use [Sentinel Modules](https://docs.hashicorp.com/sentinel/extending/modules) which allow Sentinel functions and rules to be defined in one file and used by Sentinel policies in other files.
 
-To learn more about the new Terraform Sentinel v2 imports, see this [blog post](https://www.hashicorp.com/blog/terraform-sentinel-v2-imports-now-in-technology-preview).
+To learn more about the Terraform Sentinel v2 imports, see this [blog post](https://www.hashicorp.com/blog/terraform-sentinel-v2-imports-now-in-technology-preview).
 
 To learn more about Sentinel Modules, see this [blog post](https://discuss.hashicorp.com/t/sentinel-v0-15-0-introducing-modules/6579).
 
 ## Using These Policies with Terraform Cloud and Terraform Enterprise
 These policies and the common functions they use can be used as organized with the current version of Terraform Cloud (TFC) and with Terraform Enterprise (TFE) v202011-1 and higher. That version was released on November 10, 2020. It added the Sentinel 0.16.0 runtime which introduced the option of using HCL instead of JSON configuration files.
 
-All the JSON Sentinel configuration files were replaced with new HCL equivalent files on January 20, 2021. If you running a version of Terraform Enterprise (TFE) betweeen v202006-1 and v202010-2 and would like to use these policies, you should use the most recent version of this repository before January 20, 2021 which included the JSON configuration files.
+All the JSON Sentinel configuration files were replaced with HCL equivalent files on January 20, 2021. If you running a version of Terraform Enterprise (TFE) betweeen v202006-1 and v202010-2 and would like to use these policies, you should use the most recent version of this repository before January 20, 2021 which included the JSON configuration files.
 
 ## Important Characterizations of the New Policies
-These new third-generation policies have several important characteristics:
-1. As mentioned above, they use the new Terraform Sentinel v2 imports, which are more closely aligned with Terraform 0.12's data model and leverage the recently added [filter expression](https://docs.hashicorp.com/sentinel/language/collection-operations/#filter-expression), and make it easier to restrict policies to specific operations performed by Terraform against resources.
-1. The new policies use new, parameterized functions defined in four [Sentinel modules](https://docs.hashicorp.com/sentinel/extending/modules). Since they are defined in modules, their implementations do **not** need to be pasted into the policies. This is a **HUGE** improvement over the second-generation common functions!
+These third-generation policies have several important characteristics:
+1. As mentioned above, they use the Terraform Sentinel v2 imports, which are more closely aligned with Terraform 0.12's data model and leverage the recently added [filter expression](https://docs.hashicorp.com/sentinel/language/collection-operations/#filter-expression), and make it easier to restrict policies to specific operations performed by Terraform against resources.
+1. The policies use parameterized functions defined in four [Sentinel modules](https://docs.hashicorp.com/sentinel/extending/modules). Since they are defined in modules, their implementations do **not** need to be pasted into the policies. This is a **HUGE** improvement over the second-generation common functions!
 1. A related benefit of using functions from modules is that the policies themselves do not have any `for` loops or `if/else` conditionals. This makes it easier for users to understand the sample policies and to write their own policies that copy them.
-1. The new policies have been written in a way that causes all violations to be reported. This means a user who violates a policy will be informed about all of their violations in a single shot without having to run multiple Sentinel CLI tests or TFC/TFE plans.
+1. The policies have been written in a way that causes all violations to be reported. This means a user who violates a policy will be informed about all of their violations in a single shot without having to run multiple Sentinel CLI tests or TFC/TFE plans.
 1. The policies print out the full address of each resource instance that does violate a rule in the same format that is used in plan and apply logs, namely `module.<A>.module.<B>.<type>.<name>[<index>]`. (Note that `index` will only be present if multiple instances of a resource are defined either with the `count` or the `for_each` meta-arguments.) This allows writers of Terraform code to quickly determine the resources they need to fix even if the violations occur in modules that they did not write.
 1. They are written in a way that makes Sentinel's default output much less verbose. Users looking at Sentinel policy violations that occur during their runs will get all the information they need from the messages explicitly printed from the policies using Sentinel's `print` function. (Sentinel's default output that reports `TRUE` or `FALSE` for various rules and boolean expressions used by them along with Sentinel policy line numbers is really only useful to the policy's author.)
 1. The common function `evaluate_attribute`, which is in the tfplan-functions.sentinel and tfstate-functions.sentinel modules, can evaluate the values of any attribute of any resource even if it is deeply nested inside the resource. It does this by calling itself recursively.
@@ -88,10 +88,11 @@ The `tfconfig-functions` module has several types of functions:
   * `find_*_by_provider` functions that find resources or data sources created by a specific provider.
   * The `find_outputs_by_sensitivity` function that finds outputs based on their `sensitive` setting.
   * The `find_descendant_modules` function that finds all module addresses called directly or indirectly by a specific module including that module itself. Calling `find_descendant_modules("")` will return all module addresses within the Terraform configuration.
-  * Various filter functions such as `filter_attribute_not_in_list` and `filter_attribute_in_list` that are similar to the filter functions in the tfplan-functions module. However, these can only be used against top-level attributes of the items in the collection passed to them. Those collections can be any type of entity covered by the tfconfig/v2 import including resources, data sources, providers, provisioners, variables, outputs, and module calls. The filter functions return a map consisting of 2 items:
+  * Various filter functions such as `filter_attribute_not_in_list` and `filter_attribute_in_list` that are similar to the filter functions in the tfplan-functions module. However, these can only be used against top-level attributes of the items in the collection passed to them or against items directly under the `config` map of items. Those collections can be any type of entity covered by the tfconfig/v2 import including resources, data sources, providers, provisioners, variables, outputs, and module calls. The filter functions return a map consisting of 2 items:
     * `items`: a map consisting of items that violate a condition.
     * `messages`: a map of violation messages associated with the items.
   * The same `to_string` and `print_violations` functions that are in the tfplan-functions module.
+  * A `get_module_source` function that computes the source of a module from its address. This is used in the [restrict-resources-by-module-source.sentinel](./cloud-agnostic/restrict-resources-by-module-source.sentinel) policy to restrict creation of resources based on the actual module sources.
 
 Documentation for each individual function can be found in this directory:
   * [tfconfig-functions](./common-functions/tfconfig-functions/docs)
