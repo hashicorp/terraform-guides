@@ -125,7 +125,7 @@ policy "restrict-sagemaker-notebooks" {
 }
 
 policy "restrict-subnet-of-ec2-instances" {
-  source = "./restrict-subnet-of-ec2-instancess.sentinel"
+  source = "./restrict-subnet-of-ec2-instances.sentinel"
   enforcement_level = "advisory"
 }
 
