@@ -182,7 +182,9 @@ to_string = func(obj) {
 ### evaluate_attribute ###
 # Evaluates the value of a resource's or block's attribute even if nested.
 # The resource should be derived by applying filters to tfplan.resource_changes.
-# It can be given in the initial call in the form rc.change.after or just rc
+# It can be given in the initial call in the form rc.change.after or just rc.
+# If you want to evaluate previous values, pass `rc.change.before` instead of
+# `rc` since the function converts `rc` by itself to `rc.change.after`.
 # Indices of lists should be given as 0, 1, 2, and so on.
 # For example: boot_disk.0.initialize_params.0.image
 evaluate_attribute = func(r, attribute) {
@@ -507,6 +509,44 @@ filter_attribute_is_not_value = func(resources, attr, value, prtmsg) {
   return {"resources":violators,"messages":messages}
 }
 
+### filter_attribute_was_not_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that did not have a given value.
+# Resources should be derived by applying filters to tfplan.resource_changes.
+# Set prtmsg to `true` (without quotes) if you want to print violation messages.
+# If you want to match null, set value to "null".
+# Note that it this function passes `rc.change.before` instead of `rc`
+# to the evaluate_attribute() function which converts `rc` to `rc.change.after`.
+filter_attribute_was_not_value = func(resources, attr, value, prtmsg) {
+  violators = {}
+	messages = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.before, attr) else null
+    if v is null {
+      # Add the resource and a warning message to the violators list
+      message = to_string(address) + " had " + to_string(attr) +
+                " that was null or undefined. " + "It was supposed to be " +
+                to_string(value)
+      violators[address] = rc
+			messages[address] = message
+      if prtmsg {
+        print(message)
+      }
+    } else if v is not value {
+      # Add the resource and a warning message to the violators list
+      message = to_string(address) + " had " + to_string(attr) + " with value " +
+                to_string(v) + " that was not equal to " + to_string(value)
+      violators[address] = rc
+			messages[address] = message
+      if prtmsg {
+        print(message)
+      }
+    }
+  }
+  return {"resources":violators,"messages":messages}
+}
+
+
 ### filter_attribute_is_value ###
 # Filter a list of resources to those with a specified
 # attribute (attr) that has a given value.
@@ -525,6 +565,36 @@ filter_attribute_is_value = func(resources, attr, value, prtmsg) {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) + " with value " +
                 to_string(v) + " that is not allowed."
+      violators[address] = rc
+			messages[address] = message
+      if prtmsg {
+        print(message)
+      }
+    }
+  }
+  return {"resources":violators,"messages":messages}
+}
+
+### filter_attribute_was_value ###
+# Filter a list of resources to those with a specified
+# attribute (attr) that had a given value.
+# Resources should be derived by applying filters to tfplan.resource_changes.
+# Set prtmsg to `true` (without quotes) if you want to print violation messages.
+# If you want to match null, set value to "null".
+# Note that it this function passes `rc.change.before` instead of `rc`
+# to the evaluate_attribute() function which converts `rc` to `rc.change.after`.
+filter_attribute_was_value = func(resources, attr, value, prtmsg) {
+  violators = {}
+	messages = {}
+  for resources as address, rc {
+    v = evaluate_attribute(rc.change.before, attr) else null
+    if v is null {
+      v = "null"
+    }
+    if v is value {
+      # Add the resource and a warning message to the violators list
+      message = to_string(address) + " had " + to_string(attr) + " with value " +
+                to_string(v) + " that was not allowed."
       violators[address] = rc
 			messages[address] = message
       if prtmsg {

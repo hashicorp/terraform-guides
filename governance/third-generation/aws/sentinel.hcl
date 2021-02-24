@@ -19,6 +19,11 @@ policy "enforce-mandatory-tags" {
   enforcement_level = "advisory"
 }
 
+policy "protect-against-rds-instance-deletion" {
+  source = "./protect-against-rds-instance-deletion.sentinel"
+  enforcement_level = "advisory"
+}
+
 policy "require-dns-support-for-vpcs" {
   source = "./require-dns-support-for-vpcs.sentinel"
   enforcement_level = "advisory"
@@ -120,7 +125,7 @@ policy "restrict-sagemaker-notebooks" {
 }
 
 policy "restrict-subnet-of-ec2-instances" {
-  source = "./restrict-subnet-of-ec2-instancess.sentinel"
+  source = "./restrict-subnet-of-ec2-instances.sentinel"
   enforcement_level = "advisory"
 }
 
