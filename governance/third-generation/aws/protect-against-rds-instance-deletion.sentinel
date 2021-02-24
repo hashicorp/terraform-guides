@@ -16,7 +16,7 @@ RDSInstancesBeingDeleted = plan.find_resources_being_destroyed("aws_db_instance"
 violatingRDSInstances = plan.filter_attribute_was_value(RDSInstancesBeingDeleted,
                         "deletion_protection", true, false)
 
-length(violatingRDSInstances["messages"]) > 0 {
+if length(violatingRDSInstances["messages"]) > 0 {
   print("RDS instances with deletion_protection set to true cannot be destroyed.")
   plan.print_violations(violatingRDSInstances["messages"], "")
 }
