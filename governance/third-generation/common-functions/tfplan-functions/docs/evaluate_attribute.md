@@ -8,7 +8,7 @@ This function is contained in the [tfplan-functions.sentinel](../tfplan-function
 `evaluate_attribute = func(r, attribute)`
 
 ## Arguments
-* **r**: a single resource or block containing an attribute whose value you want to determine.
+* **r**: a single resource or block containing an attribute whose value you want to determine. The function converts a plain resource reference like `rc` tp `rc.change.after`; if you want to evaluate the previous state, pass `rc.change.before`.
 * **attribute**: a string giving the attribute. If the attribute is nested, the various blocks containing it should be delimited with periods (`.`). Indices of lists should not include brackets and should start with 0. So, you would use `boot_disk.0.initialize_params.0.image` rather than `boot_disk[0].initialize_params[0].image`. If `r` represents a block, then `attribute` should be specified relative to that block.
 
 In practice, this function is only called by the filter functions, so the specification of the `attribute` parameter will be done when calling them.

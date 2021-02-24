@@ -182,7 +182,9 @@ to_string = func(obj) {
 ### evaluate_attribute ###
 # Evaluates the value of a resource's or block's attribute even if nested.
 # The resource should be derived by applying filters to tfplan.resource_changes.
-# It can be given in the initial call in the form rc.change.after or just rc
+# It can be given in the initial call in the form rc.change.after or just rc.
+# If you want to evaluate previous values, pass `rc.change.before` instead of
+# `rc` since the function converts `rc` by itself to `rc.change.after`.
 # Indices of lists should be given as 0, 1, 2, and so on.
 # For example: boot_disk.0.initialize_params.0.image
 evaluate_attribute = func(r, attribute) {
