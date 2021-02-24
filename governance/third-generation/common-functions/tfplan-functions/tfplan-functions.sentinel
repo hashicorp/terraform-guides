@@ -513,7 +513,7 @@ filter_attribute_is_not_value = func(resources, attr, value, prtmsg) {
 # Resources should be derived by applying filters to tfplan.resource_changes.
 # Set prtmsg to `true` (without quotes) if you want to print violation messages.
 # If you want to match null, set value to "null".
-# Note that it this function passes `change.actions.before` instead of `rc`
+# Note that it this function passes `rc.change.before` instead of `rc`
 # to the evaluate_attribute() function which converts `rc` to `rc.change.after`.
 filter_attribute_was_not_value = func(resources, attr, value, prtmsg) {
   violators = {}
@@ -579,7 +579,7 @@ filter_attribute_is_value = func(resources, attr, value, prtmsg) {
 # Resources should be derived by applying filters to tfplan.resource_changes.
 # Set prtmsg to `true` (without quotes) if you want to print violation messages.
 # If you want to match null, set value to "null".
-# Note that it this function passes `change.actions.before` instead of `rc`
+# Note that it this function passes `rc.change.before` instead of `rc`
 # to the evaluate_attribute() function which converts `rc` to `rc.change.after`.
 filter_attribute_was_value = func(resources, attr, value, prtmsg) {
   violators = {}
