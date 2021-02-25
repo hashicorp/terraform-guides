@@ -18,7 +18,7 @@ You can test the first policy from this directory (after forking or cloning the 
 sentinel test -run=check -verbose
 ```
 
-The second policy uses the HTTP import to call the Terraform Registry [List Modules API](https://www.terraform.io/docs/registry/api.html#list-modules) against a Terraform Cloud or Terraform Enterprise server in order to determine the most recent version of each module in the [Private Module Registry](https://www.terraform.io/docs/cloud/registry/index.html) (PMR) of an organization on that server or in the [public Terraform registry](https://registry.terraform.io). This policy also uses parameters as described below.
+The second policy uses the HTTP import to call the Terraform Registry [List Modules API](https://www.terraform.io/docs/registry/api.html#list-modules) against a Terraform Cloud or Terraform Enterprise server in order to determine the most recent version of each module in the [Private Module Registry](https://www.terraform.io/docs/cloud/registry/index.html) (PMR) of an organization on that server or in the [public Terraform registry](https://registry.terraform.io). It then checks that the version constraints used in module calls allow the most recent version. This policy also uses parameters as described below.
 
 The third policy uses the HTTP import to call a [NASA API](https://api.nasa.gov/) that retrieves a list of Near Earth Objects and warns if any of them are too close for comfort. This is based on an example from this HashiCorp [blog](https://www.hashicorp.com/blog/announcing-business-aware-policies-for-terraform-cloud-and-enterprise/) that announced the HTTP import and "Business-aware Policies". This policy also uses parameters as described below.
 
@@ -51,7 +51,7 @@ sentinel apply -trace -config=use-latest-module-versions.hcl use-latest-module-v
 ```
 You do not need a token when talking to the public registry, so the use-latest-module-versions.hcl file sets `token` to an empty string.
 
-The policy should fail since the mock does not use the most recent versions of the two modules. If you would like to see the policy pass, change the versions of the modules in mocks/mock-tfconfig-fail.sentinel to the most recent versions listed under https://registry.terraform.io/modules/Azure/network/azurerm and https://registry.terraform.io/modules/Azure/compute/azurerm. Currently, those are "3.2.1" and "3.10.0" respectively.
+The policy should fail since the mock does not use or allow the most recent versions of the two modules. If you would like to see the policy pass, change the versions of the modules in mocks/mock-tfconfig-fail.sentinel to the most recent versions listed under https://registry.terraform.io/modules/Azure/network/azurerm and https://registry.terraform.io/modules/Azure/compute/azurerm. Currently, those are "3.3.0" and "3.11.0" respectively.
 
 Note that the `sentinel test` and `sentinel apply` commands for testing/applying the use-latest-module-versions.sentinel policy **really** are making HTTP calls to the API endpoints to retrieve the list of matching modules in the registries. However, the mocks simulate which modules would actually be used by Terraform code.
 

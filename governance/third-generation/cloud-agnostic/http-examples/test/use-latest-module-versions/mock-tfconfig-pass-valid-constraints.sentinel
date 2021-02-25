@@ -1,0 +1,176 @@
+import "strings"
+
+module_calls = {
+	"module.windowsserver:os": {
+		"config": {
+			"vm_os_simple": {
+				"references": [
+					"var.vm_os_simple",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.windowsserver",
+		"name":               "os",
+		"source":             "./os",
+		"version_constraint": "",
+	},
+	"network": {
+		"config": {
+			"allow_ssh_traffic": {
+				"constant_value": true,
+			},
+			"location": {
+				"references": [
+					"var.location",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "network",
+		"source":             "app.terraform.io/Cloud-Operations/network/azurerm",
+		"version_constraint": "> 3.0.0",
+	},
+	"windowsserver": {
+		"config": {
+			"admin_password": {
+				"references": [
+					"var.admin_password",
+				],
+			},
+			"location": {
+				"references": [
+					"var.location",
+				],
+			},
+			"public_ip_dns": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+			"storage_account_type": {
+				"references": [
+					"var.storage_account_type",
+				],
+			},
+			"vm_hostname": {
+				"constant_value": "demohost",
+			},
+			"vm_os_simple": {
+				"constant_value": "WindowsServer",
+			},
+			"vm_size": {
+				"references": [
+					"var.vm_size",
+				],
+			},
+			"vnet_subnet_id": {
+				"references": [
+					"module.network.vnet_subnets",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "windowsserver",
+		"source":             "app.terraform.io/Cloud-Operations/compute/azurerm",
+		"version_constraint": "< 2.0.0",
+	},
+	"module.network:network2": {
+		"config": {
+			"allow_ssh_traffic": {
+				"constant_value": true,
+			},
+			"location": {
+				"references": [
+					"var.location",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.network",
+		"name":               "network2",
+		"source":             "app.terraform.io/Cloud-Operations/network/azurerm",
+		"version_constraint": ">= 2.0.0, <= 3.2.1",
+	},
+	"module.network:windowsserver2": {
+		"config": {
+			"admin_password": {
+				"references": [
+					"var.admin_password",
+				],
+			},
+			"location": {
+				"references": [
+					"var.location",
+				],
+			},
+			"public_ip_dns": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+			"storage_account_type": {
+				"references": [
+					"var.storage_account_type",
+				],
+			},
+			"vm_hostname": {
+				"constant_value": "demohost",
+			},
+			"vm_os_simple": {
+				"constant_value": "WindowsServer",
+			},
+			"vm_size": {
+				"references": [
+					"var.vm_size",
+				],
+			},
+			"vnet_subnet_id": {
+				"references": [
+					"module.network.vnet_subnets",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.network",
+		"name":               "windowsserver2",
+		"source":             "app.terraform.io/Cloud-Operations/compute/azurerm",
+		"version_constraint": "> 1.1.5",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
