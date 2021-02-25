@@ -73,7 +73,7 @@ module_calls = {
 		"module_address":     "",
 		"name":               "windowsserver",
 		"source":             "Azure/compute/azurerm",
-		"version_constraint": "1.1.7",
+		"version_constraint": ">= 2.0.0, < 3.0.0",
 	},
 }
 

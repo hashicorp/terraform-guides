@@ -1,11 +1,15 @@
 # This policy uses the HTTP import to call the TFC API to get a list of all
 # modules in a specified module registry and determine their
-# latest versions. It then uses the tfconfig import to inspect all non-root
-# modules and validate that those sourced from the registry use the latest versions.
+# latest versions. It then uses the tfconfig/v2 import to inspect all non-root
+# modules and validate that those sourced from the registry allow the latest
+# versions based on their version constraints. Since Terraform will always use
+# the most recent version allowed by a version constraint, this ensures that
+# the most recent version of the module will be used.
 
-# Note that this requires the Sentinel runtime 0.13.0 or higher.
+# Note that this policy requires the Sentinel runtime 0.16.0 or higher since it
+# uses the Sentinel [version](https://docs.hashicorp.com/sentinel/imports/version) import.
+
 # Additionally, this policy uses Sentinel parameters
-# Be sure to read the associated use-latest-module-versions.md file.
 
 ##### Imports #####
 
@@ -17,6 +21,7 @@ import "tfconfig-functions" as config
 import "http"
 import "strings"
 import "json"
+import "version"
 
 ##### Parameters #####
 # A boolean indicating whether the public Terraform registry is being used
@@ -30,7 +35,7 @@ param token
 
 ##### Functions #####
 
-# Retrieve modules from a module registry and give their paths and versions
+# Retrieve modules from a module registry and give their paths and latest versions
 retrieve_latest_module_versions = func(public_registry, address, organization, token) {
 
   # Call the TFC Modules API and extract the response
@@ -74,43 +79,45 @@ validate_modules = func(public_registry, address, organization, token) {
   # Iterate over all modules in the tfconfig/v2 import
   for allModuleAddresses as module_address {
     moduleCalls = config.find_module_calls_in_module(module_address)
-    #print("module_address:", module_address)
-    #print("moduleCalls:", moduleCalls)
     # Iterate over modules of the current module
     for moduleCalls as index, m {
       # Check if module is in the PMR
       if strings.has_prefix(m.source, address + "/" + organization) {
-        # Check version of module against latest version in PMR
+        # Check version constraint of module against latest version in PMR
         org_name_provider = strings.trim_prefix(m.source, address + "/")
-        if m.version_constraint is not discovered_modules[org_name_provider] {
+        most_recent_version = discovered_modules[org_name_provider]
+        if not version.new(most_recent_version).satisfies(m.version_constraint) {
           if length(module_address) == 0 {
             print("PMR module", m.source, "used in the root module",
-                  "has version", m.version_constraint, "that is not the most",
-                  "recent version", discovered_modules[org_name_provider])
+                  "has version constraint", m.version_constraint, "that does not",
+                  "allow the most recent version", most_recent_version)
             validated = false
           } else {
             print("PMR module", m.source, "used in module", module_address,
-                  "has version", m.version_constraint, "that is not the most",
-                  "recent version", discovered_modules[org_name_provider])
+                  "has version constraint", m.version_constraint, "that does not",
+                  "allow the most recent version", most_recent_version)
             validated = false
-          }
+          } // end root module check
         } // end version check
       } else {
-        # Check version of module against latest version in public registry
-        if m.source in keys(discovered_modules) and
-           m.version_constraint is not discovered_modules[m.source] {
-          if length(module_address) == 0 {
-            print("Public registry module", m.source, "used in the root module",
-                  "has version", m.version_constraint, "that is not the most",
-                  "recent version", discovered_modules[m.source])
-            validated = false
-          } else {
-            print("Public registry module", m.source, "used in module", module_address,
-                  "has version", m.version_constraint, "that is not the most",
-                  "recent version", discovered_modules[m.source])
-            validated = false
-          }
-        } // end version check
+        # Check version constraint of module against latest version in public registry
+        most_recent_version = discovered_modules[m.source]
+        if m.source in keys(discovered_modules) {
+          most_recent_version = discovered_modules[m.source]
+          if not version.new(most_recent_version).satisfies(m.version_constraint) {
+            if length(module_address) == 0 {
+              print("Public registry module", m.source, "used in the root module",
+                    "has version constraint", m.version_constraint, "that does not",
+                    "allow the most recent version", most_recent_version)
+              validated = false
+            } else {
+              print("Public registry module", m.source, "used in module",
+                    module_address, "has version constraint", m.version_constraint,
+                    "that does not allow the most version", most_recent_version)
+              validated = false
+            } // end root module check
+          } // end version check
+        } // end source in keys
       } // end if module in PMR or public registry
     } // end for module calls
   } // end modules
