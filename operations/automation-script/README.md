@@ -1,6 +1,8 @@
 # TFE Automation Script
 Script to automate interactions with Terraform Enterprise, including the cloning of a repository containing Terraform configuration code, creation of a workspace, tarring and uploading of the Terraform code, setting of variables, triggering a run, checking Sentinel policies, and finally doing an apply if permitted. If an apply is done, the script waits for it to finish and then downloads the apply log and the before and after state files. If an apply cannot be done, it downloads the plan log instead.
 
+Note that this script is only meant as an example that shows how to use the various Terraform Cloud APIs.  It is not suitable for production usage since it does not support modifying workspace variables after they have already been created in a workspace.
+
 There is also a script to delete the workspace.
 
 ## Introduction
@@ -27,8 +29,8 @@ The script does the following steps:
 1. Determines the number of Sentinel policies so that it knows whether it needs to check them.
 1. Starts a new run.
 1. Enters a loop to check the run results periodically.
-    - If $run_status is "planned", $is_confirmable is "True", and $override is "no", the script stops. In this case, no Sentinel policies existed or none of them were applicable to this workspace. The script will stop.  The user should can apply the run in the Terraform Enterprise UI.
-    - If $run_status is "planned", $is_confirmable is "True", and $override is "yes", the script will do an apply. As in the previous case, no Sentinel policies existed or none of them were applicable to this workspace.
+    - If $run_status is "planned" or "cost_estimated", $is_confirmable is "True", and $override is "no", the script stops. In this case, no Sentinel policies existed or none of them were applicable to this workspace. The script will stop.  The user should can apply the run in the Terraform Enterprise UI.
+    - If $run_status is "planned" or "cost_estimated", $is_confirmable is "True", and $override is "yes", the script will do an apply. As in the previous case, no Sentinel policies existed or none of them were applicable to this workspace.
     - If $run_status is "policy_checked", it does an Apply. In this case, all Sentinel policies passed.
     - If $run_status is "policy_override" and $override is "yes", it overrides the failed policy checks and does an Apply. In this case, one or more Sentinel policies failed, but they were marked "advisory" or "soft-mandatory" and the script was configured to override the failure.
     - If $run_status is "policy_override" and $override is "no", it prints out a message indicating that some policies failed and are not being overridden.
@@ -40,18 +42,18 @@ The script does the following steps:
     - Other values of $run_status cause the loop to repeat after a brief sleep.
 1. If $save_plan was set to "true" in the above loop, the script outputs and saves the plan log.
 1. If any apply was done, the script goes into a second loop to wait for the apply to finish, error, or be canceled.
-1. If and when the apply finishes, the script downloads the apply log and the state files from before and after the apply.
+1. If and when the apply finishes, the script downloads the apply log and the new state file from before and after the apply.
 
 In addition to the loadAndRunWorkspace.sh script, this example includes the following files:
 
 1. [config/main.tf](./config/main.tf) which is a file with some Terraform code that says "Hello" to the person whose name is given and generates a random number. This is used if no git URL is provided to the script.
-1. [variables.csv](./variables.csv) which contains the variables that are uploaded to the workspace if no file with the same name is found in the root directory of the cloned repository. The columns are key, value, category, hcl, and sensitive with the last two corresponding to the hcl and sensitive checkboxes of TFE variables. This should be in the same directory as the script unless you include a file with the same name in your git repository.
+1. [variables.csv](./variables.csv) which contains the variables that are uploaded to the workspace if no file with the same name is found in the root directory of the cloned repository. The columns are key, value, category, hcl, and sensitive with the last two corresponding to the hcl and sensitive checkboxes of TFE variables. The `category` should be set to `terraform` for Terraform variables and to `env` for environment variables. The `hcl` and `sensitive` values can be set to `true` or `false`. This should be in the same directory as the script unless you include a file with the same name in your git repository.
 1. [deleteWorkspace.sh](./deleteWorkspace.sh): a script that can be used to delete the workspace.
 1. [restrict-name-variable.sentinel](./restrict-name-variable.sentinel): a Sentinel policy you can add to your TFE organization in order to see how the script can check Sentinel policies and even override soft-mandatory failures.
 
 The following files are embedded inside the script:
 
-1. **workspace.template.json** which is used to generate _workspace.json_ which is used when creating the workspace. If you wish to add or modify the settings that are included in the _@workspace.json_ payload, add them to _workspace.template.json_ inside the script and be sure to check the Terraform Enterprise API [syntax](https://www.terraform.io/docs/enterprise/api/workspaces.html#update-a-workspace). Update or modify `"terraform-version": "0.11.14"` within _workspace.template.json_  to set a specific workspace version of the Terraform OSS binary.
+1. **workspace.template.json** which is used to generate _workspace.json_ which is used when creating the workspace. If you wish to add or modify the settings that are included in the _@workspace.json_ payload, add them to _workspace.template.json_ inside the script and be sure to check the Terraform Enterprise API [syntax](https://www.terraform.io/docs/enterprise/api/workspaces.html#update-a-workspace). Update or modify `"terraform-version": "0.13.6"` within _workspace.template.json_  to set a specific workspace version of the Terraform OSS binary.
 1. **configversion.json** which is used to generate a new configuration version.
 1. **variable.template.json** which is used to generate _variable.json_ which is used when creating a variable called "name" in the workspace.
 1. **run.template.json** which is used to generate _run.json_ which is used when triggering a run against the workspace.
