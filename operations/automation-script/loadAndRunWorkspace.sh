@@ -83,7 +83,7 @@ if [ ! -z "$2" ]; then
   workspace=$2
   echo "Using workspace provided as argument: " $workspace
 else
-  echo "Using workspace set in the script."
+  echo "Using workspace set in the script: " $workspace
 fi
 
 # Make sure $workspace does not have spaces
