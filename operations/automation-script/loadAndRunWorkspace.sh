@@ -116,7 +116,7 @@ cat > workspace.template.json <<EOF
   {
     "attributes": {
       "name":"placeholder",
-      "terraform-version": "0.11.14"
+      "terraform-version": "0.13.6"
     },
     "type":"workspaces"
   }
@@ -287,27 +287,40 @@ while [ $continue -ne 0 ]; do
   # Apply in some cases
   applied="false"
 
-  # planned means plan finished and no Sentinel policies
-  # exist or are applicable to the workspace
-
   # Run is planning - get the plan
   # Note that we use "True" rather than "true" because python converts the
   # boolean "true" in json responses to "True" and "false" to "False"
+
+  # planned means plan finished and no Sentinel policies
+  # exist or are applicable to the workspace
   if [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
     continue=0
     echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
     echo "Check the run in Terraform Enterprise UI and apply there if desired."
     save_plan="true"
-  # planned means plan finished and no Sentinel policies
+  # cost_estimated means plan finished and costs were estimated
   # exist or are applicable to the workspace
+  elif [[ "$run_status" == "cost_estimated" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
+    continue=0
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Check the run in Terraform Enterprise UI and apply there if desired."
+    save_plan="true"
   elif [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]]; then
-      continue=0
-      echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
-      echo "Since override was set to \"yes\", we are applying."
-      # Do the apply
-      echo "Doing Apply"
-      apply_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
-      applied="true"
+    continue=0
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Since override was set to \"yes\", we are applying."
+    # Do the apply
+    echo "Doing Apply"
+    apply_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
+  elif [[ "$run_status" == "cost_estimated" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]]; then
+    continue=0
+    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "Since override was set to \"yes\", we are applying."
+    # Do the apply
+    echo "Doing Apply"
+    apply_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    applied="true"
   # policy_checked means all Sentinel policies passed
   elif [[ "$run_status" == "policy_checked" ]]; then
     continue=0
@@ -428,26 +441,9 @@ if [[ "$applied" == "true" ]]; then
   # and output to shell and file
   curl -s $apply_log_url | tee ${apply_id}.log
 
-  # Get state version IDs from after the apply
-  state_id_before=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['relationships']['state-versions']['data'][1]['id'])")
-  echo "State ID 1:" ${state_id_before}
-
-  # Call API to get information about the state version including its URL
-  state_file_before_url_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" https://${address}/api/v2/state-versions/${state_id_before})
-
-  # Get state file URL from the result
-  state_file_before_url=$(echo $state_file_before_url_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['attributes']['hosted-state-download-url'])")
-  echo "URL for state file before apply:"
-  echo ${state_file_before_url}
-
-  # Retrieve state file from the URL
-  # and output to shell and file
-  echo "State file before the apply:"
-  curl -s $state_file_before_url | tee ${apply_id}-before.tfstate
-
-  # Get state version IDs from before the apply
+  # Get state version ID from after the apply
   state_id_after=$(echo $check_result | python -c "import sys, json; print(json.load(sys.stdin)['data']['relationships']['state-versions']['data'][0]['id'])")
-  echo "State ID 0:" ${state_id_after}
+  echo "State ID:" ${state_id_after}
 
   # Call API to get information about the state version including its URL
   state_file_after_url_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" https://${address}/api/v2/state-versions/${state_id_after})
