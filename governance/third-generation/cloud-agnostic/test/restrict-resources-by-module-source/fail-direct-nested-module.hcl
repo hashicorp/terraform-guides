@@ -4,7 +4,7 @@ module "tfconfig-functions" {
 
 mock "tfconfig/v2" {
   module {
-    source = "mock-tfconfig-fail.sentinel"
+    source = "mock-tfconfig-fail-direct-nested-module.sentinel"
   }
 }
 
