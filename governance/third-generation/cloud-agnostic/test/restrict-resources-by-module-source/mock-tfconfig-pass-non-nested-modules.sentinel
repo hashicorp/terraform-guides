@@ -18,40 +18,6 @@ providers = {
 }
 
 resources = {
-	"aws_s3_bucket.example": {
-		"address": "aws_s3_bucket.example",
-		"config": {
-			"bucket": {
-				"constant_value": "rogerberlindexample",
-			},
-		},
-		"count":               {},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "managed",
-		"module_address":      "",
-		"name":                "example",
-		"provider_config_key": "aws",
-		"provisioners":        [],
-		"type":                "aws_s3_bucket",
-	},
-	"module.local-s3-bucket.aws_s3_bucket.example": {
-		"address": "module.local-s3-bucket.aws_s3_bucket.example",
-		"config": {
-			"bucket": {
-				"constant_value": "roger-local-module",
-			},
-		},
-		"count":               {},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "managed",
-		"module_address":      "module.local-s3-bucket",
-		"name":                "example",
-		"provider_config_key": "module.local-s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_s3_bucket",
-	},
 	"module.local-s3-bucket.module.s3-bucket.aws_s3_bucket.this": {
 		"address": "module.local-s3-bucket.module.s3-bucket.aws_s3_bucket.this",
 		"config": {
@@ -136,122 +102,6 @@ resources = {
 		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
 		"provisioners":        [],
 		"type":                "aws_s3_bucket_policy",
-	},
-	"module.local-s3-bucket.module.s3-bucket.aws_s3_bucket_public_access_block.this": {
-		"address": "module.local-s3-bucket.module.s3-bucket.aws_s3_bucket_public_access_block.this",
-		"config": {
-			"block_public_acls": {
-				"references": [
-					"var.block_public_acls",
-				],
-			},
-			"block_public_policy": {
-				"references": [
-					"var.block_public_policy",
-				],
-			},
-			"bucket": {
-				"references": [
-					"var.attach_elb_log_delivery_policy",
-					"var.attach_policy",
-					"aws_s3_bucket_policy.this[0]",
-					"aws_s3_bucket.this[0]",
-				],
-			},
-			"ignore_public_acls": {
-				"references": [
-					"var.ignore_public_acls",
-				],
-			},
-			"restrict_public_buckets": {
-				"references": [
-					"var.restrict_public_buckets",
-				],
-			},
-		},
-		"count": {
-			"references": [
-				"var.create_bucket",
-				"var.attach_public_policy",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "managed",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_s3_bucket_public_access_block",
-	},
-	"module.local-s3-bucket.module.s3-bucket.data.aws_elb_service_account.this": {
-		"address": "module.local-s3-bucket.module.s3-bucket.data.aws_elb_service_account.this",
-		"config":  {},
-		"count": {
-			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "data",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_elb_service_account",
-	},
-	"module.local-s3-bucket.module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery": {
-		"address": "module.local-s3-bucket.module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery",
-		"config": {
-			"statement": [
-				{
-					"actions": {
-						"constant_value": [
-							"s3:PutObject",
-						],
-					},
-					"effect": {
-						"constant_value": "Allow",
-					},
-					"principals": [
-						{
-							"identifiers": {
-								"references": [
-									"data.aws_elb_service_account.this",
-								],
-							},
-							"type": {
-								"constant_value": "AWS",
-							},
-						},
-					],
-					"resources": {
-						"references": [
-							"aws_s3_bucket.this[0]",
-						],
-					},
-					"sid": {
-						"constant_value": "",
-					},
-				},
-			],
-		},
-		"count": {
-			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "data",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
-		"name":                "elb_log_delivery",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_iam_policy_document",
 	},
 	"module.s3-bucket.aws_s3_bucket.this": {
 		"address": "module.s3-bucket.aws_s3_bucket.this",
@@ -338,121 +188,90 @@ resources = {
 		"provisioners":        [],
 		"type":                "aws_s3_bucket_policy",
 	},
-	"module.s3-bucket.aws_s3_bucket_public_access_block.this": {
-		"address": "module.s3-bucket.aws_s3_bucket_public_access_block.this",
+	"module.s3-bucket-pub-registry.aws_s3_bucket.this": {
+		"address": "module.s3-bucket-pub-registry.aws_s3_bucket.this",
 		"config": {
-			"block_public_acls": {
+			"acceleration_status": {
 				"references": [
-					"var.block_public_acls",
+					"var.acceleration_status",
 				],
 			},
-			"block_public_policy": {
+			"acl": {
 				"references": [
-					"var.block_public_policy",
+					"var.acl",
 				],
 			},
 			"bucket": {
 				"references": [
-					"var.attach_elb_log_delivery_policy",
-					"var.attach_policy",
-					"aws_s3_bucket_policy.this[0]",
-					"aws_s3_bucket.this[0]",
+					"var.bucket",
 				],
 			},
-			"ignore_public_acls": {
+			"bucket_prefix": {
 				"references": [
-					"var.ignore_public_acls",
+					"var.bucket_prefix",
 				],
 			},
-			"restrict_public_buckets": {
+			"force_destroy": {
 				"references": [
-					"var.restrict_public_buckets",
+					"var.force_destroy",
+				],
+			},
+			"request_payer": {
+				"references": [
+					"var.request_payer",
+				],
+			},
+			"tags": {
+				"references": [
+					"var.tags",
 				],
 			},
 		},
 		"count": {
 			"references": [
 				"var.create_bucket",
-				"var.attach_public_policy",
 			],
 		},
 		"depends_on":          [],
 		"for_each":            {},
 		"mode":                "managed",
-		"module_address":      "module.s3-bucket",
+		"module_address":      "module.s3-bucket-pub-registry",
 		"name":                "this",
-		"provider_config_key": "module.s3-bucket:aws",
+		"provider_config_key": "module.s3-bucket-pub-registry:aws",
 		"provisioners":        [],
-		"type":                "aws_s3_bucket_public_access_block",
+		"type":                "aws_s3_bucket",
 	},
-	"module.s3-bucket.data.aws_elb_service_account.this": {
-		"address": "module.s3-bucket.data.aws_elb_service_account.this",
-		"config":  {},
-		"count": {
-			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "data",
-		"module_address":      "module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_elb_service_account",
-	},
-	"module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery": {
-		"address": "module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery",
+	"module.s3-bucket-pub-registry.aws_s3_bucket_policy.this": {
+		"address": "module.s3-bucket-pub-registry.aws_s3_bucket_policy.this",
 		"config": {
-			"statement": [
-				{
-					"actions": {
-						"constant_value": [
-							"s3:PutObject",
-						],
-					},
-					"effect": {
-						"constant_value": "Allow",
-					},
-					"principals": [
-						{
-							"identifiers": {
-								"references": [
-									"data.aws_elb_service_account.this",
-								],
-							},
-							"type": {
-								"constant_value": "AWS",
-							},
-						},
-					],
-					"resources": {
-						"references": [
-							"aws_s3_bucket.this[0]",
-						],
-					},
-					"sid": {
-						"constant_value": "",
-					},
-				},
-			],
+			"bucket": {
+				"references": [
+					"aws_s3_bucket.this[0]",
+				],
+			},
+			"policy": {
+				"references": [
+					"var.attach_elb_log_delivery_policy",
+					"data.aws_iam_policy_document.elb_log_delivery[0]",
+					"var.policy",
+				],
+			},
 		},
 		"count": {
 			"references": [
 				"var.create_bucket",
 				"var.attach_elb_log_delivery_policy",
+				"var.attach_policy",
 			],
 		},
 		"depends_on":          [],
 		"for_each":            {},
-		"mode":                "data",
-		"module_address":      "module.s3-bucket",
-		"name":                "elb_log_delivery",
-		"provider_config_key": "module.s3-bucket:aws",
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-pub-registry",
+		"name":                "this",
+		"provider_config_key": "module.s3-bucket-pub-registry:aws",
 		"provisioners":        [],
-		"type":                "aws_iam_policy_document",
+		"type":                "aws_s3_bucket_policy",
 	},
 }
 
@@ -1006,7 +825,21 @@ module_calls = {
 		"for_each":           {},
 		"module_address":     "",
 		"name":               "s3-bucket",
-		"source":             "app.terraform.io/Cloud-Operations/s3-bucket/aws",
+		"source":             "tfe.acme.com/CloudOps/s3-bucket/aws",
+		"version_constraint": "1.15.0",
+	},
+	"s3-bucket-pub-registry": {
+		"config": {
+			"bucket": {
+				"constant_value": "roger-from-pmr-module",
+			},
+		},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "s3-bucket-pub-registry",
+		"source":             "terraform-aws-modules/s3-bucket/aws",
 		"version_constraint": "1.15.0",
 	},
 }

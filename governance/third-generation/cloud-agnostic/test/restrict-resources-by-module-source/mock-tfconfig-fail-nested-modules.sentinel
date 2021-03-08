@@ -1,0 +1,2619 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"module.s3-bucket-notification.module.all_notifications.aws_s3_bucket_notification.this": {
+		"address": "module.s3-bucket-notification.module.all_notifications.aws_s3_bucket_notification.this",
+		"config": {
+			"bucket": {
+				"references": [
+					"var.bucket",
+				],
+			},
+		},
+		"count": {
+			"references": [
+				"var.create",
+				"var.lambda_notifications",
+				"var.sqs_notifications",
+				"var.sns_notifications",
+			],
+		},
+		"depends_on": [
+			"aws_lambda_permission.allow",
+			"aws_sqs_queue_policy.allow",
+			"aws_sns_topic_policy.allow",
+		],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification.module.all_notifications",
+		"name":                "this",
+		"provider_config_key": "module.s3-bucket-notification.module.all_notifications:aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_notification",
+	},
+	"module.s3-bucket-notification.module.lambda_function1.aws_s3_bucket_object.lambda_package": {
+		"address": "module.s3-bucket-notification.module.lambda_function1.aws_s3_bucket_object.lambda_package",
+		"config": {
+			"acl": {
+				"references": [
+					"var.s3_acl",
+				],
+			},
+			"bucket": {
+				"references": [
+					"var.s3_bucket",
+				],
+			},
+			"etag": {
+				"references": [
+					"data.external.archive_prepare[0]",
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"key": {
+				"references": [
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"server_side_encryption": {
+				"references": [
+					"var.s3_server_side_encryption",
+				],
+			},
+			"source": {
+				"references": [
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"storage_class": {
+				"references": [
+					"var.s3_object_storage_class",
+				],
+			},
+			"tags": {
+				"references": [
+					"var.tags",
+					"var.s3_object_tags",
+				],
+			},
+		},
+		"count": {
+			"references": [
+				"var.create",
+				"var.store_on_s3",
+				"var.create_package",
+			],
+		},
+		"depends_on": [
+			"null_resource.archive",
+		],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification.module.lambda_function1",
+		"name":                "lambda_package",
+		"provider_config_key": "module.s3-bucket-notification.module.lambda_function1:aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_object",
+	},
+	"module.s3-bucket-notification.module.lambda_function2.aws_s3_bucket_object.lambda_package": {
+		"address": "module.s3-bucket-notification.module.lambda_function2.aws_s3_bucket_object.lambda_package",
+		"config": {
+			"acl": {
+				"references": [
+					"var.s3_acl",
+				],
+			},
+			"bucket": {
+				"references": [
+					"var.s3_bucket",
+				],
+			},
+			"etag": {
+				"references": [
+					"data.external.archive_prepare[0]",
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"key": {
+				"references": [
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"server_side_encryption": {
+				"references": [
+					"var.s3_server_side_encryption",
+				],
+			},
+			"source": {
+				"references": [
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"storage_class": {
+				"references": [
+					"var.s3_object_storage_class",
+				],
+			},
+			"tags": {
+				"references": [
+					"var.tags",
+					"var.s3_object_tags",
+				],
+			},
+		},
+		"count": {
+			"references": [
+				"var.create",
+				"var.store_on_s3",
+				"var.create_package",
+			],
+		},
+		"depends_on": [
+			"null_resource.archive",
+		],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification.module.lambda_function2",
+		"name":                "lambda_package",
+		"provider_config_key": "module.s3-bucket-notification.module.lambda_function2:aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_object",
+	},
+	"module.s3-bucket-notification.module.s3_bucket.aws_s3_bucket.this": {
+		"address": "module.s3-bucket-notification.module.s3_bucket.aws_s3_bucket.this",
+		"config": {
+			"acceleration_status": {
+				"references": [
+					"var.acceleration_status",
+				],
+			},
+			"acl": {
+				"references": [
+					"var.acl",
+				],
+			},
+			"bucket": {
+				"references": [
+					"var.bucket",
+				],
+			},
+			"bucket_prefix": {
+				"references": [
+					"var.bucket_prefix",
+				],
+			},
+			"force_destroy": {
+				"references": [
+					"var.force_destroy",
+				],
+			},
+			"request_payer": {
+				"references": [
+					"var.request_payer",
+				],
+			},
+			"tags": {
+				"references": [
+					"var.tags",
+				],
+			},
+		},
+		"count": {
+			"references": [
+				"var.create_bucket",
+			],
+		},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification.module.s3_bucket",
+		"name":                "this",
+		"provider_config_key": "module.s3-bucket-notification.module.s3_bucket:aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket",
+	},
+	"module.s3-bucket-notification.module.s3_bucket.aws_s3_bucket_policy.this": {
+		"address": "module.s3-bucket-notification.module.s3_bucket.aws_s3_bucket_policy.this",
+		"config": {
+			"bucket": {
+				"references": [
+					"aws_s3_bucket.this[0]",
+				],
+			},
+			"policy": {
+				"references": [
+					"var.attach_elb_log_delivery_policy",
+					"data.aws_iam_policy_document.elb_log_delivery[0]",
+					"var.policy",
+				],
+			},
+		},
+		"count": {
+			"references": [
+				"var.create_bucket",
+				"var.attach_elb_log_delivery_policy",
+				"var.attach_policy",
+			],
+		},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification.module.s3_bucket",
+		"name":                "this",
+		"provider_config_key": "module.s3-bucket-notification.module.s3_bucket:aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_policy",
+	},
+	"module.s3-bucket-notification.random_pet.this": {
+		"address": "module.s3-bucket-notification.random_pet.this",
+		"config": {
+			"length": {
+				"constant_value": 2,
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "this",
+		"provider_config_key": "module.s3-bucket-notification:random",
+		"provisioners":        [],
+		"type":                "random_pet",
+	},
+}
+
+provisioners = {
+	"module.s3-bucket-notification.module.lambda_function1.null_resource.archive:0": {
+		"config": {
+			"command": {
+				"references": [
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"interpreter": {
+				"references": [
+					"local.python",
+					"path.module",
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"working_dir": {
+				"references": [
+					"path.cwd",
+				],
+			},
+		},
+		"index":            0,
+		"resource_address": "module.s3-bucket-notification.module.lambda_function1.null_resource.archive",
+		"type":             "local-exec",
+	},
+	"module.s3-bucket-notification.module.lambda_function2.null_resource.archive:0": {
+		"config": {
+			"command": {
+				"references": [
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"interpreter": {
+				"references": [
+					"local.python",
+					"path.module",
+					"data.external.archive_prepare[0]",
+				],
+			},
+			"working_dir": {
+				"references": [
+					"path.cwd",
+				],
+			},
+		},
+		"index":            0,
+		"resource_address": "module.s3-bucket-notification.module.lambda_function2.null_resource.archive",
+		"type":             "local-exec",
+	},
+	"module.s3-bucket-notification.null_resource.download_package:0": {
+		"config": {
+			"command": {
+				"references": [
+					"local.downloaded",
+					"local.package_url",
+				],
+			},
+		},
+		"index":            0,
+		"resource_address": "module.s3-bucket-notification.null_resource.download_package",
+		"type":             "local-exec",
+	},
+}
+
+variables = {
+	"aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "",
+		"name":           "aws_region",
+	},
+	"bucket_name": {
+		"default":        "rogerberlindexample",
+		"description":    "Name of the bucket to create",
+		"module_address": "",
+		"name":           "bucket_name",
+	},
+	"module.s3-bucket-notification.module.all_notifications:bucket": {
+		"default":        "",
+		"description":    "Name of S3 bucket to use",
+		"module_address": "module.s3-bucket-notification.module.all_notifications",
+		"name":           "bucket",
+	},
+	"module.s3-bucket-notification.module.all_notifications:bucket_arn": {
+		"default":        null,
+		"description":    "ARN of S3 bucket to use in policies",
+		"module_address": "module.s3-bucket-notification.module.all_notifications",
+		"name":           "bucket_arn",
+	},
+	"module.s3-bucket-notification.module.all_notifications:create": {
+		"default":        true,
+		"description":    "Whether to create this resource or not?",
+		"module_address": "module.s3-bucket-notification.module.all_notifications",
+		"name":           "create",
+	},
+	"module.s3-bucket-notification.module.all_notifications:lambda_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to Lambda function",
+		"module_address": "module.s3-bucket-notification.module.all_notifications",
+		"name":           "lambda_notifications",
+	},
+	"module.s3-bucket-notification.module.all_notifications:sns_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to SNS topic",
+		"module_address": "module.s3-bucket-notification.module.all_notifications",
+		"name":           "sns_notifications",
+	},
+	"module.s3-bucket-notification.module.all_notifications:sqs_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to SQS queue",
+		"module_address": "module.s3-bucket-notification.module.all_notifications",
+		"name":           "sqs_notifications",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:allowed_triggers": {
+		"default":        {},
+		"description":    "Map of allowed triggers to create Lambda permissions",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "allowed_triggers",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:artifacts_dir": {
+		"default":        "builds",
+		"description":    "Directory name where artifacts should be stored",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "artifacts_dir",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_async_event_policy": {
+		"default":        false,
+		"description":    "Controls whether async event policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_async_event_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_cloudwatch_logs_policy": {
+		"default":        true,
+		"description":    "Controls whether CloudWatch Logs policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_cloudwatch_logs_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_dead_letter_policy": {
+		"default":        false,
+		"description":    "Controls whether SNS/SQS dead letter notification policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_dead_letter_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_network_policy": {
+		"default":        false,
+		"description":    "Controls whether VPC/network policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_network_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_policies": {
+		"default":        false,
+		"description":    "Controls whether list of policies should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_policy": {
+		"default":        false,
+		"description":    "Controls whether policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_policy_json": {
+		"default":        false,
+		"description":    "Controls whether policy_json should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_policy_json",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_policy_jsons": {
+		"default":        false,
+		"description":    "Controls whether policy_jsons should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_policy_jsons",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_policy_statements": {
+		"default":        false,
+		"description":    "Controls whether policy_statements should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_policy_statements",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:attach_tracing_policy": {
+		"default":        false,
+		"description":    "Controls whether X-Ray tracing policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "attach_tracing_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:build_in_docker": {
+		"default":        false,
+		"description":    "Whether to build dependencies in Docker",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "build_in_docker",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:cloudwatch_logs_kms_key_id": {
+		"default":        null,
+		"description":    "The ARN of the KMS Key to use when encrypting log data.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "cloudwatch_logs_kms_key_id",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:cloudwatch_logs_retention_in_days": {
+		"default":        null,
+		"description":    "Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "cloudwatch_logs_retention_in_days",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:cloudwatch_logs_tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to the resource.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "cloudwatch_logs_tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:compatible_runtimes": {
+		"default":        [],
+		"description":    "A list of Runtimes this layer is compatible with. Up to 5 runtimes can be specified.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "compatible_runtimes",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create": {
+		"default":        true,
+		"description":    "Controls whether resources should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_async_event_config": {
+		"default":        false,
+		"description":    "Controls whether async event configuration for Lambda Function/Alias should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_async_event_config",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_current_version_allowed_triggers": {
+		"default":        true,
+		"description":    "Whether to allow triggers on current version of Lambda Function (this will revoke permissions from previous version because Terraform manages only current resources)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_current_version_allowed_triggers",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_current_version_async_event_config": {
+		"default":        true,
+		"description":    "Whether to allow async event configuration on current version of Lambda Function (this will revoke permissions from previous version because Terraform manages only current resources)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_current_version_async_event_config",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_function": {
+		"default":        true,
+		"description":    "Controls whether Lambda Function resource should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_function",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_layer": {
+		"default":        false,
+		"description":    "Controls whether Lambda Layer resource should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_layer",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_package": {
+		"default":        true,
+		"description":    "Controls whether Lambda package should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_package",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_role": {
+		"default":        true,
+		"description":    "Controls whether IAM role for Lambda Function should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_role",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_unqualified_alias_allowed_triggers": {
+		"default":        true,
+		"description":    "Whether to allow triggers on unqualified alias pointing to $LATEST version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_unqualified_alias_allowed_triggers",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:create_unqualified_alias_async_event_config": {
+		"default":        true,
+		"description":    "Whether to allow async event configuration on unqualified alias pointing to $LATEST version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "create_unqualified_alias_async_event_config",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:dead_letter_target_arn": {
+		"default":        null,
+		"description":    "The ARN of an SNS topic or SQS queue to notify when an invocation fails.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "dead_letter_target_arn",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:description": {
+		"default":        "",
+		"description":    "Description of your Lambda Function (or Layer)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "description",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:destination_on_failure": {
+		"default":        null,
+		"description":    "Amazon Resource Name (ARN) of the destination resource for failed asynchronous invocations",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "destination_on_failure",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:destination_on_success": {
+		"default":        null,
+		"description":    "Amazon Resource Name (ARN) of the destination resource for successful asynchronous invocations",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "destination_on_success",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:docker_build_root": {
+		"default":        "",
+		"description":    "Root dir where to build in Docker",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "docker_build_root",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:docker_file": {
+		"default":        "",
+		"description":    "Path to a Dockerfile when building in Docker",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "docker_file",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:docker_image": {
+		"default":        "",
+		"description":    "Docker image to use for the build",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "docker_image",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:docker_pip_cache": {
+		"default":        null,
+		"description":    "Whether to mount a shared pip cache folder into docker environment or not",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "docker_pip_cache",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:docker_with_ssh_agent": {
+		"default":        false,
+		"description":    "Whether to pass SSH_AUTH_SOCK into docker environment or not",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "docker_with_ssh_agent",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:environment_variables": {
+		"default":        {},
+		"description":    "A map that defines environment variables for the Lambda Function.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "environment_variables",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:event_source_mapping": {
+		"default":        {},
+		"description":    "Map of event source mapping",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "event_source_mapping",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:file_system_arn": {
+		"default":        null,
+		"description":    "The Amazon Resource Name (ARN) of the Amazon EFS Access Point that provides access to the file system.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "file_system_arn",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:file_system_local_mount_path": {
+		"default":        null,
+		"description":    "The path where the function can access the file system, starting with /mnt/.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "file_system_local_mount_path",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:function_name": {
+		"default":        "",
+		"description":    "A unique name for your Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "function_name",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:handler": {
+		"default":        "",
+		"description":    "Lambda Function entrypoint in your code",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "handler",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:hash_extra": {
+		"default":        "",
+		"description":    "The string to add into hashing function. Useful when building same source path for different functions.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "hash_extra",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:image_config_command": {
+		"default":        [],
+		"description":    "The CMD for the docker image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "image_config_command",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:image_config_entry_point": {
+		"default":        [],
+		"description":    "The ENTRYPOINT for the docker image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "image_config_entry_point",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:image_config_working_directory": {
+		"default":        null,
+		"description":    "The working directory for the docker image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "image_config_working_directory",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:image_uri": {
+		"default":        null,
+		"description":    "The ECR image URI containing the function's deployment package.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "image_uri",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:kms_key_arn": {
+		"default":        null,
+		"description":    "The ARN of KMS key to use by your Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "kms_key_arn",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:lambda_at_edge": {
+		"default":        false,
+		"description":    "Set this to true if using Lambda@Edge, to enable publishing, limit the timeout, and allow edgelambda.amazonaws.com to invoke the function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "lambda_at_edge",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:lambda_role": {
+		"default":        "",
+		"description":    " IAM role ARN attached to the Lambda Function. This governs both who / what can invoke your Lambda Function, as well as what resources our Lambda Function has access to. See Lambda Permission Model for more details.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "lambda_role",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:layer_name": {
+		"default":        "",
+		"description":    "Name of Lambda Layer to create",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "layer_name",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:layers": {
+		"default":        null,
+		"description":    "List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "layers",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:license_info": {
+		"default":        "",
+		"description":    "License info for your Lambda Layer. Eg, MIT or full url of a license.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "license_info",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:local_existing_package": {
+		"default":        null,
+		"description":    "The absolute path to an existing zip-file to use",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "local_existing_package",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:maximum_event_age_in_seconds": {
+		"default":        null,
+		"description":    "Maximum age of a request that Lambda sends to a function for processing in seconds. Valid values between 60 and 21600.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "maximum_event_age_in_seconds",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:maximum_retry_attempts": {
+		"default":        null,
+		"description":    "Maximum number of times to retry when the function returns an error. Valid values between 0 and 2. Defaults to 2.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "maximum_retry_attempts",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:memory_size": {
+		"default":        128,
+		"description":    "Amount of memory in MB your Lambda Function can use at runtime. Valid value between 128 MB to 10,240 MB (10 GB), in 64 MB increments.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "memory_size",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:number_of_policies": {
+		"default":        0,
+		"description":    "Number of policies to attach to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "number_of_policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:number_of_policy_jsons": {
+		"default":        0,
+		"description":    "Number of policies JSON to attach to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "number_of_policy_jsons",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:package_type": {
+		"default":        "Zip",
+		"description":    "The Lambda deployment package type. Valid options: Zip or Image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "package_type",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:policies": {
+		"default":        [],
+		"description":    "List of policy statements ARN to attach to Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:policy": {
+		"default":        null,
+		"description":    "An additional policy document ARN to attach to the Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:policy_json": {
+		"default":        null,
+		"description":    "An additional policy document as JSON to attach to the Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "policy_json",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:policy_jsons": {
+		"default":        [],
+		"description":    "List of additional policy documents as JSON to attach to Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "policy_jsons",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:policy_statements": {
+		"default":        {},
+		"description":    "Map of dynamic policy statements to attach to Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "policy_statements",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:provisioned_concurrent_executions": {
+		"default":        -1,
+		"description":    "Amount of capacity to allocate. Set to 1 or greater to enable, or set to 0 to disable provisioned concurrency.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "provisioned_concurrent_executions",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:publish": {
+		"default":        false,
+		"description":    "Whether to publish creation/change as new Lambda Function Version.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "publish",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:reserved_concurrent_executions": {
+		"default":        -1,
+		"description":    "The amount of reserved concurrent executions for this Lambda Function. A value of 0 disables Lambda Function from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "reserved_concurrent_executions",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:role_description": {
+		"default":        null,
+		"description":    "Description of IAM role to use for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "role_description",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:role_force_detach_policies": {
+		"default":        true,
+		"description":    "Specifies to force detaching any policies the IAM role has before destroying it.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "role_force_detach_policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:role_name": {
+		"default":        null,
+		"description":    "Name of IAM role to use for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "role_name",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:role_path": {
+		"default":        null,
+		"description":    "Path of IAM role to use for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "role_path",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:role_permissions_boundary": {
+		"default":        null,
+		"description":    "The ARN of the policy that is used to set the permissions boundary for the IAM role used by Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "role_permissions_boundary",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:role_tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to IAM role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "role_tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:runtime": {
+		"default":        "",
+		"description":    "Lambda Function runtime",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "runtime",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:s3_acl": {
+		"default":        "private",
+		"description":    "The canned ACL to apply. Valid values are private, public-read, public-read-write, aws-exec-read, authenticated-read, bucket-owner-read, and bucket-owner-full-control. Defaults to private.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "s3_acl",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:s3_bucket": {
+		"default":        null,
+		"description":    "S3 bucket to store artifacts",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "s3_bucket",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:s3_existing_package": {
+		"default":        null,
+		"description":    "The S3 bucket object with keys bucket, key, version pointing to an existing zip-file to use",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "s3_existing_package",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:s3_object_storage_class": {
+		"default":        "ONEZONE_IA",
+		"description":    "Specifies the desired Storage Class for the artifact uploaded to S3. Can be either STANDARD, REDUCED_REDUNDANCY, ONEZONE_IA, INTELLIGENT_TIERING, or STANDARD_IA.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "s3_object_storage_class",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:s3_object_tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to S3 bucket object.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "s3_object_tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:s3_server_side_encryption": {
+		"default":        null,
+		"description":    "Specifies server-side encryption of the object in S3. Valid values are \"AES256\" and \"aws:kms\".",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "s3_server_side_encryption",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:source_path": {
+		"default":        null,
+		"description":    "The absolute path to a local file or directory containing your Lambda source code",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "source_path",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:store_on_s3": {
+		"default":        false,
+		"description":    "Whether to store produced artifacts on S3 or locally.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "store_on_s3",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to resources.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:timeout": {
+		"default":        3,
+		"description":    "The amount of time your Lambda Function has to run in seconds.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "timeout",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:tracing_mode": {
+		"default":        null,
+		"description":    "Tracing mode of the Lambda Function. Valid value can be either PassThrough or Active.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "tracing_mode",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:trusted_entities": {
+		"default":        [],
+		"description":    "Lambda Function additional trusted entities for assuming roles (trust relationship)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "trusted_entities",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:use_existing_cloudwatch_log_group": {
+		"default":        false,
+		"description":    "Whether to use an existing CloudWatch log group or create new",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "use_existing_cloudwatch_log_group",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:vpc_security_group_ids": {
+		"default":        null,
+		"description":    "List of security group ids when Lambda Function should run in the VPC.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "vpc_security_group_ids",
+	},
+	"module.s3-bucket-notification.module.lambda_function1:vpc_subnet_ids": {
+		"default":        null,
+		"description":    "List of subnet ids when Lambda Function should run in the VPC. Usually private or intra subnets.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "vpc_subnet_ids",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:allowed_triggers": {
+		"default":        {},
+		"description":    "Map of allowed triggers to create Lambda permissions",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "allowed_triggers",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:artifacts_dir": {
+		"default":        "builds",
+		"description":    "Directory name where artifacts should be stored",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "artifacts_dir",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_async_event_policy": {
+		"default":        false,
+		"description":    "Controls whether async event policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_async_event_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_cloudwatch_logs_policy": {
+		"default":        true,
+		"description":    "Controls whether CloudWatch Logs policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_cloudwatch_logs_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_dead_letter_policy": {
+		"default":        false,
+		"description":    "Controls whether SNS/SQS dead letter notification policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_dead_letter_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_network_policy": {
+		"default":        false,
+		"description":    "Controls whether VPC/network policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_network_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_policies": {
+		"default":        false,
+		"description":    "Controls whether list of policies should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_policy": {
+		"default":        false,
+		"description":    "Controls whether policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_policy_json": {
+		"default":        false,
+		"description":    "Controls whether policy_json should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_policy_json",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_policy_jsons": {
+		"default":        false,
+		"description":    "Controls whether policy_jsons should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_policy_jsons",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_policy_statements": {
+		"default":        false,
+		"description":    "Controls whether policy_statements should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_policy_statements",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:attach_tracing_policy": {
+		"default":        false,
+		"description":    "Controls whether X-Ray tracing policy should be added to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "attach_tracing_policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:build_in_docker": {
+		"default":        false,
+		"description":    "Whether to build dependencies in Docker",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "build_in_docker",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:cloudwatch_logs_kms_key_id": {
+		"default":        null,
+		"description":    "The ARN of the KMS Key to use when encrypting log data.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "cloudwatch_logs_kms_key_id",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:cloudwatch_logs_retention_in_days": {
+		"default":        null,
+		"description":    "Specifies the number of days you want to retain log events in the specified log group. Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "cloudwatch_logs_retention_in_days",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:cloudwatch_logs_tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to the resource.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "cloudwatch_logs_tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:compatible_runtimes": {
+		"default":        [],
+		"description":    "A list of Runtimes this layer is compatible with. Up to 5 runtimes can be specified.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "compatible_runtimes",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create": {
+		"default":        true,
+		"description":    "Controls whether resources should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_async_event_config": {
+		"default":        false,
+		"description":    "Controls whether async event configuration for Lambda Function/Alias should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_async_event_config",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_current_version_allowed_triggers": {
+		"default":        true,
+		"description":    "Whether to allow triggers on current version of Lambda Function (this will revoke permissions from previous version because Terraform manages only current resources)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_current_version_allowed_triggers",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_current_version_async_event_config": {
+		"default":        true,
+		"description":    "Whether to allow async event configuration on current version of Lambda Function (this will revoke permissions from previous version because Terraform manages only current resources)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_current_version_async_event_config",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_function": {
+		"default":        true,
+		"description":    "Controls whether Lambda Function resource should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_function",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_layer": {
+		"default":        false,
+		"description":    "Controls whether Lambda Layer resource should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_layer",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_package": {
+		"default":        true,
+		"description":    "Controls whether Lambda package should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_package",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_role": {
+		"default":        true,
+		"description":    "Controls whether IAM role for Lambda Function should be created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_role",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_unqualified_alias_allowed_triggers": {
+		"default":        true,
+		"description":    "Whether to allow triggers on unqualified alias pointing to $LATEST version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_unqualified_alias_allowed_triggers",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:create_unqualified_alias_async_event_config": {
+		"default":        true,
+		"description":    "Whether to allow async event configuration on unqualified alias pointing to $LATEST version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "create_unqualified_alias_async_event_config",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:dead_letter_target_arn": {
+		"default":        null,
+		"description":    "The ARN of an SNS topic or SQS queue to notify when an invocation fails.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "dead_letter_target_arn",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:description": {
+		"default":        "",
+		"description":    "Description of your Lambda Function (or Layer)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "description",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:destination_on_failure": {
+		"default":        null,
+		"description":    "Amazon Resource Name (ARN) of the destination resource for failed asynchronous invocations",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "destination_on_failure",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:destination_on_success": {
+		"default":        null,
+		"description":    "Amazon Resource Name (ARN) of the destination resource for successful asynchronous invocations",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "destination_on_success",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:docker_build_root": {
+		"default":        "",
+		"description":    "Root dir where to build in Docker",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "docker_build_root",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:docker_file": {
+		"default":        "",
+		"description":    "Path to a Dockerfile when building in Docker",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "docker_file",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:docker_image": {
+		"default":        "",
+		"description":    "Docker image to use for the build",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "docker_image",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:docker_pip_cache": {
+		"default":        null,
+		"description":    "Whether to mount a shared pip cache folder into docker environment or not",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "docker_pip_cache",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:docker_with_ssh_agent": {
+		"default":        false,
+		"description":    "Whether to pass SSH_AUTH_SOCK into docker environment or not",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "docker_with_ssh_agent",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:environment_variables": {
+		"default":        {},
+		"description":    "A map that defines environment variables for the Lambda Function.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "environment_variables",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:event_source_mapping": {
+		"default":        {},
+		"description":    "Map of event source mapping",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "event_source_mapping",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:file_system_arn": {
+		"default":        null,
+		"description":    "The Amazon Resource Name (ARN) of the Amazon EFS Access Point that provides access to the file system.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "file_system_arn",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:file_system_local_mount_path": {
+		"default":        null,
+		"description":    "The path where the function can access the file system, starting with /mnt/.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "file_system_local_mount_path",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:function_name": {
+		"default":        "",
+		"description":    "A unique name for your Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "function_name",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:handler": {
+		"default":        "",
+		"description":    "Lambda Function entrypoint in your code",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "handler",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:hash_extra": {
+		"default":        "",
+		"description":    "The string to add into hashing function. Useful when building same source path for different functions.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "hash_extra",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:image_config_command": {
+		"default":        [],
+		"description":    "The CMD for the docker image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "image_config_command",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:image_config_entry_point": {
+		"default":        [],
+		"description":    "The ENTRYPOINT for the docker image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "image_config_entry_point",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:image_config_working_directory": {
+		"default":        null,
+		"description":    "The working directory for the docker image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "image_config_working_directory",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:image_uri": {
+		"default":        null,
+		"description":    "The ECR image URI containing the function's deployment package.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "image_uri",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:kms_key_arn": {
+		"default":        null,
+		"description":    "The ARN of KMS key to use by your Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "kms_key_arn",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:lambda_at_edge": {
+		"default":        false,
+		"description":    "Set this to true if using Lambda@Edge, to enable publishing, limit the timeout, and allow edgelambda.amazonaws.com to invoke the function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "lambda_at_edge",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:lambda_role": {
+		"default":        "",
+		"description":    " IAM role ARN attached to the Lambda Function. This governs both who / what can invoke your Lambda Function, as well as what resources our Lambda Function has access to. See Lambda Permission Model for more details.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "lambda_role",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:layer_name": {
+		"default":        "",
+		"description":    "Name of Lambda Layer to create",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "layer_name",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:layers": {
+		"default":        null,
+		"description":    "List of Lambda Layer Version ARNs (maximum of 5) to attach to your Lambda Function.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "layers",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:license_info": {
+		"default":        "",
+		"description":    "License info for your Lambda Layer. Eg, MIT or full url of a license.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "license_info",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:local_existing_package": {
+		"default":        null,
+		"description":    "The absolute path to an existing zip-file to use",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "local_existing_package",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:maximum_event_age_in_seconds": {
+		"default":        null,
+		"description":    "Maximum age of a request that Lambda sends to a function for processing in seconds. Valid values between 60 and 21600.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "maximum_event_age_in_seconds",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:maximum_retry_attempts": {
+		"default":        null,
+		"description":    "Maximum number of times to retry when the function returns an error. Valid values between 0 and 2. Defaults to 2.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "maximum_retry_attempts",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:memory_size": {
+		"default":        128,
+		"description":    "Amount of memory in MB your Lambda Function can use at runtime. Valid value between 128 MB to 10,240 MB (10 GB), in 64 MB increments.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "memory_size",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:number_of_policies": {
+		"default":        0,
+		"description":    "Number of policies to attach to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "number_of_policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:number_of_policy_jsons": {
+		"default":        0,
+		"description":    "Number of policies JSON to attach to IAM role for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "number_of_policy_jsons",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:package_type": {
+		"default":        "Zip",
+		"description":    "The Lambda deployment package type. Valid options: Zip or Image",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "package_type",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:policies": {
+		"default":        [],
+		"description":    "List of policy statements ARN to attach to Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:policy": {
+		"default":        null,
+		"description":    "An additional policy document ARN to attach to the Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "policy",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:policy_json": {
+		"default":        null,
+		"description":    "An additional policy document as JSON to attach to the Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "policy_json",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:policy_jsons": {
+		"default":        [],
+		"description":    "List of additional policy documents as JSON to attach to Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "policy_jsons",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:policy_statements": {
+		"default":        {},
+		"description":    "Map of dynamic policy statements to attach to Lambda Function role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "policy_statements",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:provisioned_concurrent_executions": {
+		"default":        -1,
+		"description":    "Amount of capacity to allocate. Set to 1 or greater to enable, or set to 0 to disable provisioned concurrency.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "provisioned_concurrent_executions",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:publish": {
+		"default":        false,
+		"description":    "Whether to publish creation/change as new Lambda Function Version.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "publish",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:reserved_concurrent_executions": {
+		"default":        -1,
+		"description":    "The amount of reserved concurrent executions for this Lambda Function. A value of 0 disables Lambda Function from being triggered and -1 removes any concurrency limitations. Defaults to Unreserved Concurrency Limits -1.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "reserved_concurrent_executions",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:role_description": {
+		"default":        null,
+		"description":    "Description of IAM role to use for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "role_description",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:role_force_detach_policies": {
+		"default":        true,
+		"description":    "Specifies to force detaching any policies the IAM role has before destroying it.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "role_force_detach_policies",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:role_name": {
+		"default":        null,
+		"description":    "Name of IAM role to use for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "role_name",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:role_path": {
+		"default":        null,
+		"description":    "Path of IAM role to use for Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "role_path",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:role_permissions_boundary": {
+		"default":        null,
+		"description":    "The ARN of the policy that is used to set the permissions boundary for the IAM role used by Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "role_permissions_boundary",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:role_tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to IAM role",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "role_tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:runtime": {
+		"default":        "",
+		"description":    "Lambda Function runtime",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "runtime",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:s3_acl": {
+		"default":        "private",
+		"description":    "The canned ACL to apply. Valid values are private, public-read, public-read-write, aws-exec-read, authenticated-read, bucket-owner-read, and bucket-owner-full-control. Defaults to private.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "s3_acl",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:s3_bucket": {
+		"default":        null,
+		"description":    "S3 bucket to store artifacts",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "s3_bucket",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:s3_existing_package": {
+		"default":        null,
+		"description":    "The S3 bucket object with keys bucket, key, version pointing to an existing zip-file to use",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "s3_existing_package",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:s3_object_storage_class": {
+		"default":        "ONEZONE_IA",
+		"description":    "Specifies the desired Storage Class for the artifact uploaded to S3. Can be either STANDARD, REDUCED_REDUNDANCY, ONEZONE_IA, INTELLIGENT_TIERING, or STANDARD_IA.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "s3_object_storage_class",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:s3_object_tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to S3 bucket object.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "s3_object_tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:s3_server_side_encryption": {
+		"default":        null,
+		"description":    "Specifies server-side encryption of the object in S3. Valid values are \"AES256\" and \"aws:kms\".",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "s3_server_side_encryption",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:source_path": {
+		"default":        null,
+		"description":    "The absolute path to a local file or directory containing your Lambda source code",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "source_path",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:store_on_s3": {
+		"default":        false,
+		"description":    "Whether to store produced artifacts on S3 or locally.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "store_on_s3",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:tags": {
+		"default":        {},
+		"description":    "A map of tags to assign to resources.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "tags",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:timeout": {
+		"default":        3,
+		"description":    "The amount of time your Lambda Function has to run in seconds.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "timeout",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:tracing_mode": {
+		"default":        null,
+		"description":    "Tracing mode of the Lambda Function. Valid value can be either PassThrough or Active.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "tracing_mode",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:trusted_entities": {
+		"default":        [],
+		"description":    "Lambda Function additional trusted entities for assuming roles (trust relationship)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "trusted_entities",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:use_existing_cloudwatch_log_group": {
+		"default":        false,
+		"description":    "Whether to use an existing CloudWatch log group or create new",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "use_existing_cloudwatch_log_group",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:vpc_security_group_ids": {
+		"default":        null,
+		"description":    "List of security group ids when Lambda Function should run in the VPC.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "vpc_security_group_ids",
+	},
+	"module.s3-bucket-notification.module.lambda_function2:vpc_subnet_ids": {
+		"default":        null,
+		"description":    "List of subnet ids when Lambda Function should run in the VPC. Usually private or intra subnets.",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "vpc_subnet_ids",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:acceleration_status": {
+		"default":        null,
+		"description":    "(Optional) Sets the accelerate configuration of an existing bucket. Can be Enabled or Suspended.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "acceleration_status",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:acl": {
+		"default":        "private",
+		"description":    "(Optional) The canned ACL to apply. Defaults to 'private'. Conflicts with `grant`",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "acl",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:attach_elb_log_delivery_policy": {
+		"default":        false,
+		"description":    "Controls if S3 bucket should have ELB log delivery policy attached",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "attach_elb_log_delivery_policy",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:attach_policy": {
+		"default":        false,
+		"description":    "Controls if S3 bucket should have bucket policy attached (set to `true` to use value of `policy` as bucket policy)",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "attach_policy",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:attach_public_policy": {
+		"default":        true,
+		"description":    "Controls if a user defined public bucket policy will be attached (set to `false` to allow upstream to apply defaults to the bucket)",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "attach_public_policy",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:block_public_acls": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should block public ACLs for this bucket.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "block_public_acls",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:block_public_policy": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should block public bucket policies for this bucket.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "block_public_policy",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:bucket": {
+		"default":        null,
+		"description":    "(Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "bucket",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:bucket_prefix": {
+		"default":        null,
+		"description":    "(Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "bucket_prefix",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:cors_rule": {
+		"default":        [],
+		"description":    "List of maps containing rules for Cross-Origin Resource Sharing.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "cors_rule",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:create_bucket": {
+		"default":        true,
+		"description":    "Controls if S3 bucket should be created",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "create_bucket",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:force_destroy": {
+		"default":        false,
+		"description":    "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "force_destroy",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:grant": {
+		"default":        [],
+		"description":    "An ACL policy grant. Conflicts with `acl`",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "grant",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:ignore_public_acls": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should ignore public ACLs for this bucket.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "ignore_public_acls",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:lifecycle_rule": {
+		"default":        [],
+		"description":    "List of maps containing configuration of object lifecycle management.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "lifecycle_rule",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:logging": {
+		"default":        {},
+		"description":    "Map containing access bucket logging configuration.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "logging",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:object_lock_configuration": {
+		"default":        {},
+		"description":    "Map containing S3 object locking configuration.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "object_lock_configuration",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:policy": {
+		"default":        null,
+		"description":    "(Optional) A valid bucket policy JSON document. Note that if the policy document is not specific enough (but still valid), Terraform may view the policy as constantly changing in a terraform plan. In this case, please make sure you use the verbose/specific version of the policy. For more information about building AWS IAM policy documents with Terraform, see the AWS IAM Policy Document Guide.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "policy",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:replication_configuration": {
+		"default":        {},
+		"description":    "Map containing cross-region replication configuration.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "replication_configuration",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:request_payer": {
+		"default":        null,
+		"description":    "(Optional) Specifies who should bear the cost of Amazon S3 data transfer. Can be either BucketOwner or Requester. By default, the owner of the S3 bucket would incur the costs of any data transfer. See Requester Pays Buckets developer guide for more information.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "request_payer",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:restrict_public_buckets": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should restrict public bucket policies for this bucket.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "restrict_public_buckets",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:server_side_encryption_configuration": {
+		"default":        {},
+		"description":    "Map containing server-side encryption configuration.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "server_side_encryption_configuration",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:tags": {
+		"default":        {},
+		"description":    "(Optional) A mapping of tags to assign to the bucket.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "tags",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:versioning": {
+		"default":        {},
+		"description":    "Map containing versioning configuration.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "versioning",
+	},
+	"module.s3-bucket-notification.module.s3_bucket:website": {
+		"default":        {},
+		"description":    "Map containing static web-site hosting or redirect configuration.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "website",
+	},
+}
+
+outputs = {
+	"module.s3-bucket-notification.module.all_notifications:this_s3_bucket_notification_id": {
+		"depends_on":     [],
+		"description":    "ID of S3 bucket",
+		"module_address": "module.s3-bucket-notification.module.all_notifications",
+		"name":           "this_s3_bucket_notification_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket_notification.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:lambda_cloudwatch_log_group_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Cloudwatch Log Group",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "lambda_cloudwatch_log_group_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.log_group_arn",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:lambda_cloudwatch_log_group_name": {
+		"depends_on":     [],
+		"description":    "The name of the Cloudwatch Log Group",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "lambda_cloudwatch_log_group_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.log_group_name",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:lambda_role_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the IAM role created for the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "lambda_role_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_iam_role.lambda",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:lambda_role_name": {
+		"depends_on":     [],
+		"description":    "The name of the IAM role created for the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "lambda_role_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_iam_role.lambda",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:local_filename": {
+		"depends_on":     [],
+		"description":    "The filename of zip archive deployed (if deployment was from local)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "local_filename",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.filename",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:s3_object": {
+		"depends_on":     [],
+		"description":    "The map with S3 object data of zip archive deployed (if deployment was from S3)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "s3_object",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.s3_bucket",
+				"local.s3_key",
+				"local.s3_object_version",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_event_source_mapping_function_arn": {
+		"depends_on":     [],
+		"description":    "The the ARN of the Lambda function the event source mapping is sending events to",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_event_source_mapping_function_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_event_source_mapping_state": {
+		"depends_on":     [],
+		"description":    "The state of the event source mapping",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_event_source_mapping_state",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_event_source_mapping_state_transition_reason": {
+		"depends_on":     [],
+		"description":    "The reason the event source mapping is in its current state",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_event_source_mapping_state_transition_reason",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_event_source_mapping_uuid": {
+		"depends_on":     [],
+		"description":    "The UUID of the created event source mapping",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_event_source_mapping_uuid",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_invoke_arn": {
+		"depends_on":     [],
+		"description":    "The Invoke ARN of the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_invoke_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_kms_key_arn": {
+		"depends_on":     [],
+		"description":    "The ARN for the KMS encryption key of Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_kms_key_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_last_modified": {
+		"depends_on":     [],
+		"description":    "The date Lambda Function resource was last modified",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_last_modified",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_name": {
+		"depends_on":     [],
+		"description":    "The name of the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_qualified_arn": {
+		"depends_on":     [],
+		"description":    "The ARN identifying your Lambda Function Version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_qualified_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_source_code_hash": {
+		"depends_on":     [],
+		"description":    "Base64-encoded representation of raw SHA-256 sum of the zip file",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_source_code_hash",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_source_code_size": {
+		"depends_on":     [],
+		"description":    "The size in bytes of the function .zip file",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_source_code_size",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_function_version": {
+		"depends_on":     [],
+		"description":    "Latest published version of Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_function_version",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_layer_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Lambda Layer with version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_layer_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_layer_created_date": {
+		"depends_on":     [],
+		"description":    "The date Lambda Layer resource was created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_layer_created_date",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_layer_layer_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Lambda Layer without version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_layer_layer_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_layer_source_code_size": {
+		"depends_on":     [],
+		"description":    "The size in bytes of the Lambda Layer .zip file",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_layer_source_code_size",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function1:this_lambda_layer_version": {
+		"depends_on":     [],
+		"description":    "The Lambda Layer version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function1",
+		"name":           "this_lambda_layer_version",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:lambda_cloudwatch_log_group_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Cloudwatch Log Group",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "lambda_cloudwatch_log_group_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.log_group_arn",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:lambda_cloudwatch_log_group_name": {
+		"depends_on":     [],
+		"description":    "The name of the Cloudwatch Log Group",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "lambda_cloudwatch_log_group_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.log_group_name",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:lambda_role_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the IAM role created for the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "lambda_role_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_iam_role.lambda",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:lambda_role_name": {
+		"depends_on":     [],
+		"description":    "The name of the IAM role created for the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "lambda_role_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_iam_role.lambda",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:local_filename": {
+		"depends_on":     [],
+		"description":    "The filename of zip archive deployed (if deployment was from local)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "local_filename",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.filename",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:s3_object": {
+		"depends_on":     [],
+		"description":    "The map with S3 object data of zip archive deployed (if deployment was from S3)",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "s3_object",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"local.s3_bucket",
+				"local.s3_key",
+				"local.s3_object_version",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_event_source_mapping_function_arn": {
+		"depends_on":     [],
+		"description":    "The the ARN of the Lambda function the event source mapping is sending events to",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_event_source_mapping_function_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_event_source_mapping_state": {
+		"depends_on":     [],
+		"description":    "The state of the event source mapping",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_event_source_mapping_state",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_event_source_mapping_state_transition_reason": {
+		"depends_on":     [],
+		"description":    "The reason the event source mapping is in its current state",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_event_source_mapping_state_transition_reason",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_event_source_mapping_uuid": {
+		"depends_on":     [],
+		"description":    "The UUID of the created event source mapping",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_event_source_mapping_uuid",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_event_source_mapping.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_invoke_arn": {
+		"depends_on":     [],
+		"description":    "The Invoke ARN of the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_invoke_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_kms_key_arn": {
+		"depends_on":     [],
+		"description":    "The ARN for the KMS encryption key of Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_kms_key_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_last_modified": {
+		"depends_on":     [],
+		"description":    "The date Lambda Function resource was last modified",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_last_modified",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_name": {
+		"depends_on":     [],
+		"description":    "The name of the Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_qualified_arn": {
+		"depends_on":     [],
+		"description":    "The ARN identifying your Lambda Function Version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_qualified_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_source_code_hash": {
+		"depends_on":     [],
+		"description":    "Base64-encoded representation of raw SHA-256 sum of the zip file",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_source_code_hash",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_source_code_size": {
+		"depends_on":     [],
+		"description":    "The size in bytes of the function .zip file",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_source_code_size",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_function_version": {
+		"depends_on":     [],
+		"description":    "Latest published version of Lambda Function",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_function_version",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_function.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_layer_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Lambda Layer with version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_layer_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_layer_created_date": {
+		"depends_on":     [],
+		"description":    "The date Lambda Layer resource was created",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_layer_created_date",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_layer_layer_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the Lambda Layer without version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_layer_layer_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_layer_source_code_size": {
+		"depends_on":     [],
+		"description":    "The size in bytes of the Lambda Layer .zip file",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_layer_source_code_size",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.lambda_function2:this_lambda_layer_version": {
+		"depends_on":     [],
+		"description":    "The Lambda Layer version",
+		"module_address": "module.s3-bucket-notification.module.lambda_function2",
+		"name":           "this_lambda_layer_version",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_lambda_layer_version.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the bucket. Will be of format arn:aws:s3:::bucketname.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_bucket_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket domain name. Will be of format bucketname.s3.amazonaws.com.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_bucket_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_bucket_regional_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket region-specific domain name. The bucket domain name including the region name, please refer here for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent redirect issues from CloudFront to S3 Origin URL.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_bucket_regional_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_hosted_zone_id": {
+		"depends_on":     [],
+		"description":    "The Route 53 Hosted Zone ID for this bucket's region.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_hosted_zone_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_id": {
+		"depends_on":     [],
+		"description":    "The name of the bucket.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket_policy.this",
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_region": {
+		"depends_on":     [],
+		"description":    "The AWS region this bucket resides in.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_region",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_website_domain": {
+		"depends_on":     [],
+		"description":    "The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records. ",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_website_domain",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.s3_bucket:this_s3_bucket_website_endpoint": {
+		"depends_on":     [],
+		"description":    "The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.",
+		"module_address": "module.s3-bucket-notification.module.s3_bucket",
+		"name":           "this_s3_bucket_website_endpoint",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.sns_topic1:this_sns_topic_arn": {
+		"depends_on":     [],
+		"description":    "ARN",
+		"module_address": "module.s3-bucket-notification.module.sns_topic1",
+		"name":           "this_sns_topic_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_sns_topic.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.sns_topic1:this_sns_topic_name": {
+		"depends_on":     [],
+		"description":    "Name",
+		"module_address": "module.s3-bucket-notification.module.sns_topic1",
+		"name":           "this_sns_topic_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_sns_topic.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.sns_topic2:this_sns_topic_arn": {
+		"depends_on":     [],
+		"description":    "ARN",
+		"module_address": "module.s3-bucket-notification.module.sns_topic2",
+		"name":           "this_sns_topic_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_sns_topic.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification.module.sns_topic2:this_sns_topic_name": {
+		"depends_on":     [],
+		"description":    "Name",
+		"module_address": "module.s3-bucket-notification.module.sns_topic2",
+		"name":           "this_sns_topic_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_sns_topic.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the bucket. Will be of format arn:aws:s3:::bucketname.",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_arn",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_bucket_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket domain name. Will be of format bucketname.s3.amazonaws.com.",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_bucket_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_bucket_domain_name",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_bucket_regional_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket region-specific domain name. The bucket domain name including the region name, please refer here for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent redirect issues from CloudFront to S3 Origin URL.",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_bucket_regional_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_bucket_regional_domain_name",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_hosted_zone_id": {
+		"depends_on":     [],
+		"description":    "The Route 53 Hosted Zone ID for this bucket's region.",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_hosted_zone_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_hosted_zone_id",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_id": {
+		"depends_on":     [],
+		"description":    "The name of the bucket.",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_id",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_region": {
+		"depends_on":     [],
+		"description":    "The AWS region this bucket resides in.",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_region",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_region",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_website_domain": {
+		"depends_on":     [],
+		"description":    "The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records. ",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_website_domain",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_website_domain",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_website_endpoint": {
+		"depends_on":     [],
+		"description":    "The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_website_endpoint",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"module.s3_bucket.this_s3_bucket_website_endpoint",
+			],
+		},
+	},
+}
+
+module_calls = {
+	"module.s3-bucket-notification:all_notifications": {
+		"config": {
+			"bucket": {
+				"references": [
+					"module.s3_bucket.this_s3_bucket_id",
+				],
+			},
+			"lambda_notifications": {
+				"references": [
+					"module.lambda_function1.this_lambda_function_arn",
+					"module.lambda_function1.this_lambda_function_name",
+					"module.lambda_function2.this_lambda_function_arn",
+					"module.lambda_function2.this_lambda_function_name",
+				],
+			},
+			"sns_notifications": {
+				"references": [
+					"module.sns_topic1.this_sns_topic_arn",
+					"module.sns_topic2.this_sns_topic_arn",
+				],
+			},
+			"sqs_notifications": {
+				"references": [
+					"aws_sqs_queue.this[0]",
+					"aws_sqs_queue.this[1]",
+				],
+			},
+		},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "module.s3-bucket-notification",
+		"name":               "all_notifications",
+		"source":             "../../modules/notification",
+		"version_constraint": "",
+	},
+	"module.s3-bucket-notification:lambda_function1": {
+		"config": {
+			"create_package": {
+				"constant_value": false,
+			},
+			"function_name": {
+				"references": [
+					"random_pet.this",
+				],
+			},
+			"handler": {
+				"constant_value": "index.lambda_handler",
+			},
+			"local_existing_package": {
+				"references": [
+					"data.null_data_source.downloaded_package",
+				],
+			},
+			"runtime": {
+				"constant_value": "python3.8",
+			},
+		},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "module.s3-bucket-notification",
+		"name":               "lambda_function1",
+		"source":             "terraform-aws-modules/lambda/aws",
+		"version_constraint": "~> 1.0",
+	},
+	"module.s3-bucket-notification:lambda_function2": {
+		"config": {
+			"create_package": {
+				"constant_value": false,
+			},
+			"function_name": {
+				"references": [
+					"random_pet.this",
+				],
+			},
+			"handler": {
+				"constant_value": "index.lambda_handler",
+			},
+			"local_existing_package": {
+				"references": [
+					"data.null_data_source.downloaded_package",
+				],
+			},
+			"runtime": {
+				"constant_value": "python3.8",
+			},
+		},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "module.s3-bucket-notification",
+		"name":               "lambda_function2",
+		"source":             "terraform-aws-modules/lambda/aws",
+		"version_constraint": "~> 1.0",
+	},
+	"module.s3-bucket-notification:s3_bucket": {
+		"config": {
+			"bucket": {
+				"references": [
+					"local.bucket_name",
+				],
+			},
+			"force_destroy": {
+				"constant_value": true,
+			},
+		},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "module.s3-bucket-notification",
+		"name":               "s3_bucket",
+		"source":             "../../",
+		"version_constraint": "",
+	},
+	"module.s3-bucket-notification:sns_topic1": {
+		"config":             {},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "module.s3-bucket-notification",
+		"name":               "sns_topic1",
+		"source":             "terraform-aws-modules/cloudwatch/aws//examples/fixtures/aws_sns_topic",
+		"version_constraint": "",
+	},
+	"module.s3-bucket-notification:sns_topic2": {
+		"config":             {},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "module.s3-bucket-notification",
+		"name":               "sns_topic2",
+		"source":             "terraform-aws-modules/cloudwatch/aws//examples/fixtures/aws_sns_topic",
+		"version_constraint": "",
+	},
+	"s3-bucket-notification": {
+		"config":             {},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "s3-bucket-notification",
+		"source":             "app.terraform.io/Cloud-Operations/s3-bucket/aws//examples/notification",
+		"version_constraint": "1.15.0",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

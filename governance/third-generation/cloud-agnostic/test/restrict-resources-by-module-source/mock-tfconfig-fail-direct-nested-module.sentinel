@@ -1,0 +1,901 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"module.s3-bucket-notification.aws_lambda_permission.allow": {
+		"address": "module.s3-bucket-notification.aws_lambda_permission.allow",
+		"config": {
+			"action": {
+				"constant_value": "lambda:InvokeFunction",
+			},
+			"function_name": {
+				"references": [
+					"each.value",
+				],
+			},
+			"principal": {
+				"constant_value": "s3.amazonaws.com",
+			},
+			"qualifier": {
+				"references": [
+					"each.value",
+				],
+			},
+			"source_arn": {
+				"references": [
+					"local.bucket_arn",
+				],
+			},
+			"statement_id_prefix": {
+				"constant_value": "AllowLambdaS3BucketNotification-",
+			},
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
+			"references": [
+				"var.lambda_notifications",
+			],
+		},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "allow",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_lambda_permission",
+	},
+	"module.s3-bucket-notification.aws_s3_bucket_notification.this": {
+		"address": "module.s3-bucket-notification.aws_s3_bucket_notification.this",
+		"config": {
+			"bucket": {
+				"references": [
+					"var.bucket",
+				],
+			},
+		},
+		"count": {
+			"references": [
+				"var.create",
+				"var.lambda_notifications",
+				"var.sqs_notifications",
+				"var.sns_notifications",
+			],
+		},
+		"depends_on": [
+			"aws_lambda_permission.allow",
+			"aws_sqs_queue_policy.allow",
+			"aws_sns_topic_policy.allow",
+		],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "this",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_s3_bucket_notification",
+	},
+	"module.s3-bucket-notification.aws_sns_topic_policy.allow": {
+		"address": "module.s3-bucket-notification.aws_sns_topic_policy.allow",
+		"config": {
+			"arn": {
+				"references": [
+					"each.value",
+				],
+			},
+			"policy": {
+				"references": [
+					"data.aws_iam_policy_document.sns",
+					"each.key",
+				],
+			},
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
+			"references": [
+				"var.sns_notifications",
+			],
+		},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "allow",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_sns_topic_policy",
+	},
+	"module.s3-bucket-notification.aws_sqs_queue_policy.allow": {
+		"address": "module.s3-bucket-notification.aws_sqs_queue_policy.allow",
+		"config": {
+			"policy": {
+				"references": [
+					"data.aws_iam_policy_document.sqs",
+					"each.key",
+				],
+			},
+			"queue_url": {
+				"references": [
+					"each.value",
+					"local.queue_ids",
+					"each.key",
+				],
+			},
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
+			"references": [
+				"var.sqs_notifications",
+			],
+		},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "allow",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_sqs_queue_policy",
+	},
+	"module.s3-bucket-notification.data.aws_arn.queue": {
+		"address": "module.s3-bucket-notification.data.aws_arn.queue",
+		"config": {
+			"arn": {
+				"references": [
+					"each.value",
+				],
+			},
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
+			"references": [
+				"var.sqs_notifications",
+			],
+		},
+		"mode":                "data",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "queue",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_arn",
+	},
+	"module.s3-bucket-notification.data.aws_iam_policy_document.sns": {
+		"address": "module.s3-bucket-notification.data.aws_iam_policy_document.sns",
+		"config": {
+			"statement": [
+				{
+					"actions": {
+						"constant_value": [
+							"sns:Publish",
+						],
+					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "ArnEquals",
+							},
+							"values": {
+								"references": [
+									"local.bucket_arn",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SourceArn",
+							},
+						},
+					],
+					"effect": {
+						"constant_value": "Allow",
+					},
+					"principals": [
+						{
+							"identifiers": {
+								"constant_value": [
+									"s3.amazonaws.com",
+								],
+							},
+							"type": {
+								"constant_value": "Service",
+							},
+						},
+					],
+					"resources": {
+						"references": [
+							"each.value",
+						],
+					},
+					"sid": {
+						"constant_value": "AllowSNSS3BucketNotification",
+					},
+				},
+			],
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
+			"references": [
+				"var.sns_notifications",
+			],
+		},
+		"mode":                "data",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "sns",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_iam_policy_document",
+	},
+	"module.s3-bucket-notification.data.aws_iam_policy_document.sqs": {
+		"address": "module.s3-bucket-notification.data.aws_iam_policy_document.sqs",
+		"config": {
+			"statement": [
+				{
+					"actions": {
+						"constant_value": [
+							"sqs:SendMessage",
+						],
+					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "ArnEquals",
+							},
+							"values": {
+								"references": [
+									"local.bucket_arn",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SourceArn",
+							},
+						},
+					],
+					"effect": {
+						"constant_value": "Allow",
+					},
+					"principals": [
+						{
+							"identifiers": {
+								"constant_value": [
+									"s3.amazonaws.com",
+								],
+							},
+							"type": {
+								"constant_value": "Service",
+							},
+						},
+					],
+					"resources": {
+						"references": [
+							"each.value",
+						],
+					},
+					"sid": {
+						"constant_value": "AllowSQSS3BucketNotification",
+					},
+				},
+			],
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
+			"references": [
+				"var.sqs_notifications",
+			],
+		},
+		"mode":                "data",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "sqs",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_iam_policy_document",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "",
+		"name":           "aws_region",
+	},
+	"bucket_name": {
+		"default":        "rogerberlindexample",
+		"description":    "Name of the bucket to create",
+		"module_address": "",
+		"name":           "bucket_name",
+	},
+	"module.local-s3-bucket.module.s3-bucket:acceleration_status": {
+		"default":        null,
+		"description":    "(Optional) Sets the accelerate configuration of an existing bucket. Can be Enabled or Suspended.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "acceleration_status",
+	},
+	"module.local-s3-bucket.module.s3-bucket:acl": {
+		"default":        "private",
+		"description":    "(Optional) The canned ACL to apply. Defaults to 'private'. Conflicts with `grant`",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "acl",
+	},
+	"module.local-s3-bucket.module.s3-bucket:attach_elb_log_delivery_policy": {
+		"default":        false,
+		"description":    "Controls if S3 bucket should have ELB log delivery policy attached",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "attach_elb_log_delivery_policy",
+	},
+	"module.local-s3-bucket.module.s3-bucket:attach_policy": {
+		"default":        false,
+		"description":    "Controls if S3 bucket should have bucket policy attached (set to `true` to use value of `policy` as bucket policy)",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "attach_policy",
+	},
+	"module.local-s3-bucket.module.s3-bucket:attach_public_policy": {
+		"default":        true,
+		"description":    "Controls if a user defined public bucket policy will be attached (set to `false` to allow upstream to apply defaults to the bucket)",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "attach_public_policy",
+	},
+	"module.local-s3-bucket.module.s3-bucket:block_public_acls": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should block public ACLs for this bucket.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "block_public_acls",
+	},
+	"module.local-s3-bucket.module.s3-bucket:block_public_policy": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should block public bucket policies for this bucket.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "block_public_policy",
+	},
+	"module.local-s3-bucket.module.s3-bucket:bucket": {
+		"default":        null,
+		"description":    "(Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "bucket",
+	},
+	"module.local-s3-bucket.module.s3-bucket:bucket_prefix": {
+		"default":        null,
+		"description":    "(Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "bucket_prefix",
+	},
+	"module.local-s3-bucket.module.s3-bucket:cors_rule": {
+		"default":        [],
+		"description":    "List of maps containing rules for Cross-Origin Resource Sharing.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "cors_rule",
+	},
+	"module.local-s3-bucket.module.s3-bucket:create_bucket": {
+		"default":        true,
+		"description":    "Controls if S3 bucket should be created",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "create_bucket",
+	},
+	"module.local-s3-bucket.module.s3-bucket:force_destroy": {
+		"default":        false,
+		"description":    "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "force_destroy",
+	},
+	"module.local-s3-bucket.module.s3-bucket:grant": {
+		"default":        [],
+		"description":    "An ACL policy grant. Conflicts with `acl`",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "grant",
+	},
+	"module.local-s3-bucket.module.s3-bucket:ignore_public_acls": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should ignore public ACLs for this bucket.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "ignore_public_acls",
+	},
+	"module.local-s3-bucket.module.s3-bucket:lifecycle_rule": {
+		"default":        [],
+		"description":    "List of maps containing configuration of object lifecycle management.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "lifecycle_rule",
+	},
+	"module.local-s3-bucket.module.s3-bucket:logging": {
+		"default":        {},
+		"description":    "Map containing access bucket logging configuration.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "logging",
+	},
+	"module.local-s3-bucket.module.s3-bucket:object_lock_configuration": {
+		"default":        {},
+		"description":    "Map containing S3 object locking configuration.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "object_lock_configuration",
+	},
+	"module.local-s3-bucket.module.s3-bucket:policy": {
+		"default":        null,
+		"description":    "(Optional) A valid bucket policy JSON document. Note that if the policy document is not specific enough (but still valid), Terraform may view the policy as constantly changing in a terraform plan. In this case, please make sure you use the verbose/specific version of the policy. For more information about building AWS IAM policy documents with Terraform, see the AWS IAM Policy Document Guide.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "policy",
+	},
+	"module.local-s3-bucket.module.s3-bucket:replication_configuration": {
+		"default":        {},
+		"description":    "Map containing cross-region replication configuration.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "replication_configuration",
+	},
+	"module.local-s3-bucket.module.s3-bucket:request_payer": {
+		"default":        null,
+		"description":    "(Optional) Specifies who should bear the cost of Amazon S3 data transfer. Can be either BucketOwner or Requester. By default, the owner of the S3 bucket would incur the costs of any data transfer. See Requester Pays Buckets developer guide for more information.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "request_payer",
+	},
+	"module.local-s3-bucket.module.s3-bucket:restrict_public_buckets": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should restrict public bucket policies for this bucket.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "restrict_public_buckets",
+	},
+	"module.local-s3-bucket.module.s3-bucket:server_side_encryption_configuration": {
+		"default":        {},
+		"description":    "Map containing server-side encryption configuration.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "server_side_encryption_configuration",
+	},
+	"module.local-s3-bucket.module.s3-bucket:tags": {
+		"default":        {},
+		"description":    "(Optional) A mapping of tags to assign to the bucket.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "tags",
+	},
+	"module.local-s3-bucket.module.s3-bucket:versioning": {
+		"default":        {},
+		"description":    "Map containing versioning configuration.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "versioning",
+	},
+	"module.local-s3-bucket.module.s3-bucket:website": {
+		"default":        {},
+		"description":    "Map containing static web-site hosting or redirect configuration.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "website",
+	},
+	"module.s3-bucket-notification:bucket": {
+		"default":        "",
+		"description":    "Name of S3 bucket to use",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "bucket",
+	},
+	"module.s3-bucket-notification:bucket_arn": {
+		"default":        null,
+		"description":    "ARN of S3 bucket to use in policies",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "bucket_arn",
+	},
+	"module.s3-bucket-notification:create": {
+		"default":        true,
+		"description":    "Whether to create this resource or not?",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "create",
+	},
+	"module.s3-bucket-notification:lambda_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to Lambda function",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "lambda_notifications",
+	},
+	"module.s3-bucket-notification:sns_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to SNS topic",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "sns_notifications",
+	},
+	"module.s3-bucket-notification:sqs_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to SQS queue",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "sqs_notifications",
+	},
+	"module.s3-bucket:acceleration_status": {
+		"default":        null,
+		"description":    "(Optional) Sets the accelerate configuration of an existing bucket. Can be Enabled or Suspended.",
+		"module_address": "module.s3-bucket",
+		"name":           "acceleration_status",
+	},
+	"module.s3-bucket:acl": {
+		"default":        "private",
+		"description":    "(Optional) The canned ACL to apply. Defaults to 'private'. Conflicts with `grant`",
+		"module_address": "module.s3-bucket",
+		"name":           "acl",
+	},
+	"module.s3-bucket:attach_elb_log_delivery_policy": {
+		"default":        false,
+		"description":    "Controls if S3 bucket should have ELB log delivery policy attached",
+		"module_address": "module.s3-bucket",
+		"name":           "attach_elb_log_delivery_policy",
+	},
+	"module.s3-bucket:attach_policy": {
+		"default":        false,
+		"description":    "Controls if S3 bucket should have bucket policy attached (set to `true` to use value of `policy` as bucket policy)",
+		"module_address": "module.s3-bucket",
+		"name":           "attach_policy",
+	},
+	"module.s3-bucket:attach_public_policy": {
+		"default":        true,
+		"description":    "Controls if a user defined public bucket policy will be attached (set to `false` to allow upstream to apply defaults to the bucket)",
+		"module_address": "module.s3-bucket",
+		"name":           "attach_public_policy",
+	},
+	"module.s3-bucket:block_public_acls": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should block public ACLs for this bucket.",
+		"module_address": "module.s3-bucket",
+		"name":           "block_public_acls",
+	},
+	"module.s3-bucket:block_public_policy": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should block public bucket policies for this bucket.",
+		"module_address": "module.s3-bucket",
+		"name":           "block_public_policy",
+	},
+	"module.s3-bucket:bucket": {
+		"default":        null,
+		"description":    "(Optional, Forces new resource) The name of the bucket. If omitted, Terraform will assign a random, unique name.",
+		"module_address": "module.s3-bucket",
+		"name":           "bucket",
+	},
+	"module.s3-bucket:bucket_prefix": {
+		"default":        null,
+		"description":    "(Optional, Forces new resource) Creates a unique bucket name beginning with the specified prefix. Conflicts with bucket.",
+		"module_address": "module.s3-bucket",
+		"name":           "bucket_prefix",
+	},
+	"module.s3-bucket:cors_rule": {
+		"default":        [],
+		"description":    "List of maps containing rules for Cross-Origin Resource Sharing.",
+		"module_address": "module.s3-bucket",
+		"name":           "cors_rule",
+	},
+	"module.s3-bucket:create_bucket": {
+		"default":        true,
+		"description":    "Controls if S3 bucket should be created",
+		"module_address": "module.s3-bucket",
+		"name":           "create_bucket",
+	},
+	"module.s3-bucket:force_destroy": {
+		"default":        false,
+		"description":    "(Optional, Default:false ) A boolean that indicates all objects should be deleted from the bucket so that the bucket can be destroyed without error. These objects are not recoverable.",
+		"module_address": "module.s3-bucket",
+		"name":           "force_destroy",
+	},
+	"module.s3-bucket:grant": {
+		"default":        [],
+		"description":    "An ACL policy grant. Conflicts with `acl`",
+		"module_address": "module.s3-bucket",
+		"name":           "grant",
+	},
+	"module.s3-bucket:ignore_public_acls": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should ignore public ACLs for this bucket.",
+		"module_address": "module.s3-bucket",
+		"name":           "ignore_public_acls",
+	},
+	"module.s3-bucket:lifecycle_rule": {
+		"default":        [],
+		"description":    "List of maps containing configuration of object lifecycle management.",
+		"module_address": "module.s3-bucket",
+		"name":           "lifecycle_rule",
+	},
+	"module.s3-bucket:logging": {
+		"default":        {},
+		"description":    "Map containing access bucket logging configuration.",
+		"module_address": "module.s3-bucket",
+		"name":           "logging",
+	},
+	"module.s3-bucket:object_lock_configuration": {
+		"default":        {},
+		"description":    "Map containing S3 object locking configuration.",
+		"module_address": "module.s3-bucket",
+		"name":           "object_lock_configuration",
+	},
+	"module.s3-bucket:policy": {
+		"default":        null,
+		"description":    "(Optional) A valid bucket policy JSON document. Note that if the policy document is not specific enough (but still valid), Terraform may view the policy as constantly changing in a terraform plan. In this case, please make sure you use the verbose/specific version of the policy. For more information about building AWS IAM policy documents with Terraform, see the AWS IAM Policy Document Guide.",
+		"module_address": "module.s3-bucket",
+		"name":           "policy",
+	},
+	"module.s3-bucket:replication_configuration": {
+		"default":        {},
+		"description":    "Map containing cross-region replication configuration.",
+		"module_address": "module.s3-bucket",
+		"name":           "replication_configuration",
+	},
+	"module.s3-bucket:request_payer": {
+		"default":        null,
+		"description":    "(Optional) Specifies who should bear the cost of Amazon S3 data transfer. Can be either BucketOwner or Requester. By default, the owner of the S3 bucket would incur the costs of any data transfer. See Requester Pays Buckets developer guide for more information.",
+		"module_address": "module.s3-bucket",
+		"name":           "request_payer",
+	},
+	"module.s3-bucket:restrict_public_buckets": {
+		"default":        false,
+		"description":    "Whether Amazon S3 should restrict public bucket policies for this bucket.",
+		"module_address": "module.s3-bucket",
+		"name":           "restrict_public_buckets",
+	},
+	"module.s3-bucket:server_side_encryption_configuration": {
+		"default":        {},
+		"description":    "Map containing server-side encryption configuration.",
+		"module_address": "module.s3-bucket",
+		"name":           "server_side_encryption_configuration",
+	},
+	"module.s3-bucket:tags": {
+		"default":        {},
+		"description":    "(Optional) A mapping of tags to assign to the bucket.",
+		"module_address": "module.s3-bucket",
+		"name":           "tags",
+	},
+	"module.s3-bucket:versioning": {
+		"default":        {},
+		"description":    "Map containing versioning configuration.",
+		"module_address": "module.s3-bucket",
+		"name":           "versioning",
+	},
+	"module.s3-bucket:website": {
+		"default":        {},
+		"description":    "Map containing static web-site hosting or redirect configuration.",
+		"module_address": "module.s3-bucket",
+		"name":           "website",
+	},
+}
+
+outputs = {
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the bucket. Will be of format arn:aws:s3:::bucketname.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_bucket_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket domain name. Will be of format bucketname.s3.amazonaws.com.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_bucket_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_bucket_regional_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket region-specific domain name. The bucket domain name including the region name, please refer here for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent redirect issues from CloudFront to S3 Origin URL.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_bucket_regional_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_hosted_zone_id": {
+		"depends_on":     [],
+		"description":    "The Route 53 Hosted Zone ID for this bucket's region.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_hosted_zone_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_id": {
+		"depends_on":     [],
+		"description":    "The name of the bucket.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket_policy.this",
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_region": {
+		"depends_on":     [],
+		"description":    "The AWS region this bucket resides in.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_region",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_website_domain": {
+		"depends_on":     [],
+		"description":    "The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records. ",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_website_domain",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.local-s3-bucket.module.s3-bucket:this_s3_bucket_website_endpoint": {
+		"depends_on":     [],
+		"description":    "The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.",
+		"module_address": "module.local-s3-bucket.module.s3-bucket",
+		"name":           "this_s3_bucket_website_endpoint",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket-notification:this_s3_bucket_notification_id": {
+		"depends_on":     [],
+		"description":    "ID of S3 bucket",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_notification_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket_notification.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_arn": {
+		"depends_on":     [],
+		"description":    "The ARN of the bucket. Will be of format arn:aws:s3:::bucketname.",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_arn",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_bucket_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket domain name. Will be of format bucketname.s3.amazonaws.com.",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_bucket_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_bucket_regional_domain_name": {
+		"depends_on":     [],
+		"description":    "The bucket region-specific domain name. The bucket domain name including the region name, please refer here for format. Note: The AWS CloudFront allows specifying S3 region-specific endpoint when creating S3 origin, it will prevent redirect issues from CloudFront to S3 Origin URL.",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_bucket_regional_domain_name",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_hosted_zone_id": {
+		"depends_on":     [],
+		"description":    "The Route 53 Hosted Zone ID for this bucket's region.",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_hosted_zone_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_id": {
+		"depends_on":     [],
+		"description":    "The name of the bucket.",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket_policy.this",
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_region": {
+		"depends_on":     [],
+		"description":    "The AWS region this bucket resides in.",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_region",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_website_domain": {
+		"depends_on":     [],
+		"description":    "The domain of the website endpoint, if the bucket is configured with a website. If not, this will be an empty string. This is used to create Route 53 alias records. ",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_website_domain",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+	"module.s3-bucket:this_s3_bucket_website_endpoint": {
+		"depends_on":     [],
+		"description":    "The website endpoint, if the bucket is configured with a website. If not, this will be an empty string.",
+		"module_address": "module.s3-bucket",
+		"name":           "this_s3_bucket_website_endpoint",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket.this",
+			],
+		},
+	},
+}
+
+module_calls = {
+	"s3-bucket-notification": {
+		"config": {
+			"bucket": {
+				"references": [
+					"aws_s3_bucket.example",
+				],
+			},
+			"bucket_arn": {
+				"references": [
+					"aws_s3_bucket.example",
+				],
+			},
+		},
+		"count":              {},
+		"depends_on":         [],
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "s3-bucket-notification",
+		"source":             "app.terraform.io/Operations/s3-bucket/aws//modules/notification",
+		"version_constraint": "1.15.0",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

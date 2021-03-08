@@ -18,405 +18,288 @@ providers = {
 }
 
 resources = {
-	"module.local-s3-bucket.module.s3-bucket.aws_s3_bucket.this": {
-		"address": "module.local-s3-bucket.module.s3-bucket.aws_s3_bucket.this",
+	"module.s3-bucket-notification.aws_lambda_permission.allow": {
+		"address": "module.s3-bucket-notification.aws_lambda_permission.allow",
 		"config": {
-			"acceleration_status": {
+			"action": {
+				"constant_value": "lambda:InvokeFunction",
+			},
+			"function_name": {
 				"references": [
-					"var.acceleration_status",
+					"each.value",
 				],
 			},
-			"acl": {
+			"principal": {
+				"constant_value": "s3.amazonaws.com",
+			},
+			"qualifier": {
 				"references": [
-					"var.acl",
+					"each.value",
 				],
 			},
+			"source_arn": {
+				"references": [
+					"local.bucket_arn",
+				],
+			},
+			"statement_id_prefix": {
+				"constant_value": "AllowLambdaS3BucketNotification-",
+			},
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
+			"references": [
+				"var.lambda_notifications",
+			],
+		},
+		"mode":                "managed",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "allow",
+		"provider_config_key": "module.s3-bucket-notification:aws",
+		"provisioners":        [],
+		"type":                "aws_lambda_permission",
+	},
+	"module.s3-bucket-notification.aws_s3_bucket_notification.this": {
+		"address": "module.s3-bucket-notification.aws_s3_bucket_notification.this",
+		"config": {
 			"bucket": {
 				"references": [
 					"var.bucket",
 				],
 			},
-			"bucket_prefix": {
-				"references": [
-					"var.bucket_prefix",
-				],
-			},
-			"force_destroy": {
-				"references": [
-					"var.force_destroy",
-				],
-			},
-			"request_payer": {
-				"references": [
-					"var.request_payer",
-				],
-			},
-			"tags": {
-				"references": [
-					"var.tags",
-				],
-			},
 		},
 		"count": {
 			"references": [
-				"var.create_bucket",
+				"var.create",
+				"var.lambda_notifications",
+				"var.sqs_notifications",
+				"var.sns_notifications",
 			],
 		},
-		"depends_on":          [],
+		"depends_on": [
+			"aws_lambda_permission.allow",
+			"aws_sqs_queue_policy.allow",
+			"aws_sns_topic_policy.allow",
+		],
 		"for_each":            {},
 		"mode":                "managed",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
+		"module_address":      "module.s3-bucket-notification",
 		"name":                "this",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
+		"provider_config_key": "module.s3-bucket-notification:aws",
 		"provisioners":        [],
-		"type":                "aws_s3_bucket",
+		"type":                "aws_s3_bucket_notification",
 	},
-	"module.local-s3-bucket.module.s3-bucket.aws_s3_bucket_policy.this": {
-		"address": "module.local-s3-bucket.module.s3-bucket.aws_s3_bucket_policy.this",
+	"module.s3-bucket-notification.aws_sns_topic_policy.allow": {
+		"address": "module.s3-bucket-notification.aws_sns_topic_policy.allow",
 		"config": {
-			"bucket": {
+			"arn": {
 				"references": [
-					"aws_s3_bucket.this[0]",
+					"each.value",
 				],
 			},
 			"policy": {
 				"references": [
-					"var.attach_elb_log_delivery_policy",
-					"data.aws_iam_policy_document.elb_log_delivery[0]",
-					"var.policy",
+					"data.aws_iam_policy_document.sns",
+					"each.key",
 				],
 			},
 		},
-		"count": {
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
 			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
-				"var.attach_policy",
+				"var.sns_notifications",
 			],
 		},
-		"depends_on":          [],
-		"for_each":            {},
 		"mode":                "managed",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "allow",
+		"provider_config_key": "module.s3-bucket-notification:aws",
 		"provisioners":        [],
-		"type":                "aws_s3_bucket_policy",
+		"type":                "aws_sns_topic_policy",
 	},
-	"module.local-s3-bucket.module.s3-bucket.aws_s3_bucket_public_access_block.this": {
-		"address": "module.local-s3-bucket.module.s3-bucket.aws_s3_bucket_public_access_block.this",
+	"module.s3-bucket-notification.aws_sqs_queue_policy.allow": {
+		"address": "module.s3-bucket-notification.aws_sqs_queue_policy.allow",
 		"config": {
-			"block_public_acls": {
+			"policy": {
 				"references": [
-					"var.block_public_acls",
+					"data.aws_iam_policy_document.sqs",
+					"each.key",
 				],
 			},
-			"block_public_policy": {
+			"queue_url": {
 				"references": [
-					"var.block_public_policy",
-				],
-			},
-			"bucket": {
-				"references": [
-					"var.attach_elb_log_delivery_policy",
-					"var.attach_policy",
-					"aws_s3_bucket_policy.this[0]",
-					"aws_s3_bucket.this[0]",
-				],
-			},
-			"ignore_public_acls": {
-				"references": [
-					"var.ignore_public_acls",
-				],
-			},
-			"restrict_public_buckets": {
-				"references": [
-					"var.restrict_public_buckets",
+					"each.value",
+					"local.queue_ids",
+					"each.key",
 				],
 			},
 		},
-		"count": {
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
 			"references": [
-				"var.create_bucket",
-				"var.attach_public_policy",
+				"var.sqs_notifications",
 			],
 		},
-		"depends_on":          [],
-		"for_each":            {},
 		"mode":                "managed",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "allow",
+		"provider_config_key": "module.s3-bucket-notification:aws",
 		"provisioners":        [],
-		"type":                "aws_s3_bucket_public_access_block",
+		"type":                "aws_sqs_queue_policy",
 	},
-	"module.local-s3-bucket.module.s3-bucket.data.aws_elb_service_account.this": {
-		"address": "module.local-s3-bucket.module.s3-bucket.data.aws_elb_service_account.this",
-		"config":  {},
-		"count": {
+	"module.s3-bucket-notification.data.aws_arn.queue": {
+		"address": "module.s3-bucket-notification.data.aws_arn.queue",
+		"config": {
+			"arn": {
+				"references": [
+					"each.value",
+				],
+			},
+		},
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
 			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
+				"var.sqs_notifications",
 			],
 		},
-		"depends_on":          [],
-		"for_each":            {},
 		"mode":                "data",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "queue",
+		"provider_config_key": "module.s3-bucket-notification:aws",
 		"provisioners":        [],
-		"type":                "aws_elb_service_account",
+		"type":                "aws_arn",
 	},
-	"module.local-s3-bucket.module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery": {
-		"address": "module.local-s3-bucket.module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery",
+	"module.s3-bucket-notification.data.aws_iam_policy_document.sns": {
+		"address": "module.s3-bucket-notification.data.aws_iam_policy_document.sns",
 		"config": {
 			"statement": [
 				{
 					"actions": {
 						"constant_value": [
-							"s3:PutObject",
+							"sns:Publish",
 						],
 					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "ArnEquals",
+							},
+							"values": {
+								"references": [
+									"local.bucket_arn",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SourceArn",
+							},
+						},
+					],
 					"effect": {
 						"constant_value": "Allow",
 					},
 					"principals": [
 						{
 							"identifiers": {
-								"references": [
-									"data.aws_elb_service_account.this",
+								"constant_value": [
+									"s3.amazonaws.com",
 								],
 							},
 							"type": {
-								"constant_value": "AWS",
+								"constant_value": "Service",
 							},
 						},
 					],
 					"resources": {
 						"references": [
-							"aws_s3_bucket.this[0]",
+							"each.value",
 						],
 					},
 					"sid": {
-						"constant_value": "",
+						"constant_value": "AllowSNSS3BucketNotification",
 					},
 				},
 			],
 		},
-		"count": {
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
 			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
+				"var.sns_notifications",
 			],
 		},
-		"depends_on":          [],
-		"for_each":            {},
 		"mode":                "data",
-		"module_address":      "module.local-s3-bucket.module.s3-bucket",
-		"name":                "elb_log_delivery",
-		"provider_config_key": "module.local-s3-bucket.module.s3-bucket:aws",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "sns",
+		"provider_config_key": "module.s3-bucket-notification:aws",
 		"provisioners":        [],
 		"type":                "aws_iam_policy_document",
 	},
-	"module.s3-bucket.aws_s3_bucket.this": {
-		"address": "module.s3-bucket.aws_s3_bucket.this",
-		"config": {
-			"acceleration_status": {
-				"references": [
-					"var.acceleration_status",
-				],
-			},
-			"acl": {
-				"references": [
-					"var.acl",
-				],
-			},
-			"bucket": {
-				"references": [
-					"var.bucket",
-				],
-			},
-			"bucket_prefix": {
-				"references": [
-					"var.bucket_prefix",
-				],
-			},
-			"force_destroy": {
-				"references": [
-					"var.force_destroy",
-				],
-			},
-			"request_payer": {
-				"references": [
-					"var.request_payer",
-				],
-			},
-			"tags": {
-				"references": [
-					"var.tags",
-				],
-			},
-		},
-		"count": {
-			"references": [
-				"var.create_bucket",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "managed",
-		"module_address":      "module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_s3_bucket",
-	},
-	"module.s3-bucket.aws_s3_bucket_policy.this": {
-		"address": "module.s3-bucket.aws_s3_bucket_policy.this",
-		"config": {
-			"bucket": {
-				"references": [
-					"aws_s3_bucket.this[0]",
-				],
-			},
-			"policy": {
-				"references": [
-					"var.attach_elb_log_delivery_policy",
-					"data.aws_iam_policy_document.elb_log_delivery[0]",
-					"var.policy",
-				],
-			},
-		},
-		"count": {
-			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
-				"var.attach_policy",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "managed",
-		"module_address":      "module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_s3_bucket_policy",
-	},
-	"module.s3-bucket.aws_s3_bucket_public_access_block.this": {
-		"address": "module.s3-bucket.aws_s3_bucket_public_access_block.this",
-		"config": {
-			"block_public_acls": {
-				"references": [
-					"var.block_public_acls",
-				],
-			},
-			"block_public_policy": {
-				"references": [
-					"var.block_public_policy",
-				],
-			},
-			"bucket": {
-				"references": [
-					"var.attach_elb_log_delivery_policy",
-					"var.attach_policy",
-					"aws_s3_bucket_policy.this[0]",
-					"aws_s3_bucket.this[0]",
-				],
-			},
-			"ignore_public_acls": {
-				"references": [
-					"var.ignore_public_acls",
-				],
-			},
-			"restrict_public_buckets": {
-				"references": [
-					"var.restrict_public_buckets",
-				],
-			},
-		},
-		"count": {
-			"references": [
-				"var.create_bucket",
-				"var.attach_public_policy",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "managed",
-		"module_address":      "module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_s3_bucket_public_access_block",
-	},
-	"module.s3-bucket.data.aws_elb_service_account.this": {
-		"address": "module.s3-bucket.data.aws_elb_service_account.this",
-		"config":  {},
-		"count": {
-			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
-			],
-		},
-		"depends_on":          [],
-		"for_each":            {},
-		"mode":                "data",
-		"module_address":      "module.s3-bucket",
-		"name":                "this",
-		"provider_config_key": "module.s3-bucket:aws",
-		"provisioners":        [],
-		"type":                "aws_elb_service_account",
-	},
-	"module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery": {
-		"address": "module.s3-bucket.data.aws_iam_policy_document.elb_log_delivery",
+	"module.s3-bucket-notification.data.aws_iam_policy_document.sqs": {
+		"address": "module.s3-bucket-notification.data.aws_iam_policy_document.sqs",
 		"config": {
 			"statement": [
 				{
 					"actions": {
 						"constant_value": [
-							"s3:PutObject",
+							"sqs:SendMessage",
 						],
 					},
+					"condition": [
+						{
+							"test": {
+								"constant_value": "ArnEquals",
+							},
+							"values": {
+								"references": [
+									"local.bucket_arn",
+								],
+							},
+							"variable": {
+								"constant_value": "aws:SourceArn",
+							},
+						},
+					],
 					"effect": {
 						"constant_value": "Allow",
 					},
 					"principals": [
 						{
 							"identifiers": {
-								"references": [
-									"data.aws_elb_service_account.this",
+								"constant_value": [
+									"s3.amazonaws.com",
 								],
 							},
 							"type": {
-								"constant_value": "AWS",
+								"constant_value": "Service",
 							},
 						},
 					],
 					"resources": {
 						"references": [
-							"aws_s3_bucket.this[0]",
+							"each.value",
 						],
 					},
 					"sid": {
-						"constant_value": "",
+						"constant_value": "AllowSQSS3BucketNotification",
 					},
 				},
 			],
 		},
-		"count": {
+		"count":      {},
+		"depends_on": [],
+		"for_each": {
 			"references": [
-				"var.create_bucket",
-				"var.attach_elb_log_delivery_policy",
+				"var.sqs_notifications",
 			],
 		},
-		"depends_on":          [],
-		"for_each":            {},
 		"mode":                "data",
-		"module_address":      "module.s3-bucket",
-		"name":                "elb_log_delivery",
-		"provider_config_key": "module.s3-bucket:aws",
+		"module_address":      "module.s3-bucket-notification",
+		"name":                "sqs",
+		"provider_config_key": "module.s3-bucket-notification:aws",
 		"provisioners":        [],
 		"type":                "aws_iam_policy_document",
 	},
@@ -586,6 +469,42 @@ variables = {
 		"description":    "Map containing static web-site hosting or redirect configuration.",
 		"module_address": "module.local-s3-bucket.module.s3-bucket",
 		"name":           "website",
+	},
+	"module.s3-bucket-notification:bucket": {
+		"default":        "",
+		"description":    "Name of S3 bucket to use",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "bucket",
+	},
+	"module.s3-bucket-notification:bucket_arn": {
+		"default":        null,
+		"description":    "ARN of S3 bucket to use in policies",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "bucket_arn",
+	},
+	"module.s3-bucket-notification:create": {
+		"default":        true,
+		"description":    "Whether to create this resource or not?",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "create",
+	},
+	"module.s3-bucket-notification:lambda_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to Lambda function",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "lambda_notifications",
+	},
+	"module.s3-bucket-notification:sns_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to SNS topic",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "sns_notifications",
+	},
+	"module.s3-bucket-notification:sqs_notifications": {
+		"default":        {},
+		"description":    "Map of S3 bucket notifications to SQS queue",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "sqs_notifications",
 	},
 	"module.s3-bucket:acceleration_status": {
 		"default":        null,
@@ -837,6 +756,18 @@ outputs = {
 			],
 		},
 	},
+	"module.s3-bucket-notification:this_s3_bucket_notification_id": {
+		"depends_on":     [],
+		"description":    "ID of S3 bucket",
+		"module_address": "module.s3-bucket-notification",
+		"name":           "this_s3_bucket_notification_id",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_s3_bucket_notification.this",
+			],
+		},
+	},
 	"module.s3-bucket:this_s3_bucket_arn": {
 		"depends_on":     [],
 		"description":    "The ARN of the bucket. Will be of format arn:aws:s3:::bucketname.",
@@ -937,42 +868,25 @@ outputs = {
 }
 
 module_calls = {
-	"local-s3-bucket": {
-		"config":             {},
-		"count":              {},
-		"depends_on":         [],
-		"for_each":           {},
-		"module_address":     "",
-		"name":               "local-s3-bucket",
-		"source":             "./module",
-		"version_constraint": "",
-	},
-	"module.local-s3-bucket:s3-bucket": {
+	"s3-bucket-notification": {
 		"config": {
 			"bucket": {
-				"constant_value": "roger-from-pmr-module-nested",
+				"references": [
+					"aws_s3_bucket.example",
+				],
 			},
-		},
-		"count":              {},
-		"depends_on":         [],
-		"for_each":           {},
-		"module_address":     "module.local-s3-bucket",
-		"name":               "s3-bucket",
-		"source":             "app.terraform.io/Cloud-Operations/s3-bucket/aws",
-		"version_constraint": "1.15.0",
-	},
-	"s3-bucket": {
-		"config": {
-			"bucket": {
-				"constant_value": "roger-from-pmr-module",
+			"bucket_arn": {
+				"references": [
+					"aws_s3_bucket.example",
+				],
 			},
 		},
 		"count":              {},
 		"depends_on":         [],
 		"for_each":           {},
 		"module_address":     "",
-		"name":               "s3-bucket",
-		"source":             "app.terraform.io/Cloud-Operations/s3-bucket/aws",
+		"name":               "s3-bucket-notification",
+		"source":             "app.terraform.io/Cloud-Operations/s3-bucket/aws//modules/notification",
 		"version_constraint": "1.15.0",
 	},
 }

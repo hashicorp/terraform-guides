@@ -535,3 +535,65 @@ get_module_source = func(module_address) {
     return module_source
   }
 }
+
+### get_ancestor_module_source ###
+# Get the module source of the first ancestor module from a module address that
+# is not a local module (one having source starting with "./" or "../").
+# Note that the module_address in many collections in the tfplan/v2, tfconfig/v2,
+# and tfstate/v2 imports gives the labels used in the module blocks.
+# For instance, a module_address like "module.A.module.B" means that the current
+# item is in a module with label "B" that is a module with label "A". But that
+# does not give you the source the module labeled "B".
+# But if you want to limit creation of resources to specific modules based on
+# their source, you need the module source.  This function computes it for
+# the first ancestor module that is not a local module.
+get_ancestor_module_source = func(module_address) {
+  # Check for root module
+  if module_address is "" {
+    return "root"
+  } else {
+    # Find parent module
+    module_segments = strings.split(module_address, ".")
+    num_segments = length(module_segments)
+    parent_module = strings.join(module_segments[0:num_segments-2], ".")
+    current_module_name = module_segments[num_segments-1]
+
+    # Find module call that called current module
+    if parent_module is "" {
+      # parent module is root module
+      mc = tfconfig.module_calls[current_module_name]
+    } else {
+      # parent module is not root module
+      mc = tfconfig.module_calls[parent_module + ":" + current_module_name]
+    }
+
+    # Set source from the module call
+    module_source = mc.source
+
+    # Check to see if current module source is a nested module
+    if strings.has_prefix(module_source, "./") or strings.has_prefix(module_source, "../") {
+      return get_ancestor_module_source(parent_module)
+    } else {
+      return module_source
+    }
+
+  }
+}
+
+### get_parent_module_address ###
+# Get the address of the parent module of a module from the module address
+# return "root" if the given module_address is "" (the root module).
+get_parent_module_address = func(module_address) {
+  # Check for root module
+  if module_address is "" {
+    return "root"
+  } else {
+    # Find parent module
+    module_segments = strings.split(module_address, ".")
+    num_segments = length(module_segments)
+    parent_module = strings.join(module_segments[0:num_segments-2], ".")
+    current_module_name = module_segments[num_segments-1]
+
+    return parent_module
+  }
+}

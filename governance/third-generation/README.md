@@ -92,7 +92,9 @@ The `tfconfig-functions` module has several types of functions:
     * `items`: a map consisting of items that violate a condition.
     * `messages`: a map of violation messages associated with the items.
   * The same `to_string` and `print_violations` functions that are in the tfplan-functions module.
-  * A `get_module_source` function that computes the source of a module from its address. This is used in the [restrict-resources-by-module-source.sentinel](./cloud-agnostic/restrict-resources-by-module-source.sentinel) policy to restrict creation of resources based on the actual module sources.
+  * A `get_module_source` function that computes the source of a module from its address.
+  * A `get_ancestor_module_source` function that computes the source of the first ancestor module that is not a local module of a module from its address. This is used in the [restrict-resources-by-module-source.sentinel](./cloud-agnostic/restrict-resources-by-module-source.sentinel) policy to restrict creation of resources based on the actual module sources.
+  * A `get_parent_module_address` function that computes the address of the parent module of a module from its address.
 
 Documentation for each individual function can be found in this directory:
   * [tfconfig-functions](./common-functions/tfconfig-functions/docs)
