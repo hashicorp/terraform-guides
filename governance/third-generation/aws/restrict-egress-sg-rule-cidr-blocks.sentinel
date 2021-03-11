@@ -17,9 +17,10 @@ forbidden_cidrs = ["0.0.0.0/0"]
 # Get all Security Group Egress Rules
 SGEgressRules = filter tfplan.resource_changes as address, rc {
   rc.type is "aws_security_group_rule" and
-  rc.mode is "managed" and rc.change.after.type is "egress" and
+  rc.mode is "managed" and
   (rc.change.actions contains "create" or rc.change.actions contains "update" or
-   rc.change.actions contains "read" or rc.change.actions contains "no-op")
+   rc.change.actions contains "read" or rc.change.actions contains "no-op") and
+  rc.change.after.type is "egress"
 }
 
 # Filter to Egress Security Group Rules with violations
