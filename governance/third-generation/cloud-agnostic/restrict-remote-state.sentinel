@@ -11,7 +11,9 @@
 # could echo the remote state to outputs and see it in the log of their plan.
 # They could also use the external and http data sources (if not banned by
 # another Sentinel policy) to send the remote state data to and external API
-# endpoint.
+# endpoint. The Terraform Cloud team is working on enhancements to TFC's
+# RBAC system that will better secure and control remote state access. So, please
+# only consider this policy a stop-gap until that enhancement is released.
 
 # Import common-functions/tfstate-functions/tfstate-functions.sentinel
 # with alias "state"
