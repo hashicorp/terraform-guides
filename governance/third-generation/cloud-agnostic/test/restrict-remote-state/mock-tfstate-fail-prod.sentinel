@@ -19,14 +19,14 @@ outputs = {
 }
 
 resources = {
-	"terraform_remote_state.pets": {
-		"address":        "terraform_remote_state.pets",
+	"terraform_remote_state.ec2-prod": {
+		"address":        "terraform_remote_state.ec2-prod",
 		"depends_on":     [],
 		"deposed_key":    "",
 		"index":          null,
 		"mode":           "data",
 		"module_address": "",
-		"name":           "pets",
+		"name":           "ec2-prod",
 		"provider_name":  "terraform.io/builtin/terraform",
 		"tainted":        false,
 		"type":           "terraform_remote_state",
