@@ -4,6 +4,14 @@
 # prefixes and suffixes of names of workspaces that want to read remote state
 # and specific workspaces from which they can read it.
 
+# IMPORTANT CAVEAT: Since this policy would be run AFTER the `terraform plan`
+# has already been run, it can really only be used to report violations of
+# remote state access. It does not fully address the security concern of
+# preventing exfiltration of remote state. In particular, a Terraform developer
+# could echo the remote state to outputs and see it in the log of their plan.
+# They could also use the external and http data sources (if not banned by
+# another Sentinel policy) to send the remote state data to and external API
+# endpoint.
 
 # Import common-functions/tfstate-functions/tfstate-functions.sentinel
 # with alias "state"
