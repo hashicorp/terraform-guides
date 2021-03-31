@@ -1,0 +1,50 @@
+terraform_version = "0.14.6"
+
+outputs = {
+	"pet_1": {
+		"name":      "pet_1",
+		"sensitive": false,
+		"value":     "probable-opossum",
+	},
+	"pet_2": {
+		"name":      "pet_2",
+		"sensitive": false,
+		"value":     "skilled-macaque",
+	},
+	"pet_3": {
+		"name":      "pet_3",
+		"sensitive": false,
+		"value":     "correct-labrador",
+	},
+}
+
+resources = {
+	"terraform_remote_state.ec2-prod": {
+		"address":        "terraform_remote_state.ec2-prod",
+		"depends_on":     [],
+		"deposed_key":    "",
+		"index":          null,
+		"mode":           "data",
+		"module_address": "",
+		"name":           "ec2-prod",
+		"provider_name":  "terraform.io/builtin/terraform",
+		"tainted":        false,
+		"type":           "terraform_remote_state",
+		"values": {
+			"backend": "remote",
+			"config": {
+				"organization": "Cloud-Operations",
+				"workspaces": {
+					"name": "s3-qa",
+				},
+			},
+			"defaults": null,
+			"outputs": {
+				"pet_1": "probable-opossum",
+				"pet_2": "skilled-macaque",
+				"pet_3": "correct-labrador",
+			},
+			"workspace": null,
+		},
+	},
+}
