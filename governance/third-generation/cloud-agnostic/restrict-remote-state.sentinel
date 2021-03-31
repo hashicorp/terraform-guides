@@ -1,0 +1,66 @@
+# This policy uses the Sentinel tfstate import to restrict the
+# workspaces from which remote state can be retrieved using the
+# terraform_remote_state data source. It provides a map between
+# substrings of names of workspaces that want to read remote state
+# and specific workspaces from which they can read it.
+
+
+# Import common-functions/tfstate-functions/tfstate-functions.sentinel
+# with alias "state"
+import "tfstate-functions" as state
+
+# Use standard tfrun import
+import "tfrun"
+
+# workspace mapping
+# We use "invalid-workspace-name" to represent workspaces with names that do not
+# match any of the allowed workspace naming patterns. These workspace names are
+# allowed, but the workspaces with these names are not allowed to access remote
+# state.
+param allowed_workspaces default {
+  "dev": ["vpc-dev", "s3-dev", "sec-group-dev"],
+  "qa": ["vpc-qa", "s3-qa", "sec-group-qa"],
+  "prod": ["vpc-prod", "s3-prod", "sec-group-prod"],
+  "invalid-workspace-name": [],
+}
+
+# Get workspace name
+workspace_name = tfrun.workspace.name
+# print("workspace_name:", workspace_name)
+
+# Determine environment of workspace name
+# If workspace does not start or end with "dev", "qa", or "prod", then set it
+# to "invalid-workspace-name"
+workspace_env = ""
+case {
+  when workspace_name matches "^(.+)-dev$" or workspace_name matches "^dev-(.+)$":
+    workspace_env = "dev"
+  when workspace_name matches "^(.+)-qa$" or workspace_name matches "^qa-(.+)$":
+    workspace_env = "qa"
+  when workspace_name matches "^(.+)-prod$" or workspace_name matches "^prod-(.+)$":
+    workspace_env = "prod"
+  else:
+    workspace_env = "invalid-workspace-name"
+}
+
+# Find instances of remote state data sources
+remoteStates = state.find_datasources("terraform_remote_state")
+
+# Filter remote state data sources
+violatingRemoteStates = state.filter_attribute_not_in_list(remoteStates,
+                        "config.workspaces.name",
+                        allowed_workspaces[workspace_env], false)
+
+# Determine if there are any violations
+validated = true
+if length(violatingRemoteStates["messages"]) is not 0 {
+  validated = false
+  print("This workspace tried to access remote state from workspaces",
+        "it is not allowed to access.")
+  state.print_violations(violatingRemoteStates["messages"], "Data source")
+}
+
+# Main rule
+main = rule {
+  validated
+}

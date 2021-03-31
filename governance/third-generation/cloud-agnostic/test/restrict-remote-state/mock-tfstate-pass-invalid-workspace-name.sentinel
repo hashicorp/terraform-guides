@@ -1,0 +1,22 @@
+terraform_version = "0.14.6"
+
+outputs = {
+	"pet_1": {
+		"name":      "pet_1",
+		"sensitive": false,
+		"value":     "probable-opossum",
+	},
+	"pet_2": {
+		"name":      "pet_2",
+		"sensitive": false,
+		"value":     "skilled-macaque",
+	},
+	"pet_3": {
+		"name":      "pet_3",
+		"sensitive": false,
+		"value":     "correct-labrador",
+	},
+}
+
+resources = {
+}

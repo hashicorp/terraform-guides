@@ -1,0 +1,29 @@
+id = "run-eeixcn9i6fMbrEHH"
+created_at = "2021-03-30T23:50:03.418Z"
+message = "Queued manually using Terraform"
+commit_sha = undefined
+speculative = false
+is_destroy = false
+target_addrs = null
+
+variables = {}
+
+organization = {
+	"name": "Cloud-Operations",
+}
+
+workspace = {
+	"auto_apply":        false,
+	"created_at":        "2021-03-30T23:41:19.904Z",
+	"description":       "Test terraform_remote_state data source against test-randoms",
+	"id":                "ws-cmUjz7ZoDVX4PG51",
+	"name":              "ec2-prod",
+	"vcs_repo":          null,
+	"working_directory": "",
+}
+
+cost_estimate = {
+	"delta_monthly_cost":    "0.0",
+	"prior_monthly_cost":    "0.0",
+	"proposed_monthly_cost": "0.0",
+}
