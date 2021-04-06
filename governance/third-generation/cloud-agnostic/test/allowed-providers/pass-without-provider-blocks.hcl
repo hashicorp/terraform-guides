@@ -4,12 +4,12 @@ module "tfconfig-functions" {
 
 mock "tfconfig/v2" {
   module {
-    source = "mock-tfconfig-fail.sentinel"
+    source = "mock-tfconfig-pass-without-provider-blocks.sentinel"
   }
 }
 
 test {
   rules = {
-    main = false
+    main = true
   }
 }

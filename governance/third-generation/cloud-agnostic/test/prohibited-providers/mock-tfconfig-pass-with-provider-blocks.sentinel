@@ -1,0 +1,268 @@
+import "strings"
+
+providers = {
+	"aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+		},
+		"module_address":      "",
+		"name":                "aws",
+		"provider_config_key": "aws",
+		"version_constraint":  "",
+	},
+	"module.nested:aws": {
+		"alias": "",
+		"config": {
+			"region": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+		},
+		"module_address":      "module.nested",
+		"name":                "aws",
+		"provider_config_key": "module.nested:aws",
+		"version_constraint":  "",
+	},
+	"azurerm": {
+		"alias": "",
+		"config": {
+			"features": {
+				"constant_value": null,
+			},
+		},
+		"module_address":      "",
+		"name":                "azurerm",
+		"provider_config_key": "azurerm",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"aws_instance.ubuntu": {
+		"address": "aws_instance.ubuntu",
+		"config": {
+			"ami": {
+				"references": [
+					"var.ami_id",
+				],
+			},
+			"associate_public_ip_address": {
+				"references": [
+					"var.associate_public_ip_address",
+				],
+			},
+			"availability_zone": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+			"instance_type": {
+				"references": [
+					"var.instance_type",
+				],
+			},
+			"tags": {
+				"references": [
+					"var.name",
+				],
+			},
+		},
+		"count": {
+			"constant_value": 2,
+		},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "ubuntu",
+		"provider_config_key": "aws",
+		"provisioners":        [],
+		"type":                "aws_instance",
+	},
+	"module.nested.aws_instance.ubuntu": {
+		"address": "module.nested.aws_instance.ubuntu",
+		"config": {
+			"ami": {
+				"references": [
+					"var.ami_id",
+				],
+			},
+			"associate_public_ip_address": {
+				"references": [
+					"var.associate_public_ip_address",
+				],
+			},
+			"availability_zone": {
+				"references": [
+					"var.aws_region",
+				],
+			},
+			"instance_type": {
+				"references": [
+					"var.instance_type",
+				],
+			},
+			"tags": {
+				"references": [
+					"var.name",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "module.nested",
+		"name":                "ubuntu",
+		"provider_config_key": "module.nested:aws",
+		"provisioners":        [],
+		"type":                "aws_instance",
+	},
+	"azurerm_resource_group.main": {
+		"address": "azurerm_resource_group.main",
+		"config": {
+			"location": {
+				"constant_value": "East US",
+			},
+			"name": {
+				"references": [
+					"var.prefix",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "main",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_resource_group",
+	},
+}
+
+provisioners = {}
+
+variables = {
+	"ami_id": {
+		"default":        "ami-2e1ef954",
+		"description":    "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image",
+		"module_address": "",
+		"name":           "ami_id",
+	},
+	"associate_public_ip_address": {
+		"default":        true,
+		"description":    "",
+		"module_address": "",
+		"name":           "associate_public_ip_address",
+	},
+	"aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "",
+		"name":           "aws_region",
+	},
+	"instance_type": {
+		"default":        "t2.micro",
+		"description":    "type of EC2 instance to provision.",
+		"module_address": "",
+		"name":           "instance_type",
+	},
+	"module.nested:ami_id": {
+		"default":        "ami-2e1ef954",
+		"description":    "ID of the AMI to provision. Default is Ubuntu 14.04 Base Image",
+		"module_address": "module.nested",
+		"name":           "ami_id",
+	},
+	"module.nested:associate_public_ip_address": {
+		"default":        true,
+		"description":    "",
+		"module_address": "module.nested",
+		"name":           "associate_public_ip_address",
+	},
+	"module.nested:aws_region": {
+		"default":        "us-east-1",
+		"description":    "AWS region",
+		"module_address": "module.nested",
+		"name":           "aws_region",
+	},
+	"module.nested:instance_type": {
+		"default":        "t2.micro",
+		"description":    "type of EC2 instance to provision.",
+		"module_address": "module.nested",
+		"name":           "instance_type",
+	},
+	"module.nested:name": {
+		"default":        "roger-demo-nested",
+		"description":    "name to pass to Name tag",
+		"module_address": "module.nested",
+		"name":           "name",
+	},
+	"name": {
+		"default":        "roger-demo",
+		"description":    "name to pass to Name tag",
+		"module_address": "",
+		"name":           "name",
+	},
+}
+
+outputs = {
+	"module.nested:public_dns": {
+		"depends_on":     [],
+		"description":    "",
+		"module_address": "module.nested",
+		"name":           "public_dns",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_instance.ubuntu",
+			],
+		},
+	},
+	"public_dns": {
+		"depends_on":     [],
+		"description":    "",
+		"module_address": "",
+		"name":           "public_dns",
+		"sensitive":      false,
+		"value": {
+			"references": [
+				"aws_instance.ubuntu",
+			],
+		},
+	},
+}
+
+module_calls = {
+	"nested": {
+		"config": {
+			"instance_type": {
+				"references": [
+					"var.instance_type",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "nested",
+		"source":             "./module",
+		"version_constraint": "",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}
