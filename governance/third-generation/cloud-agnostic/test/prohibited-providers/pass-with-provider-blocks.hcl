@@ -4,7 +4,7 @@ module "tfconfig-functions" {
 
 mock "tfconfig/v2" {
   module {
-    source = "mock-tfconfig-pass.sentinel"
+    source = "mock-tfconfig-pass-with-provider-blocks.sentinel"
   }
 }
 

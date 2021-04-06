@@ -1,51 +1,6 @@
 import "strings"
 
-providers = {
-	"aws": {
-		"alias": "",
-		"config": {
-			"region": {
-				"references": [
-					"var.aws_region",
-				],
-			},
-		},
-		"module_address":      "",
-		"name":                "aws",
-		"provider_config_key": "aws",
-		"version_constraint":  "",
-	},
-	"external": {
-		"alias": "",
-		"config": {},
-		"module_address":      "",
-		"name":                "external",
-		"provider_config_key": "external",
-		"version_constraint":  "",
-	},
-	"module.nested:aws": {
-		"alias": "",
-		"config": {
-			"region": {
-				"references": [
-					"var.aws_region",
-				],
-			},
-		},
-		"module_address":      "module.nested",
-		"name":                "aws",
-		"provider_config_key": "module.nested:aws",
-		"version_constraint":  "",
-	},
-	"module.nested:http.east": {
-		"alias": "east",
-		"config": {},
-		"module_address":      "module.nested",
-		"name":                "http",
-		"provider_config_key": "module.nested:http.east",
-		"version_constraint":  "",
-	},
-}
+providers = {}
 
 resources = {
 	"aws_instance.ubuntu": {
@@ -127,6 +82,85 @@ resources = {
 		"provider_config_key": "module.nested:aws",
 		"provisioners":        [],
 		"type":                "aws_instance",
+	},
+	"azurerm_resource_group.main": {
+		"address": "azurerm_resource_group.main",
+		"config": {
+			"location": {
+				"constant_value": "East US",
+			},
+			"name": {
+				"references": [
+					"var.prefix",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "main",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_resource_group",
+	},
+	"data.external.example": {
+		"address": "data.external.example",
+		"config": {
+			"program": {
+				"references": [
+					"random_id.random",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "external",
+		"provisioners":        [],
+		"type":                "external",
+	},
+	"data.http.example": {
+		"address": "module.nested.data.http.example",
+		"config": {
+			"url": {
+				"constant_value": "https://checkpoint-api.hashicorp.com/v1/check/terraform",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "data",
+		"module_address":      "module.nested",
+		"name":                "example",
+		"provider_config_key": "module.nested:http.east",
+		"provisioners":        [],
+		"type":                "http",
+	},
+	"null_resource.test": {
+		"address": "null_resource.test",
+		"config": {
+		},
+		"count": {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "test",
+		"provider_config_key": "null",
+		"provisioners":        [
+			{
+				"resource_address": "null_resource.test",
+				"type": "remote-exec",
+				"index": "0",
+				"config": {},
+			},
+		],
+		"type": "null_resource",
 	},
 }
 
