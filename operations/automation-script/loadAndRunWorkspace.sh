@@ -483,10 +483,18 @@ if [[ "$applied" == "true" ]]; then
   echo ""
   echo "State ID:" ${state_id}
 
-  # Call API to get information about the state version including its URL
+  # Call API to get information about the state version including its URL and outputs
   state_file_url_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" "https://${address}/api/v2/state-versions/${state_id}?include=outputs")
 
   # Retrieve and echo outputs from state
+  # Note that we retrieved outputs in the last API call by
+  # adding `?include=outputs`
+  # Instead of doing that, we could have retrieved the state version output
+  # IDs from the relationships of the above API call and could have then
+  # called the State Version Output API to retrieve details for each output.
+  # That would have involved URLs like
+  # "https://${address}/api/v2/state-version-outputs/${output_id}"
+  # See `https://www.terraform.io/docs/cloud/api/state-version-outputs.html#show-a-state-version-output`
   num_outputs=$(echo $state_file_url_result | python -c "import sys, json; print(len(json.load(sys.stdin)['included']))")
   echo ""
   echo "Outputs from State:"
