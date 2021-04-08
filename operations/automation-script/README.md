@@ -1,5 +1,5 @@
 # TFE Automation Script
-Script to automate interactions with Terraform Enterprise, including the cloning of a repository containing Terraform configuration code, creation of a workspace, tarring and uploading of the Terraform code, setting of variables, triggering a run, checking Sentinel policies, and finally doing an apply if permitted. If an apply is done, the script waits for it to finish and then downloads the apply log and the before and after state files. If an apply cannot be done, it downloads the plan log instead.
+Script to automate interactions with Terraform Enterprise, including the cloning of a repository containing Terraform configuration code, creation of a workspace, tarring and uploading of the Terraform code, setting of variables, triggering a run, checking Sentinel policies, and finally doing an apply if permitted. If an apply is done, the script waits for it to finish and then downloads and prints the apply log and the state file. It also prints the outputs separately even though they are also in the state file. If an apply cannot be done, it downloads the plan log instead.
 
 Note that this script is only meant as an example that shows how to use the various Terraform Cloud APIs.  It is not suitable for production usage since it does not support modifying workspace variables after they have already been created in a workspace.
 
@@ -42,7 +42,7 @@ The script does the following steps:
     - Other values of $run_status cause the loop to repeat after a brief sleep.
 1. If $save_plan was set to "true" in the above loop, the script outputs and saves the plan log.
 1. If any apply was done, the script goes into a second loop to wait for the apply to finish, error, or be canceled.
-1. If and when the apply finishes, the script downloads the apply log and the new state file from before and after the apply.
+1. If and when the apply finishes, the script downloads the apply log, determines the state version ID, retrieves the outputs from the state version with that ID, and then downloads and prints the new state file.
 
 In addition to the loadAndRunWorkspace.sh script, this example includes the following files:
 
