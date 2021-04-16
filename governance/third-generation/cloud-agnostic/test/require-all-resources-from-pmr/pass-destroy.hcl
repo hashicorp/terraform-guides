@@ -8,18 +8,19 @@ param "organization" {
 
 mock "tfconfig/v2" {
   module {
-    source = "mock-tfconfig-fail.sentinel"
+    source = "mock-tfconfig-pass-destroy.sentinel"
   }
 }
 
 mock "tfrun" {
   module {
-    source = "mock-tfrun-fail.sentinel"
+    source = "mock-tfrun-pass-destroy.sentinel"
   }
 }
 
+
 test {
   rules = {
-    main = false
+    main = true
   }
 }
