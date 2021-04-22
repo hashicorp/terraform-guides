@@ -8,7 +8,6 @@ import "tfplan-functions" as plan
 
 # Get all Sagemaker notebooks
 allSagemakerNotebooks = plan.find_resources("aws_sagemaker_notebook_instance")
-#print("allSagemakerNotebooks:", allSagemakerNotebooks)
 
 # Filter to Sagemaker notebooks that have root_access set to "Enabled"
 # or missing.
