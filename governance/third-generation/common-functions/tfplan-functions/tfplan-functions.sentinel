@@ -37,13 +37,46 @@ find_resources = func(type) {
 # Find all resources for a specific provider using the tfplan/v2 import.
 # Include resources that are not being permanently deleted.
 # Technically, this returns a map of resource changes.
+# Terraform 0.12 and earlier set `rc.provider_name` to short text like "null";
+# but Terraform 0.13 and higher set it to something like
+# "registry.terraform.io/hashicorp/null".
+# You can pass in the long form or short form.
 find_resources_by_provider = func(provider) {
-  resources = filter tfplan.resource_changes as address, rc {
-    rc.provider_name is provider and
-  	rc.mode is "managed" and
-  	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-     rc.change.actions contains "read" or rc.change.actions contains "no-op")
-  }
+  parsed_provider = strings.split(provider, "/")
+  segment_count = length(parsed_provider)
+  v = strings.split(tfplan.terraform_version, ".")
+  v_major = int(v[1])
+
+  # If v_major is 12, we know short form was passed to Sentinel
+  if v_major is 12 {
+    resources = filter tfplan.resource_changes as address, rc {
+      rc.provider_name is provider and
+    	rc.mode is "managed" and
+    	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+       rc.change.actions contains "read" or rc.change.actions contains "no-op")
+    }
+  } else {
+    # v_major must be higher than 12 since v2 imports being used
+    # So, we know long form like "registry.terraform.io/hashicorp/null" given
+    if segment_count is 1 {
+      # Function was passed short form, so we want to reduce each occurence of
+      # rc.provider_name to its short form.
+      resources = filter tfplan.resource_changes as address, rc {
+        strings.split(rc.provider_name, "/")[2] is provider and
+      	rc.mode is "managed" and
+      	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+      }
+    } else {
+      # Function was passed long form, so we use full rc.provider_name
+      resources = filter tfplan.resource_changes as address, rc {
+        rc.provider_name is provider and
+      	rc.mode is "managed" and
+      	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+      }
+    } // end segment_count
+  } // end v_major
 
   return resources
 }
@@ -69,15 +102,46 @@ find_datasources = func(type) {
 # Find all data sources for a specific provider using the tfplan/v2 import.
 # Include data sources that are not being permanently deleted.
 # Technically, this returns a map of resource changes.
+# Terraform 0.12 and earlier set `rc.provider_name` to short text like "null";
+# but Terraform 0.13 and higher set it to something like
+# "registry.terraform.io/hashicorp/null".
+# You can pass in the long form or short form.
 find_datasources_by_provider = func(provider) {
-  datasources = filter tfplan.resource_changes as address, rc {
-  	rc.provider_name is provider and
-  	rc.mode is "data" and
-  	(rc.change.actions contains "create" or
-    rc.change.actions contains "update" or
-    rc.change.actions contains "read" or
-    rc.change.actions contains "no-op")
-  }
+  parsed_provider = strings.split(provider, "/")
+  segment_count = length(parsed_provider)
+  v = strings.split(tfplan.terraform_version, ".")
+  v_major = int(v[1])
+
+  # If v_major is 12, we know short form was passed to Sentinel
+  if v_major is 12 {
+    datasources = filter tfplan.resource_changes as address, rc {
+      rc.provider_name is provider and
+    	rc.mode is "data" and
+    	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+       rc.change.actions contains "read" or rc.change.actions contains "no-op")
+    }
+  } else {
+    # v_major must be higher than 12 since v2 imports being used
+    # So, we know long form like "registry.terraform.io/hashicorp/null" given
+    if segment_count is 1 {
+      # Function was passed short form, so we want to reduce each occurence of
+      # rc.provider_name to its short form.
+      datasources = filter tfplan.resource_changes as address, rc {
+        strings.split(rc.provider_name, "/")[2] is provider and
+      	rc.mode is "data" and
+      	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+      }
+    } else {
+      # Function was passed long form, so we use full rc.provider_name
+      datasources = filter tfplan.resource_changes as address, rc {
+        rc.provider_name is provider and
+      	rc.mode is "data" and
+      	(rc.change.actions contains "create" or rc.change.actions contains "update" or
+         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+      }
+    } // end segment_count
+  } // end v_major
 
   return datasources
 }
