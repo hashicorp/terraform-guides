@@ -1,0 +1,501 @@
+terraform_version = "0.14.7"
+
+planned_values = {
+	"outputs": {},
+	"resources": {
+		"azurerm_resource_group.example": {
+			"address":        "azurerm_resource_group.example",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "example",
+			"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+			"tainted":        false,
+			"type":           "azurerm_resource_group",
+			"values": {
+				"location": "eastus2",
+				"name":     "practice-rg",
+				"tags": {
+					"app-id":  "1234",
+					"bill_id": "567",
+					"env":     "test",
+				},
+				"timeouts": null,
+			},
+		},
+		"azurerm_storage_account.example": {
+			"address":        "azurerm_storage_account.example",
+			"depends_on":     [],
+			"deposed_key":    "",
+			"index":          null,
+			"mode":           "managed",
+			"module_address": "",
+			"name":           "example",
+			"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+			"tainted":        false,
+			"type":           "azurerm_storage_account",
+			"values": {
+				"account_kind":               "StorageV2",
+				"account_replication_type":   "LRS",
+				"account_tier":               "Standard",
+				"allow_blob_public_access":   false,
+				"azure_files_authentication": [],
+				"custom_domain":              [],
+				"enable_https_traffic_only":  true,
+				"is_hns_enabled":             false,
+				"location":                   "eastus2",
+				"min_tls_version":            "TLS1_0",
+				"name":                       "strfriapr",
+				"nfsv3_enabled":              false,
+				"resource_group_name":        "practice-rg",
+				"static_website":             [],
+				"tags":                       null,
+				"timeouts":                   null,
+			},
+		},
+	},
+}
+
+variables = {
+	"created_by": {
+		"name":  "created_by",
+		"value": "jj123",
+	},
+	"env": {
+		"name":  "env",
+		"value": "test",
+	},
+	"subnets": {
+		"name": "subnets",
+		"value": {
+			"subnet1": {
+				"address_prefixes": [
+					"10.14.0.0/24",
+				],
+				"subnet_name": "subnet-1",
+				"vnet_key":    "vnet1",
+			},
+			"subnet2": {
+				"address_prefixes": [
+					"10.14.18.0/24",
+				],
+				"subnet_name": "subnet-2",
+				"vnet_key":    "vnet1",
+			},
+		},
+	},
+	"vnets": {
+		"name": "vnets",
+		"value": {
+			"vnet1": {
+				"address_space": [
+					"10.14.0.0/16",
+				],
+				"vnet_name": "vnet-1",
+			},
+			"vnet2": {
+				"address_space": [
+					"10.15.0.0/16",
+				],
+				"vnet_name": "vnet-2",
+			},
+		},
+	},
+}
+
+resource_changes = {
+	"azurerm_resource_group.example": {
+		"address": "azurerm_resource_group.example",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"location": "eastus2",
+				"name":     "practice-rg",
+				"tags": {
+					"app-id":  "1234",
+					"bill_id": "567",
+					"env":     "test",
+				},
+				"timeouts": null,
+			},
+			"after_unknown": {
+				"id":   true,
+				"tags": {},
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "example",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_resource_group",
+	},
+	"azurerm_storage_account.example": {
+		"address": "azurerm_storage_account.example",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"account_kind":               "StorageV2",
+				"account_replication_type":   "LRS",
+				"account_tier":               "Standard",
+				"allow_blob_public_access":   false,
+				"azure_files_authentication": [],
+				"custom_domain":              [],
+				"enable_https_traffic_only":  true,
+				"is_hns_enabled":             false,
+				"location":                   "eastus2",
+				"min_tls_version":            "TLS1_0",
+				"name":                       "strfriapr",
+				"nfsv3_enabled":              false,
+				"resource_group_name":        "practice-rg",
+				"static_website":             [],
+				"tags":                       null,
+				"timeouts":                   null,
+			},
+			"after_unknown": {
+				"access_tier":                      true,
+				"azure_files_authentication":       [],
+				"blob_properties":                  true,
+				"custom_domain":                    [],
+				"id":                               true,
+				"identity":                         true,
+				"large_file_share_enabled":         true,
+				"network_rules":                    true,
+				"primary_access_key":               true,
+				"primary_blob_connection_string":   true,
+				"primary_blob_endpoint":            true,
+				"primary_blob_host":                true,
+				"primary_connection_string":        true,
+				"primary_dfs_endpoint":             true,
+				"primary_dfs_host":                 true,
+				"primary_file_endpoint":            true,
+				"primary_file_host":                true,
+				"primary_location":                 true,
+				"primary_queue_endpoint":           true,
+				"primary_queue_host":               true,
+				"primary_table_endpoint":           true,
+				"primary_table_host":               true,
+				"primary_web_endpoint":             true,
+				"primary_web_host":                 true,
+				"queue_properties":                 true,
+				"routing":                          true,
+				"secondary_access_key":             true,
+				"secondary_blob_connection_string": true,
+				"secondary_blob_endpoint":          true,
+				"secondary_blob_host":              true,
+				"secondary_connection_string":      true,
+				"secondary_dfs_endpoint":           true,
+				"secondary_dfs_host":               true,
+				"secondary_file_endpoint":          true,
+				"secondary_file_host":              true,
+				"secondary_location":               true,
+				"secondary_queue_endpoint":         true,
+				"secondary_queue_host":             true,
+				"secondary_table_endpoint":         true,
+				"secondary_table_host":             true,
+				"secondary_web_endpoint":           true,
+				"secondary_web_host":               true,
+				"static_website":                   [],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "example",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_storage_account",
+	},
+}
+
+output_changes = {}
+
+raw = {
+	"configuration": {
+		"provider_config": {
+			"azurerm": {
+				"expressions": {
+					"features": [
+						{},
+					],
+				},
+				"name":               "azurerm",
+				"version_constraint": "~> 2.2",
+			},
+		},
+		"root_module": {
+			"resources": [
+				{
+					"address": "azurerm_resource_group.example",
+					"expressions": {
+						"location": {
+							"constant_value": "eastus2",
+						},
+						"name": {
+							"constant_value": "practice-rg",
+						},
+						"tags": {
+							"constant_value": {
+								"app-id":  1234,
+								"bill_id": 567,
+								"env":     "test",
+							},
+						},
+					},
+					"mode":                "managed",
+					"name":                "example",
+					"provider_config_key": "azurerm",
+					"schema_version":      0,
+					"type":                "azurerm_resource_group",
+				},
+				{
+					"address": "azurerm_storage_account.example",
+					"expressions": {
+						"account_replication_type": {
+							"constant_value": "LRS",
+						},
+						"account_tier": {
+							"constant_value": "Standard",
+						},
+						"location": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+						"name": {
+							"constant_value": "strfriapr",
+						},
+						"resource_group_name": {
+							"references": [
+								"azurerm_resource_group.example",
+							],
+						},
+					},
+					"mode":                "managed",
+					"name":                "example",
+					"provider_config_key": "azurerm",
+					"schema_version":      2,
+					"type":                "azurerm_storage_account",
+				},
+			],
+			"variables": {
+				"created_by": {
+					"description": "Associate ID who created the resource",
+				},
+				"env": {
+					"description": "Type of env",
+				},
+				"subnets": {},
+				"vnets":   {},
+			},
+		},
+	},
+	"format_version": "0.1",
+	"planned_values": {
+		"root_module": {
+			"resources": [
+				{
+					"address":        "azurerm_resource_group.example",
+					"mode":           "managed",
+					"name":           "example",
+					"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+					"schema_version": 0,
+					"type":           "azurerm_resource_group",
+					"values": {
+						"location": "eastus2",
+						"name":     "practice-rg",
+						"tags": {
+							"app-id":  "1234",
+							"bill_id": "567",
+							"env":     "test",
+						},
+						"timeouts": null,
+					},
+				},
+				{
+					"address":        "azurerm_storage_account.example",
+					"mode":           "managed",
+					"name":           "example",
+					"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+					"schema_version": 2,
+					"type":           "azurerm_storage_account",
+					"values": {
+						"account_kind":               "StorageV2",
+						"account_replication_type":   "LRS",
+						"account_tier":               "Standard",
+						"allow_blob_public_access":   false,
+						"azure_files_authentication": [],
+						"custom_domain":              [],
+						"enable_https_traffic_only":  true,
+						"is_hns_enabled":             false,
+						"location":                   "eastus2",
+						"min_tls_version":            "TLS1_0",
+						"name":                       "strfriapr",
+						"nfsv3_enabled":              false,
+						"resource_group_name":        "practice-rg",
+						"static_website":             [],
+						"tags":                       null,
+						"timeouts":                   null,
+					},
+				},
+			],
+		},
+	},
+	"resource_changes": [
+		{
+			"address": "azurerm_resource_group.example",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"location": "eastus2",
+					"name":     "practice-rg",
+					"tags": {
+						"app-id":  "1234",
+						"bill_id": "567",
+						"env":     "test",
+					},
+					"timeouts": null,
+				},
+				"after_unknown": {
+					"id":   true,
+					"tags": {},
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "example",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"type":          "azurerm_resource_group",
+		},
+		{
+			"address": "azurerm_storage_account.example",
+			"change": {
+				"actions": [
+					"create",
+				],
+				"after": {
+					"account_kind":               "StorageV2",
+					"account_replication_type":   "LRS",
+					"account_tier":               "Standard",
+					"allow_blob_public_access":   false,
+					"azure_files_authentication": [],
+					"custom_domain":              [],
+					"enable_https_traffic_only":  true,
+					"is_hns_enabled":             false,
+					"location":                   "eastus2",
+					"min_tls_version":            "TLS1_0",
+					"name":                       "strfriapr",
+					"nfsv3_enabled":              false,
+					"resource_group_name":        "practice-rg",
+					"static_website":             [],
+					"tags":                       null,
+					"timeouts":                   null,
+				},
+				"after_unknown": {
+					"access_tier":                      true,
+					"azure_files_authentication":       [],
+					"blob_properties":                  true,
+					"custom_domain":                    [],
+					"id":                               true,
+					"identity":                         true,
+					"large_file_share_enabled":         true,
+					"network_rules":                    true,
+					"primary_access_key":               true,
+					"primary_blob_connection_string":   true,
+					"primary_blob_endpoint":            true,
+					"primary_blob_host":                true,
+					"primary_connection_string":        true,
+					"primary_dfs_endpoint":             true,
+					"primary_dfs_host":                 true,
+					"primary_file_endpoint":            true,
+					"primary_file_host":                true,
+					"primary_location":                 true,
+					"primary_queue_endpoint":           true,
+					"primary_queue_host":               true,
+					"primary_table_endpoint":           true,
+					"primary_table_host":               true,
+					"primary_web_endpoint":             true,
+					"primary_web_host":                 true,
+					"queue_properties":                 true,
+					"routing":                          true,
+					"secondary_access_key":             true,
+					"secondary_blob_connection_string": true,
+					"secondary_blob_endpoint":          true,
+					"secondary_blob_host":              true,
+					"secondary_connection_string":      true,
+					"secondary_dfs_endpoint":           true,
+					"secondary_dfs_host":               true,
+					"secondary_file_endpoint":          true,
+					"secondary_file_host":              true,
+					"secondary_location":               true,
+					"secondary_queue_endpoint":         true,
+					"secondary_queue_host":             true,
+					"secondary_table_endpoint":         true,
+					"secondary_table_host":             true,
+					"secondary_web_endpoint":           true,
+					"secondary_web_host":               true,
+					"static_website":                   [],
+				},
+				"before": null,
+			},
+			"mode":          "managed",
+			"name":          "example",
+			"provider_name": "registry.terraform.io/hashicorp/azurerm",
+			"type":          "azurerm_storage_account",
+		},
+	],
+	"terraform_version": "0.14.7",
+	"variables": {
+		"created_by": {
+			"value": "jj123",
+		},
+		"env": {
+			"value": "test",
+		},
+		"subnets": {
+			"value": {
+				"subnet1": {
+					"address_prefixes": [
+						"10.14.0.0/24",
+					],
+					"subnet_name": "subnet-1",
+					"vnet_key":    "vnet1",
+				},
+				"subnet2": {
+					"address_prefixes": [
+						"10.14.18.0/24",
+					],
+					"subnet_name": "subnet-2",
+					"vnet_key":    "vnet1",
+				},
+			},
+		},
+		"vnets": {
+			"value": {
+				"vnet1": {
+					"address_space": [
+						"10.14.0.0/16",
+					],
+					"vnet_name": "vnet-1",
+				},
+				"vnet2": {
+					"address_space": [
+						"10.15.0.0/16",
+					],
+					"vnet_name": "vnet-2",
+				},
+			},
+		},
+	},
+}
