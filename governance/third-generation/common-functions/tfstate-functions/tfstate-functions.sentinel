@@ -180,9 +180,10 @@ to_string = func(obj) {
         if index < lastIndex {
           output += to_string(key) + ": " + to_string(obj[key]) + ", "
         } else {
-          output += to_string(key) + ": " + to_string(obj[key]) + "}"
+          output += to_string(key) + ": " + to_string(obj[key])
         }
       }
+      output += "}"
       return output
     else:
       return ""
