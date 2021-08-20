@@ -1,0 +1,31 @@
+# This policy uses the Sentinel tfplan/v2 import to require that
+# any occurence of the azurerm_security_center_subscription_pricing
+# resource that lists VirtualMachines as the resource_type also lists
+# the tier as "Free"
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel with
+# alias "plan"
+import "tfplan-functions" as plan
+
+# Get all Azure Security Center Pricings
+allAzureSecCenterSubPricings = plan.find_resources("azurerm_security_center_subscription_pricing")
+
+# Filter to Azure Security Center Pricings for Virtual Machines
+# Warnings will not be printed for violations since the last parameter is false
+azureSecCenterSubPricingsForVMs = plan.filter_attribute_is_value(
+                             allAzureSecCenterSubPricings,
+                             "resource_type", "VirtualMachines", false)
+
+# Filter to Azure Security Center Pricings for Virtual Machines with pricing
+# tier set to Standard.
+# When applying a second filter, we restrict to the resources map returned from
+# the first filter.
+# Warnings will be printed for all violations since the last parameter is true
+violatingAzureSecCenterSubPricingsForVMs = plan.filter_attribute_is_value(
+                                           azureSecCenterSubPricingsForVMs["resources"],
+                                           "tier", "Standard", true)
+
+# Main rule
+main = rule {
+  length(violatingAzureSecCenterSubPricingsForVMs["messages"]) is 0
+}
