@@ -1,0 +1,80 @@
+terraform_version = "1.0.5"
+
+variables = {}
+
+resource_changes = {
+	"azurerm_security_center_subscription_pricing.keyvaults": {
+		"address": "azurerm_security_center_subscription_pricing.keyvaults",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"resource_type": "KeyVaults",
+				"tier":          "Standard",
+				"timeouts":      null,
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "keyvaults",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_security_center_subscription_pricing",
+	},
+	"azurerm_security_center_subscription_pricing.storageaccounts": {
+		"address": "azurerm_security_center_subscription_pricing.storageaccounts",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"resource_type": "StorageAccounts",
+				"tier":          "Free",
+				"timeouts":      null,
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "storageaccounts",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_security_center_subscription_pricing",
+	},
+	"azurerm_security_center_subscription_pricing.vms": {
+		"address": "azurerm_security_center_subscription_pricing.vms",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"resource_type": "VirtualMachines",
+				"tier":          "Standard",
+				"timeouts":      null,
+			},
+			"after_unknown": {
+				"id": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "vms",
+		"provider_name":  "registry.terraform.io/hashicorp/azurerm",
+		"type":           "azurerm_security_center_subscription_pricing",
+	},
+}
+
+output_changes = {}
