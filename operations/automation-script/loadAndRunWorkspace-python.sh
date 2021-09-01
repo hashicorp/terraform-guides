@@ -1,4 +1,4 @@
-#!/bin/bash
+policy sets#!/bin/bash
 # Script that clones Terraform configuration from a git repository
 # creates a workspace if it does not already exist, uploads the
 # Terraform configuration to it, adds variables to the workspace,
@@ -116,7 +116,7 @@ cat > workspace.template.json <<EOF
   {
     "attributes": {
       "name":"placeholder",
-      "terraform-version": "0.13.6"
+      "terraform-version": "1.0.5"
     },
     "type":"workspaces"
   }
@@ -263,11 +263,11 @@ do
   upload_variable_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 done < ${variables_file}
 
-# List Sentinel Policies
-sentinel_list_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/policies")
-sentinel_policy_count=$(echo $sentinel_list_result | python -c "import sys, json; print(json.load(sys.stdin)['meta']['pagination']['total-count'])")
+# List Sentinel Policy Sets
+sentinel_list_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/policy-sets")
+sentinel_policy_set_count=$(echo $sentinel_list_result | python -c "import sys, json; print(json.load(sys.stdin)['meta']['pagination']['total-count'])")
 echo ""
-echo "Number of Sentinel policies: " $sentinel_policy_count
+echo "Number of Sentinel policy sets: " $sentinel_policy_set_count
 
 # Do a run
 sed "s/workspace_id/$workspace_id/" < run.template.json  > run.json
@@ -305,12 +305,12 @@ while [ $continue -ne 0 ]; do
   # Note that we use "True" rather than "true" because python converts the
   # boolean "true" in json responses to "True" and "false" to "False"
 
-  # planned means plan finished and no Sentinel policies
+  # planned means plan finished and no Sentinel policy sets
   # exist or are applicable to the workspace
   if [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
     continue=0
     echo ""
-    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "There are " $sentinel_policy_set_count "policy sets, but none of them are applicable to this workspace."
     echo "Check the run in Terraform Enterprise UI and apply there if desired."
     save_plan="true"
   # cost_estimated means plan finished and costs were estimated
@@ -318,13 +318,13 @@ while [ $continue -ne 0 ]; do
   elif [[ "$run_status" == "cost_estimated" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "no" ]]; then
     continue=0
     echo ""
-    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "There are " $sentinel_policy_set_count "policy sets, but none of them are applicable to this workspace."
     echo "Check the run in Terraform Enterprise UI and apply there if desired."
     save_plan="true"
   elif [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]]; then
     continue=0
     echo ""
-    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "There are " $sentinel_policy_set_count "policy sets, but none of them are applicable to this workspace."
     echo "Since override was set to \"yes\", we are applying."
     # Do the apply
     echo "Doing Apply"
@@ -333,7 +333,7 @@ while [ $continue -ne 0 ]; do
   elif [[ "$run_status" == "cost_estimated" ]] && [[ "$is_confirmable" == "True" ]] && [[ "$override" == "yes" ]]; then
     continue=0
     echo ""
-    echo "There are " $sentinel_policy_count "policies, but none of them are applicable to this workspace."
+    echo "There are " $sentinel_policy_set_count "policy sets, but none of them are applicable to this workspace."
     echo "Since override was set to \"yes\", we are applying."
     # Do the apply
     echo "Doing Apply"
