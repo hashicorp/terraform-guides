@@ -76,7 +76,7 @@ Do the following before using these scripts:
 1. To see how the scripts can check Sentinel policies and even override soft-mandatory failures, add the included restrict-name-variable.sentinel policy to your TFE organization. See the [Managing Sentinel Policies](https://www.terraform.io/docs/enterprise/sentinel/manage-policies.html) documentation for instructions.
 
 ## Using with a Terraform Enteprise Server using private CA
-If you use these scripts with a Terraform Enterprise server that uses a private CA instead of a public CA, you will need to ensure that the curl commands run by the script will trust the private CA.  There are several ways to do this.  The first is easiest for enabling the automation script to run, but it only affects curl. The second and third are useful for using the Terraform and TFE CLIs against your PTFE server. The third is a permanent solution.
+If you use these scripts with a Terraform Enterprise server that uses a private CA instead of a public CA, you will need to ensure that the curl commands run by the script will trust the private CA.  There are several ways to do this.  The first is easiest for enabling the automation script to run, but it only affects curl. The second and third approaches are useful when using the Terraform CLI to talk to your Terraform Enterprise server. The third is a permanent solution.
 1. `export  CURL_CA_BUNDLE=<path_to_ca_bundle>`
 1. Export the Golang SSL_CERT_FILE and/or SSL_CERT_DIR environment variables. For instance, you could set the first of these to the same CA bundle used in option 1.
 1. Copy your certificate bundle to /etc/pki/ca-trust/source/anchors and then run `update-ca-trust extract`.
