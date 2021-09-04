@@ -6,6 +6,10 @@ param "address" {
   value = "registry.terraform.io"
 }
 
+param "limit" {
+  value = 100
+}
+
 param "organization" {
   value = "Azure"
 }

@@ -3,8 +3,6 @@ This directory contains examples of using the [HTTP import](https://docs.hashico
 
 Be sure to use Sentinel 0.15.2 or higher with these policies.
 
-These policies are essentially the same as the second-generation versions in this [directory](../../../second-generation/cloud-agnostic/http-examples), but the [use-latest-module-versions.sentinel](./use-latest-module-versions.sentinel) in this directory uses the [tfconfig/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfconfig-v2.html) import instead of the older [tfconfig](https://www.terraform.io/docs/cloud/sentinel/import/tfconfig.html) import. It uses that import indirectly by calling some functions from the [tfconfig-functions](../../common-functions/tfconfig-functions) Sentinel module.
-
 ## Policies
 There are currently three example policies in this directory:
 * [check-external-http-api.sentinel](./check-external-http-api.sentinel)
@@ -20,12 +18,17 @@ sentinel test -run=check -verbose
 
 The second policy uses the HTTP import to call the Terraform Registry [List Modules API](https://www.terraform.io/docs/registry/api.html#list-modules) against a Terraform Cloud or Terraform Enterprise server in order to determine the most recent version of each module in the [Private Module Registry](https://www.terraform.io/docs/cloud/registry/index.html) (PMR) of an organization on that server or in the [public Terraform registry](https://registry.terraform.io). It then checks that the version constraints used in module calls allow the most recent version. This policy also uses parameters as described below.
 
+Since 9/6/2021, the second policy can retrieve versions of all private modules in a PMR since it uses pagination to keep calling the List Modules API. However, the policy limits the number of modules retrieved from the public registry to 100.
+
+This policy currently uses the `/api/registry/v1/modules` endpoint for private registries rather than the newer `/organizations/:organization_name/registry-modules` endpoint that can get both private and publicly curated modules. Note that publically curated modules are not available in TFE. The `/organizations/:organization_name/registry-modules` API endpoint is available in TFE since version v202106-1. We expect to create a version of this policy that will use the new API endpoint but we will keep this policy so that customers on older versions of TFE can still use it.
+
 The third policy uses the HTTP import to call a [NASA API](https://api.nasa.gov/) that retrieves a list of Near Earth Objects and warns if any of them are too close for comfort. This is based on an example from this HashiCorp [blog](https://www.hashicorp.com/blog/announcing-business-aware-policies-for-terraform-cloud-and-enterprise/) that announced the HTTP import and "Business-aware Policies". This policy also uses parameters as described below.
 
 ## Use of Parameters in use-latest-module-versions.sentinel
-The [use-latest-module-versions.sentinel](./use-latest-module-versions.sentinel) policy uses four parameters:
+The [use-latest-module-versions.sentinel](./use-latest-module-versions.sentinel) policy uses five parameters:
 * `public_registry` indicates whether the public Terraform registry is being used.  This is `false` by default, but could be set to `true`.
 * `address` gives the address of the Terraform Cloud or Terraform Enterprise server.  It defaults to `app.terraform.io` which is the address of the multi-tenant Terraform Cloud server that HashiCorp runs. You must specify a value for this if using a Terraform Enterprise server.
+* `limit` gives the maximum number of modules to retrieve in a single call to the List Modules API endpoint. It defaults to `100` which is the maximum value that can be set.
 * `organization` gives the name of an [organization](https://www.terraform.io/docs/cloud/users-teams-organizations/organizations.html) on the Terraform Cloud or Terraform Enterprise server specified by `address`. You must always specify a valid organization.
 * `token` gives a valid Terraform Cloud API token which can be a user, team, or organization token. See the [API tokens](https://www.terraform.io/docs/cloud/users-teams-organizations/api-tokens.html) document for more information.
 
