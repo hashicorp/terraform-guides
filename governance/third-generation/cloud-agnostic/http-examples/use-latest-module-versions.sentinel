@@ -75,7 +75,7 @@ retrieve_latest_module_versions = func() {
 # But pass the organization parameter
 get_public_registry_modules = func() {
   req = http.request("https://" + address + "/v1/modules/"  +
-                     namespace + "?limit=" + limit + "&verified=true")
+                     organization + "?limit=" + limit + "&verified=true")
 
   # Call TFE API to get modules and unmarshal results
   res = json.unmarshal(http.get(req).body)
@@ -166,7 +166,7 @@ validate_modules = func() {
             } else {
               print("Public registry module", m.source, "used in module",
                     module_address, "has version constraint", m.version_constraint,
-                    "that does not allow the most version", most_recent_version)
+                    "that does not allow the most recent version", most_recent_version)
               validated = false
             } // end root module check
           } // end version check
