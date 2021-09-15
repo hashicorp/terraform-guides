@@ -1,0 +1,143 @@
+# Functions to retrive public and private modules from a private module registry
+# and determine recent versions
+
+##### Imports #####
+import "http"
+import "json"
+import "version"
+
+##### Functions #####
+
+### get_recent_module_versions ###
+# Get recent versions for private or public modules from private module registry
+# Pass the address of the TFC/E server, the organization, and a TFE API token.
+# Set `registry` to "public" or "private".
+# Set `version_limit` to the number of most recent versions to get for each
+# module.
+# This function calls `get_recent_module_versions_by_page` (which has the same
+# arguments plus `page`) one or more times, depending on whether there are more
+# than one page of modules.
+get_recent_module_versions = func(address, organization, token,
+                                  registry, version_limit) {
+  return get_recent_module_versions_by_page(address, organization, token,
+                                    registry, version_limit, 1)
+}
+
+### get_recent_module_versions_by_page ###
+# Get recent versions for private or public modules from private module registry
+# one page at a time.
+# This uses the same arguments as `get_recent_module_versions` plus `page`
+get_recent_module_versions_by_page = func(address, organization, token,
+                                  registry, version_limit, page) {
+
+  # Build request to send to Registry Modules API
+  req1 = http.request("https://" + address + "/api/v2/organizations/"  +
+                     organization +
+                     "/registry-modules?filter%5Bregistry_name%5D=" + registry +
+                     "&page%5Bsize%5D=100" +
+                     "&page%5Bnumber%5D=" + string(page))
+  req1 = req1.with_header("Authorization", "Bearer " + token)
+
+  # Call TFE API to get modules and unmarshal results
+  res1 = json.unmarshal(http.get(req1).body)
+
+  # Initialize module_versions to empty map
+  module_versions = {}
+
+  # Make recursive function call if there are more pages of modules
+  if res1.meta.pagination["current-page"] < res1.meta.pagination["total-pages"] {
+    module_versions = get_recent_module_versions_by_page(address, organization,
+              token, registry, version_limit, res1.meta.pagination["next-page"])
+  }
+
+  # Iterate over the modules and extract namespaces, names, and providers
+  for res1.data as m {
+    module = m.attributes.namespace + "/" + m.attributes.name + "/" +
+             m.attributes.provider
+
+    # Get versions for current module
+    if registry is "public" {
+      req2 = http.request("https://" + address +
+                          "/api/registry/public/v1/modules/" + module + "/versions")
+      req2 = req2.with_header("Authorization", "Bearer " + token)
+    } else {
+      # registry is private
+      req2 = http.request("https://" + address + "/api/registry/v1/modules/" +
+                          module + "/versions")
+      req2 = req2.with_header("Authorization", "Bearer " + token)
+    }
+
+    # Call Registry API to get module versions
+    res2 = json.unmarshal(http.get(req2).body)
+
+    # Build versions map
+    versions = res2.modules[0].versions
+    versions_map = {}
+    for versions as index, v {
+      versions_map[index] = v.version
+    }
+
+    # Extract most recent versions and add to module_versions
+    module_versions[module] = []
+    for range(version_limit) as rank {
+      if length(versions_map) > 0 {
+        most_recent_version = find_most_recent_version(versions_map)
+        for most_recent_version as index, v {
+          append(module_versions[module], most_recent_version[index])
+          delete(versions_map, keys(most_recent_version)[0])
+        } // end for most_recent_version
+      } // end if length(versions_map) > 0
+    } // end for range(version_limit)
+
+  } // end for res1.data
+
+  # Return recent module versions
+  return module_versions
+}
+
+### find_most_recent_version ###
+# Finds the most recent version from a map of version strings.
+# The `versions_map` parameter should contain strings, not actual versions
+# from the version import.
+# The keys of the map should be integers ranging from 0 to N-1
+# where the map has N versions.
+find_most_recent_version = func(versions_map) {
+
+  # Initialize newest_version to first version of map
+  newest_index = 0
+  newest_version = "0.0.0"
+
+  # Iterate over versions, looking for newer versions
+  for versions_map as index, v {
+    if version.new(v).greater_than(newest_version) {
+      newest_index = index
+      newest_version = versions_map[index]
+    }
+  }
+
+  # Return newest version including index
+  return {newest_index: newest_version}
+}
+
+### is_module_in_public_registry ###
+# Determine if a module is in the public registry.
+# The `module` parameter is derived from the m.source of a module call.
+is_module_in_public_registry = func(module) {
+
+  # Build URL to call public registry API
+  req = http.request("https://registry.terraform.io/v1/modules/"  +
+                     module)
+
+  # Call public registry API to get modules and unmarshal results
+  # If we get undefined from the http call, we convert it to a
+  # trivial json document.
+  res = json.unmarshal(http.accept_status_codes([200, 403, 404]).get(req).body) else {"public": false}
+
+  # Extract latest version
+  if "name" in keys(res) {
+    return true
+  } else {
+    return false
+  }
+
+}

@@ -1,0 +1,198 @@
+# This policy uses the HTTP import to call the TFC API to get a list of all
+# private and publicly curated modules in the private module registries of
+# specified organizations on a specified TFC/E server and then determines their
+# N latest versions. It then uses the tfconfig/v2 import to inspect all non-root
+# modules and validate that those sourced from the PMRs allow the N latest
+# versions based on their version constraints. Since Terraform will always use
+# the most recent version allowed by a version constraint, this ensures that
+# one of the N most recent versions of the module will be used. N can be set
+# with the `version_limit` parameter. It's default value is 3. The policy blocks
+# use of public registry modules that are not curated and non-registry modules
+# except for local sources starting with "./" and ".//".
+
+# This policy requires the Sentinel runtime 0.16.0 or higher since the
+# registry-functions module it calls uses the Sentinel
+# [version](https://docs.hashicorp.com/sentinel/imports/version) import.
+
+# This policy requires TFE release v202106-1 or higher since it uses
+# the [Registry Module APIs](https://www.terraform.io/docs/cloud/api/modules.html)
+# that were added in that release of TFE.
+
+# TFE does not support publicly curated modules. So, restricting
+# their versions is only possible if using Terraform Cloud (TFC).
+
+
+##### Imports #####
+# Import registry-functions/registry-functions.sentinel
+# with alias "config"
+import "registry-functions" as registry
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+import "strings"
+import "version"
+
+##### Parameters #####
+# The address of the Terraform Cloud or Terraform Enterprise server
+param address default "app.terraform.io"
+# The names of the Terraform Cloud or Terraform Enterprise organizations that
+# modules can be sourced from. They should all belong to the same server.
+param organizations
+# A valid Terraform Cloud or Terraform Enterprise API token
+param token
+# The number of most recent versions to return
+param version_limit default 3
+
+# Validate sources of modules in the registry
+validate_modules = func() {
+
+  # Initialize variables
+  validated = true
+  newest_private_module_versions = {}
+  newest_public_module_versions = {}
+
+  # Iterate over all specified organizations
+  for organizations as organization {
+    # Invoke get_recent_module_versions function with "private" to get
+    # most recent versions for private modules in current organization
+    newest_private_module_versions_for_org =
+        registry.get_recent_module_versions(address, organization,
+                                    token, "private", version_limit)
+    for newest_private_module_versions_for_org as module, versions {
+      newest_private_module_versions[module] = versions
+    }
+    #print("newest private module versions:", newest_private_module_versions)
+
+    # Invoke get_recent_module_versions function with "public" to get
+    # most recent versions for publicly curated modules in current organization
+    newest_public_module_versions_for_org =
+        registry.get_recent_module_versions(address, organization,
+                                    token, "public", version_limit)
+    for newest_public_module_versions_for_org as module, versions {
+      newest_public_module_versions[module] = versions
+    }
+    #print("newest public module versions:", newest_public_module_versions)
+  }
+
+  # Get all module addresses in current configuration from the tfconfig/v2 import
+  allModuleAddresses = config.find_descendant_modules("")
+
+  # Iterate over all modules in the tfconfig/v2 import
+  for allModuleAddresses as module_address {
+    moduleCalls = config.find_module_calls_in_module(module_address)
+    # Iterate over modules of the current module
+    for moduleCalls as index, m {
+      # Check if module is a private module in the PMR
+      if any organizations as organization {
+        strings.has_prefix(m.source, address + "/" + organization)
+        } {
+        # Check version constraint of module against recent versions in PMR
+        source_without_address = strings.trim_prefix(m.source, address + "/")
+        # Support nested modules with sources like
+        # app.terraform.io/Cloud-Operations/security-group/aws//modules/cassandra
+        # We assume versions of submodules are same as parent module
+        org_name_provider = strings.split(source_without_address, "//")[0]
+        most_recent_versions = newest_private_module_versions[org_name_provider]
+        if not any most_recent_versions as module, recent_version {
+          version.new(recent_version).satisfies(m.version_constraint)
+        } {
+          if length(module_address) == 0 {
+            print("Private module", m.source, "used in the root module",
+                  "has version constraint", m.version_constraint, "that does not",
+                  "allow any of the", string(version_limit), "most recent versions",
+                  most_recent_versions)
+            validated = false
+          } else {
+            print("Private module", m.source, "used in module", module_address,
+                  "has version constraint", m.version_constraint, "that does not",
+                  "allow any of the", string(version_limit), "most recent versions",
+                  most_recent_versions)
+            validated = false
+          } // end root module check
+        } // end version check
+      # We ignore portion of source starting with "//" in order to support
+      # nested modules like terraform-aws-modules/security-group/aws//modules/cassandra
+      # in the following else if clause.
+      # We assume versions of submodules are same as parent module
+      } else if strings.split(m.source, "//")[0] in keys(newest_public_module_versions) {
+        # Check version constraint of module against recent versions in public registry
+        source_without_submodules = strings.split(m.source, "//")[0]
+        most_recent_versions = newest_public_module_versions[source_without_submodules]
+        if not any most_recent_versions as module, recent_version {
+          version.new(recent_version).satisfies(m.version_constraint)
+        } {
+          if length(module_address) == 0 {
+            print("Curated public registry module", m.source,
+                  "used in the root module has version constraint",
+                  m.version_constraint, "that does not allow any of the",
+                  string(version_limit), "most recent versions", most_recent_versions)
+            validated = false
+          } else {
+            print("Curated public registry module", m.source, "used in module",
+                  module_address, "has version constraint", m.version_constraint,
+                  "that does not allow any of the", string(version_limit),
+                  "most recent versions", most_recent_versions)
+            validated = false
+          } // end root module check
+        } // end version check
+      } else {
+        # Process other modules such as those in public registry that are not
+        # curated and those with non-registry sources. But allow local modules
+        # with source that start with things like "./" or "../"
+        source_without_submodules = strings.split(m.source, "//")[0]
+        if ! strings.has_prefix(source_without_submodules, ".") {
+          uncurated_public_module =
+            registry.is_module_in_public_registry(source_without_submodules)
+          if uncurated_public_module {
+            # Uncurated registry module
+            if length(module_address) == 0 {
+              print("Uncurated public registry module", m.source,
+                    "used in the root module is not allowed.", "Only private",
+                    "and publicly curated modules from these organizations",
+                    organizations, "are allowed and only if their versions",
+                    "are amongst the", string(version_limit), "most recent versions.")
+              validated = false
+            } else {
+              print("Uncurated public registry module", m.source, "used in module",
+                    module_address, "is not allowed.", "Only private",
+                    "and publicly curated modules from these organizations",
+                    organizations, "are allowed and only if their versions",
+                    "are amongst the", string(version_limit), "most recent versions.")
+              validated = false
+            } // end root module check
+          } else {
+            # Non-registry module
+            if length(module_address) == 0 {
+              print("Module", m.source,
+                    "used in the root module is not allowed.", "Only private",
+                    "and publicly curated modules from these organizations",
+                    organizations, "are allowed and only if their versions",
+                    "are amongst the", string(version_limit), "most recent versions.")
+              validated = false
+            } else {
+              print("Module", m.source, "used in module",
+                    module_address, "is not allowed.", "Only private",
+                    "and publicly curated modules from these organizations",
+                    organizations, "are allowed and only if their versions",
+                    "are amongst the", string(version_limit), "most recent versions.")
+              validated = false
+            } // end root module check
+          } // end uncurated public module check
+        }
+      } // end if module is private or curated public module in PMR
+    } // end for module calls
+  } // end modules
+
+  return validated
+}
+
+##### Rules #####
+
+# Call the validation function
+modules_validated = validate_modules()
+
+# Main rule
+main = rule {
+  modules_validated
+}
