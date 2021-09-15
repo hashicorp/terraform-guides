@@ -33,7 +33,7 @@ You can find most of the common functions used in the third-generation policies 
   * [tfconfig-functions](./common-functions/tfconfig-functions)
   * [tfrun-functions](./common-functions/tfrun-functions)
 
-There are also some functions that can be used with the AWS and Azure providers in [aws-functions](./aws/aws-functions) and [azure-functions](./azure/azure-functions).
+There are also some functions that can be used with the AWS and Azure providers in [aws-functions](./aws/aws-functions) and [azure-functions](./azure/azure-functions) and some functions that can be used when talking to module registries in [registry-functions](./cloud-agnostic/http-examples/registry-functions).
 
 Unlike the second-generation common functions that were each defined in a separate file, all of the common functions that use any of the 4 Terraform Sentinel imports (tfplan/v2, tfstate/v2, tfconfig/v2, and tfrun) are defined in a single file. This makes it easier to import all of the functions that use one of those imports into the Sentinel CLI test cases and Terraform Cloud policy sets, since those only need a single stanza such as this one for each module:
 ```
@@ -57,8 +57,9 @@ import "tfconfig-functions" as config
 import "tfrun-functions" as run
 import "aws-functions" as aws
 import "azure-functions" as azure
+import "registry-functions" as registry
 ```
-In this case, we are using `plan`, `state`, `config`, `run`, `aws`, and `azure` as aliases for the six imports to keep lines that use their functions shorter. Of course, you only need to import the modules that contain functions that your policy actually calls.
+In this case, we are using `plan`, `state`, `config`, `run`, `aws`, `azure`, and `registry` as aliases for the seven imports to keep lines that use their functions shorter. Of course, you only need to import the modules that contain functions that your policy actually calls.
 
 ### The Functions of the tfplan-functions and tfstate-functions Modules
 We discuss these two modules together because they are essentially identical except for their use of the tfplan/v2 and tfstate/v2 imports.
@@ -109,7 +110,7 @@ Documentation for each individual function can be found in this directory:
   * [tfrun-functions](./common-functions/tfrun-functions/docs)
 
 ### The Functions of the aws-functions Module
-The `aws-functions` module (which is located under in the aws/aws-functions directory) has the following functions:
+The `aws-functions` module (which is located in the aws/aws-functions directory) has the following functions:
   * The `find_resources_with_standard_tags` function finds all AWS resources of specified types that should have tags in the current plan that are not being permanently deleted.
   * The `determine_role_arn` function determines the ARN of a role set in the `role_arn` parameter of an AWS provider. It can only determine the role_arn if it is set to either a hard-coded value or to a reference to a single Terraform variable. It sets the role to "complex" if it finds a single non-variable reference or if it finds multiple references. It sets the role to "none" if no role arn is found.
   * The `get_assumed_roles` function gets all roles assumed by AWS providers in the current Terraform configuration. It calls the `determine_role_arn` function.
@@ -120,11 +121,21 @@ Documentation for each individual function can be found in this directory:
   * [aws-functions](./aws/aws-functions/docs)
 
 ### The Functions of the azure-functions Module
-The `azure-functions` module (which is located under in the azure/azure-functions directory) has the following functions:
+The `azure-functions` module (which is located in the azure/azure-functions directory) has the following functions:
   * The `find_resources_with_standard_tags` function finds all Azure resources of specified types that should have tags in the current plan that are not being permanently deleted.
 
 Documentation for each individual function can be found in this directory:
   * [azure-functions](./azure/azure-functions/docs)
+
+### The Functions of the registry-functions Module
+The `registry-functions` module (which is located in the cloud-agnostic/http-examples/registry-functions directory) has the following functions:
+  * The `get_recent_module_versions` function finds recent versions for private or public modules from a private module registry (PMR).
+  * The `get_recent_module_versions_by_page` function finds recent versions for private or public modules from a private module registry (PMR) one page at a time. It is called by the `get_recent_module_versions` function. Having a separate function that deals with pagination keeps the interface for the `get_recent_module_versions` function cleaner.
+  * The `find_most_recent_version` function finds the most recent versing string from a map of version strings.
+  * The `is_module_in_public_registry` function determines if a module is in the public module registry.
+
+Documentation for each individual function can be found in this directory:
+    * [registry-functions](./cloud-agnostic/http-examples/registry-functions/docs)
 
 ## Mock Files and Test Cases
 Sentinel [mock files](https://www.terraform.io/docs/enterprise/sentinel/mock.html) and [test cases](https://docs.hashicorp.com/sentinel/commands/config#test-cases) have been provided under the test directory of each cloud so that all the policies can be tested with the [Sentinel CLI](https://docs.hashicorp.com/sentinel/commands). The mocks were generated from actual Terraform 0.12 plans run against Terraform code that provisioned resources in these clouds. The pass and fail mock files were edited to respectively pass and fail the associated Sentinel policies. Some policies, including those that have multiple rules, have multiple fail mock files with names that indicate which condition or conditions they fail.
