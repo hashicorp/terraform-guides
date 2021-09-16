@@ -1,0 +1,51 @@
+import "strings"
+
+module_calls = {
+	"module.windowsserver:os": {
+		"config": {
+			"vm_os_simple": {
+				"references": [
+					"var.vm_os_simple",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.windowsserver",
+		"name":               "os",
+		"source":             "./os",
+		"version_constraint": "",
+	},
+	"network": {
+		"config": {
+			"allow_ssh_traffic": {
+				"constant_value": true,
+			},
+			"location": {
+				"references": [
+					"var.location",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "eks",
+		"source":             "terraform-aws-modules/eks/aws",
+		"version_constraint": "17.18.0",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

@@ -1,0 +1,79 @@
+import "strings"
+
+module_calls = {
+	"module.windowsserver:os": {
+		"config": {
+			"vm_os_simple": {
+				"references": [
+					"var.vm_os_simple",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "module.windowsserver",
+		"name":               "os",
+		"source":             "./os",
+		"version_constraint": "",
+	},
+	"windowsserver": {
+		"config": {
+			"admin_password": {
+				"references": [
+					"var.admin_password",
+				],
+			},
+			"location": {
+				"references": [
+					"var.location",
+				],
+			},
+			"public_ip_dns": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+			"resource_group_name": {
+				"references": [
+					"var.windows_dns_prefix",
+				],
+			},
+			"storage_account_type": {
+				"references": [
+					"var.storage_account_type",
+				],
+			},
+			"vm_hostname": {
+				"constant_value": "demohost",
+			},
+			"vm_os_simple": {
+				"constant_value": "WindowsServer",
+			},
+			"vm_size": {
+				"references": [
+					"var.vm_size",
+				],
+			},
+			"vnet_subnet_id": {
+				"references": [
+					"module.network.vnet_subnets",
+				],
+			},
+		},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "windowsserver",
+		"source":             "./windows-server",
+		"version_constraint": "",
+	},
+}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

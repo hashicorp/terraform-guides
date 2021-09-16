@@ -6,24 +6,29 @@
 # the most recent version allowed by a version constraint, this ensures that
 # the most recent version of the module will be used.
 
-# Note that this policy requires the Sentinel runtime 0.16.0 or higher since it
+# This policy does not prevent use of non-versioned modules from other
+# sources such as local modules, GitHub, Bitbucket, etc. If you want to ensure
+# that all non-root modules come from your private module registry (PMR) use the
+# policy [require-all-resources-from-pmr.sentinel](https://github.com/hashicorp/terraform-guides/blob/master/governance/third-generation/cloud-agnostic/require-all-resources-from-pmr.sentinel).
+
+# This policy requires the Sentinel runtime 0.16.0 or higher since it
 # uses the Sentinel [version](https://docs.hashicorp.com/sentinel/imports/version) import.
 
-# Additionally, this policy uses Sentinel parameters
-
-# The policy supports pagination to get unlimited number of modules from private
+# This policy supports pagination to get unlimited number of modules from private
 # registries. Since the public registry has a very large number of modules,
 # the policy does not use pagination for it and limits the total number of
 # modules to 100.
 
-# This policy currently uses the /api/registry/v1/modules endpoint for private
+# This policy uses the /api/registry/v1/modules endpoint for private
 # registries rather than the newer /organizations/:organization_name/registry-modules
-# endpoint that can get both private and publicly curated modules. Note that
-# publically curated modules are not available in TFE. The
-# /organizations/:organization_name/registry-modules endpoint is available
-# in TFE since version v202106-1. We expect to create a version of this policy
-# that will use the new API endpoint but we will keep this policy so that
-# customers on older versions of TFE can still use it.
+# endpoint that can get both private and publicly curated modules. If you want
+# to restrict private and publicly curated modules from your PMR, use the
+# [use-recent-versions-from-pmr.sentinel](./use-recent-versions-from-pmr.sentinel)
+# policy. That policy supports restricting versions to the N most recent versions
+# where N is a policy parameter.
+
+# This policy needs modification to support calls to modules in other
+# organizations on the same TFE server.
 
 ##### Imports #####
 
@@ -127,7 +132,6 @@ validate_modules = func() {
 
   # Get all module addresses
   allModuleAddresses = config.find_descendant_modules("")
-  #print("Module addresses:", allModuleAddresses)
 
   # Iterate over all modules in the tfconfig/v2 import
   for allModuleAddresses as module_address {
@@ -137,7 +141,11 @@ validate_modules = func() {
       # Check if module is in the PMR
       if strings.has_prefix(m.source, address + "/" + organization) {
         # Check version constraint of module against latest version in PMR
-        org_name_provider = strings.trim_prefix(m.source, address + "/")
+        source_without_address = strings.trim_prefix(m.source, address + "/")
+        # Support nested modules with sources like
+        # app.terraform.io/Cloud-Operations/security-group/aws//modules/cassandra
+        # We assume versions of submodules are same as parent module
+        org_name_provider = strings.split(source_without_address, "//")[0]
         most_recent_version = discovered_modules[org_name_provider]
         if not version.new(most_recent_version).satisfies(m.version_constraint) {
           if length(module_address) == 0 {
@@ -154,9 +162,16 @@ validate_modules = func() {
         } // end version check
       } else {
         # Check version constraint of module against latest version in public registry
-        most_recent_version = discovered_modules[m.source]
-        if m.source in keys(discovered_modules) {
-          most_recent_version = discovered_modules[m.source]
+        # We check if source is in keys of discovered_modules and then check
+        # version constraint against most recent version.  If source is not in
+        # keys of discovered_modules, then it has source that does not support
+        # versioning and is allowed by this policy.
+        # We trim any submodule references off of m.source to support nested
+        # submodules like terraform-aws-modules/security-group/aws//modules/cassandra
+        # We assume versions of submodules are same as parent module
+        source_without_submodules = strings.split(m.source, "//")[0]
+        if source_without_submodules in keys(discovered_modules) {
+          most_recent_version = discovered_modules[source_without_submodules]
           if not version.new(most_recent_version).satisfies(m.version_constraint) {
             if length(module_address) == 0 {
               print("Public registry module", m.source, "used in the root module",
