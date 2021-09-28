@@ -8,17 +8,35 @@
 # If an apply is done, the script waits for it to finish and then
 # downloads the apply log and the state file.
 
-# Make sure TFE_TOKEN and TFE_ORG environment variables are set
+# Make sure TFE_ORG_TOKEN, TFE_USER_TOKEN and TFE_ORG environment variables are set
 # to owners team token and organization name for the respective
 # TFE environment. TFE_ADDR should be set to the FQDN/URL of the private
 # TFE server or if unset it will default to TF Cloud/SaaS address.
 
-if [ ! -z "$TFE_TOKEN" ]; then
-  token=$TFE_TOKEN
-  echo "TFE_TOKEN environment variable was found."
+# GENERAL USE
+# ./loadAndRunWorkspace-jq.sh <TFE-WORKSPACE-NAME> 
+# Additional options arguments exist for <GIT-REPO-URL> <OVERRIDE>
+#/loadAndRunWorkspace-jq.sh <TFE-WORKSPACE-NAME> <GIT-REPO-URL> <OVERRIDE>
+
+
+if [ ! -z "$TFE_ORG_TOKEN" ]; then
+  org_token=$TFE_ORG_TOKEN
+  echo "TFE_ORG_TOKEN environment variable was found."
 else
-  echo "TFE_TOKEN environment variable was not set."
-  echo "You must export/set the TFE_TOKEN environment variable."
+  echo "TFE_ORG_TOKEN environment variable was not set."
+  echo "You must export/set the TFE_ORG_TOKEN environment variable."
+  echo "It should be a user or team token that has write or admin"
+  echo "permission on the workspace."
+  echo "Exiting."
+  exit
+fi
+
+if [ ! -z "$TFE_USER_TOKEN" ]; then
+  user_token=$TFE_USRER_TOKEN
+  echo "TFE_ORG_TOKEN environment variable was found."
+else
+  echo "TFE_ORG_TOKEN environment variable was not set."
+  echo "You must export/set the TFE_ORG_TOKEN environment variable."
   echo "It should be a user or team token that has write or admin"
   echo "permission on the workspace."
   echo "Exiting."
@@ -54,7 +72,22 @@ fi
 # workspace name should not have spaces and should be set as second
 # argument from CLI
 
-workspace="workspace-from-api"
+workspace="$1-workspace-from-api"
+
+# Default workspace if first argument is null not passed.
+if [ ! -z "$1" ]; then
+  workspace=$1
+  echo "Using workspace provided as argument: " $workspace
+else
+  echo "Using workspace set in the script: " $workspace
+fi
+
+# Make sure $workspace does not have spaces
+if [[ "${workspace}" != "${workspace% *}" ]] ; then
+    echo "The workspace name cannot contain spaces."
+    echo "Please pick a name without spaces and run again."
+    exit
+fi
 
 # You can change sleep duration if desired
 sleep_duration=5
@@ -63,8 +96,8 @@ sleep_duration=5
 # If not "", Set to git clone URL
 # and clone the git repository
 # If "", then load code from config directory
-if [ ! -z $1 ]; then
-  git_url=$1
+if [ ! -z $2 ]; then
+  git_url=$2
   config_dir=$(echo $git_url | cut -d "/" -f 5 | cut -d "." -f 1)
   if [ -d "${config_dir}" ]; then
     echo "removing existing directory ${config_dir}"
@@ -78,20 +111,6 @@ else
   config_dir="config"
 fi
 
-# Set workspace if provided as the second argument
-if [ ! -z "$2" ]; then
-  workspace=$2
-  echo "Using workspace provided as argument: " $workspace
-else
-  echo "Using workspace set in the script: " $workspace
-fi
-
-# Make sure $workspace does not have spaces
-if [[ "${workspace}" != "${workspace% *}" ]] ; then
-    echo "The workspace name cannot contain spaces."
-    echo "Please pick a name without spaces and run again."
-    exit
-fi
 
 # Override soft-mandatory policy checks that fail.
 # Set to "yes" or "no" in second argument passed to script.
@@ -190,7 +209,7 @@ sed "s/placeholder/${workspace}/" < workspace.template.json > workspace.json
 # Check to see if the workspace already exists
 echo ""
 echo "Checking to see if workspace exists"
-check_workspace_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/workspaces/${workspace}")
+check_workspace_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/workspaces/${workspace}")
 
 # Parse workspace_id from check_workspace_result
 workspace_id=$(echo $check_workspace_result | jq -r '.data.id')
@@ -201,7 +220,7 @@ echo "Workspace ID: " $workspace_id
 if [ "$workspace_id" = "null" ]; then
   echo ""
   echo "Workspace did not already exist; will create it."
-  workspace_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @workspace.json "https://${address}/api/v2/organizations/${organization}/workspaces")
+  workspace_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @workspace.json "https://${address}/api/v2/organizations/${organization}/workspaces")
 
   # Parse workspace_id from workspace_result
   workspace_id=$(echo $workspace_result | jq -r '.data.id')
@@ -215,7 +234,7 @@ fi
 # Create configuration version
 echo ""
 echo "Creating configuration version."
-configuration_version_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @configversion.json "https://${address}/api/v2/workspaces/${workspace_id}/configuration-versions")
+configuration_version_result=$(curl -s --header "Authorization: Bearer $TFE_USER_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST --data @configversion.json "https://${address}/api/v2/workspaces/${workspace_id}/configuration-versions")
 
 # Parse configuration_version_id and upload_url
 config_version_id=$(echo $configuration_version_result | jq -r '.data.id')
@@ -260,19 +279,19 @@ do
   fixedvalue=$(escape_string "$value")
   sed -e "s/my-organization/$organization/" -e "s/my-workspace/${workspace}/" -e "s${sedDelim}my-key${sedDelim}$fixedkey${sedDelim}" -e "s${sedDelim}my-value${sedDelim}$fixedvalue${sedDelim}" -e "s/my-category/$category/" -e "s/my-hcl/$hcl/" -e "s/my-sensitive/$sensitive/" < variable.template.json | sed -e 's|\\|\\\\|g' > variable.json
   echo "Adding variable $key with value $value in category $category with hcl $hcl and sensitive $sensitive"
-  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
+  upload_variable_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" --data @variable.json "https://${address}/api/v2/vars?filter%5Borganization%5D%5Bname%5D=${organization}&filter%5Bworkspace%5D%5Bname%5D=${workspace}")
 done < ${variables_file}
 
 # List Sentinel Policy Sets
-sentinel_list_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/policy-sets")
+sentinel_list_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" "https://${address}/api/v2/organizations/${organization}/policy-sets")
 sentinel_policy_set_count=$(echo $sentinel_list_result | tr '\r\n' ' ' | jq -r '.meta.pagination."total-count"')
 echo ""
 echo "Number of Sentinel policy sets: " $sentinel_policy_set_count
 
 # Do a run
 sed "s/workspace_id/$workspace_id/" < run.template.json  > run.json
-run_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @run.json https://${address}/api/v2/runs)
-
+run_result=$(curl -s --header "Authorization: Bearer $TFE_USER_TOKEN" --request POST --header "Content-Type: application/vnd.api+json" --data @run.json https://${address}/api/v2/runs)
+sleep 5
 # Parse run_result
 run_id=$(echo $run_result | jq -r '.data.id')
 echo ""
@@ -282,13 +301,10 @@ echo "Run ID: " $run_id
 continue=1
 while [ $continue -ne 0 ]; do
   # Sleep
-  sleep $sleep_duration
-  echo ""
   echo "Checking run status"
-
+  sleep $sleep_duration
   # Check the status of run
-  check_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id})
-
+  check_result=$(curl -s --header "Authorization: Bearer $TFE_USER_TOKEN" --request GET --header "Content-Type: application/vnd.api+json"  https://${address}/api/v2/runs/${run_id})
   # Parse out the run status and is-confirmable
   run_status=$(echo $check_result | jq -r '.data.attributes.status')
   echo "Run Status: " $run_status
@@ -300,9 +316,8 @@ while [ $continue -ne 0 ]; do
 
   # Apply in some cases
   applied="false"
-
+  
   # Run is planning - get the plan
-
   # planned means plan finished and no Sentinel policy sets
   # exist or are applicable to the workspace
   if [[ "$run_status" == "planned" ]] && [[ "$is_confirmable" == "true" ]] && [[ "$override" == "no" ]]; then
@@ -326,7 +341,7 @@ while [ $continue -ne 0 ]; do
     echo "Since override was set to \"yes\", we are applying."
     # Do the apply
     echo "Doing Apply"
-    apply_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    apply_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
     applied="true"
   elif [[ "$run_status" == "cost_estimated" ]] && [[ "$is_confirmable" == "true" ]] && [[ "$override" == "yes" ]]; then
     continue=0
@@ -335,7 +350,7 @@ while [ $continue -ne 0 ]; do
     echo "Since override was set to \"yes\", we are applying."
     # Do the apply
     echo "Doing Apply"
-    apply_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    apply_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
     applied="true"
   # policy_checked means all Sentinel policies passed
   elif [[ "$run_status" == "policy_checked" ]]; then
@@ -343,7 +358,7 @@ while [ $continue -ne 0 ]; do
     # Do the apply
     echo ""
     echo "Policies passed. Doing Apply"
-    apply_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    apply_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
     applied="true"
   # policy_override means at least 1 Sentinel policy failed
   # but since $override is "yes", we will override and then apply
@@ -354,7 +369,7 @@ while [ $continue -ne 0 ]; do
     # Get the policy check ID
     echo ""
     echo "Getting policy check ID"
-    policy_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" https://${address}/api/v2/runs/${run_id}/policy-checks)
+    policy_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" https://${address}/api/v2/runs/${run_id}/policy-checks)
     # Parse out the policy check ID
     policy_check_id=$(echo $policy_result | jq -r '.data[0].id')
     echo ""
@@ -362,11 +377,11 @@ while [ $continue -ne 0 ]; do
     # Override policy
     echo ""
     echo "Overriding policy check"
-    override_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST https://${address}/api/v2/policy-checks/${policy_check_id}/actions/override)
+    override_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" --request POST https://${address}/api/v2/policy-checks/${policy_check_id}/actions/override)
     # Do the apply
     echo ""
     echo "Doing Apply"
-    apply_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
+    apply_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" --data @apply.json https://${address}/api/v2/runs/${run_id}/actions/apply)
     applied="true"
   # policy_override means at least 1 Sentinel policy failed
   # but since $override is "no", we will not override
@@ -410,7 +425,7 @@ done
 if [[ "$save_plan" == "true" ]]; then
   echo ""
   echo "Getting the result of the Terraform Plan."
-  plan_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id}?include=plan)
+  plan_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id}?include=plan)
   plan_log_url=$(echo $plan_result | jq -r '.included[0].attributes."log-read-url"')
   echo ""
   echo "Plan Log:"
@@ -427,7 +442,7 @@ if [[ "$applied" == "true" ]]; then
   echo "Will download apply log and state file."
 
   # Get run details including apply information
-  check_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id}?include=apply)
+  check_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/runs/${run_id}?include=apply)
 
   # Get apply ID
   apply_id=$(echo $check_result | jq -r '.included[0].id')
@@ -443,7 +458,7 @@ if [[ "$applied" == "true" ]]; then
     echo "Checking apply status"
 
     # Check the apply status
-    check_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/applies/${apply_id})
+    check_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" --header "Content-Type: application/vnd.api+json" https://${address}/api/v2/applies/${apply_id})
 
     # Parse out the apply status
     apply_status=$(echo $check_result | jq -r '.data.attributes.status')
@@ -482,7 +497,7 @@ if [[ "$applied" == "true" ]]; then
   echo "State ID:" ${state_id}
 
   # Call API to get information about the state version including its URL and outputs
-  state_file_url_result=$(curl -s --header "Authorization: Bearer $TFE_TOKEN" "https://${address}/api/v2/state-versions/${state_id}?include=outputs")
+  state_file_url_result=$(curl -s --header "Authorization: Bearer $TFE_ORG_TOKEN" "https://${address}/api/v2/state-versions/${state_id}?include=outputs")
 
   # Retrieve and echo outputs from state
   # Note that we retrieved outputs in the last API call by
