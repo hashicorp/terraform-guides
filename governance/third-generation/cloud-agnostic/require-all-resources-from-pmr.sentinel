@@ -14,19 +14,21 @@ import "strings"
 ### Parameters ###
 # The address of the TFC or TFE server
 param address default "app.terraform.io"
-# The organization on the TFC or TFE server
-param organization
+# The organizations on the TFC or TFE server that modules can some from
+param organizations
 
 # Fnd modules called from root module that are not in the desired PMR
 violatingMCs = filter tfconfig.module_calls as index, mc {
   mc.module_address is "" and
-  not strings.has_prefix(mc.source, address + "/" + organization)
+  not any organizations as organization {
+    strings.has_prefix(mc.source, address + "/" + organization)
+  }
 }
 
 # Print violation messages for invalid modules
 if length(violatingMCs) > 0 and not tfrun.is_destroy {
-  print("All modules called from the root module must come from the",
-        "private module registry", address + "/" + organization)
+  print("All modules called from the root module must come from a",
+        "private module registry in one of these organizations:", organizations, " on server", address)
   for violatingMCs as address, mc {
     print("The module", mc.name, "called from the root module has source",
           mc.source)

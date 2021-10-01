@@ -2,8 +2,8 @@ param "address" {
   value = "app.terraform.io"
 }
 
-param "organization" {
-  value = "Cloud-Operations"
+param "organizations" {
+  value = ["Cloud-Operations", "App-Operations"]
 }
 
 mock "tfconfig/v2" {
