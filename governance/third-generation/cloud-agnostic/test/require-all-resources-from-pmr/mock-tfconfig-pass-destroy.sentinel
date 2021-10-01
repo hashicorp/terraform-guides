@@ -122,6 +122,15 @@ module_calls = {
 		"source":             "app.terraform.io/Cloud-Operations/compute/aws",
 		"version_constraint": "",
 	},
+	"nested-local": {
+		"config":             {},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "nested-local",
+		"source":             "./module",
+		"version_constraint": "",
+	},
 }
 
 strip_index = func(addr) {

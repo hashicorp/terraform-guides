@@ -113,13 +113,22 @@ outputs = {
 }
 
 module_calls = {
-	"nested": {
+	"nested-cloud": {
 		"config":             {},
 		"count":              {},
 		"for_each":           {},
 		"module_address":     "",
-		"name":               "nested",
-		"source":             "app.terraform.io/Cloud-Operations/compute/aws",
+		"name":               "nested-cloud",
+		"source":             "app.terraform.io/Cloud-Operations/network/aws",
+		"version_constraint": "",
+	},
+	"nested-app": {
+		"config":             {},
+		"count":              {},
+		"for_each":           {},
+		"module_address":     "",
+		"name":               "nested-app",
+		"source":             "app.terraform.io/App-Operations/compute/aws",
 		"version_constraint": "",
 	},
 }
