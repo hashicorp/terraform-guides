@@ -1,5 +1,5 @@
 # find_datasources_by_provider
-This function finds all data source instances for a specific provider that are being created, modified, or read in the current plan using the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import. Data sources with the "no-op" action are also included.
+This function finds all data source instances for a specific provider that are being created, modified, or read in the current plan using the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import. Data sources with the "no-op" action are also included, but only if their `change.after` attribute is not null.
 
 When evaluating data sources that do not reference any computed values (those known after doing an apply), it is usually better to use the [tfstate/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfstate-v2.html) import and the corresponding [find_datasources](../tfstate-functions/find_datasources.md) function that uses that import.
 

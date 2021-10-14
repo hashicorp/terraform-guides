@@ -27,7 +27,8 @@ find_resources = func(type) {
   	rc.type is type and
   	rc.mode is "managed" and
   	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-     rc.change.actions contains "read" or rc.change.actions contains "no-op")
+     rc.change.actions contains "read" or (rc.change.actions contains "no-op" and
+     rc.change.after is not null))
   }
 
   return resources
@@ -53,7 +54,8 @@ find_resources_by_provider = func(provider) {
       rc.provider_name is provider and
     	rc.mode is "managed" and
     	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-       rc.change.actions contains "read" or rc.change.actions contains "no-op")
+       rc.change.actions contains "read" or (rc.change.actions contains "no-op" and
+       rc.change.after is not null))
     }
   } else {
     # v_major must be higher than 12 since v2 imports being used
@@ -65,7 +67,8 @@ find_resources_by_provider = func(provider) {
         strings.split(rc.provider_name, "/")[2] is provider and
       	rc.mode is "managed" and
       	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+         rc.change.actions contains "read" or (rc.change.actions contains "no-op" and
+         rc.change.after is not null))
       }
     } else {
       # Function was passed long form, so we use full rc.provider_name
@@ -73,7 +76,8 @@ find_resources_by_provider = func(provider) {
         rc.provider_name is provider and
       	rc.mode is "managed" and
       	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+         rc.change.actions contains "read" or (rc.change.actions contains "no-op" and
+         rc.change.after is not null))
       }
     } // end segment_count
   } // end v_major
@@ -92,7 +96,7 @@ find_datasources = func(type) {
   	(rc.change.actions contains "create" or
     rc.change.actions contains "update" or
     rc.change.actions contains "read" or
-    rc.change.actions contains "no-op")
+    (rc.change.actions contains "no-op" and rc.change.after is not null))
   }
 
   return datasources
@@ -118,7 +122,8 @@ find_datasources_by_provider = func(provider) {
       rc.provider_name is provider and
     	rc.mode is "data" and
     	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-       rc.change.actions contains "read" or rc.change.actions contains "no-op")
+       rc.change.actions contains "read" or (rc.change.actions contains "no-op" and
+       rc.change.after is not null))
     }
   } else {
     # v_major must be higher than 12 since v2 imports being used
@@ -130,7 +135,8 @@ find_datasources_by_provider = func(provider) {
         strings.split(rc.provider_name, "/")[2] is provider and
       	rc.mode is "data" and
       	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+         rc.change.actions contains "read" or (rc.change.actions contains "no-op" and
+         rc.change.after is not null))
       }
     } else {
       # Function was passed long form, so we use full rc.provider_name
@@ -138,7 +144,8 @@ find_datasources_by_provider = func(provider) {
         rc.provider_name is provider and
       	rc.mode is "data" and
       	(rc.change.actions contains "create" or rc.change.actions contains "update" or
-         rc.change.actions contains "read" or rc.change.actions contains "no-op")
+         rc.change.actions contains "read" or (rc.change.actions contains "no-op" and
+         rc.change.after is not null))
       }
     } // end segment_count
   } // end v_major

@@ -1,5 +1,5 @@
 # find_resources
-This function finds all resource instances of a specific type in the current plan that are being created, modified or read using the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import. Resources with the "no-op" action are also included.
+This function finds all resource instances of a specific type in the current plan that are being created, modified or read using the [tfplan/v2](https://www.terraform.io/docs/cloud/sentinel/import/tfplan-v2.html) import. Resources with the "no-op" action are also included, but only if their `change.after` attribute is not null.
 
 ## Sentinel Module
 This function is contained in the [tfplan-functions.sentinel](../tfplan-functions.sentinel) module.
