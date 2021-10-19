@@ -25,7 +25,7 @@ This function returns a map with two maps, `items` and `messages`. The `items` m
 This function prints the violation messages if the parameter, `prtmsg`, was set to `true`. Otherwise, it does not print anything.
 
 ## Examples
-Here are some examples of calling this function, assuming that the tfconfig-functions.sentinel file that contains it has been imported with the alias `plan`:
+Here are some examples of calling this function, assuming that the tfconfig-functions.sentinel file that contains it has been imported with the alias `config`:
 ```
 violatingProviders = config.filter_attribute_in_list(allProviders,
                      "name", prohibited_list, false)
