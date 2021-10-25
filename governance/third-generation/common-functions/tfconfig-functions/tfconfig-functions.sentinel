@@ -330,7 +330,6 @@ filter_attribute_not_in_list = func(items, attr, allowed, prtmsg) {
   # Iterate over items
   for items as index, item {
     val = evaluate_attribute(item, attr) else null
-    print("val:", val)
     # Check if the value is null
     if val is null {
       val = "null"
@@ -387,7 +386,6 @@ filter_attribute_in_list = func(items, attr, forbidden, prtmsg) {
   # Iterate over items
   for items as index, item {
     val = evaluate_attribute(item, attr) else null
-    print("val:", val)
     # Check if the value is null
     if val is null {
       val = "null"
