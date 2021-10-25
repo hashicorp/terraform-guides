@@ -1,0 +1,58 @@
+# This policy uses the Sentinel tfplan/v2 and tfconfig/v2 imports to require that
+# auditing is enabled for all MSSQL databases.
+# This can be done at the database or server level.
+# It can also be done directly in the database and server resources or in
+# audit policy resources that point back at the database or server.
+# This policy only examines databases and database-level auditing policies
+# A more robust policy would also examine the servers of the databases and
+# server-level auditing policies.
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Import common-functions/tfconfig-functions/tfconfig-functions.sentinel
+# with alias "config"
+import "tfconfig-functions" as config
+
+# Get all MSSQL Databases from the plan
+allMSSQLDatabases = plan.find_resources("azurerm_mssql_database")
+
+# Filter to Azure MSSQL Databases for which extended_auditing_policy is null
+# which includes those for which this block is missing.
+# Warnings will not be printed for violations since the last parameter is false
+MSSQLDatabasesWithoutInlineAuditingPolicies = plan.filter_attribute_is_value(
+                allMSSQLDatabases, "extended_auditing_policy", "null", false)
+
+# Get all Azure MSSQL Database extended audting policies from the config
+allMSSQLDatabaseExtendedAuditingPolicies = config.find_resources_by_type(
+                          "azurerm_mssql_database_extended_auditing_policy")
+
+# Iterate over the databases that do not have inline auditing policies
+validated = true
+for MSSQLDatabasesWithoutInlineAuditingPolicies["resources"] as address, db {
+  # Compute expression for database ID as referenced in auditing policy
+  db_id = db.type + "." + db.name + ".id"
+
+  # Filter to auditing policies that match db_id
+  # Note that we have to include `config.` before `database_id` since the
+  # database_id attribute is under the `config` map.
+  matchingMSSQLDatabaseExtendedAuditingPolicies = config.filter_attribute_in_list(
+      allMSSQLDatabaseExtendedAuditingPolicies, "config.database_id", [db_id], false)
+
+  # Check if there were any matches
+  if length(matchingMSSQLDatabaseExtendedAuditingPolicies["items"]) is 0 {
+    validated = false
+    print("MSSQL Database", address, "does not have an inline auditing policy",
+          "and no instance of azurerm_mssql_database_extended_auditing_policy",
+          "references it. Please either add an inline auditing policy to it",
+          "with the extended_auditing_policy block, or add an instance of",
+          "azurerm_mssql_database_extended_auditing_policy that references",
+          db_id)
+  }
+}
+
+# Main rule
+main = rule {
+  validated
+}

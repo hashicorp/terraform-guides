@@ -1,0 +1,213 @@
+import "strings"
+
+providers = {
+	"azurerm": {
+		"alias": "",
+		"config": {
+			"features": [
+				{},
+			],
+		},
+		"module_address":      "",
+		"name":                "azurerm",
+		"provider_config_key": "azurerm",
+		"version_constraint":  "",
+	},
+}
+
+resources = {
+	"azurerm_mssql_database.test": {
+		"address": "azurerm_mssql_database.test",
+		"config": {
+			"collation": {
+				"constant_value": "SQL_Latin1_General_CP1_CI_AS",
+			},
+			"license_type": {
+				"constant_value": "LicenseIncluded",
+			},
+			"max_size_gb": {
+				"constant_value": 4,
+			},
+			"name": {
+				"constant_value": "acctest-db-d",
+			},
+			"read_scale": {
+				"constant_value": true,
+			},
+			"server_id": {
+				"references": [
+					"azurerm_mssql_server.example.id",
+					"azurerm_mssql_server.example",
+				],
+			},
+			"sku_name": {
+				"constant_value": "BC_Gen5_2",
+			},
+			"tags": {
+				"constant_value": {
+					"foo": "bar",
+				},
+			},
+			"zone_redundant": {
+				"constant_value": true,
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "test",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_mssql_database",
+	},
+	"azurerm_mssql_database_extended_auditing_policy.example": {
+		"address": "azurerm_mssql_database_extended_auditing_policy.example",
+		"config": {
+			"database_id": {
+				"references": [
+					"azurerm_mssql_database.test.id",
+					"azurerm_mssql_database.test",
+				],
+			},
+			"retention_in_days": {
+				"constant_value": 6,
+			},
+			"storage_account_access_key": {
+				"references": [
+					"azurerm_storage_account.example.primary_access_key",
+					"azurerm_storage_account.example",
+				],
+			},
+			"storage_account_access_key_is_secondary": {
+				"constant_value": false,
+			},
+			"storage_endpoint": {
+				"references": [
+					"azurerm_storage_account.example.primary_blob_endpoint",
+					"azurerm_storage_account.example",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_mssql_database_extended_auditing_policy",
+	},
+	"azurerm_mssql_server.example": {
+		"address": "azurerm_mssql_server.example",
+		"config": {
+			"administrator_login": {
+				"constant_value": "4dm1n157r470r",
+			},
+			"administrator_login_password": {
+				"constant_value": "4-v3ry-53cr37-p455w0rd",
+			},
+			"location": {
+				"references": [
+					"azurerm_resource_group.example.location",
+					"azurerm_resource_group.example",
+				],
+			},
+			"name": {
+				"constant_value": "example-sqlserver",
+			},
+			"resource_group_name": {
+				"references": [
+					"azurerm_resource_group.example.name",
+					"azurerm_resource_group.example",
+				],
+			},
+			"version": {
+				"constant_value": "12.0",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_mssql_server",
+	},
+	"azurerm_resource_group.example": {
+		"address": "azurerm_resource_group.example",
+		"config": {
+			"location": {
+				"constant_value": "West Europe",
+			},
+			"name": {
+				"constant_value": "example-resources",
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_resource_group",
+	},
+	"azurerm_storage_account.example": {
+		"address": "azurerm_storage_account.example",
+		"config": {
+			"account_replication_type": {
+				"constant_value": "LRS",
+			},
+			"account_tier": {
+				"constant_value": "Standard",
+			},
+			"location": {
+				"references": [
+					"azurerm_resource_group.example.location",
+					"azurerm_resource_group.example",
+				],
+			},
+			"name": {
+				"constant_value": "examplesa",
+			},
+			"resource_group_name": {
+				"references": [
+					"azurerm_resource_group.example.name",
+					"azurerm_resource_group.example",
+				],
+			},
+		},
+		"count":               {},
+		"depends_on":          [],
+		"for_each":            {},
+		"mode":                "managed",
+		"module_address":      "",
+		"name":                "example",
+		"provider_config_key": "azurerm",
+		"provisioners":        [],
+		"type":                "azurerm_storage_account",
+	},
+}
+
+provisioners = {}
+
+variables = {}
+
+outputs = {}
+
+module_calls = {}
+
+strip_index = func(addr) {
+	s = strings.split(addr, ".")
+	for s as i, v {
+		s[i] = strings.split(v, "[")[0]
+	}
+
+	return strings.join(s, ".")
+}

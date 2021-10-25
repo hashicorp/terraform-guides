@@ -9,13 +9,18 @@ module "tfstate-functions" {
 module "tfconfig-functions" {
     source = "../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
 }
-    
+
 module "azure-functions" {
     source = "./azure-functions/azure-functions.sentinel"
 }
 
 policy "enforce-mandatory-tags" {
     source = "./enforce-mandatory-tags.sentinel"
+    enforcement_level = "advisory"
+}
+
+policy "require-database-auditing" {
+    source = "./require-database-auditing.sentinel"
     enforcement_level = "advisory"
 }
 
