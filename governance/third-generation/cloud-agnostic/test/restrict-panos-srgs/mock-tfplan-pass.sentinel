@@ -1,0 +1,176 @@
+terraform_version = "1.0.10"
+
+variables = {}
+
+resource_changes = {
+	"panos_security_rule_group.devtodmz": {
+		"address": "panos_security_rule_group.devtodmz",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"position_keyword":   null,
+				"position_reference": null,
+				"rule": [
+					{
+						"action": "allow",
+						"applications": [
+							"any",
+						],
+						"categories": [
+							"any",
+						],
+						"data_filtering": null,
+						"description":    "test",
+						"destination_addresses": [
+							"10.1.2.0/24",
+						],
+						"destination_zones": [
+							"dmz",
+						],
+						"disable_server_response_inspection": null,
+						"disabled":                           null,
+						"file_blocking":                      null,
+						"group":                              null,
+						"hip_profiles": [
+							"any",
+						],
+						"icmp_unreachable":   null,
+						"log_end":            true,
+						"log_setting":        null,
+						"log_start":          null,
+						"name":               "allow dev to dmz",
+						"negate_destination": null,
+						"negate_source":      null,
+						"schedule":           null,
+						"services": [
+							"application-default",
+						],
+						"source_addresses": [
+							"10.1.1.0/24",
+						],
+						"source_users": [
+							"any",
+						],
+						"source_zones": [
+							"dev",
+						],
+						"spyware":           null,
+						"tags":              null,
+						"type":              "universal",
+						"url_filtering":     null,
+						"virus":             null,
+						"vulnerability":     null,
+						"wildfire_analysis": null,
+					},
+				],
+				"vsys": "vsys1",
+			},
+			"after_unknown": {
+				"id": true,
+				"rule": [
+					{
+						"applications": [
+							false,
+						],
+						"categories": [
+							false,
+						],
+						"destination_addresses": [
+							false,
+						],
+						"destination_zones": [
+							false,
+						],
+						"hip_profiles": [
+							false,
+						],
+						"services": [
+							false,
+						],
+						"source_addresses": [
+							false,
+						],
+						"source_users": [
+							false,
+						],
+						"source_zones": [
+							false,
+						],
+					},
+				],
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "devtodmz",
+		"provider_name":  "registry.terraform.io/paloaltonetworks/panos",
+		"type":           "panos_security_rule_group",
+	},
+	"panos_zone.dev": {
+		"address": "panos_zone.dev",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"enable_user_id": false,
+				"exclude_acls":   null,
+				"include_acls":   null,
+				"log_setting":    null,
+				"mode":           "layer3",
+				"name":           "dev",
+				"vsys":           "vsys1",
+				"zone_profile":   null,
+			},
+			"after_unknown": {
+				"id":         true,
+				"interfaces": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "dev",
+		"provider_name":  "registry.terraform.io/paloaltonetworks/panos",
+		"type":           "panos_zone",
+	},
+	"panos_zone.dmz": {
+		"address": "panos_zone.dmz",
+		"change": {
+			"actions": [
+				"create",
+			],
+			"after": {
+				"enable_user_id": false,
+				"exclude_acls":   null,
+				"include_acls":   null,
+				"log_setting":    null,
+				"mode":           "layer3",
+				"name":           "dmz",
+				"vsys":           "vsys1",
+				"zone_profile":   null,
+			},
+			"after_unknown": {
+				"id":         true,
+				"interfaces": true,
+			},
+			"before": null,
+		},
+		"deposed":        "",
+		"index":          null,
+		"mode":           "managed",
+		"module_address": "",
+		"name":           "dmz",
+		"provider_name":  "registry.terraform.io/paloaltonetworks/panos",
+		"type":           "panos_zone",
+	},
+}
+
+output_changes = {}

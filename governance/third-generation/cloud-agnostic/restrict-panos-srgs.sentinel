@@ -1,0 +1,37 @@
+# This policy uses the Sentinel tfplan/v2 import to restrict the
+# destination addresses of Palo Alto Networks security rule groups
+# to not have "any".
+
+# Import common-functions/tfplan-functions/tfplan-functions.sentinel
+# with alias "plan"
+import "tfplan-functions" as plan
+
+# Get all Security Rule Groups
+allSRGs = plan.find_resources("panos_security_rule_group")
+
+# Validate Security Rule Groups
+violatingSRGsCount = 0
+for allSRGs as address, srg {
+
+  # Find the rules of the current SRG
+  rules = plan.find_blocks(srg, "rule")
+
+  # Filter to violating rules that contain "any" in destination_addresses
+  # Warnings will not be printed for violations since the last parameter is false
+  violatingRules = plan.filter_attribute_contains_items_from_list(rules,
+                 "destination_addresses", ["any"], false)
+
+  # Print violation messages
+  if length(violatingRules["messages"]) > 0 {
+    violatingSRGsCount += 1
+    print("SRG Rule Violation:", address, "has at least one rule",
+          "with destination_addresses containing \"any\".")
+    plan.print_violations(violatingRules["messages"], "Rule")
+  }  // end if
+  
+} // end for SRGs
+
+# Main rule
+main = rule {
+  violatingSRGsCount is 0
+}

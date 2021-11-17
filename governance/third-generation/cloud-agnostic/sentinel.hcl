@@ -104,6 +104,11 @@ policy "restrict-databricks-clusters" {
     enforcement_level = "advisory"
 }
 
+policy "restrict-panos-srgs" {
+    source = "./restrict-panos-srgs.sentinel"
+    enforcement_level = "advisory"
+}
+
 policy "restrict-remote-state" {
     source = "./restrict-remote-state.sentinel"
     enforcement_level = "advisory"
