@@ -1,6 +1,6 @@
 # Governance with Terraform Sentinel Policies
 
-** Note: The Third-Generation Policies Now Live in [terraform-sentinel-policies](https://github.com/hashicorp/terraform-sentinel-policies). Please add and edit policies in that repository.**
+**Note: The Third-Generation Policies Now Live in [terraform-sentinel-policies](https://github.com/hashicorp/terraform-sentinel-policies). Please add and edit policies in that repository.**
 
 Sentinel gives operations teams the governance capabilities they need to ensure that all infrastructure provisioned with Terraform Enterprise complies with their organization's provisioning rules. The files under this directory and its sub-directories provide some sample Sentinel policies for AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware as well as some cloud-agnostic policies.
 
