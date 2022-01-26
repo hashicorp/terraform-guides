@@ -1,6 +1,6 @@
 # Third-Generation Sentinel Policies
 
-** Note: The Third-Generation Policies Now Live in [terraform-sentinel-policies](https://github.com/hashicorp/terraform-sentinel-policies). Please add and edit policies in that repository.**
+**Note: The Third-Generation Policies Now Live in [terraform-sentinel-policies](https://github.com/hashicorp/terraform-sentinel-policies). Please add and edit policies in that repository.**
 
 This directory and its sub-directories contain third-generation Sentinel policies and associated [Sentinel CLI](https://docs.hashicorp.com/sentinel/intro/getting-started/install) test cases and mocks which were created in 2020 for AWS, Microsoft Azure, Google Cloud Platform (GCP), and VMware. It also contains some some common, re-usable functions.
 
