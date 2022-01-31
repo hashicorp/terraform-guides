@@ -10,6 +10,10 @@ module "tfconfig-functions" {
     source = "../common-functions/tfconfig-functions/tfconfig-functions.sentinel"
 }
 
+module "gcp-functions" {
+    source = "./gcp-functions/gcp-functions.sentinel"
+}
+
 policy "enforce-mandatory-labels" {
     source = "./enforce-mandatory-labels.sentinel"
     enforcement_level = "advisory"
