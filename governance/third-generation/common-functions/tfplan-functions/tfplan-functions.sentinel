@@ -951,7 +951,7 @@ filter_attribute_does_not_have_suffix = func(resources, attr, suffix, prtmsg) {
       # Add the resource and a warning message to the violators list
       message = to_string(address) + " has " + to_string(attr) +
                 " that is null or undefined. " + "It must have a value that " +
-                "ends with " + to_string(prefix)
+                "ends with " + to_string(suffix)
       violators[address] = rc
 			messages[address] = message
       if prtmsg {
