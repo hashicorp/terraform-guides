@@ -7,7 +7,7 @@ import "tfplan-functions" as plan
 
 # Allowed GCE Instance Types
 # Include "null" to allow missing or computed values
-allowed_types = ["n1-standard-1", "n1-standard-2", "n1-standard-4"]
+allowed_types = ["n1-standard-2", "n1-standard-4"]
 
 # Get all GCE instances
 allGCEInstances = plan.find_resources("google_compute_instance")
