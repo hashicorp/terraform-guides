@@ -1,5 +1,0 @@
-test {
-  rules = {
-    main = true
-  }
-}
