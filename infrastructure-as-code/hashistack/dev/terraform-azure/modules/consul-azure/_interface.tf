@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Required variables
 variable "resource_group_name" {
   description = "Azure Resource Group to provision resources into"

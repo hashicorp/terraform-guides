@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "gcp_credentials" {
   description = "GCP credentials needed by Google Terraform provider"
 }

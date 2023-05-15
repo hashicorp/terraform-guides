@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "gn_name" {
   default     = ""
   description = "The default name for the Compute Network"

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Notify about untagged instances and their key names.                           
 resource "aws_lambda_function" "notifyUntaggedInstances" {
   filename         = "./files/notifyUntaggedInstances.zip"

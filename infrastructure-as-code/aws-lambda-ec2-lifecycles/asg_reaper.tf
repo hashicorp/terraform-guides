@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Checks the TTL of your instances, if expired can stop or terminate them.                         
 resource "aws_lambda_function" "ASGReaper" {
   filename         = "./files/ASGReaper.zip"

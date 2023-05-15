@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 # This script template is expected to be populated during the setup of a
 # OpenShift  node. It runs on host startup.

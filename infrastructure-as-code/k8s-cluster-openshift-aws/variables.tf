@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 //  The region we will deploy our cluster into.
 variable "region" {
   description = "Region to deploy the cluster into"

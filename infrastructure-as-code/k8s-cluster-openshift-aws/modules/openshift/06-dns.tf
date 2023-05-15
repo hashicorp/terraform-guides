@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 //  Notes: We could make the internal domain a variable, but not sure it is
 //  really necessary.
 

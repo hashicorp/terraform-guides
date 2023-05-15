@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 # Note: This script runs after the ansible install, use it to make configuration
 # changes which would otherwise be overwritten by ansible.

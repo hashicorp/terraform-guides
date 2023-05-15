@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "resource_group_consumable" {
   value       = "${azurerm_resource_group.demo_resource_group.name}"
   description = "The Demo VPC Name for later use"

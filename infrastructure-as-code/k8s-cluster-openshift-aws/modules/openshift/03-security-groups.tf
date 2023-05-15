@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 //  This security group allows intra-node communication on all ports with all
 //  protocols.
 resource "aws_security_group" "openshift-vpc" {

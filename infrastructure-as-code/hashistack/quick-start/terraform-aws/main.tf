@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 data "aws_ami" "base" {
   most_recent = true
   owners      = ["${var.ami_owner}"]

@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Authenticate against Vault
 login_result=$(curl --request POST --data '{"role": "demo", "jwt": "'"${K8S_TOKEN}"'"}' ${VAULT_ADDR}/v1/auth/${VAULT_K8S_BACKEND}/login)
 

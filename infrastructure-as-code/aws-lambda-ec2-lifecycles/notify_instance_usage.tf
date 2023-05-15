@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Notify slack about the # of each instance type you have running.
 resource "aws_lambda_function" "notifyInstanceUsage" {
   filename         = "./files/notifyInstanceUsage.zip"

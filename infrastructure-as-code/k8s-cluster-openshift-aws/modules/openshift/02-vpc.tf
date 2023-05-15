@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 //  Define the VPC.
 resource "aws_vpc" "openshift" {
   cidr_block           = "${var.vpc_cidr}"

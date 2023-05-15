@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # This lambda is intended to deal with untagged instances by either stopping
 # and then terminating them according to your lifecycle policy.
 resource "aws_lambda_function" "EC2Janitor" {

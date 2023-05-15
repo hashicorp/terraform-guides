@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # `.tf` files that contain the word "gitignore" are ignored
 # by git in the `.gitignore` file at the root of this repo.
 

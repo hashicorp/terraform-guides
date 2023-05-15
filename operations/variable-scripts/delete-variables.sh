@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Script that deletes all Terraform and environment variables in a Terraform Enterprise (TFE) workspace
 
 # Make sure TFE_TOKEN and TFE_ORG environment variables are set

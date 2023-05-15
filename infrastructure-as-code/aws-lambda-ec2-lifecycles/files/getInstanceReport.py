@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Example functions for AWS reporting. Use as a base to build your own.
 
 import boto3

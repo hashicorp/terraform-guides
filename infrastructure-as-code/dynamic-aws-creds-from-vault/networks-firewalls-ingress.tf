@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_security_group_rule" "ssh" {
   security_group_id = "${aws_security_group.egress_public.id}"
   type              = "ingress"

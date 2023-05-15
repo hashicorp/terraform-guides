@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # This script imports all policies in the current directory into a
 # specific policy set within a specific organization on a TFE server.
 
