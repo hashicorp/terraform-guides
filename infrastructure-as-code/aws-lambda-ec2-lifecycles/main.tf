@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Terraform configurations for creating lambda functions to help manage
 # your ec2 instance lifecycles. The data_collectors.tf and iam_roles.tf
 # files are required. You may also use one or more of the following:

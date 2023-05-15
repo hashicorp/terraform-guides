@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Gets a list of properly tagged ASGs and returns some info about them.
 
 import boto3

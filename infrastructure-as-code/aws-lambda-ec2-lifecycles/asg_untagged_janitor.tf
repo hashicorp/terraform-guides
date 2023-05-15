@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # This lambda is intended to deal with untagged Auto Scaling Groups.
 resource "aws_lambda_function" "ASGJanitor" {
   filename         = "./files/ASGJanitor.zip"

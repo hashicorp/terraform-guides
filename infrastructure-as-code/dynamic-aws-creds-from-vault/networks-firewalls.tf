@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_security_group" "egress_public" {
   name        = "${var.environment_name}-egress_public"
   description = "${var.environment_name}-egress_public"

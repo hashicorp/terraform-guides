@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Required variables
 variable "account_file_json" {
   description = "Path to the JSON file used to authenticate."

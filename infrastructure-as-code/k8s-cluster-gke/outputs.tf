@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "k8s_endpoint" {
   value = "${google_container_cluster.k8sexample.endpoint}"
 }

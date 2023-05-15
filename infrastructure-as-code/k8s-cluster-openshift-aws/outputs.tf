@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Output some useful variables for quick SSH access etc.
 output "master_url" {
   value = "https://${module.openshift.master_public_ip}.xip.io:8443"

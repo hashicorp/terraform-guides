@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "vpc_id_consumable" {
   value       = "${aws_vpc.demo_vpc.id}"
   description = "This is the VPC ID for later use"

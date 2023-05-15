@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # General purpose Lambda function for sending Slack messages, encrypted in transit.
 
 import boto3

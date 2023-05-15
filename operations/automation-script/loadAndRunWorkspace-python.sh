@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 policy sets#!/bin/bash
 # Script that clones Terraform configuration from a git repository
 # creates a workspace if it does not already exist, uploads the

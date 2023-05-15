@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Define the RHEL 7.2 AMI by:
 # RedHat, Latest, x86_64, EBS, HVM, RHEL 7.5
 data "aws_ami" "rhel7_5" {

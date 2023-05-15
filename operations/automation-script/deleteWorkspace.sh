@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Script to delete the workspace created by the loadAndRunWorkspace.sh script
 
 # Make sure TFE_TOKEN and TFE_ORG environment variables are set

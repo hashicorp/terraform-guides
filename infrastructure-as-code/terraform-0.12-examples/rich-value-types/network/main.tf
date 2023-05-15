@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_vpc" "my_vpc" {
   cidr_block = var.network_config.vpc_cidr
   tags = {

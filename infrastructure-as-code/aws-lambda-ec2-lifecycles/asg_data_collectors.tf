@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # These lambda functions return dictionaries of instances. 
 # Use them with other functions to take action on tagged, untagged
 # or running instances.

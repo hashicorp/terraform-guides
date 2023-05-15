@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "azurerm_network_security_group" "jumphost" {
   name                = "${var.environment_name}-jumphost"
   location            = "${var.location}"

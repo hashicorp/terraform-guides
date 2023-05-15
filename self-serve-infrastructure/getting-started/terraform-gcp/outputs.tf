@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "compute_network_consumable" {
   value       = "${google_compute_network.demo_network.name}"
   description = "The Network Name"

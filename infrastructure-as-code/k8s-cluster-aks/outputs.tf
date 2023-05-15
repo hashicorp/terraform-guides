@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 output "private_key_pem" {
   value = "${chomp(tls_private_key.ssh_key.private_key_pem)}"
 }

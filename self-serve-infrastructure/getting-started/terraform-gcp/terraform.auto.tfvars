@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # name         = "self-serve-getting-started-override" # Override "name" variable default
 # region       = "us-west1" # Override "region" variable default
 # zone         = "us-west1-a" # Override "zone" variable default

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 //  Output some useful variables for quick SSH access etc.
 output "master_public_dns" {
   value = "${aws_instance.master.public_dns}"

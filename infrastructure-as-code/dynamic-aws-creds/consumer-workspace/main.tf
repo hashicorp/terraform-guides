@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "name" { default = "dynamic-aws-creds-consumer" }
 variable "path" { default = "../producer-workspace/terraform.tfstate" }
 variable "ttl"  { default = "1" }

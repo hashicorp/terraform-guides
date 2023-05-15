@@ -1,4 +1,7 @@
 #!/bin/bash
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 
 # This script creates a Sentinel policy set version for an existing policy set
 # and then uploads sentinel.hcl, policies, and modules into it.

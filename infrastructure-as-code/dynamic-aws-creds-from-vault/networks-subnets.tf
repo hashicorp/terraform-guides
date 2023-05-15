@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 resource "aws_subnet" "public" {
   count = "${length(var.vpc_cidrs_public)}"
 

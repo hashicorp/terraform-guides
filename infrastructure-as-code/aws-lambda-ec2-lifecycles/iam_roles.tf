@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # IAM roles to allow Lambda functions to access different AWS resources.
 
 # Fetch our own account id and region. Used in our IAM policy templates.

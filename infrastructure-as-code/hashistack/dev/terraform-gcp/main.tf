@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Set environment name
 resource "random_id" "environment_name" {
   byte_length = 4

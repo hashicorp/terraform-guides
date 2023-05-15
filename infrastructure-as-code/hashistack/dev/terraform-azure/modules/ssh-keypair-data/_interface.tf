@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Optional Variables
 variable "private_key_filename" {
   default     = "private_key.pem"

@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 variable "rg_name" {
   default     = ""
   description = "The default name for the Resource Group"

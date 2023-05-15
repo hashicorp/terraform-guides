@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # This function deals with instances that are untagged.  Use the environment variables 
 # sleepDays and reapDays to set your lifecycle policies.
 
