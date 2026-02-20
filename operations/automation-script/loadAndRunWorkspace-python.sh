@@ -1,4 +1,4 @@
-policy sets#!/bin/bash
+#!/bin/bash
 # Script that clones Terraform configuration from a git repository
 # creates a workspace if it does not already exist, uploads the
 # Terraform configuration to it, adds variables to the workspace,
