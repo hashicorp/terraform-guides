@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 data "external" "delay" {
   program = ["./modules/openshift/delay-aws"]
 

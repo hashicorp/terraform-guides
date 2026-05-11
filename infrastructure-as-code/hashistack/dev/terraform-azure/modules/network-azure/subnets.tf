@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "azurerm_subnet" "public" {
   count = "${length(var.network_cidrs_public)}"
 

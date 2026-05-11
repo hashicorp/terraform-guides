@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 //  Create the master userdata script.
 data "template_file" "setup-master" {
   template = "${file("${path.module}/files/setup-master.sh")}"

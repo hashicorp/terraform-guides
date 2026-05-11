@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Optional Variables
 variable "private_key_filename" {
   default     = "private_key.pem"

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # This lambda is intended to deal with untagged instances by either stopping
 # and then terminating them according to your lifecycle policy.
 resource "aws_lambda_function" "EC2Janitor" {

@@ -1,4 +1,6 @@
 # Find all resources of specific type from all modules using the tfstate import
+# Copyright IBM Corp. 2017, 2026
+
 find_resources_from_state = func(type) {
 
   resources = {}

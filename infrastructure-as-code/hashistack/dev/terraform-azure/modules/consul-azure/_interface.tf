@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Required variables
 variable "resource_group_name" {
   description = "Azure Resource Group to provision resources into"

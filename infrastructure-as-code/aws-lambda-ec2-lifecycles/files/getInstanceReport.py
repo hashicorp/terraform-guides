@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Example functions for AWS reporting. Use as a base to build your own.
 
 import boto3

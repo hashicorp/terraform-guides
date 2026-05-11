@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 variable "region" {
   default     = ""
   description = "The default AZ to provision to for the provider"

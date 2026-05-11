@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "aws_subnet" "public" {
   count = "${length(var.vpc_cidrs_public)}"
 

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 FROM redis
 
 RUN apt-get update 

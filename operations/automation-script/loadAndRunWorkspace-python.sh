@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 policy sets#!/bin/bash
 # Script that clones Terraform configuration from a git repository
 # creates a workspace if it does not already exist, uploads the

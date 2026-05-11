@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 module "ssh_keypair_aws_override" {
   source = "github.com/hashicorp-modules/ssh-keypair-aws"
 

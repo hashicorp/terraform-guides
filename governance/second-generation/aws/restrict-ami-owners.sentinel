@@ -1,6 +1,8 @@
 # This policy uses the Sentinel tfstate import to restrict the owners set on
 # all instances of the aws_ami data source in all modules
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 import "tfstate"
 import "types"

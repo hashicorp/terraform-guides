@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 variable "tfe_organization" {
   description = "TFE organization"
 }

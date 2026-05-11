@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "azurerm_virtual_machine" "consul" {
   count = "${length(var.network_cidrs_private)}"
 

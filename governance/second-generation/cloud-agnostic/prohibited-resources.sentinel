@@ -1,5 +1,7 @@
 # This policy prevents prohibited resources from being used.
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfplan"

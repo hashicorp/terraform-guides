@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # Script that deletes all Terraform and environment variables in a Terraform Enterprise (TFE) workspace
 
 # Make sure TFE_TOKEN and TFE_ORG environment variables are set

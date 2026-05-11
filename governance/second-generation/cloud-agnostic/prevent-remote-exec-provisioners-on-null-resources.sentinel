@@ -1,6 +1,8 @@
 # This policy uses the Sentinel tfconfig import to prevent
 # remote-exec provisioners from being run on null resources
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfconfig"

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 //  Create a role which OpenShift instances will assume.
 //  This role has a policy saying it can be assumed by ec2
 //  instances.

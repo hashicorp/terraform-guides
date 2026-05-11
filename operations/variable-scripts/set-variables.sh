@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # Script that sets Terraform and environment variables in a
 # Terraform Enterprise (TFE) workspace
 # The variables must be set in <workspace>.csv, variables.csv or in a similar

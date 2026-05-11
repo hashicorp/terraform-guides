@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "aws_security_group" "egress_public" {
   name        = "${var.environment_name}-egress_public"
   description = "${var.environment_name}-egress_public"

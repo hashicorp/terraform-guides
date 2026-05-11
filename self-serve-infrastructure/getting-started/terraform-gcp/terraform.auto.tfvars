@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # name         = "self-serve-getting-started-override" # Override "name" variable default
 # region       = "us-west1" # Override "region" variable default
 # zone         = "us-west1-a" # Override "zone" variable default

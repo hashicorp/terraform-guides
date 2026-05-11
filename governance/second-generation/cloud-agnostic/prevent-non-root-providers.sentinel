@@ -2,6 +2,8 @@
 # in non-root modules, aligning with the best practices given in:
 # https://www.terraform.io/docs/configuration/modules.html
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 import "tfconfig"
 import "strings"

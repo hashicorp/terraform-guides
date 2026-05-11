@@ -1,5 +1,7 @@
 # This policy validates that all variables in all modules have descriptions
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 import "tfconfig"
 import "strings"

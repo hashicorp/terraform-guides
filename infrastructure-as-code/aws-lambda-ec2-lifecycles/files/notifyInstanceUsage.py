@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # General purpose Lambda function for sending Slack messages, encrypted in transit.
 
 import boto3

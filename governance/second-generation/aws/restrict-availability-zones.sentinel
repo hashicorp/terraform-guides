@@ -2,6 +2,8 @@
 # the availability zones used by EC2 instances.
 # This can be used to restrict the region by only listing zones in one of them.
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfplan"

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # `.tf` files that contain the word "gitignore" are ignored
 # by git in the `.gitignore` file at the root of this repo.
 

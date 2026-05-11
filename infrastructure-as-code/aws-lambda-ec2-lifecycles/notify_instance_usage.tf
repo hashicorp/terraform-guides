@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Notify slack about the # of each instance type you have running.
 resource "aws_lambda_function" "notifyInstanceUsage" {
   filename         = "./files/notifyInstanceUsage.zip"

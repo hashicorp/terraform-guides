@@ -4,6 +4,8 @@
 # there's a potentially hazardous asteroid reaching within a
 # million miles o' here, we're way too nervous and distracted to
 # be changing our infrastructure right now!
+# Copyright IBM Corp. 2017, 2026
+
 import "http"
 import "json"
 import "strings"

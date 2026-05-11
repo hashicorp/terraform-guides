@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Notify about untagged instances and their key names.                           
 resource "aws_lambda_function" "notifyUntaggedInstances" {
   filename         = "./files/notifyUntaggedInstances.zip"

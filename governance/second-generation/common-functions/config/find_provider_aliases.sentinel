@@ -1,4 +1,6 @@
 # Find all providers aliases of given type using the tfconfig import
+# Copyright IBM Corp. 2017, 2026
+
 find_provider_aliases = func(type) {
 
   # We will find all provider aliases og given type from tfconfig,

@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # This script deletes all policies from the specified organization
 # of the specified TFE server 
 

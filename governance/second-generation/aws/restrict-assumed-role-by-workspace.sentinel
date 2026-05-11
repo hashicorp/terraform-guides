@@ -4,6 +4,8 @@
 # It assumes that the role_arn is either a hard-coded value or a reference
 # to a Terraform variable
 
+# Copyright IBM Corp. 2017, 2026
+
 #### Imports #####
 import "tfconfig"
 import "tfplan"

@@ -1,5 +1,7 @@
 # Validate that all instances of a specified resource type being modified have
 # a specified top-level attribute with a given value
+# Copyright IBM Corp. 2017, 2026
+
 validate_attribute_has_value = func(type, attribute, value) {
 
   validated = true

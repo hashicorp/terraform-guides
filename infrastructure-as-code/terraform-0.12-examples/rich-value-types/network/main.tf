@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "aws_vpc" "my_vpc" {
   cidr_block = var.network_config.vpc_cidr
   tags = {

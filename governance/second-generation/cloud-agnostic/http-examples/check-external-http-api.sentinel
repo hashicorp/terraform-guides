@@ -4,6 +4,8 @@
 # that has a JSON-based API in order to confirm that the run is
 # allowed to do an apply.
 
+# Copyright IBM Corp. 2017, 2026
+
 # For example, some customers require tickets to be opened and approved
 # before an apply can be done.  The HTTP import could be used to check
 # those types of systems.

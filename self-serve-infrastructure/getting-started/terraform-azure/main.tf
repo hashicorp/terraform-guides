@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 provider "azurerm" {
   subscription_id = ""
   client_id       = ""

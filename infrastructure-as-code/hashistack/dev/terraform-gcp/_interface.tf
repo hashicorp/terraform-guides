@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Required variables
 variable "account_file_json" {
   description = "Path to the JSON file used to authenticate."

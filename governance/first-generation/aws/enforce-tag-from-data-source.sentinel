@@ -3,6 +3,8 @@
 # The allowable value of the "Env" tag is obtained from an aws_subnet Datasource
 # The Env tag from EC2 must match the Env tag of aws_subnet for the policy to pass. 
 
+# Copyright IBM Corp. 2017, 2026
+
 import "tfplan"
 
 # Get all aws_instance resources from all modules

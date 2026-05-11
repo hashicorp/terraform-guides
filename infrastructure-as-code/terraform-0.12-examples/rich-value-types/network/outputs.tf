@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 output "vpc" {
   value = aws_vpc.my_vpc
 }

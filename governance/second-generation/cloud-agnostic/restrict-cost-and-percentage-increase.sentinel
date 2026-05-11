@@ -3,6 +3,8 @@
 # the monthly cost that would be incurred if the current plan
 # were applied
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfrun"

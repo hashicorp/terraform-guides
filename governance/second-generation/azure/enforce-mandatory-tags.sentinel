@@ -1,6 +1,8 @@
 # This policy uses the Sentinel tfplan import to require that all Azure VMs
 # have all mandatory tags.
 
+# Copyright IBM Corp. 2017, 2026
+
 # Note that the comparison is case-sensitive even though Azure tags are not.
 # If you want to allow case variations, include them in your mandatory_tags list
 

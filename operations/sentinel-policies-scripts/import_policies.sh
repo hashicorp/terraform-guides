@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # This script imports all policies in the current directory into a
 # specific policy set within a specific organization on a TFE server.
 

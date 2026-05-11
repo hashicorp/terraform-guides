@@ -1,6 +1,8 @@
 # This policy uses the Sentinel tfplan import to require that
 # all VMware VMs obey CPU and memory limits
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfplan"

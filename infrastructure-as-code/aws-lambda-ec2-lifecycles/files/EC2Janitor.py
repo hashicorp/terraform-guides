@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # This function deals with instances that are untagged.  Use the environment variables 
 # sleepDays and reapDays to set your lifecycle policies.
 

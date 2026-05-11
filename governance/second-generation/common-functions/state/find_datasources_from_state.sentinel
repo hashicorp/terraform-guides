@@ -1,5 +1,7 @@
 # Find all data sources of a specific type from all modules using the
 # tfstate import
+# Copyright IBM Corp. 2017, 2026
+
 find_datasources_from_state = func(type) {
 
   datasources = {}

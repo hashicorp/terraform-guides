@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 //  Output some useful variables for quick SSH access etc.
 output "master_public_dns" {
   value = "${aws_instance.master.public_dns}"

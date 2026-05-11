@@ -1,5 +1,7 @@
 # Find all variables using the tfconfig import
 # This returns a flat map of variables across all modules
+# Copyright IBM Corp. 2017, 2026
+
 find_variables_in_config = func() {
   variables = {}
 

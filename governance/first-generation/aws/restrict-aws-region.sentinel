@@ -2,6 +2,8 @@
 # instances of the AWS provider in the root module of the workspace.
 # It does not check providers in nested modules.
 
+# Copyright IBM Corp. 2017, 2026
+
 import "tfconfig"
 import "tfplan"
 import "strings"

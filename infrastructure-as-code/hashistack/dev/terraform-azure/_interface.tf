@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Required variables
 
 variable "custom_image_id" {

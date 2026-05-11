@@ -1,5 +1,7 @@
 # This policy allows you to define a maximum number of resources that can be destroyed on a given run
 
+# Copyright IBM Corp. 2017, 2026
+
 import "tfplan"
 
 get_all_resources = func() {

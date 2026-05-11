@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 variable "rg_name" {
   default     = ""
   description = "The default name for the Resource Group"

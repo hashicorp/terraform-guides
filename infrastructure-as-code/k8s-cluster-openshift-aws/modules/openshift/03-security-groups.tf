@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 //  This security group allows intra-node communication on all ports with all
 //  protocols.
 resource "aws_security_group" "openshift-vpc" {

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright IBM Corp. 2017, 2026
+
 
 # Note: This script runs after the ansible install, use it to make configuration
 # changes which would otherwise be overwritten by ansible.

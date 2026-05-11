@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "azurerm_network_security_group" "jumphost" {
   name                = "${var.environment_name}-jumphost"
   location            = "${var.location}"

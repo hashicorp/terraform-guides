@@ -2,6 +2,8 @@
 # all Azure app services have https_only set to true so that
 # they can only be accessed via HTTPS
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfplan"
