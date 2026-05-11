@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 
 # This script creates a Sentinel policy set version for an existing policy set
 # and then uploads sentinel.hcl, policies, and modules into it.

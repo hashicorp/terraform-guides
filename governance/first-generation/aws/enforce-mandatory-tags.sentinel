@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 import "tfplan"
 
 # Warning, this is case sensitive.  

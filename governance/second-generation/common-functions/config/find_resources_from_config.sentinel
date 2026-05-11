@@ -1,4 +1,6 @@
 # Find all resources of specific type from all modules using the tfconfig import
+# Copyright IBM Corp. 2017, 2026
+
 find_resources_from_config = func(type) {
 
   resources = {}

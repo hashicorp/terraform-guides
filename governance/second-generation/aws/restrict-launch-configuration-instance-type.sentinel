@@ -3,6 +3,8 @@
 # While it could have used the common validate_attribute_in_list function,
 # we did not use it to provide an alternative.
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfplan"

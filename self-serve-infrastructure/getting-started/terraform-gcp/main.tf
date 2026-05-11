@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 provider "google" {
   project = "terraform-gcp-module-test"
   region  = "us-central1"

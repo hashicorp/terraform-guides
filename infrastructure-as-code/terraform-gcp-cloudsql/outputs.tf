@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 output "connection_name" {
   value = "${google_sql_database_instance.cloudsql-postgres-master.connection_name}"
 }

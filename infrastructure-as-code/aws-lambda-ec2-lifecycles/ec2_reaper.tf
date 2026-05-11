@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Checks the TTL of your instances, if expired can stop or terminate them.                         
 resource "aws_lambda_function" "EC2Reaper" {
   filename         = "./files/EC2Reaper.zip"

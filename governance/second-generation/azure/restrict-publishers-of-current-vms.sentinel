@@ -1,6 +1,8 @@
 # This policy uses the Sentinel tfstate import to require that
 # all existing Azure VMs have publishers from a specified list
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfstate"

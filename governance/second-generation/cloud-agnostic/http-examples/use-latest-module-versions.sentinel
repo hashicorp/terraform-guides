@@ -3,6 +3,8 @@
 # latest versions. It then uses the tfconfig import to inspect all non-root
 # modules and validate that those sourced from the registry use the latest versions.
 
+# Copyright IBM Corp. 2017, 2026
+
 # Note that this requires the Sentinel runtime 0.13.0 or higher.
 # Additionally, this policy uses Sentinel parameters
 # Be sure to read the associated use-latest-module-versions.md file.

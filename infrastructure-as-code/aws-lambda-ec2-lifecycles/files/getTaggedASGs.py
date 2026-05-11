@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Gets a list of properly tagged ASGs and returns some info about them.
 
 import boto3

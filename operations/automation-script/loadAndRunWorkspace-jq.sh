@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # Script that clones Terraform configuration from a git repository
 # creates a workspace if it does not already exist, uploads the
 # Terraform configuration to it, adds variables to the workspace,

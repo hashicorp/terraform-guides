@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 provider "google" {
   credentials = "${var.gcp_credentials}"
   project     = "${var.gcp_project}"

@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # Authenticate against Vault
 login_result=$(curl --request POST --data '{"role": "demo", "jwt": "'"${K8S_TOKEN}"'"}' ${VAULT_ADDR}/v1/auth/${VAULT_K8S_BACKEND}/login)
 

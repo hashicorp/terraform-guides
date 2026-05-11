@@ -1,6 +1,8 @@
 # This policy uses the Sentinel tfplan import to require that all GCP compute
 # instances have all mandatory labels.
 
+# Copyright IBM Corp. 2017, 2026
+
 # Note that the comparison is case-sensitive but also that GCP labels
 # are only allowed to contain lowercase letters, numbers, hypens, and underscores.
 

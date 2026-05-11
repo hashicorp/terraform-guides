@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Required variables
 variable "environment_name" {
   description = "Environment Name"

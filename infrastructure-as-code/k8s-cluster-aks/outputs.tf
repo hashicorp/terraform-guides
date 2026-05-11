@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 output "private_key_pem" {
   value = "${chomp(tls_private_key.ssh_key.private_key_pem)}"
 }

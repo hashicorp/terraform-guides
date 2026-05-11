@@ -1,5 +1,7 @@
 # Find all datasources of specific type from all modules
 # using the tfconfig import
+# Copyright IBM Corp. 2017, 2026
+
 find_datasources_from_config = func(type) {
 
   datasources = {}

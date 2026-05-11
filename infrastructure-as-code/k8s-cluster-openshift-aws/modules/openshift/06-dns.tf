@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 //  Notes: We could make the internal domain a variable, but not sure it is
 //  really necessary.
 

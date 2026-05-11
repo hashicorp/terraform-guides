@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # This function deals with ASGs that are untagged. 
 # TODO: Actually write the code to make it work.
 

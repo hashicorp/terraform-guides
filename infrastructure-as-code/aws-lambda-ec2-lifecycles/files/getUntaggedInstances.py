@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 import boto3
 import json
 import logging

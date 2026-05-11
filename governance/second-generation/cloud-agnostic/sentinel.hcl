@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 policy "prohibited-datasources" {
     enforcement_level = "advisory"
 }

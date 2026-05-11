@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 variable "resource_group_name" {
   description = "Azure Resource Group Name"
 }

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "aws_internet_gateway" "main" {
   vpc_id = "${aws_vpc.main.id}"
 

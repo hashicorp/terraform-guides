@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 output "compute_network_consumable" {
   value       = "${google_compute_network.demo_network.name}"
   description = "The Network Name"

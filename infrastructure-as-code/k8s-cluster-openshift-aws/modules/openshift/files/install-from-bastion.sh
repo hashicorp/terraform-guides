@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Copyright IBM Corp. 2017, 2026
+
 
 set -x
 exec > /home/ec2-user/install-openshift.log 2>&1

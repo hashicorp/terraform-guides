@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 output "resource_group_consumable" {
   value       = "${azurerm_resource_group.demo_resource_group.name}"
   description = "The Demo VPC Name for later use"

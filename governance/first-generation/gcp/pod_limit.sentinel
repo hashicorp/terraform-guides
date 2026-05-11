@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 import "tfplan"
 
 pods_limit = tfplan.resources.kubernetes_resource_quota

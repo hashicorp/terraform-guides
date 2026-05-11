@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # IAM roles to allow Lambda functions to access different AWS resources.
 
 # Fetch our own account id and region. Used in our IAM policy templates.

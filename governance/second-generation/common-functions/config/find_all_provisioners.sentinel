@@ -1,4 +1,6 @@
 # Find all provisioners using the tfconfig import
+# Copyright IBM Corp. 2017, 2026
+
 find_all_provisioners = func() {
 
   provisioners = {}

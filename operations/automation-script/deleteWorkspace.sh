@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright IBM Corp. 2017, 2026
+
 # Script to delete the workspace created by the loadAndRunWorkspace.sh script
 
 # Make sure TFE_TOKEN and TFE_ORG environment variables are set

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # These lambda functions return dictionaries of instances. 
 # Use them with other functions to take action on tagged, untagged
 # or running instances.

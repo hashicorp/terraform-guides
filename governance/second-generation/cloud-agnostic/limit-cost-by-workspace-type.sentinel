@@ -3,6 +3,8 @@
 # plan were applied, using different limits for different
 # workspaces based on their names.
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 
 import "tfrun"

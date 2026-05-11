@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 variable "gcp_credentials" {
   description = "GCP credentials needed by Google Terraform provider"
 }

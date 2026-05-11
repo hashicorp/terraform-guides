@@ -3,6 +3,8 @@
 # This does not do by-resource level restrictions, but restricts all resources with 
 # these actions
 
+# Copyright IBM Corp. 2017, 2026
+
 import "json"
 import "tfplan"
 

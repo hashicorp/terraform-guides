@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 output "k8s_endpoint" {
   value = "${google_container_cluster.k8sexample.endpoint}"
 }

@@ -1,6 +1,8 @@
 # This policy uses the Sentinel tfplan import to require that all EC2 instances
 # have all mandatory tags.
 
+# Copyright IBM Corp. 2017, 2026
+
 # Note that the comparison is case-sensitive since AWS tags are case-sensitive.
 
 ##### Imports #####

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 variable "name" { default = "dynamic-aws-creds-consumer" }
 variable "path" { default = "../producer-workspace/terraform.tfstate" }
 variable "ttl"  { default = "1" }

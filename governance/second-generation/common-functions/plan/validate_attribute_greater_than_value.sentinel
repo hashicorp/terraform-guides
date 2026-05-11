@@ -1,5 +1,7 @@
 # Validate that all instances of a specified resource type being modified have
 # a specified top-level attribute with a value greater than or equal to a min value
+# Copyright IBM Corp. 2017, 2026
+
 validate_attribute_greater_than_value = func(type, attribute, min_value) {
 
   validated = true

@@ -1,5 +1,7 @@
 # Validate that all instances of specified type have a specified top-level
 # attribute that contains all members of a given list
+# Copyright IBM Corp. 2017, 2026
+
 validate_attribute_contains_list = func(type, attribute, required_values) {
   validated = true
 

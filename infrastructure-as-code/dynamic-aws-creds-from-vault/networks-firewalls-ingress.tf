@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 resource "aws_security_group_rule" "ssh" {
   security_group_id = "${aws_security_group.egress_public.id}"
   type              = "ingress"

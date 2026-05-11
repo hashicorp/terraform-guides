@@ -1,4 +1,6 @@
 # Find all resource types from all modules using the tfplan import
+# Copyright IBM Corp. 2017, 2026
+
 find_resource_types_from_plan = func() {
 
   types = []

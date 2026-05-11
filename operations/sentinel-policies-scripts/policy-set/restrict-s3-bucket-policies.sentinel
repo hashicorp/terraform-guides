@@ -3,6 +3,8 @@
 # data source and that those policies require buckets to only be accessible
 # via HTTPS and from specific VPC endpoints.
 
+# Copyright IBM Corp. 2017, 2026
+
 # Import common-functions/tfplan-functions/tfplan-functions.sentinel
 # with alias "plan"
 import "tfplan-functions" as plan

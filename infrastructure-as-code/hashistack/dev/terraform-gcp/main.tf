@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Set environment name
 resource "random_id" "environment_name" {
   byte_length = 4

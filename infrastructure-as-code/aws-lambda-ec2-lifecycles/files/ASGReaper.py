@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # This function uses the getTaggedASGs.py function to fetch a list of properly tagged ASGs.
 # It will then determine whether those ASGs have expired, and delete them if they have.
 # Finally a message is sent to Slack or Email to notify your admins.

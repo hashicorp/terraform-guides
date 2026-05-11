@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # This lambda is intended to deal with untagged Auto Scaling Groups.
 resource "aws_lambda_function" "ASGJanitor" {
   filename         = "./files/ASGJanitor.zip"

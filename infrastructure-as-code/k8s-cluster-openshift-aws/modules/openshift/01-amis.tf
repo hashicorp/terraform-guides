@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Define the RHEL 7.2 AMI by:
 # RedHat, Latest, x86_64, EBS, HVM, RHEL 7.5
 data "aws_ami" "rhel7_5" {

@@ -1,3 +1,5 @@
+# Copyright IBM Corp. 2017, 2026
+
 # Outputs
 output "vpc_id" {
   value = "${aws_vpc.main.id}"

@@ -1,6 +1,8 @@
 # This policy uses the tfconfig import to prevent prohibited provisioners
 # from being used
 
+# Copyright IBM Corp. 2017, 2026
+
 ##### Imports #####
 import "tfconfig"
 import "strings"
