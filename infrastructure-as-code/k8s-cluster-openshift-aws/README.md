@@ -87,7 +87,7 @@ If you want to use open source Terraform instead of TFE, you can create a copy o
 1. On the Latest Run tab, you should see a new run. If the plan succeeds, you can view the plan and verify that the AWS infrastructure will be created and that various remote-exec and local-exec provisioners will run when you apply your plan.
 1. Click the "Confirm and Apply" button to actually provision your OpenShift cluster.
 
-Unfortunately, the Ansible playbook that provisions the OpenShift cluster takes 80-90 minutes to do it.  To accomodate this, we have set the `max_lease_ttl_seconds` attribute on the Vault provider to 7200 seconds (2 hours).
+Unfortunately, the Ansible playbook that provisions the OpenShift cluster takes 80-90 minutes to do it.  To accommodate this, we have set the `max_lease_ttl_seconds` attribute on the Vault provider to 7200 seconds (2 hours).
 
 When the Ansible playbook finally deploys the OpenShift cluster and a few other null resources are run by Terraform, you will see outputs providing the IPs and DNS addresses needed to access your OpenShift cluster in the AWS Console, TLS certs/keys for your cluster, the Vault Kubernetes auth method path, the Vault server address, and your Vault username. You will need these when using Terraform's Kubernetes Provider to provision Kubernetes pods and services in other workspaces that use your OpenShift cluster. You can also validate that the cluster was created in the AWS Console.
 
